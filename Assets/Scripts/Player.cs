@@ -23,9 +23,8 @@ public class Player : MonoBehaviour
     void Update()
     {
         Move();
+        Attack();
 
-        if (Input.GetKeyDown(KeyCode.LeftControl) && curTime <= 0)
-            Attack();
         curTime -= Time.deltaTime;
     }
 
@@ -46,15 +45,18 @@ public class Player : MonoBehaviour
 
     private void Attack()
     {
-        Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(attackBoxPos.position, boxSize, 0);
-        for (int i = 0; i < collider2Ds.Length; i++)
+        if (Input.GetButtonDown("Fire1") && curTime <= 0)
         {
-            if (collider2Ds[i].CompareTag("Enemy"))
+            Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(attackBoxPos.position, boxSize, 0);
+            for (int i = 0; i < collider2Ds.Length; i++)
             {
-                TakeDamaged(collider2Ds[i]);
+                if (collider2Ds[i].CompareTag("Enemy"))
+                {
+                    TakeDamaged(collider2Ds[i]);
+                }
             }
+            curTime = coolTime;
         }
-        curTime = coolTime;
     }
 
     private void TakeDamaged(Collider2D collider2D)
