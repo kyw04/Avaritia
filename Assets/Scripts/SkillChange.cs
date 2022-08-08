@@ -6,8 +6,24 @@ using UnityEngine.UI;
 public class SkillChange : MonoBehaviour
 {
     [HideInInspector] public GameObject taget;
-    public GameObject chnageButtonImage;
+    public GameObject changeCanvas;
+    private GameObject previousTaget;
+    private Image[] images = new Image[2];
+    private Vector3 startPos;
+    private Vector3 endPos;
     public float distance;
+    public float changeSpeed;
+    public float changeCountMax;
+    private float changeCount;
+    private float keyDownTimeOne;
+    private float keyDownTimeTwo;
+
+    private void Start()
+    {
+        endPos = Vector3.zero;
+        images[0] = changeCanvas.transform.GetChild(0).GetComponent<Image>();
+        images[1] = changeCanvas.transform.GetChild(1).GetComponent<Image>();
+    }
 
     private void Update()
     {
@@ -19,6 +35,12 @@ public class SkillChange : MonoBehaviour
 
         Debug.DrawRay(transform.position, transform.right * distance, Color.red);
         Debug.DrawRay(transform.position, -transform.right * distance, Color.blue);
+
+        //// 나중에 누른 키로 하기 만들어야 할 듯?
+        //if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.S) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S))
+        //{
+        //    ClearCount();
+        //}
 
         if (rightObject)
         {
@@ -34,21 +56,78 @@ public class SkillChange : MonoBehaviour
             if (rightDistance > leftDistance)
             {
                 taget = leftObject.collider.gameObject;
-                Debug.Log("left : " + taget.name);
             }
             else
             {
                 taget = rightObject.collider.gameObject;
-                Debug.Log("right : " + taget.name);
             }
-            chnageButtonImage.gameObject.transform.position = taget.transform.position + Vector3.up;
-            chnageButtonImage.SetActive(true);
+            startPos = taget.transform.position + Vector3.up * 1.5f;
+            changeCanvas.gameObject.transform.position = startPos;
+            changeCanvas.SetActive(true);
+
+            if (startPos != endPos)
+            {
+                endPos = startPos;
+                ClearCount();
+            }
         }
         else if (taget)
         {
             taget = null;
-            chnageButtonImage.SetActive(false);
+            changeCanvas.SetActive(false);
+            ClearCount();
         }
         
+        if (taget)
+        {
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                keyDownTimeOne = Time.time;
+                ClearCount();
+            }
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                keyDownTimeTwo = Time.time;
+                ClearCount();
+            }
+            int index = keyDownTimeOne < keyDownTimeTwo ? 1 : 0;
+
+            if (Input.GetKeyUp(KeyCode.A))
+            {
+                keyDownTimeOne = 0;
+                if (index == 0)
+                {
+                    ClearCount();
+                }
+            }
+            if (Input.GetKeyUp(KeyCode.S))
+            {
+                keyDownTimeTwo = 0;
+                if (index == 1)
+                {
+                    ClearCount();
+                }
+            }
+
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S))
+            {
+                AddCount(index);
+            }
+        }
+    }
+
+    private void AddCount(int index)
+    {
+        int temp = index == 1 ? 0 : 1;
+        images[temp].fillAmount = 0;
+        changeCount += Time.deltaTime * changeSpeed;
+        images[index].fillAmount = changeCount / changeCountMax;
+    }
+
+    private void ClearCount()
+    {
+        changeCount = 0;
+        images[0].fillAmount = 0;
+        images[1].fillAmount = 0;
     }
 }
