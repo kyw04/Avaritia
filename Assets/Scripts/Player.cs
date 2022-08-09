@@ -12,9 +12,12 @@ public class Player : MonoBehaviour
     public float jumpPower;
     public float coolTime;
     private int jumpCount;
+    private int mask;
     private float curTime;
+
     void Start()
     {
+        mask = 1 << LayerMask.NameToLayer("Enemy");
         jumpCount = 0;
         curTime = 0;
         rb = GetComponent<Rigidbody2D>();
@@ -47,7 +50,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetButtonDown("Fire1") && curTime <= 0)
         {
-            Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(attackBoxPos.position, boxSize, 0);
+            Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(attackBoxPos.position, boxSize, 0, mask);
             for (int i = 0; i < collider2Ds.Length; i++)
             {
                 if (collider2Ds[i].CompareTag("Enemy"))

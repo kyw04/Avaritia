@@ -36,12 +36,6 @@ public class SkillChange : MonoBehaviour
         Debug.DrawRay(transform.position, transform.right * distance, Color.red);
         Debug.DrawRay(transform.position, -transform.right * distance, Color.blue);
 
-        //// 나중에 누른 키로 하기 만들어야 할 듯?
-        //if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.S) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S))
-        //{
-        //    ClearCount();
-        //}
-
         if (rightObject)
         {
             rightDistance = rightObject.distance;
@@ -80,19 +74,19 @@ public class SkillChange : MonoBehaviour
         
         if (taget)
         {
-            if (Input.GetKeyDown(KeyCode.A))
+            if (Input.GetButtonDown("Skill1"))
             {
                 keyDownTimeOne = Time.time;
                 ClearCount();
             }
-            if (Input.GetKeyDown(KeyCode.S))
+            if (Input.GetButtonDown("Skill2"))
             {
                 keyDownTimeTwo = Time.time;
                 ClearCount();
             }
             int index = keyDownTimeOne < keyDownTimeTwo ? 1 : 0;
 
-            if (Input.GetKeyUp(KeyCode.A))
+            if (Input.GetButtonUp("Skill1"))
             {
                 keyDownTimeOne = 0;
                 if (index == 0)
@@ -100,7 +94,7 @@ public class SkillChange : MonoBehaviour
                     ClearCount();
                 }
             }
-            if (Input.GetKeyUp(KeyCode.S))
+            if (Input.GetButtonUp("Skill2"))
             {
                 keyDownTimeTwo = 0;
                 if (index == 1)
@@ -109,7 +103,7 @@ public class SkillChange : MonoBehaviour
                 }
             }
 
-            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S))
+            if (Input.GetButton("Skill1") || Input.GetButton("Skill2"))
             {
                 AddCount(index);
             }

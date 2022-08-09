@@ -5,15 +5,23 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public float hp;
-    // Start is called before the first frame update
+    public bool isDead;
+    
     void Start()
     {
-        
+        isDead = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        if (hp <= 0)
+        {
+            hp = 0;
+            if (!isDead)
+            {
+                gameObject.layer = 8;
+                isDead = true;
+            }
+        }
     }
 }
