@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 public class StateManager : Singleton<StateManager>
 {
-    List<IStateMachine> machines;
+    List<IStateMachine> machines = new();
     
     public void Register(IStateMachine machine)
     {

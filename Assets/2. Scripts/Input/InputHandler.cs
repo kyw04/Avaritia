@@ -15,6 +15,7 @@ public class InputHandler : MonoBehaviour
         inputAction.Enable();
 
         inputAction.Gameplay.Jump.performed += OnJump;
+        inputAction.Gameplay.Move.performed += Move;
         // inputAction.Gameplay.Attack.performed += OnAttack;
         // inputAction.Gameplay.Dash.performed   += OnDash;
     }
@@ -24,8 +25,6 @@ public class InputHandler : MonoBehaviour
         inputAction.Disable();
     }
 
-    private void OnJump(InputAction.CallbackContext context)
-    {
-        Debug.Log("OnJump");
-    }
+    private void OnJump(InputAction.CallbackContext context)  => Debug.Log("OnJump");
+    private void Move(InputAction.CallbackContext context) => Debug.Log($"Move {context.ReadValue<Vector2>()}");
 }
