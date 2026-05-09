@@ -1,47 +1,53 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class TestInput : MonoBehaviour
 {
-    public PlayerInputActions input;
-    private bool listening = false;
+    public TextMeshProUGUI text;
+    private InputAction action;
     
-    private void Awake()
-    {
-        input = new PlayerInputActions();
-    }
-    
-    private void OnEnable()
-    {
-        input.Enable();
-    }
-
     void Update()
     {
-        if (!listening) return;
+        text.text = action?.GetBindingDisplayString();
+    }
+    
+    public void StartListen(InputActionReference actionReference)
+    {       
+        action = InputHandler.Instance.inputAction.FindAction(actionReference.action.name);
+        int bindingIndex = FindKeyboardBindingIndex(action, "Keyboard");
+        if (bindingIndex == -1)
+            return;
         
-        input.Gameplay.Jump.PerformInteractiveRebinding()
+        InputActionMap map = action.actionMap;
+        map.Disable();
+        
+        Debug.Log(action.name);
+        
+        action.PerformInteractiveRebinding(bindingIndex)
+            .WithControlsHavingToMatchPath("<Keyboard>")
+            .WithCancelingThrough("<Keyboard>/escape")
+            .WithControlsExcluding("Mouse")
             .OnComplete(operation =>
             {
-                Debug.Log(input.Gameplay.Jump.bindings[0].effectivePath);
                 operation.Dispose();
+                action.Enable();
             })
             .Start();
     }
     
-    public void StartListen()
+    int FindKeyboardBindingIndex(InputAction targetAction, string targetController)
     {
-        listening = true;
-        input.Disable();
-        Debug.Log("키 입력 대기 시작");
-    }
+        for (int i = 0; i < targetAction.bindings.Count; i++)
+        {
+            InputBinding binding = targetAction.bindings[i];
 
-    public void RebindJumpToJ()
-    {
-        var jumpAction = input.Gameplay.Jump;
+            if (binding.effectivePath.Contains(targetController))
+            {
+                return i;
+            }
+        }
 
-        // 기존 바인딩 중 0번째를 J 키로 변경
-        jumpAction.ApplyBindingOverride(0, "<Keyboard>/j");
-        Debug.Log(input.Gameplay.Jump.bindings[0].effectivePath);
+        return -1;
     }
 }
