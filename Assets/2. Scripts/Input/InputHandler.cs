@@ -1,12 +1,13 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputHandler : MonoBehaviour
+public class InputHandler : Singleton<InputHandler>
 {
-    private PlayerInputActions inputAction;
+    public PlayerInputActions inputAction;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         inputAction = new PlayerInputActions();
     }
 
