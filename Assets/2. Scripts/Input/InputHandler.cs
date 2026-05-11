@@ -3,7 +3,9 @@ using UnityEngine.InputSystem;
 
 public class InputHandler : Singleton<InputHandler>
 {
-    public PlayerInputActions inputAction;
+    public Player player;
+    
+    private PlayerInputActions inputAction;
 
     protected override void Awake()
     {
@@ -26,6 +28,6 @@ public class InputHandler : Singleton<InputHandler>
         inputAction.Disable();
     }
 
-    private void OnJump(InputAction.CallbackContext context)  => Debug.Log("OnJump");
+    private void OnJump(InputAction.CallbackContext context)  => player.stateMachine.ChangeState<PlayerStateMachine.JumpState>();
     private void Move(InputAction.CallbackContext context) => Debug.Log($"Move {context.ReadValue<Vector2>()}");
 }

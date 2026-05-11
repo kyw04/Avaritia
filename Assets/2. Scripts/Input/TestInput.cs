@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 
 public class TestInput : MonoBehaviour
 {
+    public PlayerInputActions playerInput;
     public TextMeshProUGUI text;
     private InputAction action;
     
@@ -14,7 +15,7 @@ public class TestInput : MonoBehaviour
     
     public void StartListen(InputActionReference actionReference)
     {       
-        action = InputHandler.Instance.inputAction.FindAction(actionReference.action.name);
+        action = playerInput.FindAction(actionReference.action.name);
         int bindingIndex = FindKeyboardBindingIndex(action, "Keyboard");
         if (bindingIndex == -1)
             return;
