@@ -4,8 +4,7 @@ public abstract class StateBase<T> : IState
 {
     public T Owner { get; private set; }
     
-    protected StateBase<T> parent;
-    protected StateBase<T> currentChild;
+    public StateBase<T> parent;
     public Dictionary<System.Type, StateBase<T>> children = new();
     
     protected StateBase(T owner)

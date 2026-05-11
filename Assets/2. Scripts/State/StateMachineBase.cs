@@ -21,20 +21,27 @@ public class StateMachineBase<T> : IStateMachine
         
     public void ChangeState<S>() where S : StateBase<T>
     {
-        if (currentState != null && currentState.children.TryGetValue(typeof(S), out var child))
+        states.TryGetValue(typeof(S), out var value);
+        StateBase<T> newState = value as S;
+        if (currentState != null)
         {
-            currentState?.Exit();
-            currentState = child;
-            currentState?.Enter();
+            if (currentState.children.TryGetValue(typeof(S), out var childrenState))
+            {
+                newState = childrenState;
+            }
+            if (currentState.parent != null && currentState.parent.children.TryGetValue(typeof(S), out var parentState))
+            {
+                newState = parentState;
+            }
+        }
+
+        if (newState == null)
             return;
-        }
         
-        if (states.TryGetValue(typeof(S), out var newSate))
-        {
-            currentState?.Exit();
-            currentState = newSate;
-            currentState?.Enter();
-        }
+        currentState?.Exit();
+        currentState = newState;
+        currentState?.Enter();
+
     }
 
     public void Execute()
