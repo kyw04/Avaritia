@@ -70,7 +70,17 @@ public class PlayerStateMachine : StateMachineBase<Player>
         {
             Debug.Log("Move Execute");
         }
-}
+
+        public override void FixedExecute()
+        {
+            Owner.Move(InputHandler.Instance.MoveInput);
+        }
+        
+        public override void Exit()
+        {
+            
+        }
+    }
     
 #endregion
 #region Alive Airborne

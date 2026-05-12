@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class InputHandler : Singleton<InputHandler>
 {
     public Player player;
+    public Vector2 MoveInput { get; private set; }
     
     private PlayerInputActions inputAction;
 
@@ -29,7 +30,12 @@ public class InputHandler : Singleton<InputHandler>
         inputAction.Disable();
     }
 
-    private void OnJump(InputAction.CallbackContext context)  => player.stateMachine.ChangeState<PlayerStateMachine.JumpState>();
-    private void OnMove(InputAction.CallbackContext context) =>  player.stateMachine.ChangeState<PlayerStateMachine.MoveState>();
-    private void OnMoveStopped(InputAction.CallbackContext context) => player.stateMachine.ChangeState<PlayerStateMachine.IdleState>();
+    private void OnJump(InputAction.CallbackContext context)  => player.StateMachine.ChangeState<PlayerStateMachine.JumpState>();
+    private void OnMove(InputAction.CallbackContext context)
+    {
+        MoveInput = context.ReadValue<Vector2>();
+        player.StateMachine.ChangeState<PlayerStateMachine.MoveState>();
+    }
+
+    private void OnMoveStopped(InputAction.CallbackContext context) => player.StateMachine.ChangeState<PlayerStateMachine.IdleState>();
 }
