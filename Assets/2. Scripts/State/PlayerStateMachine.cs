@@ -48,12 +48,6 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Enter()
         {
-            Debug.Log("Idle Enter");
-        }
-
-        public override void Execute()
-        {
-            Debug.Log("Idle Execute");
         }
     }
 
@@ -61,24 +55,9 @@ public class PlayerStateMachine : StateMachineBase<Player>
     {
         public MoveState(Player owner) : base(owner) { }
 
-        public override void Enter()
-        {
-            Debug.Log("Move Enter");
-        }
-
-        public override void Execute()
-        {
-            Debug.Log("Move Execute");
-        }
-
         public override void FixedExecute()
         {
             Owner.Move(InputHandler.Instance.MoveInput);
-        }
-        
-        public override void Exit()
-        {
-            
         }
     }
     
@@ -103,12 +82,12 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Enter()
         {
-            Debug.Log("Jump Enter");
+            Owner.Jump();
         }
 
-        public override void Execute()
+        public override void FixedExecute()
         {
-            Debug.Log("Jump Execute");
+            Owner.Move(InputHandler.Instance.MoveInput);
         }
     }
     

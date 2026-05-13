@@ -37,5 +37,10 @@ public class InputHandler : Singleton<InputHandler>
         player.StateMachine.ChangeState<PlayerStateMachine.MoveState>();
     }
 
-    private void OnMoveStopped(InputAction.CallbackContext context) => player.StateMachine.ChangeState<PlayerStateMachine.IdleState>();
+    private void OnMoveStopped(InputAction.CallbackContext context)
+    {
+        MoveInput = Vector2.zero;
+        player.Move(MoveInput);
+        player.StateMachine.ChangeState<PlayerStateMachine.IdleState>();
+    }
 }
