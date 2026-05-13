@@ -4,9 +4,12 @@ public class Player : MonoBehaviour
 {
     public PlayerStateMachine StateMachine { get; private set; }
     public Rigidbody2D Rb { get; private set; }
-
     public bool IsGrounded { get; private set; }
 
+    public Transform groundCheck;
+    public float groundRadius;
+    public LayerMask groundLayer;
+    
     public float moveSpeed;
     public float jumpForce;
     
@@ -19,10 +22,19 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         StateMachine = new PlayerStateMachine(this);
-        Rb =  GetComponent<Rigidbody2D>();
+        Rb = GetComponent<Rigidbody2D>();
         IsGrounded = true; // 테스트용
     }
-    
+
+    private void Update()
+    {
+        IsGrounded = Physics2D.OverlapCircle(
+            groundCheck.position,
+            groundRadius,
+            groundLayer
+        );
+    }
+
     public void Move(Vector2 input)
     {
         float inputX = input.x;
@@ -46,11 +58,21 @@ public class Player : MonoBehaviour
         float newVelX = Mathf.MoveTowards(currentVelX, targetVelX, rate * Time.fixedDeltaTime);
  
         Rb.linearVelocity = new Vector2(newVelX, Rb.linearVelocity.y);
-        Debug.Log(Rb.linearVelocity);
     }
 
     public void Jump()
     {
         Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, jumpForce);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (groundCheck != null)
+        {
+            if (IsGrounded) Gizmos.color = Color.green;
+            else Gizmos.color = Color.gray2;
+            Gizmos.DrawWireSphere(groundCheck.position, groundRadius);
+        }
+        
     }
 }

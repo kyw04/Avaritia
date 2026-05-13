@@ -72,7 +72,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Enter()
         {
-            
+            Debug.Log("Airborne Enter");
         }
     }
     
