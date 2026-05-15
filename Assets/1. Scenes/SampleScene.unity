@@ -744,6 +744,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cecd44b59cbdbf4408e9cb4c4852dd97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
+  jumpClip: {fileID: 0}
+  landClip: {fileID: 0}
+  moveClip: {fileID: 0}
 --- !u!4 &1263011414
 Transform:
   m_ObjectHideFlags: 0
@@ -792,6 +795,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4113bce7d5ab4dcd8815858b17eb087e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
+  state: 
   groundCheck: {fileID: 1235557513}
   groundRadius: 0.25
   groundLayer:
