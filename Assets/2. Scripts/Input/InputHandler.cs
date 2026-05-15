@@ -30,17 +30,17 @@ public class InputHandler : Singleton<InputHandler>
         inputAction.Disable();
     }
 
-    private void OnJump(InputAction.CallbackContext context)  => player.StateMachine.ChangeState<PlayerStateMachine.JumpState>();
+    private void OnJump(InputAction.CallbackContext context) => 
+        player.StateMachine.ChangeState<PlayerStateMachine.JumpState>();
+    
     private void OnMove(InputAction.CallbackContext context)
     {
         MoveInput = context.ReadValue<Vector2>();
-        player.StateMachine.ChangeState<PlayerStateMachine.MoveState>();
     }
 
     private void OnMoveStopped(InputAction.CallbackContext context)
     {
         MoveInput = Vector2.zero;
         player.Move(MoveInput);
-        player.StateMachine.ChangeState<PlayerStateMachine.IdleState>();
     }
 }

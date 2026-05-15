@@ -4,11 +4,16 @@ public class Player : MonoBehaviour
 {
     public PlayerStateMachine StateMachine { get; private set; }
     public Rigidbody2D Rb { get; private set; }
+    public SpriteRenderer Renderer { get; private set; }
+    
     public bool IsGrounded { get; private set; }
+    private bool wasGroundCheckerChanged;
 
-    public Transform groundCheck;
-    public float groundRadius;
-    public LayerMask groundLayer;
+    [SerializeField] private string state;
+    
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private float groundRadius;
+    [SerializeField] private LayerMask groundLayer;
     
     public float moveSpeed;
     public float jumpForce;
@@ -16,14 +21,16 @@ public class Player : MonoBehaviour
     private float acceleration = 20f; // 지면 가속도
     private float deceleration = 10f; // 지면 감속도
     
-    private float airAcceleration = 50f; // 공중 가속도
-    private float airDeceleration = 30f; // 공중 감속도
+    private float airAcceleration = 30f; // 공중 가속도
+    private float airDeceleration = 15f; // 공중 감속도
     
     private void Awake()
     {
         StateMachine = new PlayerStateMachine(this);
         Rb = GetComponent<Rigidbody2D>();
-        IsGrounded = true; // 테스트용
+        Renderer = GetComponentInChildren<SpriteRenderer>();
+        
+        wasGroundCheckerChanged = !IsGrounded;
     }
 
     private void Update()
@@ -33,11 +40,29 @@ public class Player : MonoBehaviour
             groundRadius,
             groundLayer
         );
+
+        if (wasGroundCheckerChanged != IsGrounded)
+        {
+            wasGroundCheckerChanged = IsGrounded;
+            if (IsGrounded)
+            {
+                StateMachine.ChangeState<PlayerStateMachine.IdleState>();
+            }
+            else if (Rb.linearVelocityY <= 0)
+            {
+                StateMachine.ChangeState<PlayerStateMachine.FallState>();
+            }
+        }
+        
+        state = StateMachine.currentState.CurrentChild.CurrentChild.ToString();
     }
 
     public void Move(Vector2 input)
     {
         float inputX = input.x;
+        if (inputX != 0)
+            Renderer.flipX = inputX < 0;
+        
         float targetVelX  = inputX * moveSpeed;
         float currentVelX = Rb.linearVelocity.x;
  

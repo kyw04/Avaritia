@@ -38,4 +38,10 @@ public static class EventBus
             ((IObserver<T>)list[i]).OnNotify(gameEvent);
         }
     }
+    
+    public static void UnsubscribeAll(object observer)
+    {
+        foreach (var list in observers.Values)
+            list.Remove(observer);
+    }
 }

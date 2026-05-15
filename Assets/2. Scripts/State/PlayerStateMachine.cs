@@ -4,11 +4,21 @@ public class PlayerStateMachine : StateMachineBase<Player>
 {
     public PlayerStateMachine(Player owner) : base(owner)
     {
-        AddState(new AliveState(Owner));
+        AddTransition<IdleState, MoveState>();
+        AddTransition<IdleState, JumpState>();
+        AddTransition<IdleState, FallState>();
         
+        AddTransition<MoveState, IdleState>();
+        AddTransition<MoveState, JumpState>();
+        AddTransition<MoveState, FallState>();
+        
+        AddTransition<JumpState, FallState>();
+        
+        AddTransition<FallState, IdleState>();
+        
+        
+        AddState(new AliveState(Owner));
         ChangeState<AliveState>();
-        ChangeState<Grounded>();
-        ChangeState<IdleState>();
     }
 #region Alive
     public class AliveState : StateBase<Player>
@@ -19,11 +29,6 @@ public class PlayerStateMachine : StateMachineBase<Player>
             AddChild(new Airborne(Owner));
             AddChild(new Action(Owner));
         }
-
-        public override void Enter()
-        {
-            Debug.Log("Alive Enter");
-        }
     }
 
 #region Alive Grounded
@@ -33,12 +38,6 @@ public class PlayerStateMachine : StateMachineBase<Player>
         {
             AddChild(new IdleState(Owner));
             AddChild(new MoveState(Owner));
-            AddChild(new JumpState(Owner));
-        }
-
-        public override void Enter()
-        {
-            Debug.Log("Grounded Enter");
         }
     }
     
@@ -48,12 +47,30 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Enter()
         {
+            EventBus.Publish(new PlayerIdleEvent());
+        }
+
+        public override void Execute()
+        {
+            if (Mathf.Abs(InputHandler.Instance.MoveInput.x) > 0)
+                Owner.StateMachine.ChangeState<MoveState>();
         }
     }
 
     public class MoveState : StateBase<Player>
     {
         public MoveState(Player owner) : base(owner) { }
+        
+        public override void Enter()
+        {
+            EventBus.Publish(new PlayerMovedEvent());
+        }
+
+        public override void Execute()
+        {
+            if (InputHandler.Instance.MoveInput.x == 0)
+                Owner.StateMachine.ChangeState<IdleState>();
+        }
 
         public override void FixedExecute()
         {
@@ -67,7 +84,8 @@ public class PlayerStateMachine : StateMachineBase<Player>
     {
         public Airborne(Player owner) : base(owner)
         {
-            AddChild(new Fall(Owner));
+            AddChild(new FallState(Owner));
+            AddChild(new JumpState(Owner));
         }
 
         public override void Enter()
@@ -82,7 +100,14 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Enter()
         {
+            EventBus.Publish(new PlayerJumpedEvent());
             Owner.Jump();
+        }
+
+        public override void Execute()
+        {
+            if (Owner.Rb.linearVelocityY <= 0)
+                Owner.StateMachine.ChangeState<FallState>();
         }
 
         public override void FixedExecute()
@@ -91,18 +116,18 @@ public class PlayerStateMachine : StateMachineBase<Player>
         }
     }
     
-    public class Fall : StateBase<Player>
+    public class FallState : StateBase<Player>
     {
-        public Fall(Player owner) : base(owner) { }
+        public FallState(Player owner) : base(owner) { }
 
         public override void Enter()
         {
-            Debug.Log("Fall Enter");
+            EventBus.Publish(new PlayerFallingEvent());
         }
 
-        public override void Execute()
+        public override void FixedExecute()
         {
-            Debug.Log("Fall Execute");
+            Owner.Move(InputHandler.Instance.MoveInput);
         }
     }
     
@@ -114,7 +139,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Enter()
         {
-            
+            EventBus.Publish(new PlayerFallingEvent());
         }
     }
 #endregion

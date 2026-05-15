@@ -4,8 +4,9 @@ public abstract class StateBase<T> : IState
 {
     public T Owner { get; private set; }
     
-    public StateBase<T> parent;
-    public Dictionary<System.Type, StateBase<T>> children = new();
+    public StateBase<T> Parent { get; private set; }
+    public StateBase<T> CurrentChild { get; private set; }
+    public Dictionary<System.Type, StateBase<T>> Children { get; } = new();
     
     protected StateBase(T owner)
     {
@@ -19,9 +20,40 @@ public abstract class StateBase<T> : IState
 
     public virtual void Exit() { }
     
-    public void AddChild(StateBase<T> child)
+    protected void AddChild(StateBase<T> child)
     {
-        child.parent = this;
-        children.Add(child.GetType(), child);
+        child.Parent = this;
+        Children.Add(child.GetType(), child);
+        
+        CurrentChild ??= child;
+    }
+    
+    internal void SetCurrentChild(StateBase<T> child)
+    {
+        CurrentChild = child;
+    }
+    
+    internal void PropagateEnter()
+    {
+        Enter();
+        CurrentChild?.PropagateEnter();
+    }
+
+    internal void PropagateExit()
+    {
+        CurrentChild?.PropagateExit();
+        Exit();
+    }
+
+    internal void PropagateExecute()
+    {
+        Execute();
+        CurrentChild?.PropagateExecute();
+    }
+
+    internal void PropagateFixedExecute()
+    {
+        FixedExecute();
+        CurrentChild?.PropagateFixedExecute();
     }
 }
