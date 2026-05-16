@@ -60,8 +60,10 @@ public class Player : MonoBehaviour
     public void Move(Vector2 input)
     {
         float inputX = input.x;
-        if (inputX != 0)
-            Renderer.flipX = inputX < 0;
+        if (inputX == 0)
+            return;
+        
+        Renderer.flipX = inputX < 0;
         
         float targetVelX  = inputX * moveSpeed;
         float currentVelX = Rb.linearVelocity.x;
@@ -79,7 +81,14 @@ public class Player : MonoBehaviour
         }
  
         bool isTurning = (currentVelX > 0.1f && inputX < 0f) || (currentVelX < -0.1f && inputX > 0f);
-        float rate = isTurning ? accel + decel : accel;
+        float rate = accel;
+        if (isTurning)
+        {
+            rate = accel + decel;
+            
+            if (Mathf.Abs(currentVelX) / moveSpeed >= 0.55f)
+                StateMachine.ChangeState<PlayerStateMachine.TurnState>();
+        }
         float newVelX = Mathf.MoveTowards(currentVelX, targetVelX, rate * Time.fixedDeltaTime);
  
         Rb.linearVelocity = new Vector2(newVelX, Rb.linearVelocity.y);

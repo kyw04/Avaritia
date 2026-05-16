@@ -11,6 +11,10 @@ public class PlayerStateMachine : StateMachineBase<Player>
         AddTransition<MoveState, IdleState>();
         AddTransition<MoveState, JumpState>();
         AddTransition<MoveState, FallState>();
+        AddTransition<MoveState, TurnState>();
+        
+        AddTransition<TurnState, MoveState>();
+        AddTransition<TurnState, JumpState>();
         
         AddTransition<JumpState, FallState>();
         
@@ -38,6 +42,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         {
             AddChild(new IdleState(Owner));
             AddChild(new MoveState(Owner));
+            AddChild(new TurnState(Owner));
         }
     }
     
@@ -59,22 +64,63 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
     public class MoveState : StateBase<Player>
     {
+        private float currentSpeed => Mathf.Abs(Owner.Rb.linearVelocityX) / Owner.moveSpeed;
+        
         public MoveState(Player owner) : base(owner) { }
         
         public override void Enter()
         {
-            EventBus.Publish(new PlayerMovedEvent());
+            EventBus.Publish(new PlayerMovedEvent(currentSpeed));
         }
 
         public override void Execute()
         {
-            if (InputHandler.Instance.MoveInput.x == 0)
+            if (InputHandler.Instance.MoveInput.x == 0 &&
+                currentSpeed == 0)
+            {
                 Owner.StateMachine.ChangeState<IdleState>();
+            }
+            else
+            {
+                EventBus.Publish(new PlayerMovedEvent(currentSpeed));
+            }
         }
 
         public override void FixedExecute()
         {
             Owner.Move(InputHandler.Instance.MoveInput);
+        }
+
+        public override void Exit()
+        {
+            EventBus.Publish(new PlayerMovedEvent(0));
+        }
+    }
+
+    public class TurnState : StateBase<Player>
+    {
+        private float currentSpeed => Mathf.Abs(Owner.Rb.linearVelocityX) / Owner.moveSpeed;
+        private Vector2 moveDir;
+        
+        public TurnState(Player owner) : base(owner) { }
+
+        public override void Enter()
+        {
+            moveDir = InputHandler.Instance.MoveInput;
+            EventBus.Publish(new PlayerTurnEvent());
+        }
+
+        public override void Execute()
+        {
+            if (currentSpeed >= 0.5f)
+            {
+                Owner.StateMachine.ChangeState<MoveState>();
+            }
+        }
+        
+        public override void FixedExecute()
+        {
+            Owner.Move(moveDir);
         }
     }
     
@@ -86,11 +132,6 @@ public class PlayerStateMachine : StateMachineBase<Player>
         {
             AddChild(new FallState(Owner));
             AddChild(new JumpState(Owner));
-        }
-
-        public override void Enter()
-        {
-            Debug.Log("Airborne Enter");
         }
     }
     

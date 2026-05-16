@@ -5,7 +5,8 @@ public class PlayerAnimator : MonoBehaviour,
     IObserver<PlayerMovedEvent>,
     IObserver<PlayerJumpedEvent>,
     IObserver<PlayerFallingEvent>,
-    IObserver<PlayerLandedEvent>
+    IObserver<PlayerLandedEvent>,
+    IObserver<PlayerTurnEvent>
 {
     private Animator animator;
     private static readonly int Speed = Animator.StringToHash("Speed");
@@ -22,6 +23,7 @@ public class PlayerAnimator : MonoBehaviour,
         EventBus.Subscribe<PlayerJumpedEvent>(this);
         EventBus.Subscribe<PlayerFallingEvent>(this);
         EventBus.Subscribe<PlayerLandedEvent>(this);
+        EventBus.Subscribe<PlayerTurnEvent>(this);
     }
 
     void OnDisable()
@@ -30,8 +32,13 @@ public class PlayerAnimator : MonoBehaviour,
     }
 
     public void OnNotify(PlayerIdleEvent e) => animator.Play("idle");
-    public void OnNotify(PlayerMovedEvent e) => animator.Play("run");
+    public void OnNotify(PlayerMovedEvent e)
+    {
+        animator.SetFloat(Speed, e.Speed);
+        animator.Play("Move");
+    }
     public void OnNotify(PlayerJumpedEvent e) => animator.Play("jump");
     public void OnNotify(PlayerFallingEvent e) => animator.Play("fall_loop");
     public void OnNotify(PlayerLandedEvent e) => animator.Play("land");
+    public void OnNotify(PlayerTurnEvent gameEvent) => animator.Play("turn");
 }
