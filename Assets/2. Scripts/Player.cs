@@ -83,10 +83,11 @@ public class Player : MonoBehaviour
  
         bool isTurnStarting = (currentVelX > 0.1f && inputX < 0f) || (currentVelX < -0.1f && inputX > 0f);
         float rate = accel;
-        float absCntVelX = Mathf.Abs(currentVelX);
-        Debug.Log(absCntVelX);
-        if (!isTurning && isTurnStarting && absCntVelX >= 0.9f)
+        float absCntSpeedPer = Mathf.Abs(currentVelX)  / moveSpeed;
+        Debug.Log(absCntSpeedPer);
+        if (!isTurning && isTurnStarting && absCntSpeedPer >= 0.9f)
         {
+            Debug.Log("Turning");
             rate = accel + decel;
             isTurning = true;
         }
@@ -94,7 +95,7 @@ public class Player : MonoBehaviour
         {
             StateMachine.ChangeState<PlayerStateMachine.TurnState>();
             
-            if (absCntVelX / moveSpeed >= 0.55f)
+            if (absCntSpeedPer <= 0.55f)
             {
                 isTurning = false;
             }
