@@ -6,28 +6,28 @@ public class InputHandler : Singleton<InputHandler>
     public Player player;
     public Vector2 MoveInput { get; private set; }
     
-    private PlayerInputActions inputAction;
+    public PlayerInputActions InputAction { get; private set; }
 
     protected override void Awake()
     {
         base.Awake();
-        inputAction = new PlayerInputActions();
+        InputAction = new PlayerInputActions();
     }
 
     void OnEnable()
     {
-        inputAction.Enable();
+        InputAction.Enable();
 
-        inputAction.Gameplay.Jump.performed += OnJump;
-        inputAction.Gameplay.Move.performed += OnMove;
-        inputAction.Gameplay.Move.canceled += OnMoveStopped;
+        InputAction.Gameplay.Jump.performed += OnJump;
+        InputAction.Gameplay.Move.performed += OnMove;
+        InputAction.Gameplay.Move.canceled += OnMoveStopped;
         // inputAction.Gameplay.Attack.performed += OnAttack;
         // inputAction.Gameplay.Dash.performed   += OnDash;
     }
 
     void OnDisable()
     {
-        inputAction.Disable();
+        InputAction.Disable();
     }
 
     private void OnJump(InputAction.CallbackContext context) => 

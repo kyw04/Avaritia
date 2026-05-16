@@ -4,10 +4,15 @@ using UnityEngine.InputSystem;
 
 public class TestInput : MonoBehaviour
 {
-    public PlayerInputActions playerInput;
     public TextMeshProUGUI text;
+    private PlayerInputActions playerInput;
     private InputAction action;
-    
+
+    private void Start()
+    {
+        playerInput = InputHandler.Instance.InputAction;
+    }
+
     void Update()
     {
         text.text = action?.GetBindingDisplayString();
