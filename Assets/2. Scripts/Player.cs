@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     
     public bool IsGrounded { get; private set; }
     private bool wasGroundCheckerChanged;
+    private bool isTurning;
 
     [SerializeField] private string state;
     
@@ -80,15 +81,26 @@ public class Player : MonoBehaviour
             decel = airDeceleration;
         }
  
-        bool isTurning = (currentVelX > 0.1f && inputX < 0f) || (currentVelX < -0.1f && inputX > 0f);
+        bool isTurnStarting = (currentVelX > 0.1f && inputX < 0f) || (currentVelX < -0.1f && inputX > 0f);
         float rate = accel;
-        if (isTurning)
+        float absCntVelX = Mathf.Abs(currentVelX);
+        Debug.Log(absCntVelX);
+        if (!isTurning && isTurnStarting && absCntVelX >= 0.9f)
         {
             rate = accel + decel;
-            
-            if (Mathf.Abs(currentVelX) / moveSpeed >= 0.55f)
-                StateMachine.ChangeState<PlayerStateMachine.TurnState>();
+            isTurning = true;
         }
+        if (isTurning)
+        {
+            StateMachine.ChangeState<PlayerStateMachine.TurnState>();
+            
+            if (absCntVelX / moveSpeed >= 0.55f)
+            {
+                isTurning = false;
+            }
+        }
+           
+        
         float newVelX = Mathf.MoveTowards(currentVelX, targetVelX, rate * Time.fixedDeltaTime);
  
         Rb.linearVelocity = new Vector2(newVelX, Rb.linearVelocity.y);
