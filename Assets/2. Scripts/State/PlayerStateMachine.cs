@@ -16,9 +16,12 @@ public class PlayerStateMachine : StateMachineBase<Player>
         AddTransition<TurnState, MoveState>();
         AddTransition<TurnState, JumpState>();
         
+        AddTransition<LandState, IdleState>();
+        
         AddTransition<JumpState, FallState>();
         
         AddTransition<FallState, IdleState>();
+        AddTransition<FallState, LandState>();
         
         
         AddState(new AliveState(Owner));
@@ -29,9 +32,9 @@ public class PlayerStateMachine : StateMachineBase<Player>
     {
         public AliveState(Player owner) : base(owner)
         {
-            AddChild(new Grounded(Owner));
-            AddChild(new Airborne(Owner));
-            AddChild(new Action(Owner));
+            AddChild(new Grounded(owner));
+            AddChild(new Airborne(owner));
+            AddChild(new Action(owner));
         }
     }
 
@@ -40,9 +43,10 @@ public class PlayerStateMachine : StateMachineBase<Player>
     {
         public Grounded(Player owner) : base(owner)
         {
-            AddChild(new IdleState(Owner));
-            AddChild(new MoveState(Owner));
-            AddChild(new TurnState(Owner));
+            AddChild(new IdleState(owner));
+            AddChild(new MoveState(owner));
+            AddChild(new TurnState(owner));
+            AddChild(new LandState(owner));
         }
     }
     
@@ -123,6 +127,25 @@ public class PlayerStateMachine : StateMachineBase<Player>
             Owner.Move(moveDir);
         }
     }
+
+    public class LandState : StateBase<Player>
+    {
+        private float landTime = 0.25f;
+        private float landStartTime;
+        public LandState(Player owner) : base(owner) { }
+
+        public override void Enter()
+        {
+            landStartTime = Time.time;
+            EventBus.Publish(new PlayerLandedEvent());
+        }
+
+        public override void Execute()
+        {
+            if (landStartTime + landTime <= Time.time)
+                Owner.StateMachine.ChangeState<IdleState>();
+        }
+    }
     
 #endregion
 #region Alive Airborne
@@ -130,8 +153,8 @@ public class PlayerStateMachine : StateMachineBase<Player>
     {
         public Airborne(Player owner) : base(owner)
         {
-            AddChild(new FallState(Owner));
-            AddChild(new JumpState(Owner));
+            AddChild(new FallState(owner));
+            AddChild(new JumpState(owner));
         }
     }
     

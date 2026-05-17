@@ -47,7 +47,14 @@ public class Player : MonoBehaviour
             wasGroundCheckerChanged = IsGrounded;
             if (IsGrounded)
             {
-                StateMachine.ChangeState<PlayerStateMachine.IdleState>();
+                if (Rb.linearVelocityY <= -5)
+                {
+                    StateMachine.ChangeState<PlayerStateMachine.LandState>();
+                }
+                else
+                {
+                    StateMachine.ChangeState<PlayerStateMachine.IdleState>();
+                }
             }
             else if (Rb.linearVelocityY <= 0)
             {
@@ -84,10 +91,8 @@ public class Player : MonoBehaviour
         bool isTurnStarting = (currentVelX > 0.1f && inputX < 0f) || (currentVelX < -0.1f && inputX > 0f);
         float rate = accel;
         float absCntSpeedPer = Mathf.Abs(currentVelX)  / moveSpeed;
-        Debug.Log(absCntSpeedPer);
         if (!isTurning && isTurnStarting && absCntSpeedPer >= 0.9f)
         {
-            Debug.Log("Turning");
             rate = accel + decel;
             isTurning = true;
         }
