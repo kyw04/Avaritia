@@ -130,7 +130,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
     public class LandState : StateBase<Player>
     {
-        private float landTime = 0.25f;
+        private float landTime = 0.2f;
         private float landStartTime;
         public LandState(Player owner) : base(owner) { }
 
