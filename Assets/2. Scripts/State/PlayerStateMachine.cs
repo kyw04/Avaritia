@@ -7,11 +7,13 @@ public class PlayerStateMachine : StateMachineBase<Player>
         AddTransition<IdleState, MoveState>();
         AddTransition<IdleState, JumpState>();
         AddTransition<IdleState, FallState>();
+        AddTransition<IdleState, AttackState>();
         
         AddTransition<MoveState, IdleState>();
         AddTransition<MoveState, JumpState>();
         AddTransition<MoveState, FallState>();
         AddTransition<MoveState, TurnState>();
+        AddTransition<MoveState, AttackState>();
         
         AddTransition<TurnState, MoveState>();
         AddTransition<TurnState, JumpState>();
@@ -23,6 +25,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         AddTransition<FallState, IdleState>();
         AddTransition<FallState, LandState>();
         
+        AddTransition<AttackState, IdleState>();
         
         AddState(new AliveState(Owner));
         ChangeState<AliveState>();
@@ -204,6 +207,16 @@ public class PlayerStateMachine : StateMachineBase<Player>
         public override void Enter()
         {
             EventBus.Publish(new PlayerFallingEvent());
+        }
+    }
+    
+    public class AttackState : StateBase<Player>
+    {
+        public AttackState(Player owner) : base(owner) { }
+
+        public override void Enter()
+        {
+            Debug.Log("Attack Enter");
         }
     }
 #endregion
