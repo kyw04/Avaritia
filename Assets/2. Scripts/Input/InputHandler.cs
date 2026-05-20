@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputHandler : Singleton<InputHandler>
+public class InputHandler : Singleton<InputHandler>, IObserver<PlayerEndAttackEvent>
 {
     public Player player;
     public Vector2 MoveInput { get; private set; }
@@ -14,24 +14,28 @@ public class InputHandler : Singleton<InputHandler>
         InputAction = new PlayerInputActions();
     }
 
-    void OnEnable()
+    private void OnEnable()
     {
         InputAction.Enable();
 
         InputAction.Gameplay.Jump.performed += OnJump;
+        InputAction.Gameplay.Attack.performed += OnAttack;
         InputAction.Gameplay.Move.performed += OnMove;
         InputAction.Gameplay.Move.canceled += OnMoveStopped;
-        // inputAction.Gameplay.Attack.performed += OnAttack;
-        // inputAction.Gameplay.Dash.performed   += OnDash;
+        
+        EventBus.Subscribe<PlayerEndAttackEvent>(this);
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         InputAction.Disable();
+        EventBus.Unsubscribe(this);
     }
 
     private void OnJump(InputAction.CallbackContext context) => 
         player.StateMachine.ChangeState<PlayerStateMachine.JumpState>();
+    private void OnAttack(InputAction.CallbackContext context) =>
+        player.StateMachine.ChangeState<PlayerStateMachine.AttackState>();
     
     private void OnMove(InputAction.CallbackContext context)
     {
@@ -43,4 +47,7 @@ public class InputHandler : Singleton<InputHandler>
         MoveInput = Vector2.zero;
         player.Move(MoveInput);
     }
+
+    public void OnNotify(PlayerEndAttackEvent gameEvent) =>
+        player.StateMachine.ChangeState<PlayerStateMachine.IdleState>();
 }

@@ -202,7 +202,10 @@ public class PlayerStateMachine : StateMachineBase<Player>
 #region Alive Action
     public class Action : StateBase<Player>
     {
-        public Action(Player owner) : base(owner) { }
+        public Action(Player owner) : base(owner)
+        {
+            AddChild(new AttackState(owner));
+        }
 
         public override void Enter()
         {
@@ -216,7 +219,8 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Enter()
         {
-            Debug.Log("Attack Enter");
+            Owner.Rb.linearVelocity = Vector2.zero;
+            EventBus.Publish(new PlayerAttackEvent());
         }
     }
 #endregion

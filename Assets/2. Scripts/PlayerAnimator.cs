@@ -6,17 +6,18 @@ public class PlayerAnimator : MonoBehaviour,
     IObserver<PlayerJumpedEvent>,
     IObserver<PlayerFallingEvent>,
     IObserver<PlayerLandedEvent>,
-    IObserver<PlayerTurnEvent>
+    IObserver<PlayerTurnEvent>,
+    IObserver<PlayerAttackEvent>
 {
     private Animator animator;
     private static readonly int Speed = Animator.StringToHash("Speed");
 
-    void Awake()
+    private void Awake()
     {
-        animator = GetComponentInChildren<Animator>();
+        animator = GetComponent<Animator>();
     }
 
-    void OnEnable()
+    private void OnEnable()
     {
         EventBus.Subscribe<PlayerIdleEvent>(this);
         EventBus.Subscribe<PlayerMovedEvent>(this);
@@ -24,13 +25,19 @@ public class PlayerAnimator : MonoBehaviour,
         EventBus.Subscribe<PlayerFallingEvent>(this);
         EventBus.Subscribe<PlayerLandedEvent>(this);
         EventBus.Subscribe<PlayerTurnEvent>(this);
+        EventBus.Subscribe<PlayerAttackEvent>(this);
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         EventBus.UnsubscribeAll(this);
     }
 
+    public void EndAttacking()
+    {
+        EventBus.Publish(new PlayerEndAttackEvent());
+    }
+    
     public void OnNotify(PlayerIdleEvent e) => animator.Play("idle");
     public void OnNotify(PlayerMovedEvent e)
     {
@@ -40,5 +47,7 @@ public class PlayerAnimator : MonoBehaviour,
     public void OnNotify(PlayerJumpedEvent e) => animator.Play("jump");
     public void OnNotify(PlayerFallingEvent e) => animator.Play("fall_loop");
     public void OnNotify(PlayerLandedEvent e) => animator.Play("land");
-    public void OnNotify(PlayerTurnEvent gameEvent) => animator.Play("turn");
+    public void OnNotify(PlayerTurnEvent e) => animator.Play("turn");
+    public void OnNotify(PlayerAttackEvent e) => animator.Play("attack");
+
 }

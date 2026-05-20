@@ -10,6 +10,8 @@ public struct PlayerFallingEvent : ISubject { }
 public struct PlayerLandedEvent : ISubject { }
 public struct PlayerTurnEvent : ISubject { }
 
+public struct PlayerAttackEvent : ISubject { }
+public struct PlayerEndAttackEvent : ISubject { }
 
 public struct PlayerDamagedEvent : ISubject
 {
