@@ -215,11 +215,46 @@ public class PlayerStateMachine : StateMachineBase<Player>
     
     public class AttackState : StateBase<Player>
     {
+        private int attackCount = 0;
         public AttackState(Player owner) : base(owner) { }
 
         public override void Enter()
         {
+            Debug.Log($"Attack Start {attackCount}");
             Owner.Rb.linearVelocity = Vector2.zero;
+            EventBus.Publish(new PlayerAttackEvent(attackCount++));
+        }
+    }
+    
+    public class AttackState1 : StateBase<Player>
+    {
+        public AttackState1(Player owner) : base(owner) { }
+
+        public override void Enter()
+        {
+            Debug.Log("Attack 1");
+            EventBus.Publish(new PlayerAttackEvent());
+        }
+    }
+    
+    public class AttackState2 : StateBase<Player>
+    {
+        public AttackState2(Player owner) : base(owner) { }
+
+        public override void Enter()
+        {
+            Debug.Log("Attack 2");
+            EventBus.Publish(new PlayerAttackEvent());
+        }
+    }
+    
+    public class AttackState3 : StateBase<Player>
+    {
+        public AttackState3(Player owner) : base(owner) { }
+
+        public override void Enter()
+        {
+            Debug.Log("Attack 3");
             EventBus.Publish(new PlayerAttackEvent());
         }
     }

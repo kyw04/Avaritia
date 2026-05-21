@@ -48,6 +48,6 @@ public class InputHandler : Singleton<InputHandler>, IObserver<PlayerEndAttackEv
         player.Move(MoveInput);
     }
 
-    public void OnNotify(PlayerEndAttackEvent gameEvent) =>
+    public void OnNotify(PlayerEndAttackEvent e) =>
         player.StateMachine.ChangeState<PlayerStateMachine.IdleState>();
 }

@@ -10,12 +10,10 @@ public struct PlayerFallingEvent : ISubject { }
 public struct PlayerLandedEvent : ISubject { }
 public struct PlayerTurnEvent : ISubject { }
 
-public struct PlayerAttackEvent : ISubject { }
-public struct PlayerEndAttackEvent : ISubject { }
-
-public struct PlayerDamagedEvent : ISubject
+public struct PlayerAttackEvent : ISubject
 {
-    public int Damage { get; private set; }
-    public PlayerDamagedEvent(int damage) { Damage = damage; }
+    public int Count { get; private set; }
+    public PlayerAttackEvent(int cnt)  { Count = cnt; } 
 }
+public struct PlayerEndAttackEvent : ISubject { }
 
