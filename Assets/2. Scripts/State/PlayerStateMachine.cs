@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerStateMachine : StateMachineBase<Player>
@@ -224,141 +225,48 @@ public class PlayerStateMachine : StateMachineBase<Player>
     public class AttackState : StateBase<Player>
     {
         private ComboBuffer buffer = new();
-        private int comboIndex = 0;
-        private const int MAX_COMBO = 3;
+        private AttackDataCombo comboData = new();
+        
+        private bool isAttaking;
+        private float timer;
+        private int comboIndex;
 
         public AttackState(Player owner) : base(owner)
         {
-            AddChild(new Attack1State(owner));
-            AddChild(new Attack2State(owner));
-            AddChild(new Attack3State(owner));
-            
             Machine.AddTransition<AttackState, IdleState>();
+            comboIndex = 0;
             
+            /* 테스트용 */
+            comboData.datas = new List<AttackData>();
+            var t = new AttackData();
+            t.duration = 0.5f;
+            comboData.datas.Add(t);
         }
 
         public override void Enter()
         {
             Debug.Log($"Attack Start {comboIndex}");
-            Owner.Rb.linearVelocity = Vector2.zero;
-            TransitionTo(comboIndex);
-        }
-        
-        private void OnAttackInput()
-        {
-            if (comboIndex < MAX_COMBO)
-                buffer.RegisterInput();
-        }
-        
-        void OnAttackEnded()
-        {
-            if (buffer.ConsumeInput() && comboIndex < MAX_COMBO)
-            {
-                comboIndex++;
-                TransitionTo(comboIndex);
-            }
-            else
-            {
-                comboIndex = 0;
-            }
-        }
-
-        void TransitionTo(int index)
-        {
-            switch (index)
-            {
-                case 0: Machine.ChangeState<Attack1State>(); break;
-                case 1: Machine.ChangeState<Attack2State>(); break;
-                case 2: Machine.ChangeState<Attack3State>(); break;
-            }
-        }
-
-        public override void Execute() => buffer.Tick(Time.deltaTime);
-
-        public override void Exit()
-        {
-            comboIndex = 0;
-        }
-    }
-    
-    public abstract class IAttackState : StateBase<Player>
-    {
-
-        protected abstract float Duration { get; }
-        protected abstract float ComboWindowStart { get; }
-        protected abstract AttackData Data { get; }
-
-        private float timer;
-        private bool comboWindowOpen = false;
-        private bool hitboxActive = false;
-        protected IAttackState(Player owner) : base(owner) { }
-
-        public override void Enter()
-        {
+            comboIndex %= comboData.Count;
+            isAttaking = false;
             timer = 0f;
-            comboWindowOpen = false;
-            EventBus.Publish(new PlayerAttackEvent(Data));
+          
+            Owner.Rb.linearVelocity = Vector2.zero;
+            EventBus.Publish(new PlayerAttackEvent(comboData.datas[comboIndex]));
         }
 
         public override void Execute()
         {
             timer += Time.deltaTime;
-
-            if (!comboWindowOpen && timer >= ComboWindowStart)
+            buffer.Tick(Time.deltaTime);
+            
+            if (timer >= comboData.datas[comboIndex].duration)
             {
-                comboWindowOpen = true;
-            }
-
-            if (timer >= Duration)
-            {
+                timer = 0;
                 Machine.ChangeState<IdleState>();
             }
         }
-
-        // public override void Exit() => DeactivateHitbox();
     }
-    
-    public class Attack1State : IAttackState
-    {
-        protected override float Duration => 0.4f;
-        protected override float ComboWindowStart => 0.25f;
-        protected override AttackData Data => new();
-        public Attack1State(Player owner) : base(owner) { }
 
-        public override void Enter()
-        {
-            base.Enter();
-            Debug.Log("Attack 1");
-        }
-    }
-    
-    public class Attack2State : IAttackState
-    {
-        protected override float Duration => 0.4f;
-        protected override float ComboWindowStart => 0.25f;
-        protected override AttackData Data => new();
-        public Attack2State(Player owner) : base(owner) { }
-
-        public override void Enter()
-        {
-            base.Enter();
-            Debug.Log("Attack 2");
-        }
-    }
-    
-    public class Attack3State : IAttackState
-    {
-        protected override float Duration => 0.4f;
-        protected override float ComboWindowStart => 0.25f;
-        protected override AttackData Data => new();
-        public Attack3State(Player owner) : base(owner) { }
-
-        public override void Enter()
-        {
-            base.Enter();
-            Debug.Log("Attack 3");
-        }
-    }
 #endregion
 #endregion
 }
