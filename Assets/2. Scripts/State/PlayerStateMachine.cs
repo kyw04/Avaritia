@@ -2,34 +2,15 @@ using UnityEngine;
 
 public class PlayerStateMachine : StateMachineBase<Player>
 {
-    public PlayerStateMachine(Player owner) : base(owner)
+    public PlayerStateMachine(Player owner) : base(owner) { }
+
+    public override void Init()
     {
-        AddTransition<IdleState, MoveState>();
-        AddTransition<IdleState, JumpState>();
-        AddTransition<IdleState, FallState>();
-        AddTransition<IdleState, AttackState>();
-        
-        AddTransition<MoveState, IdleState>();
-        AddTransition<MoveState, JumpState>();
-        AddTransition<MoveState, FallState>();
-        AddTransition<MoveState, TurnState>();
-        AddTransition<MoveState, AttackState>();
-        
-        AddTransition<TurnState, MoveState>();
-        AddTransition<TurnState, JumpState>();
-        
-        AddTransition<LandState, IdleState>();
-        
-        AddTransition<JumpState, FallState>();
-        
-        AddTransition<FallState, IdleState>();
-        AddTransition<FallState, LandState>();
-        
-        AddTransition<AttackState, IdleState>();
-        
+        base.Init();
         AddState(new AliveState(Owner));
         ChangeState<AliveState>();
     }
+    
 #region Alive
     public class AliveState : StateBase<Player>
     {
@@ -55,7 +36,13 @@ public class PlayerStateMachine : StateMachineBase<Player>
     
     public class IdleState : StateBase<Player>
     {
-        public IdleState(Player owner) : base(owner) { }
+        public IdleState(Player owner) : base(owner)
+        {
+            Machine.AddTransition<IdleState, MoveState>();
+            Machine.AddTransition<IdleState, JumpState>();
+            Machine.AddTransition<IdleState, FallState>();
+            Machine.AddTransition<IdleState, AttackState>();
+        }
 
         public override void Enter()
         {
@@ -65,15 +52,22 @@ public class PlayerStateMachine : StateMachineBase<Player>
         public override void Execute()
         {
             if (Mathf.Abs(InputHandler.Instance.MoveInput.x) > 0)
-                Owner.StateMachine.ChangeState<MoveState>();
+                Machine.ChangeState<MoveState>();
         }
     }
 
     public class MoveState : StateBase<Player>
     {
         private float currentSpeed => Mathf.Abs(Owner.Rb.linearVelocityX) / Owner.moveSpeed;
-        
-        public MoveState(Player owner) : base(owner) { }
+
+        public MoveState(Player owner) : base(owner)
+        {
+            Machine.AddTransition<MoveState, IdleState>();
+            Machine.AddTransition<MoveState, JumpState>();
+            Machine.AddTransition<MoveState, FallState>();
+            Machine.AddTransition<MoveState, TurnState>();
+            Machine.AddTransition<MoveState, AttackState>();
+        }
         
         public override void Enter()
         {
@@ -85,7 +79,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             if (InputHandler.Instance.MoveInput.x == 0 &&
                 currentSpeed == 0)
             {
-                Owner.StateMachine.ChangeState<IdleState>();
+                Machine.ChangeState<IdleState>();
             }
             else
             {
@@ -113,6 +107,9 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Enter()
         {
+            Machine.AddTransition<TurnState, JumpState>();
+            Machine.AddTransition<TurnState, MoveState>();
+            
             moveDir = InputHandler.Instance.MoveInput;
             EventBus.Publish(new PlayerTurnEvent());
         }
@@ -121,7 +118,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         {
             if (currentSpeed >= 0.5f)
             {
-                Owner.StateMachine.ChangeState<MoveState>();
+                Machine.ChangeState<MoveState>();
             }
         }
         
@@ -135,7 +132,11 @@ public class PlayerStateMachine : StateMachineBase<Player>
     {
         private float landTime = 0.2f;
         private float landStartTime;
-        public LandState(Player owner) : base(owner) { }
+
+        public LandState(Player owner) : base(owner)
+        {
+            Machine.AddTransition<LandState, IdleState>();
+        }
 
         public override void Enter()
         {
@@ -146,7 +147,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         public override void Execute()
         {
             if (landStartTime + landTime <= Time.time)
-                Owner.StateMachine.ChangeState<IdleState>();
+                Machine.ChangeState<IdleState>();
         }
     }
     
@@ -163,7 +164,10 @@ public class PlayerStateMachine : StateMachineBase<Player>
     
     public class JumpState : StateBase<Player>
     {
-        public JumpState(Player owner) : base(owner) { }
+        public JumpState(Player owner) : base(owner)
+        {
+            Machine.AddTransition<JumpState, FallState>();
+        }
 
         public override void Enter()
         {
@@ -174,7 +178,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         public override void Execute()
         {
             if (Owner.Rb.linearVelocityY <= 0)
-                Owner.StateMachine.ChangeState<FallState>();
+                Machine.ChangeState<FallState>();
         }
 
         public override void FixedExecute()
@@ -185,7 +189,11 @@ public class PlayerStateMachine : StateMachineBase<Player>
     
     public class FallState : StateBase<Player>
     {
-        public FallState(Player owner) : base(owner) { }
+        public FallState(Player owner) : base(owner)
+        {
+            Machine.AddTransition<FallState, IdleState>();
+            Machine.AddTransition<FallState, LandState>();
+        }
 
         public override void Enter()
         {
@@ -215,47 +223,140 @@ public class PlayerStateMachine : StateMachineBase<Player>
     
     public class AttackState : StateBase<Player>
     {
-        private int attackCount = 0;
-        public AttackState(Player owner) : base(owner) { }
+        private ComboBuffer buffer = new();
+        private int comboIndex = 0;
+        private const int MAX_COMBO = 3;
+
+        public AttackState(Player owner) : base(owner)
+        {
+            AddChild(new Attack1State(owner));
+            AddChild(new Attack2State(owner));
+            AddChild(new Attack3State(owner));
+            
+            Machine.AddTransition<AttackState, IdleState>();
+            
+        }
 
         public override void Enter()
         {
-            Debug.Log($"Attack Start {attackCount}");
+            Debug.Log($"Attack Start {comboIndex}");
             Owner.Rb.linearVelocity = Vector2.zero;
-            EventBus.Publish(new PlayerAttackEvent(attackCount++));
+            TransitionTo(comboIndex);
+        }
+        
+        private void OnAttackInput()
+        {
+            if (comboIndex < MAX_COMBO)
+                buffer.RegisterInput();
+        }
+        
+        void OnAttackEnded()
+        {
+            if (buffer.ConsumeInput() && comboIndex < MAX_COMBO)
+            {
+                comboIndex++;
+                TransitionTo(comboIndex);
+            }
+            else
+            {
+                comboIndex = 0;
+            }
+        }
+
+        void TransitionTo(int index)
+        {
+            switch (index)
+            {
+                case 0: Machine.ChangeState<Attack1State>(); break;
+                case 1: Machine.ChangeState<Attack2State>(); break;
+                case 2: Machine.ChangeState<Attack3State>(); break;
+            }
+        }
+
+        public override void Execute() => buffer.Tick(Time.deltaTime);
+
+        public override void Exit()
+        {
+            comboIndex = 0;
         }
     }
     
-    public class AttackState1 : StateBase<Player>
+    public abstract class IAttackState : StateBase<Player>
     {
-        public AttackState1(Player owner) : base(owner) { }
+
+        protected abstract float Duration { get; }
+        protected abstract float ComboWindowStart { get; }
+        protected abstract AttackData Data { get; }
+
+        private float timer;
+        private bool comboWindowOpen = false;
+        private bool hitboxActive = false;
+        protected IAttackState(Player owner) : base(owner) { }
 
         public override void Enter()
         {
+            timer = 0f;
+            comboWindowOpen = false;
+            EventBus.Publish(new PlayerAttackEvent(Data));
+        }
+
+        public override void Execute()
+        {
+            timer += Time.deltaTime;
+
+            if (!comboWindowOpen && timer >= ComboWindowStart)
+            {
+                comboWindowOpen = true;
+            }
+
+            if (timer >= Duration)
+            {
+                Machine.ChangeState<IdleState>();
+            }
+        }
+
+        // public override void Exit() => DeactivateHitbox();
+    }
+    
+    public class Attack1State : IAttackState
+    {
+        protected override float Duration => 0.4f;
+        protected override float ComboWindowStart => 0.25f;
+        protected override AttackData Data => new();
+        public Attack1State(Player owner) : base(owner) { }
+
+        public override void Enter()
+        {
+            base.Enter();
             Debug.Log("Attack 1");
-            EventBus.Publish(new PlayerAttackEvent());
         }
     }
     
-    public class AttackState2 : StateBase<Player>
+    public class Attack2State : IAttackState
     {
-        public AttackState2(Player owner) : base(owner) { }
+        protected override float Duration => 0.4f;
+        protected override float ComboWindowStart => 0.25f;
+        protected override AttackData Data => new();
+        public Attack2State(Player owner) : base(owner) { }
 
         public override void Enter()
         {
+            base.Enter();
             Debug.Log("Attack 2");
-            EventBus.Publish(new PlayerAttackEvent());
         }
     }
     
-    public class AttackState3 : StateBase<Player>
+    public class Attack3State : IAttackState
     {
-        public AttackState3(Player owner) : base(owner) { }
+        protected override float Duration => 0.4f;
+        protected override float ComboWindowStart => 0.25f;
+        protected override AttackData Data => new();
+        public Attack3State(Player owner) : base(owner) { }
 
         public override void Enter()
         {
+            base.Enter();
             Debug.Log("Attack 3");
-            EventBus.Publish(new PlayerAttackEvent());
         }
     }
 #endregion

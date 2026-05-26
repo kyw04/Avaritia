@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 
-public abstract class StateBase<T> : IState
+public abstract class StateBase<T> : IState where T : IStateOwner<T>
 {
     public T Owner { get; private set; }
+    protected IStateMachine Machine => Owner.Machine;
     
     public StateBase<T> Parent { get; private set; }
     public StateBase<T> CurrentChild { get; private set; }
@@ -10,7 +11,7 @@ public abstract class StateBase<T> : IState
     
     protected StateBase(T owner)
     {
-        this.Owner = owner;
+        Owner = owner;
     }
     
     public virtual void Enter() { }

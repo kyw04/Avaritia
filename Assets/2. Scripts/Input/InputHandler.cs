@@ -33,9 +33,9 @@ public class InputHandler : Singleton<InputHandler>, IObserver<PlayerEndAttackEv
     }
 
     private void OnJump(InputAction.CallbackContext context) => 
-        player.StateMachine.ChangeState<PlayerStateMachine.JumpState>();
+        player.Machine.ChangeState<PlayerStateMachine.JumpState>();
     private void OnAttack(InputAction.CallbackContext context) =>
-        player.StateMachine.ChangeState<PlayerStateMachine.AttackState>();
+        player.Machine.ChangeState<PlayerStateMachine.AttackState>();
     
     private void OnMove(InputAction.CallbackContext context)
     {
@@ -49,5 +49,5 @@ public class InputHandler : Singleton<InputHandler>, IObserver<PlayerEndAttackEv
     }
 
     public void OnNotify(PlayerEndAttackEvent e) =>
-        player.StateMachine.ChangeState<PlayerStateMachine.IdleState>();
+        player.Machine.ChangeState<PlayerStateMachine.IdleState>();
 }

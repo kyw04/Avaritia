@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IStateOwner<Player>
 {
-    public PlayerStateMachine StateMachine { get; private set; }
+    public Player Owner { get; private set; }
+    public IStateMachine Machine { get; private set; }
+    
     public Rigidbody2D Rb { get; private set; }
     public SpriteRenderer Renderer { get; private set; }
     
@@ -10,8 +12,6 @@ public class Player : MonoBehaviour
     private bool wasGroundCheckerChanged;
     private bool isTurning;
 
-    [SerializeField] private string state;
-    
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundRadius;
     [SerializeField] private LayerMask groundLayer;
@@ -27,7 +27,10 @@ public class Player : MonoBehaviour
     
     private void Awake()
     {
-        StateMachine = new PlayerStateMachine(this);
+        Owner = this;
+        Machine = new PlayerStateMachine(Owner);
+        Machine.Init();
+        
         Rb = GetComponent<Rigidbody2D>();
         Renderer = GetComponentInChildren<SpriteRenderer>();
         
@@ -49,20 +52,18 @@ public class Player : MonoBehaviour
             {
                 if (Rb.linearVelocityY <= -5)
                 {
-                    StateMachine.ChangeState<PlayerStateMachine.LandState>();
+                    Machine.ChangeState<PlayerStateMachine.LandState>();
                 }
                 else
                 {
-                    StateMachine.ChangeState<PlayerStateMachine.IdleState>();
+                    Machine.ChangeState<PlayerStateMachine.IdleState>();
                 }
             }
             else if (Rb.linearVelocityY <= 0)
             {
-                StateMachine.ChangeState<PlayerStateMachine.FallState>();
+                Machine.ChangeState<PlayerStateMachine.FallState>();
             }
         }
-        
-        state = StateMachine.currentState.CurrentChild.CurrentChild.ToString();
     }
 
     public void Move(Vector2 input)
@@ -98,7 +99,7 @@ public class Player : MonoBehaviour
         }
         if (isTurning)
         {
-            StateMachine.ChangeState<PlayerStateMachine.TurnState>();
+            Machine.ChangeState<PlayerStateMachine.TurnState>();
             
             if (absCntSpeedPer <= 0.55f)
             {
