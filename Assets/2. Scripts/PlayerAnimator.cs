@@ -48,6 +48,6 @@ public class PlayerAnimator : MonoBehaviour,
     public void OnNotify(PlayerFallingEvent e) => animator.Play("fall_loop");
     public void OnNotify(PlayerLandedEvent e) => animator.Play("land");
     public void OnNotify(PlayerTurnEvent e) => animator.Play("turn");
-    public void OnNotify(PlayerAttackEvent e) => animator.Play("attack");
+    public void OnNotify(PlayerAttackEvent e) => animator.Play(e.Data.animClip.name);
 
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public class PlayerStateMachine : StateMachineBase<Player>
 {
@@ -225,7 +226,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
     public class AttackState : StateBase<Player>
     {
         private ComboBuffer buffer = new();
-        private AttackDataCombo comboData = new();
+        private AttackDataCombo comboData;
         
         private bool isAttaking;
         private float timer;
@@ -233,16 +234,28 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public AttackState(Player owner) : base(owner)
         {
-            Machine.AddTransition<AttackState, IdleState>();
+            DataLoad();
             comboIndex = 0;
             
-            /* 테스트용 */
-            comboData.datas = new List<AttackData>();
-            var t = new AttackData();
-            t.duration = 0.5f;
-            comboData.datas.Add(t);
+            Machine.AddTransition<AttackState, IdleState>();
         }
 
+        private async void DataLoad()
+        {
+            var hanlde = 
+                Addressables.LoadAssetAsync<AttackDataCombo>("attack_combo/player_001");
+            
+            await hanlde.Task;
+            
+            comboData = hanlde.Result;
+            
+            Debug.Log(comboData);
+            foreach (var VARIABLE in comboData.datas)
+            {
+                Debug.Log(VARIABLE);
+            }
+        }
+        
         public override void Enter()
         {
             Debug.Log($"Attack Start {comboIndex}");
