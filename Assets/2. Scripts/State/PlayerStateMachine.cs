@@ -223,11 +223,11 @@ public class PlayerStateMachine : StateMachineBase<Player>
         }
     }
     
-    public class AttackState : StateBase<Player>
+    public class AttackState : StateBase<Player>, IObserver<PlayerAttackBufferEvent>
     {
-        private ComboBuffer buffer = new();
         private AttackDataCombo comboData;
-        
+
+        private bool buffer;
         private bool isAttaking;
         private float timer;
         private int comboIndex;
@@ -235,7 +235,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         public AttackState(Player owner) : base(owner)
         {
             DataLoad();
-            comboIndex = 0;
+            EventBus.Subscribe<PlayerAttackBufferEvent>(this);
             
             Machine.AddTransition<AttackState, IdleState>();
         }
@@ -248,36 +248,46 @@ public class PlayerStateMachine : StateMachineBase<Player>
             await hanlde.Task;
             
             comboData = hanlde.Result;
-            
-            Debug.Log(comboData);
-            foreach (var VARIABLE in comboData.datas)
-            {
-                Debug.Log(VARIABLE);
-            }
         }
         
         public override void Enter()
         {
-            Debug.Log($"Attack Start {comboIndex}");
-            comboIndex %= comboData.Count;
+            comboIndex = 0;
             isAttaking = false;
             timer = 0f;
           
             Owner.Rb.linearVelocity = Vector2.zero;
-            EventBus.Publish(new PlayerAttackEvent(comboData.datas[comboIndex]));
+            EventBus.Publish(new PlayerAttackStartEvent(comboData.datas[comboIndex]));
         }
 
         public override void Execute()
         {
-            timer += Time.deltaTime;
-            buffer.Tick(Time.deltaTime);
+            if (timer <= 0.01f)
+                buffer = false;
             
+            timer += Time.deltaTime;
             if (timer >= comboData.datas[comboIndex].duration)
             {
-                timer = 0;
-                Machine.ChangeState<IdleState>();
+                if (buffer)
+                {
+                    comboIndex = (comboIndex + 1) % comboData.Count;
+                    Debug.Log($"Attack Start {comboIndex}");
+                    Debug.Log($"Attack buffer {buffer}");
+
+                    Owner.Rb.linearVelocity = Vector2.zero;
+                    EventBus.Publish(new PlayerAttackStartEvent(comboData.datas[comboIndex]));
+                    buffer = false;
+                }
+                else
+                {
+                    comboIndex = 0;
+                    Machine.ChangeState<IdleState>();
+                }
+                timer = 0f;
             }
         }
+
+        public void OnNotify(PlayerAttackBufferEvent e) {buffer = true; Debug.Log("OnNotify buffer");}
     }
 
 #endregion

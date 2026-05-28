@@ -7,7 +7,7 @@ public class PlayerAnimator : MonoBehaviour,
     IObserver<PlayerFallingEvent>,
     IObserver<PlayerLandedEvent>,
     IObserver<PlayerTurnEvent>,
-    IObserver<PlayerAttackEvent>
+    IObserver<PlayerAttackStartEvent>
 {
     private Animator animator;
     private static readonly int Speed = Animator.StringToHash("Speed");
@@ -25,7 +25,7 @@ public class PlayerAnimator : MonoBehaviour,
         EventBus.Subscribe<PlayerFallingEvent>(this);
         EventBus.Subscribe<PlayerLandedEvent>(this);
         EventBus.Subscribe<PlayerTurnEvent>(this);
-        EventBus.Subscribe<PlayerAttackEvent>(this);
+        EventBus.Subscribe<PlayerAttackStartEvent>(this);
     }
 
     private void OnDisable()
@@ -35,7 +35,7 @@ public class PlayerAnimator : MonoBehaviour,
 
     public void EndAttacking()
     {
-        EventBus.Publish(new PlayerEndAttackEvent());
+        EventBus.Publish(new PlayerAttackEndEvent());
     }
     
     public void OnNotify(PlayerIdleEvent e) => animator.Play("idle");
@@ -48,6 +48,6 @@ public class PlayerAnimator : MonoBehaviour,
     public void OnNotify(PlayerFallingEvent e) => animator.Play("fall_loop");
     public void OnNotify(PlayerLandedEvent e) => animator.Play("land");
     public void OnNotify(PlayerTurnEvent e) => animator.Play("turn");
-    public void OnNotify(PlayerAttackEvent e) => animator.Play(e.Data.animClip.name);
+    public void OnNotify(PlayerAttackStartEvent e) => animator.Play(e.Data.animClip.name);
 
 }
