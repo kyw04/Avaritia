@@ -271,8 +271,6 @@ public class PlayerStateMachine : StateMachineBase<Player>
                 if (buffer)
                 {
                     comboIndex = (comboIndex + 1) % comboData.Count;
-                    Debug.Log($"Attack Start {comboIndex}");
-                    Debug.Log($"Attack buffer {buffer}");
 
                     Owner.Rb.linearVelocity = Vector2.zero;
                     EventBus.Publish(new PlayerAttackStartEvent(comboData.datas[comboIndex]));

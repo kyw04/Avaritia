@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Player Attack 3
   m_EditorClassIdentifier: Assembly-CSharp::AttackData
   duration: 0.5
-  animClip: {fileID: 0}
+  animClip: {fileID: 7400000, guid: b075438dbfab78a419918467d753e74c, type: 2}
   hitboxData: {x: 0, y: 0}

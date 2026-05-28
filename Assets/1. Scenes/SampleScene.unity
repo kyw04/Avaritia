@@ -1006,7 +1006,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4113bce7d5ab4dcd8815858b17eb087e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
-  state: 
   groundCheck: {fileID: 1235557513}
   groundRadius: 0.25
   groundLayer:
