@@ -47,6 +47,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6664e6571a0d6404b92ea4d97f6c3f70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  speed: 5
+  patrolPoint: {fileID: 11400000, guid: a3cd3c13bc8b21f4384ba086b4e4f19b, type: 2}
   viewLayerMask:
     serializedVersion: 2
     m_Bits: 64

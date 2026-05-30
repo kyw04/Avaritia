@@ -35,6 +35,11 @@ public class EnemyPatrolState : StateBase<Enemy>
     {
         Owner.Patrol();
     }
+    
+    public override void FixedExecute()
+    {
+        Owner.Move();
+    }
 }
     
 #endregion

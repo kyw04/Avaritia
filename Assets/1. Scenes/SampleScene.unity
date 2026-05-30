@@ -870,11 +870,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1989622532717823825, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.18
+      value: -0.21
       objectReference: {fileID: 0}
     - target: {fileID: 1989622532717823825, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.56
+      value: -3.36
       objectReference: {fileID: 0}
     - target: {fileID: 1989622532717823825, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
       propertyPath: m_LocalPosition.z
@@ -913,9 +913,13 @@ PrefabInstance:
       value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
-      propertyPath: viewLayerMask.m_Bits
-      value: 64
+      propertyPath: speed
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
+      propertyPath: patrolPoint
+      value: 
+      objectReference: {fileID: 11400000, guid: a3cd3c13bc8b21f4384ba086b4e4f19b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
