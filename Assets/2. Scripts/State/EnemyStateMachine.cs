@@ -30,7 +30,7 @@ public class EnemyPatrolState : StateBase<Enemy>
     {
         Machine.AddTransition<EnemyPatrolState, EnemyCombatState>();
     }
-
+    
     public override void Execute()
     {
         Owner.Patrol();
@@ -48,12 +48,7 @@ public class EnemyCombatState : StateBase<Enemy>
         AddChild(new EnemyAttackState(Owner));
         AddChild(new EnemyHitState(Owner));
         
-        Machine.AddTransition<EnemyCombatState, EnemyPatrolState>();
-    }
-
-    public override void Enter()
-    {
-        Debug.Log($"{Owner.gameObject.name} Combat");
+        Machine.AddTransition<EnemyCombatState, EnemyPatrolState>(); // 하위 객체 상태일 때 이동 될 수 있게 수정 필요
     }
 }
 

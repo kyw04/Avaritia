@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -286,7 +285,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             }
         }
 
-        public void OnNotify(PlayerAttackBufferEvent e) {buffer = true; Debug.Log("OnNotify buffer");}
+        public void OnNotify(PlayerAttackBufferEvent e) => buffer = true;
     }
 
 #endregion

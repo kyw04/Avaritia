@@ -47,6 +47,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6664e6571a0d6404b92ea4d97f6c3f70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  viewLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
   viewAngle: 30
   viewDensity: 25
   viewRadius: 15

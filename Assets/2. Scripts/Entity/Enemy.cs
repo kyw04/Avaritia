@@ -5,6 +5,7 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>
     public Enemy Owner { get;  private set; }
     public IStateMachine Machine { get; private set; }
 
+    [SerializeField] LayerMask viewLayerMask;
     [SerializeField, Range(0, 360)] private int viewAngle;
     [SerializeField] private float viewDensity;
     [SerializeField] private float viewRadius;
@@ -22,7 +23,7 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>
         RaycastHit2D hit;
         var currentPos = transform.position;
 
-        hit = Physics2D.CircleCast(currentPos, alertRadius, Vector2.zero, 1f, LayerMask.GetMask("Player"));
+        hit = Physics2D.CircleCast(currentPos, alertRadius, Vector2.zero, 1f, viewLayerMask);
         if (hit)
         {
             Machine.ChangeState<EnemyCombatState>();
@@ -36,10 +37,10 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>
             var currentAngle = -halfAngle + (stepAngle * i);
             var dir = Quaternion.Euler(0, 0, currentAngle) * transform.right;
     
-            hit = Physics2D.Raycast(currentPos, dir, viewRadius, ~LayerMask.GetMask("Enemy"));
+            hit = Physics2D.Raycast(currentPos, dir, viewRadius, ~(1 << gameObject.layer));
             if (hit)
             {
-                if (hit.transform.CompareTag("Player"))
+                if ((viewLayerMask & (1 << hit.transform.gameObject.layer)) != 0)
                 {
                     Machine.ChangeState<EnemyCombatState>();
                     return;
