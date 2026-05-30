@@ -9,41 +9,42 @@ public class PlayerStateMachine : StateMachineBase<Player>
     public override void Init()
     {
         base.Init();
-        AddState(new AliveState(Owner));
-        ChangeState<AliveState>();
+        AddState(new PlayerAliveState(Owner));
+        ChangeState<PlayerAliveState>();
     }
-    
+}
+   
 #region Alive
-    public class AliveState : StateBase<Player>
+    public class PlayerAliveState : StateBase<Player>
     {
-        public AliveState(Player owner) : base(owner)
+        public PlayerAliveState(Player owner) : base(owner)
         {
-            AddChild(new Grounded(owner));
-            AddChild(new Airborne(owner));
-            AddChild(new Action(owner));
+            AddChild(new PlayerGrounded(owner));
+            AddChild(new PlayerAirborne(owner));
+            AddChild(new PlayerAction(owner));
         }
     }
 
-#region Alive Grounded
-    public class Grounded : StateBase<Player>
+#region Grounded
+    public class PlayerGrounded : StateBase<Player>
     {
-        public Grounded(Player owner) : base(owner)
+        public PlayerGrounded(Player owner) : base(owner)
         {
-            AddChild(new IdleState(owner));
-            AddChild(new MoveState(owner));
-            AddChild(new TurnState(owner));
-            AddChild(new LandState(owner));
+            AddChild(new PlayerIdleState(owner));
+            AddChild(new PlayerMoveState(owner));
+            AddChild(new PlayerTurnState(owner));
+            AddChild(new PlayerLandState(owner));
         }
     }
     
-    public class IdleState : StateBase<Player>
+    public class PlayerIdleState : StateBase<Player>
     {
-        public IdleState(Player owner) : base(owner)
+        public PlayerIdleState(Player owner) : base(owner)
         {
-            Machine.AddTransition<IdleState, MoveState>();
-            Machine.AddTransition<IdleState, JumpState>();
-            Machine.AddTransition<IdleState, FallState>();
-            Machine.AddTransition<IdleState, AttackState>();
+            Machine.AddTransition<PlayerIdleState, PlayerMoveState>();
+            Machine.AddTransition<PlayerIdleState, PlayerJumpState>();
+            Machine.AddTransition<PlayerIdleState, PlayerFallState>();
+            Machine.AddTransition<PlayerIdleState, PlayerAttackState>();
         }
 
         public override void Enter()
@@ -54,21 +55,21 @@ public class PlayerStateMachine : StateMachineBase<Player>
         public override void Execute()
         {
             if (Mathf.Abs(InputHandler.Instance.MoveInput.x) > 0)
-                Machine.ChangeState<MoveState>();
+                Machine.ChangeState<PlayerMoveState>();
         }
     }
 
-    public class MoveState : StateBase<Player>
+    public class PlayerMoveState : StateBase<Player>
     {
         private float currentSpeed => Mathf.Abs(Owner.Rb.linearVelocityX) / Owner.moveSpeed;
 
-        public MoveState(Player owner) : base(owner)
+        public PlayerMoveState(Player owner) : base(owner)
         {
-            Machine.AddTransition<MoveState, IdleState>();
-            Machine.AddTransition<MoveState, JumpState>();
-            Machine.AddTransition<MoveState, FallState>();
-            Machine.AddTransition<MoveState, TurnState>();
-            Machine.AddTransition<MoveState, AttackState>();
+            Machine.AddTransition<PlayerMoveState, PlayerIdleState>();
+            Machine.AddTransition<PlayerMoveState, PlayerJumpState>();
+            Machine.AddTransition<PlayerMoveState, PlayerFallState>();
+            Machine.AddTransition<PlayerMoveState, PlayerTurnState>();
+            Machine.AddTransition<PlayerMoveState, PlayerAttackState>();
         }
         
         public override void Enter()
@@ -81,7 +82,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             if (InputHandler.Instance.MoveInput.x == 0 &&
                 currentSpeed == 0)
             {
-                Machine.ChangeState<IdleState>();
+                Machine.ChangeState<PlayerIdleState>();
             }
             else
             {
@@ -100,17 +101,17 @@ public class PlayerStateMachine : StateMachineBase<Player>
         }
     }
 
-    public class TurnState : StateBase<Player>
+    public class PlayerTurnState : StateBase<Player>
     {
         private float currentSpeed => Mathf.Abs(Owner.Rb.linearVelocityX) / Owner.moveSpeed;
         private Vector2 moveDir;
         
-        public TurnState(Player owner) : base(owner) { }
+        public PlayerTurnState(Player owner) : base(owner) { }
 
         public override void Enter()
         {
-            Machine.AddTransition<TurnState, JumpState>();
-            Machine.AddTransition<TurnState, MoveState>();
+            Machine.AddTransition<PlayerTurnState, PlayerJumpState>();
+            Machine.AddTransition<PlayerTurnState, PlayerMoveState>();
             
             moveDir = InputHandler.Instance.MoveInput;
             EventBus.Publish(new PlayerTurnEvent());
@@ -120,7 +121,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         {
             if (currentSpeed >= 0.5f)
             {
-                Machine.ChangeState<MoveState>();
+                Machine.ChangeState<PlayerMoveState>();
             }
         }
         
@@ -130,14 +131,14 @@ public class PlayerStateMachine : StateMachineBase<Player>
         }
     }
 
-    public class LandState : StateBase<Player>
+    public class PlayerLandState : StateBase<Player>
     {
         private float landTime = 0.2f;
         private float landStartTime;
 
-        public LandState(Player owner) : base(owner)
+        public PlayerLandState(Player owner) : base(owner)
         {
-            Machine.AddTransition<LandState, IdleState>();
+            Machine.AddTransition<PlayerLandState, PlayerIdleState>();
         }
 
         public override void Enter()
@@ -149,26 +150,26 @@ public class PlayerStateMachine : StateMachineBase<Player>
         public override void Execute()
         {
             if (landStartTime + landTime <= Time.time)
-                Machine.ChangeState<IdleState>();
+                Machine.ChangeState<PlayerIdleState>();
         }
     }
     
 #endregion
-#region Alive Airborne
-    public class Airborne : StateBase<Player>
+#region Airborne
+    public class PlayerAirborne : StateBase<Player>
     {
-        public Airborne(Player owner) : base(owner)
+        public PlayerAirborne(Player owner) : base(owner)
         {
-            AddChild(new FallState(owner));
-            AddChild(new JumpState(owner));
+            AddChild(new PlayerFallState(owner));
+            AddChild(new PlayerJumpState(owner));
         }
     }
     
-    public class JumpState : StateBase<Player>
+    public class PlayerJumpState : StateBase<Player>
     {
-        public JumpState(Player owner) : base(owner)
+        public PlayerJumpState(Player owner) : base(owner)
         {
-            Machine.AddTransition<JumpState, FallState>();
+            Machine.AddTransition<PlayerJumpState, PlayerFallState>();
         }
 
         public override void Enter()
@@ -180,7 +181,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         public override void Execute()
         {
             if (Owner.Rb.linearVelocityY <= 0)
-                Machine.ChangeState<FallState>();
+                Machine.ChangeState<PlayerFallState>();
         }
 
         public override void FixedExecute()
@@ -189,12 +190,12 @@ public class PlayerStateMachine : StateMachineBase<Player>
         }
     }
     
-    public class FallState : StateBase<Player>
+    public class PlayerFallState : StateBase<Player>
     {
-        public FallState(Player owner) : base(owner)
+        public PlayerFallState(Player owner) : base(owner)
         {
-            Machine.AddTransition<FallState, IdleState>();
-            Machine.AddTransition<FallState, LandState>();
+            Machine.AddTransition<PlayerFallState, PlayerIdleState>();
+            Machine.AddTransition<PlayerFallState, PlayerLandState>();
         }
 
         public override void Enter()
@@ -209,12 +210,12 @@ public class PlayerStateMachine : StateMachineBase<Player>
     }
     
 #endregion
-#region Alive Action
-    public class Action : StateBase<Player>
+#region Action
+    public class PlayerAction : StateBase<Player>
     {
-        public Action(Player owner) : base(owner)
+        public PlayerAction(Player owner) : base(owner)
         {
-            AddChild(new AttackState(owner));
+            AddChild(new PlayerAttackState(owner));
         }
 
         public override void Enter()
@@ -223,7 +224,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         }
     }
     
-    public class AttackState : StateBase<Player>, IObserver<PlayerAttackBufferEvent>
+    public class PlayerAttackState : StateBase<Player>, IObserver<PlayerAttackBufferEvent>
     {
         private AttackDataCombo comboData;
 
@@ -232,12 +233,12 @@ public class PlayerStateMachine : StateMachineBase<Player>
         private float timer;
         private int comboIndex;
 
-        public AttackState(Player owner) : base(owner)
+        public PlayerAttackState(Player owner) : base(owner)
         {
             DataLoad();
             EventBus.Subscribe<PlayerAttackBufferEvent>(this);
             
-            Machine.AddTransition<AttackState, IdleState>();
+            Machine.AddTransition<PlayerAttackState, PlayerIdleState>();
         }
 
         private async void DataLoad()
@@ -279,7 +280,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
                 else
                 {
                     comboIndex = 0;
-                    Machine.ChangeState<IdleState>();
+                    Machine.ChangeState<PlayerIdleState>();
                 }
                 timer = 0f;
             }
@@ -289,5 +290,5 @@ public class PlayerStateMachine : StateMachineBase<Player>
     }
 
 #endregion
+
 #endregion
-}

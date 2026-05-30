@@ -52,16 +52,16 @@ public class Player : MonoBehaviour, IStateOwner<Player>
             {
                 if (Rb.linearVelocityY <= -5)
                 {
-                    Machine.ChangeState<PlayerStateMachine.LandState>();
+                    Machine.ChangeState<PlayerLandState>();
                 }
                 else
                 {
-                    Machine.ChangeState<PlayerStateMachine.IdleState>();
+                    Machine.ChangeState<PlayerIdleState>();
                 }
             }
             else if (Rb.linearVelocityY <= 0)
             {
-                Machine.ChangeState<PlayerStateMachine.FallState>();
+                Machine.ChangeState<PlayerFallState>();
             }
         }
     }
@@ -99,7 +99,7 @@ public class Player : MonoBehaviour, IStateOwner<Player>
         }
         if (isTurning)
         {
-            Machine.ChangeState<PlayerStateMachine.TurnState>();
+            Machine.ChangeState<PlayerTurnState>();
             
             if (absCntSpeedPer <= 0.55f)
             {

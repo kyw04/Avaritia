@@ -127,7 +127,6 @@ public class StateMachineBase<T> : IStateMachine where T : IStateOwner<T>
     
     public void Execute()
     {
-        Debug.Log(GetActiveLeaf().GetType().Name);
         currentState?.PropagateExecute();
     }
 

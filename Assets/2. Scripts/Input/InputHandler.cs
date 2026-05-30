@@ -30,11 +30,11 @@ public class InputHandler : Singleton<InputHandler>
     }
 
     private void OnJump(InputAction.CallbackContext context) => 
-        player.Machine.ChangeState<PlayerStateMachine.JumpState>();
+        player.Machine.ChangeState<PlayerJumpState>();
     private void OnAttack(InputAction.CallbackContext context)
     {
         EventBus.Publish(new PlayerAttackBufferEvent());
-        player.Machine.ChangeState<PlayerStateMachine.AttackState>();
+        player.Machine.ChangeState<PlayerAttackState>();
     }
     
     private void OnMove(InputAction.CallbackContext context)
