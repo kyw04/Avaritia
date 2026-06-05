@@ -61,7 +61,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
     public class PlayerMoveState : StateBase<Player>
     {
-        private float currentSpeed => Mathf.Abs(Owner.Rb.linearVelocityX) / Owner.moveSpeed;
+        private float currentSpeed => Mathf.Abs(Owner.Rb.linearVelocityX) / Owner.MoveSpeed;
 
         public PlayerMoveState(Player owner) : base(owner)
         {
@@ -103,7 +103,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
     public class PlayerTurnState : StateBase<Player>
     {
-        private float currentSpeed => Mathf.Abs(Owner.Rb.linearVelocityX) / Owner.moveSpeed;
+        private float currentSpeed => Mathf.Abs(Owner.Rb.linearVelocityX) / Owner.MoveSpeed;
         private Vector2 moveDir;
         
         public PlayerTurnState(Player owner) : base(owner) { }

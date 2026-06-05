@@ -15,9 +15,10 @@ public class Player : MonoBehaviour, IStateOwner<Player>
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundRadius;
     [SerializeField] private LayerMask groundLayer;
-    
-    public float moveSpeed;
-    public float jumpForce;
+    [SerializeField] private StatData statData;
+
+    public float MoveSpeed => statData.GetValue<float>(StatType.Speed);
+    public float JumpForce => statData.GetValue<float>(StatType.JumpForce);
     
     private float acceleration = 20f; // 지면 가속도
     private float deceleration = 10f; // 지면 감속도
@@ -74,7 +75,7 @@ public class Player : MonoBehaviour, IStateOwner<Player>
         
         Renderer.flipX = inputX < 0;
         
-        float targetVelX  = inputX * moveSpeed;
+        float targetVelX  = inputX * MoveSpeed;
         float currentVelX = Rb.linearVelocity.x;
  
         float accel, decel;
@@ -91,7 +92,7 @@ public class Player : MonoBehaviour, IStateOwner<Player>
  
         bool isTurnStarting = (currentVelX > 0.1f && inputX < 0f) || (currentVelX < -0.1f && inputX > 0f);
         float rate = accel;
-        float absCntSpeedPer = Mathf.Abs(currentVelX)  / moveSpeed;
+        float absCntSpeedPer = Mathf.Abs(currentVelX) / MoveSpeed;
         if (!isTurning && isTurnStarting && absCntSpeedPer >= 0.9f)
         {
             rate = accel + decel;
@@ -115,7 +116,7 @@ public class Player : MonoBehaviour, IStateOwner<Player>
 
     public void Jump()
     {
-        Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, jumpForce);
+        Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, JumpForce);
     }
 
     private void OnDrawGizmosSelected()
