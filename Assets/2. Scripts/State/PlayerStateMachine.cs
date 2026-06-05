@@ -277,7 +277,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
                 hasAttack = true;
 
                 var pos = comboData.datas[comboIndex].hitboxPosition;
-                pos = Owner.Renderer.flipX ? -pos : pos;
+                if (Owner.Renderer.flipX) pos.x = -pos.x;
                 pos += (Vector2)Owner.transform.position;
                 var size = comboData.datas[comboIndex].hitboxSize;
                 var filter = comboData.datas[comboIndex].filter;
