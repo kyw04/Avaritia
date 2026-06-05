@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Enemy : MonoBehaviour, IStateOwner<Enemy>
+public class Enemy : MonoBehaviour, IStateOwner<Enemy>, IDamageable
 {
     public Enemy Owner { get;  private set; }
     public IStateMachine Machine { get; private set; }
@@ -116,5 +116,10 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>
         
         Gizmos.color = Color.forestGreen;
         Gizmos.DrawWireSphere(transform.position +  transform.right * 0.5f, 0.25f);
+    }
+
+    public void TakeDamage(float damage)
+    {
+        Debug.Log("데미지 입음!");
     }
 }

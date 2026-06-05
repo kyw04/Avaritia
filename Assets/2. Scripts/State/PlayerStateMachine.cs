@@ -242,14 +242,19 @@ public class PlayerStateMachine : StateMachineBase<Player>
             Machine.AddTransition<PlayerAttackState, PlayerIdleState>();
         }
 
-        private async void DataLoad()
+        private async void DataLoad() // 데이터 받아오는 애 만들어서 관리 하면 좋을 듯
         {
-            var hanlde = 
-                Addressables.LoadAssetAsync<AttackDataCombo>("attack_combo/player_001");
+            try
+            {
+                var handle = Addressables.LoadAssetAsync<AttackDataCombo>("attack_combo/player_001");
+                await handle.Task;
             
-            await hanlde.Task;
-            
-            comboData = hanlde.Result;
+                comboData = handle.Result;
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e.Message);
+            }
         }
         
         public override void Enter()
@@ -281,8 +286,10 @@ public class PlayerStateMachine : StateMachineBase<Player>
                 int count = Physics2D.BoxCast(pos, size, 0, Vector2.zero, filter, hitResults);
                 for (int i = 0; i < count; i++)
                 {
-                    if (hitResults[i])
-                        Debug.Log(hitResults[i].collider.gameObject.name);
+                    if (hitResults[i].collider.TryGetComponent<IDamageable>(out var damageable))
+                    {
+                        damageable.TakeDamage(10f);
+                    }
                 }
             }
             
