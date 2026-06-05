@@ -29,10 +29,18 @@ public class StateMachineBase<T> : IStateMachine where T : IStateOwner<T>
         transitionTable.Add((typeof(From), typeof(To)));
     }
 
-    private bool CanTransition(System.Type from, System.Type to)
+    private bool CanTransition(System.Type to)
     {
         if (transitionTable.Count == 0) return true;
-        return transitionTable.Contains((from, to));
+
+        var node = currentState;
+        while (node != null)
+        {
+            if (transitionTable.Contains((node.GetType(), to)))
+                return true;
+            node = node.CurrentChild;
+        }
+        return false;
     }
     
     private StateBase<T> GetActiveLeaf()
@@ -46,9 +54,8 @@ public class StateMachineBase<T> : IStateMachine where T : IStateOwner<T>
     public void ChangeState<S>() where S : IState
     {
         var targetType = typeof(S);
-        var activeLeaf = GetActiveLeaf();
 
-        if (activeLeaf != null && !CanTransition(activeLeaf.GetType(), targetType))
+        if (currentState != null && !CanTransition(targetType))
             return;
 
         if (states.TryGetValue(targetType, out var topState))
