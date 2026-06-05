@@ -73,7 +73,7 @@ public class AttackDataEditor : Editor
             sprite.rect.width  / ppu,
             sprite.rect.height / ppu) * scale;
 
-        Vector2 pivotWorld = sprite.pivot / ppu;
+        Vector2 pivotWorld = (sprite.pivot / ppu) * scale;
 
         Vector3 origin = Vector3.zero;
         Vector3 bottomLeft = origin - (Vector3)pivotWorld;
