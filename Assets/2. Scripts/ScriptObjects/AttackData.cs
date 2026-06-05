@@ -5,5 +5,7 @@ public class AttackData : ScriptableObject
 {
     public float duration;
     public AnimationClip animClip;
-    public Vector2 hitboxData;
+    public ContactFilter2D filter;
+    public Vector2 hitboxPosition;
+    public Vector2 hitboxSize;
 }

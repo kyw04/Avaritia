@@ -14,4 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AttackData
   duration: 0.5
   animClip: {fileID: 7400000, guid: f20ba4a5c6f2bab478714b682ff5c65b, type: 2}
-  hitboxData: {x: 0, y: 0}
+  filter:
+    useTriggers: 0
+    useLayerMask: 1
+    useDepth: 0
+    useOutsideDepth: 0
+    useNormalAngle: 0
+    useOutsideNormalAngle: 0
+    layerMask:
+      serializedVersion: 2
+      m_Bits: 128
+    minDepth: 0
+    maxDepth: 0
+    minNormalAngle: 0
+    maxNormalAngle: 0
+  hitboxPosition: {x: 0.25, y: 0}
+  hitboxSize: {x: 2, y: 1}

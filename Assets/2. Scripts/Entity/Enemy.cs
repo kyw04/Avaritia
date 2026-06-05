@@ -40,14 +40,14 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>
     
     public void Patrol()
     {
-        bool hasTurn = Physics2D.CircleCast(
+        bool onTurn = Physics2D.CircleCast(
             transform.position,
-            0.5f,
+            0.25f,
             transform.right,
-            1f,
+            0.5f,
             1 << LayerMask.NameToLayer("Wall") | 1 << LayerMask.NameToLayer("Floor"));
 
-        if (hasTurn)
+        if (onTurn)
         {
             transform.Rotate(0, 180, 0);
         }
@@ -115,6 +115,6 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>
         }
         
         Gizmos.color = Color.forestGreen;
-        Gizmos.DrawWireSphere(transform.position +  transform.right * 1f, 0.5f);
+        Gizmos.DrawWireSphere(transform.position +  transform.right * 0.5f, 0.25f);
     }
 }

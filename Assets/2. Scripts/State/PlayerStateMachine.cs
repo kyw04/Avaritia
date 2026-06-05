@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -226,9 +227,10 @@ public class PlayerStateMachine : StateMachineBase<Player>
     public class PlayerAttackState : StateBase<Player>, IObserver<PlayerAttackBufferEvent>
     {
         private AttackDataCombo comboData;
+        private RaycastHit2D[] hitResults = new RaycastHit2D[10];
 
         private bool buffer;
-        private bool isAttaking;
+        private bool hasAttack;
         private float timer;
         private int comboIndex;
 
@@ -253,7 +255,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         public override void Enter()
         {
             comboIndex = 0;
-            isAttaking = false;
+            hasAttack = false;
             timer = 0f;
           
             Owner.Rb.linearVelocity = Vector2.zero;
@@ -264,6 +266,25 @@ public class PlayerStateMachine : StateMachineBase<Player>
         {
             if (timer <= 0.01f)
                 buffer = false;
+
+            if (!hasAttack) // Attack Manager 만들어서 관리 하면 더 좋을 듯
+            {
+                hasAttack = true;
+
+                var pos = comboData.datas[comboIndex].hitboxPosition;
+                pos = Owner.Renderer.flipX ? -pos : pos;
+                pos += (Vector2)Owner.transform.position;
+                var size = comboData.datas[comboIndex].hitboxSize;
+                var filter = comboData.datas[comboIndex].filter;
+
+                DebugExtension.DrawBox(pos, size / 2f, Quaternion.identity, Color.forestGreen, 0.5f);
+                int count = Physics2D.BoxCast(pos, size, 0, Vector2.zero, filter, hitResults);
+                for (int i = 0; i < count; i++)
+                {
+                    if (hitResults[i])
+                        Debug.Log(hitResults[i].collider.gameObject.name);
+                }
+            }
             
             timer += Time.deltaTime;
             if (timer >= comboData.datas[comboIndex].duration)
@@ -275,6 +296,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
                     Owner.Rb.linearVelocity = Vector2.zero;
                     EventBus.Publish(new PlayerAttackStartEvent(comboData.datas[comboIndex]));
                     buffer = false;
+                    hasAttack = false;
                 }
                 else
                 {
