@@ -5,7 +5,7 @@ using UnityEngine;
 public enum StatType
 {
     None,
-    Health,
+    MaxHealth,
     Speed,
     Damage,
     Armor,
@@ -15,7 +15,7 @@ public static class StatParameter
 {
     private static readonly Dictionary<StatType, Type> StatDictionary = new()
     {
-        { StatType.Health, typeof(float) },
+        { StatType.MaxHealth, typeof(float) },
         { StatType.Speed, typeof(float) },
         { StatType.Damage, typeof(float) },
         { StatType.Armor, typeof(int) },
