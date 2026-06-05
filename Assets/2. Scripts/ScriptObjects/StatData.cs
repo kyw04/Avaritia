@@ -7,6 +7,7 @@ public enum StatType
     None,
     MaxHealth,
     Speed,
+    JumpPower,
     Damage,
     Armor,
 }
@@ -17,6 +18,7 @@ public static class StatParameter
     {
         { StatType.MaxHealth, typeof(float) },
         { StatType.Speed, typeof(float) },
+        { StatType.JumpPower, typeof(float) },
         { StatType.Damage, typeof(float) },
         { StatType.Armor, typeof(int) },
     };
