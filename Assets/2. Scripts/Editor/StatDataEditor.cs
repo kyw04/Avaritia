@@ -14,6 +14,7 @@ public class StatDataEditor : Editor
     public void OnEnable()
     {
         var data = (StatData)target;
+        statDictionary.Clear();
         foreach (var stat in data.stats)
         {
             statDictionary.Add(stat.statType, stat.value);
@@ -22,7 +23,6 @@ public class StatDataEditor : Editor
 
     public void OnDisable()
     {
-        SaveData();
         statDictionary.Clear();
     }
 
@@ -40,38 +40,71 @@ public class StatDataEditor : Editor
 
     public override void OnInspectorGUI()
     {
-        DrawDefaultInspector();
-
         var data = (StatData)target;
 
-        EditorGUILayout.LabelField("Stats", EditorStyles.boldLabel);
+        EditorGUILayout.BeginHorizontal();
+        
+        GUIStyle titleStyle = new GUIStyle(EditorStyles.label)
+        {
+            fontStyle = FontStyle.Bold
+        };
+        var rect = EditorGUILayout.GetControlRect(false);
+        var leftRect = new Rect(rect.x, rect.y, 150, rect.height);
+        var firstLineRect = new Rect(rect.x + 145, rect.y, 1, rect.height + 2);
+        var rightRect = new Rect(rect.x + 155, rect.y, rect.width - 155, rect.height);
 
+        EditorGUI.LabelField(leftRect, "Stat", titleStyle);
+        EditorGUI.DrawRect(firstLineRect, Color.gray);
+        EditorGUI.LabelField(rightRect, "Value", titleStyle);
+        
+        EditorGUILayout.EndHorizontal();
+
+        rect = EditorGUILayout.GetControlRect(false, 1);
+        EditorGUI.DrawRect(new Rect(rect.x, rect.y, rect.width, 1), Color.gray);
+        
         StatType removeData = StatType.None;
+        int rowIndex = 0;
         foreach (var pair in statDictionary)
         {
-            EditorGUILayout.BeginHorizontal();
+            Rect rowRect = EditorGUILayout.GetControlRect(false, 22);
+            Color bgColor = (rowIndex & 1) == 1 
+                ? new Color(0.27f, 0.27f, 0.27f)
+                : new Color(0.20f, 0.20f, 0.20f);
+            if (pair.Key == newKey)
+                bgColor = Color.darkOliveGreen;
 
-            EditorGUILayout.LabelField(pair.Key.ToString(), GUILayout.Width(150));
+            EditorGUI.DrawRect(rowRect, bgColor);
+            Rect statRect = new Rect(rowRect.x + 5, rowRect.y + 2, 140, rowRect.height);
+            Rect dividerRect = new Rect(rowRect.x + 145, rowRect.y, 1, rowRect.height);
+            Rect valueRect = new Rect(rowRect.x + 155, rowRect.y + 2, rowRect.width - 190, rowRect.height);
+            Rect buttonRect = new Rect(rowRect.x + rowRect.width - 25, rowRect.y + 1, 20, rowRect.height - 2);
+
+            EditorGUI.LabelField(statRect, pair.Key.ToString());
+            EditorGUI.DrawRect(dividerRect, Color.gray);
 
             switch (pair.Value)
             {
                 case StatData.IntValue intValue:
-                    EditorGUILayout.LabelField(intValue.value.ToString());
+                    EditorGUI.LabelField(valueRect, intValue.value.ToString());
                     break;
+
                 case StatData.FloatValue floatValue:
-                    EditorGUILayout.LabelField(floatValue.value.ToString(CultureInfo.InvariantCulture));
+                    EditorGUI.LabelField(
+                        valueRect,
+                        floatValue.value.ToString(CultureInfo.InvariantCulture));
                     break;
+
                 case StatData.StringValue stringValue:
-                    EditorGUILayout.LabelField(stringValue.value);
+                    EditorGUI.LabelField(valueRect, stringValue.value);
                     break;
             }
 
-            if (GUILayout.Button("-", GUILayout.Width(30)))
+            if (GUI.Button(buttonRect, "-"))
             {
                 removeData = pair.Key;
             }
 
-            EditorGUILayout.EndHorizontal();
+            rowIndex++;
         }
 
         if (removeData != StatType.None)
@@ -85,9 +118,9 @@ public class StatDataEditor : Editor
 
         EditorGUILayout.BeginHorizontal();
 
-        Rect rect = EditorGUILayout.GetControlRect();
-        Rect leftRect = new Rect(rect.x, rect.y, 150, rect.height);
-        Rect rightRect = new Rect(rect.x + 155, rect.y, rect.width - 155, rect.height);
+        rect = EditorGUILayout.GetControlRect();
+        leftRect = new Rect(rect.x, rect.y, 150, rect.height);
+        rightRect = new Rect(rect.x + 155, rect.y, rect.width - 155, rect.height);
 
         newKey = (StatType)EditorGUI.EnumPopup(leftRect, newKey);
         if (preKey != newKey)
@@ -108,22 +141,27 @@ public class StatDataEditor : Editor
         newValue = DrawTypeField(newValue, rightRect);
         
         EditorGUILayout.EndHorizontal();
-        
+
+        EditorGUILayout.Space(5);
         if (GUILayout.Button("Add"))
         {
             if (newKey != StatType.None)
             {
-                Undo.RecordObject(data, "Add Dictionary Item");
-
                 statDictionary[newKey] = newValue;
                 SaveData();
             }
+            
             newKey = StatType.None;
+            newValue = null;
+            preKey = StatType.None;
         }
 
         if (newKey != StatType.None && statDictionary.ContainsKey(newKey))
         {
-            EditorGUILayout.HelpBox("Stat already exists", MessageType.Warning);
+            EditorGUILayout.HelpBox(
+                "Stat already exists.\n" +
+                       "If you add, the value is overwritten.", 
+                MessageType.Warning);
         }
     }
     

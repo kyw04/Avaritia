@@ -50,5 +50,5 @@ public class StatData : ScriptableObject
         }
     }
     
-    [SerializeField] public List<StatEntry> stats = new();
+    [SerializeReference, HideInInspector] public List<StatEntry> stats = new();
 }
