@@ -53,7 +53,7 @@ public class EnemyCombatState : StateBase<Enemy>
         AddChild(new EnemyAttackState(Owner));
         AddChild(new EnemyHitState(Owner));
         
-        Machine.AddTransition<EnemyCombatState, EnemyPatrolState>(); // 하위 객체 상태일 때 이동 될 수 있게 수정 필요
+        Machine.AddTransition<EnemyCombatState, EnemyPatrolState>();
     }
 }
 
