@@ -62,6 +62,21 @@ public class EnemyMoveState : StateBase<Enemy>
     public EnemyMoveState(Enemy owner) : base(owner)
     {
     }
+
+    public override void Execute()
+    {
+        Owner.FindTarget();
+
+        if (!Owner.HasTarget)
+        {
+            Machine.ChangeState<EnemyPatrolState>();
+        }
+    }
+    
+    public override void FixedExecute()
+    {
+        Owner.Move();
+    }
 }
     
 public class EnemyAttackState : StateBase<Enemy>

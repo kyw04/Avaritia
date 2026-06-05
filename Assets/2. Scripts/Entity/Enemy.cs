@@ -6,6 +6,7 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>
     public IStateMachine Machine { get; private set; }
     public Rigidbody2D Rb { get;  private set; }
     public Transform Target { get; private set; }
+    public bool HasTarget => Target != null;
     
     [SerializeField] private float speed;
     
@@ -16,8 +17,6 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>
     [SerializeField] private float viewRadius;
     [SerializeField] private float alertRadius;
 
-    private int direction = 1;
-    
     private void Awake()
     {
         Owner = this;
@@ -29,21 +28,38 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>
 
     public void Move()
     {
-        float targetVelocityX = direction * speed;
+        if (HasTarget)
+        {
+            var rot = Target.position.x > transform.position.x ? 0 : 180;
+            transform.rotation = Quaternion.Euler(0, rot, 0);
+        }
+        
+        float targetVelocityX = transform.right.x * speed;
         Rb.linearVelocity = new Vector2(targetVelocityX, Rb.linearVelocityY);
     }
     
     public void Patrol()
     {
+        bool hasTurn = Physics2D.CircleCast(
+            transform.position,
+            0.5f,
+            transform.right,
+            1f,
+            1 << LayerMask.NameToLayer("Wall") | 1 << LayerMask.NameToLayer("Floor"));
+
+        if (hasTurn)
+        {
+            transform.Rotate(0, 180, 0);
+        }
+        
         FindTarget();
     }
 
     public void FindTarget()
     {
-        RaycastHit2D hit;
         var currentPos = transform.position;
 
-        hit = Physics2D.CircleCast(currentPos, alertRadius, Vector2.zero, 1f, viewLayerMask);
+        var hit = Physics2D.CircleCast(currentPos, alertRadius, Vector2.zero, 1f, viewLayerMask);
         if (hit)
         {
             Target = hit.transform;
@@ -74,7 +90,7 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>
                 Debug.DrawRay(currentPos, dir * viewRadius, Color.red);
         }
 
-        direction = 1;
+        Target = null;
     }
 
     private void OnDrawGizmosSelected()
@@ -97,5 +113,8 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>
             Gizmos.color = new Color32(0, 255, 0, 50);
             Gizmos.DrawCube(patrolPoint.position, patrolPoint.size);
         }
+        
+        Gizmos.color = Color.forestGreen;
+        Gizmos.DrawWireSphere(transform.position +  transform.right * 1f, 0.5f);
     }
 }
