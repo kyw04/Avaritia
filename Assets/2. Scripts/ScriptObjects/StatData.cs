@@ -88,7 +88,7 @@ public class StatData : ScriptableObject
 
     [SerializeReference, HideInInspector] public List<StatEntry> stats = new();
 
-    public T GetValue<T>(StatType statType)
+    public T TryGetValue<T>(StatType statType)
     {
         foreach (var stat in stats)
         {
