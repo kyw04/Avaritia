@@ -28,5 +28,5 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  hitboxPosition: {x: 2.6349485, y: 0}
-  hitboxSize: {x: 5.3124986, y: 1}
+  hitboxPosition: {x: 0.5, y: 0.25}
+  hitboxSize: {x: 1.75, y: 1.5}
