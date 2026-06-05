@@ -17,7 +17,7 @@ public class Player : MonoBehaviour, IStateOwner<Player>
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private StatData statData;
 
-    public float MoveSpeed => statData.TryGetValue<float>(StatType.Speed);
+    public float MoveSpeed => statData.TryGetValue<float>(StatType.MoveSpeed);
     public float JumpForce => statData.TryGetValue<float>(StatType.JumpForce);
     
     private float acceleration = 20f; // 지면 가속도

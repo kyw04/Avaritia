@@ -6,7 +6,7 @@ public enum StatType
 {
     None,
     MaxHealth,
-    Speed,
+    MoveSpeed,
     JumpForce,
     Damage,
     Armor,
@@ -17,7 +17,7 @@ public static class StatParameter
     private static readonly Dictionary<StatType, Type> StatDictionary = new()
     {
         { StatType.MaxHealth, typeof(float) },
-        { StatType.Speed, typeof(float) },
+        { StatType.MoveSpeed, typeof(float) },
         { StatType.JumpForce, typeof(float) },
         { StatType.Damage, typeof(float) },
         { StatType.Armor, typeof(int) },
@@ -97,10 +97,12 @@ public class StatData : ScriptableObject
                 if (stat.value.TryGetValue<T>(out var r))
                     return r;
                 
+                Debug.LogError($"Type error for type {statType}");
                 return default;
             }
         }
         
+        Debug.LogError($"No stat found for type {statType}");
         return default;
     }
 }
