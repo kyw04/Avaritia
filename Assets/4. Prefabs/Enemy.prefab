@@ -47,7 +47,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6664e6571a0d6404b92ea4d97f6c3f70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  speed: 5
   patrolPoint: {fileID: 11400000, guid: a3cd3c13bc8b21f4384ba086b4e4f19b, type: 2}
   viewLayerMask:
     serializedVersion: 2
@@ -56,6 +55,7 @@ MonoBehaviour:
   viewDensity: 25
   viewRadius: 15
   alertRadius: 3
+  statDataAsset: {fileID: 11400000, guid: 39f96f962c1505e438aed6d89314079b, type: 2}
 --- !u!61 &6955552012763545146
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -128,7 +128,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!1 &5450962051100456378
 GameObject:
   m_ObjectHideFlags: 0

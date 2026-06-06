@@ -8,6 +8,8 @@ public class EnemyStateMachine : StateMachineBase<Enemy>
     {
         base.Init();
         AddState(new EnemyAliveState(Owner));
+        AddState(new EnemyDeadState(Owner));
+        
         ChangeState<EnemyAliveState>();
     }
 }
@@ -19,6 +21,8 @@ public class EnemyAliveState : StateBase<Enemy>
     {
         AddChild(new EnemyPatrolState(Owner));
         AddChild(new EnemyCombatState(Owner));
+        
+        Machine.AddTransition<EnemyAliveState, EnemyDeadState>();
     }
 }
     
@@ -95,3 +99,16 @@ public class EnemyHitState : StateBase<Enemy>
 #endregion
 
 #endregion
+
+public class EnemyDeadState : StateBase<Enemy>
+{
+    public EnemyDeadState(Enemy owner) : base(owner)
+    {
+        
+    }
+
+    public override void Enter()
+    {
+        Debug.Log("죽음");
+    }
+}

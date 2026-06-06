@@ -8,14 +8,18 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>, IDamageable
     public Transform Target { get; private set; }
     public bool HasTarget => Target != null;
     
-    [SerializeField] private float speed;
-    
     [SerializeField] private PatrolArea patrolPoint;
     [SerializeField] private LayerMask viewLayerMask;
     [SerializeField, Range(0, 360)] private int viewAngle;
     [SerializeField] private float viewDensity;
     [SerializeField] private float viewRadius;
     [SerializeField] private float alertRadius;
+
+    [SerializeField] private StatData statDataAsset; // 수정 사항 Addressables로 관리
+    private RuntimeStats stats;
+    public float MaxHealth => stats.Get<float>(StatType.MaxHealth);
+    public float CurrentHealth => stats.Get<float>(StatType.CurrentHealth);
+    public float MoveSpeed => stats.Get<float>(StatType.MoveSpeed);
 
     private void Awake()
     {
@@ -24,6 +28,8 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>, IDamageable
         Machine.Init();
         
         Rb = GetComponent<Rigidbody2D>();
+
+        stats = new RuntimeStats(statDataAsset);
     }
 
     public void Move()
@@ -34,7 +40,7 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>, IDamageable
             transform.rotation = Quaternion.Euler(0, rot, 0);
         }
         
-        float targetVelocityX = transform.right.x * speed;
+        float targetVelocityX = transform.right.x * MoveSpeed;
         Rb.linearVelocity = new Vector2(targetVelocityX, Rb.linearVelocityY);
     }
     
@@ -120,6 +126,12 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>, IDamageable
 
     public void TakeDamage(float damage)
     {
-        Debug.Log("데미지 입음!");
+        stats.Set(StatType.CurrentHealth, CurrentHealth - damage);
+
+        if (CurrentHealth <= 0)
+        {
+            Machine.ChangeState<EnemyDeadState>();
+        }
+        Debug.Log($"데미지 입음! 체력: {CurrentHealth}");
     }
 }

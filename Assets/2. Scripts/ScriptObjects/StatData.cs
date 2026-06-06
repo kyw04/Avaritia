@@ -6,6 +6,7 @@ public enum StatType
 {
     None,
     MaxHealth,
+    CurrentHealth,
     MoveSpeed,
     JumpForce,
     Damage,
@@ -17,6 +18,7 @@ public static class StatParameter
     private static readonly Dictionary<StatType, Type> StatDictionary = new()
     {
         { StatType.MaxHealth, typeof(float) },
+        { StatType.CurrentHealth, typeof(float) },
         { StatType.MoveSpeed, typeof(float) },
         { StatType.JumpForce, typeof(float) },
         { StatType.Damage, typeof(float) },
@@ -33,10 +35,9 @@ public static class StatParameter
 [CreateAssetMenu(fileName = "StatData", menuName = "Scriptable Objects/StatData", order = 1)]
 public class StatData : ScriptableObject
 {
-    [Serializable]
-    public abstract class StatValue
+    [Serializable] public abstract class StatValue
     {
-        public abstract object Value { get; }
+        public abstract object Value { get; internal set; }
         
         public bool TryGetValue<T>(out T result)
         {
@@ -49,32 +50,47 @@ public class StatData : ScriptableObject
             result = default;
             return false;
         }
-    }
 
-    [Serializable]
-    public class IntValue : StatValue
+        public bool TrySetValue<T>(T value)
+        {
+            if (Value is not T)
+                return false;
+            
+            Value = value;
+            return true;
+
+        }
+    }
+    [Serializable] public class IntValue : StatValue
     {
         public int value;
-        public override object Value => value;
-    }
 
-    [Serializable]
-    public class FloatValue : StatValue
+        public override object Value
+        {
+            get => value;
+            internal set => this.value = (int)value;
+        }
+    }
+    [Serializable] public class FloatValue : StatValue
     {
         public float value;
-        public override object Value => value;
+        public override object Value
+        {
+            get => value;
+            internal set => this.value = (float)value;
+        }
     }
-
-    [Serializable]
-    public class StringValue : StatValue
+    [Serializable] public class StringValue : StatValue
     {
         public string value;
-        public override object Value => value;
+        public override object Value
+        {
+            get => value;
+            internal set => this.value = (string)value;
+        }
     }
-
-
-    [Serializable]
-    public class StatEntry
+    
+    [Serializable] public class StatEntry
     {
         [SerializeReference] public StatType statType;
         [SerializeReference] public StatValue value;
@@ -104,5 +120,22 @@ public class StatData : ScriptableObject
         
         Debug.LogError($"No stat found for type {statType}");
         return default;
+    }
+
+    public void SetValue<T>(StatType statType, T value = default)
+    {
+        foreach (var stat in stats)
+        {
+            if (stat.statType == statType)
+            {
+                if (stat.value.TrySetValue(value))
+                    return;
+                
+                Debug.LogError($"Type error for type {statType}");
+                return;
+            }
+        }
+        
+        Debug.LogError($"No stat found for type {statType}");
     }
 }
