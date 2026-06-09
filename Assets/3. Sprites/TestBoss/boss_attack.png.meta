@@ -159,7 +159,7 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 24
-        width: 485
+        width: 540
         height: 500
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -179,9 +179,9 @@ TextureImporter:
       name: boss_attack_3
       rect:
         serializedVersion: 2
-        x: 485
+        x: 541
         y: 23
-        width: 539
+        width: 483
         height: 500
       alignment: 0
       pivot: {x: 0.5, y: 0.5}

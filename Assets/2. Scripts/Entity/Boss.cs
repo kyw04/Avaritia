@@ -57,10 +57,14 @@ public class Boss : MonoBehaviour, IDamageable, IAttacker
 
     public void MoveToTarget()
     {
-        if (Target == null) return;
-        var rot = Target.position.x > transform.position.x ? 0 : 180;
-        transform.rotation = Quaternion.Euler(0, rot, 0);
-        Rb.linearVelocity = new Vector2(transform.right.x * MoveSpeed, Rb.linearVelocityY);
+        if (Target == null) 
+            return;
+        
+        int flip = Target.position.x > transform.position.x ? 1 : -1;
+        float scale = Mathf.Abs(transform.localScale.x);
+        transform.localScale = new Vector3(scale * flip, scale, scale);
+        
+        Rb.linearVelocity = new Vector2(flip * MoveSpeed, Rb.linearVelocityY);
     }
 
     public void Die()

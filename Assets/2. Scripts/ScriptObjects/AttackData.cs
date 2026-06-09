@@ -31,9 +31,13 @@ public class AttackData : ScriptableObject
     {
         float dmg = attacker.Damage * damageMultiplier;
         var hits = new List<Collider2D>();
-        var pos = (Vector2)attacker.Mono.transform.position + hitboxPosition;
+        var pos = hitboxPosition;
+        if (attacker.Mono.transform.localScale.x < 0)
+            pos.x = -pos.x;
+        pos += (Vector2)attacker.Mono.transform.position;
         
         Physics2D.OverlapBox(pos, hitboxSize, 0f, filter, hits);
+        DebugExtension.DrawBox(pos, hitboxSize / 2f, Quaternion.identity, Color.green, 1.0f);
         foreach (var hit in hits)
         {
             if (hit.TryGetComponent<IDamageable>(out var d))

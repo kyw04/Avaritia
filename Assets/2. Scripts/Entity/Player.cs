@@ -82,8 +82,10 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
         float inputX = input.x;
         if (inputX == 0)
             return;
-        
-        Renderer.flipX = inputX < 0;
+
+        int flip = inputX > 0 ? 1 : -1;
+        float scale = Mathf.Abs(transform.localScale.x);
+        transform.localScale = new Vector3(scale * flip, scale, scale);
         
         float targetVelX  = inputX * MoveSpeed;
         float currentVelX = Rb.linearVelocity.x;

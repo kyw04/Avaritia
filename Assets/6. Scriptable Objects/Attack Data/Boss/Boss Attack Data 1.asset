@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Boss Attack Data 1
   m_EditorClassIdentifier: Assembly-CSharp::AttackData
   duration: 1
-  readyAnimClip: {fileID: 7400000, guid: 54dba05ee14ea96429bb5896737b9b95, type: 2}
+  readyAnimClip: {fileID: 7400000, guid: bf5f7a6ba1f859b46b10e0f4ee72d43f, type: 2}
   attackAnimClip: {fileID: 7400000, guid: 36151245d147506439db4a60d381f15c, type: 2}
   filter:
     useTriggers: 0
