@@ -52,6 +52,10 @@ public class Boss : MonoBehaviour, IDamageable, IAttacker
     public void StartAttack(BossAttackEntry entry)
     {
         cooldownEndTimes[entry] = Time.time + entry.cooldown;
+        int flip = Target.position.x > transform.position.x ? 1 : -1;
+        float scale = Mathf.Abs(transform.localScale.x);
+        transform.localScale = new Vector3(scale * flip, scale, scale);
+        
         entry.data.Attack(this, Target);
     }
 
