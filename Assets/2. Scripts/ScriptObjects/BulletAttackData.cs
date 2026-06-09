@@ -53,6 +53,8 @@ public class BulletAttackData : AttackData
     {
         float timer = 0f;
         Vector3 upDir = Quaternion.Euler(0f, 0f, spreadDeg) * Vector3.up;
+        float angle = Mathf.Atan2(upDir.y, upDir.x) * Mathf.Rad2Deg;
+        bullet.rotation = Quaternion.Euler(0, 0, angle);
         while (timer < upDuration)
         {
             if (bullet == null)
@@ -64,6 +66,8 @@ public class BulletAttackData : AttackData
         }
 
         yield return new WaitForSeconds(Random.Range(0f, redirectDelay));
+        angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        bullet.rotation = Quaternion.Euler(0, 0, angle);
         while (bullet != null)
         {
             bullet.position += dir * redirectSpeed * Time.fixedDeltaTime;
