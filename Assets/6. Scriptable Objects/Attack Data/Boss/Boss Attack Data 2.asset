@@ -10,13 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 66d99f0a6e5f4ccdad3bd77a2f0c5d2b, type: 3}
-  m_Name: Attack Data 2
+  m_Name: Boss Attack Data 2
   m_EditorClassIdentifier: Assembly-CSharp::AttackData
   duration: 1
-  animClip: {fileID: 7400000, guid: 962c9e0c7af67ba4091fbd84cfcfb78f, type: 2}
+  readyAnimClip: {fileID: 7400000, guid: 54dba05ee14ea96429bb5896737b9b95, type: 2}
+  attackAnimClip: {fileID: 7400000, guid: 962c9e0c7af67ba4091fbd84cfcfb78f, type: 2}
   filter:
     useTriggers: 0
-    useLayerMask: 0
+    useLayerMask: 1
     useDepth: 0
     useOutsideDepth: 0
     useNormalAngle: 0

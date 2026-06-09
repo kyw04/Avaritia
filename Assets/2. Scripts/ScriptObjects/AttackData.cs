@@ -6,21 +6,46 @@ using UnityEngine;
 public class AttackData : ScriptableObject
 {
     public float duration;
-    public AnimationClip animClip;
+    public AnimationClip readyAnimClip;
+    public AnimationClip attackAnimClip;
     public ContactFilter2D filter;
     public Vector2 hitboxPosition;
     public Vector2 hitboxSize;
     public float damageMultiplier = 1f;
 
-    public virtual IEnumerator Execute(IAttacker attacker, Transform target = null)
+    public void Attack(IAttacker attacker, Transform target = null)
+    {
+        attacker.IsAttacking = true;
+        attacker.Mono.StartCoroutine(PlayAttack(attacker, target));
+    }
+    
+    protected virtual IEnumerator PlayAttack(IAttacker attacker, Transform target = null)
+    {
+        if (readyAnimClip)
+            yield return new WaitForSeconds(readyAnimClip.length);
+        
+        attacker.Mono.StartCoroutine(Execute(attacker, target));
+    }
+    
+    protected virtual IEnumerator Execute(IAttacker attacker, Transform target = null)
     {
         float dmg = attacker.Damage * damageMultiplier;
         var hits = new List<Collider2D>();
         var pos = (Vector2)attacker.Mono.transform.position + hitboxPosition;
+        
         Physics2D.OverlapBox(pos, hitboxSize, 0f, filter, hits);
         foreach (var hit in hits)
+        {
             if (hit.TryGetComponent<IDamageable>(out var d))
+            {
+                Debug.Log($"[Take Damage] {hit.name}");
                 d.TakeDamage(dmg);
+            }
+
+        }        
+
+        yield return new WaitForSeconds(attackAnimClip.length);
         yield return new WaitForSeconds(duration);
+        attacker.IsAttacking = false;
     }
 }

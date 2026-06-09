@@ -11,7 +11,7 @@ public class BulletAttackData : AttackData
     public float redirectSpeed;
     public GameObject bulletPrefab;
 
-    public override IEnumerator Execute(IAttacker attacker, Transform target = null)
+    protected override IEnumerator Execute(IAttacker attacker, Transform target = null)
     {
         if (bulletPrefab == null)
         {

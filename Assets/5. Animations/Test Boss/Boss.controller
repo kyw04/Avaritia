@@ -146,13 +146,13 @@ AnimatorStateMachine:
     m_Position: {x: 200, y: 0, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4165981823334073001}
-    m_Position: {x: 440, y: 40, z: 0}
+    m_Position: {x: 280, y: 240, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3613021935581207096}
-    m_Position: {x: 270, y: 130, z: 0}
+    m_Position: {x: 250, y: 160, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 6764826781591010609}
-    m_Position: {x: 305, y: 195, z: 0}
+    m_Position: {x: 490, y: 130, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -4522617875990664293}
     m_Position: {x: 240, y: 70, z: 0}
@@ -173,7 +173,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: test_boss_attack3
+  m_Name: test_boss_attack_ready
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []

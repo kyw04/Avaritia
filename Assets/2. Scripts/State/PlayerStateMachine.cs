@@ -276,21 +276,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             {
                 hasAttack = true;
 
-                var pos = comboData.datas[comboIndex].hitboxPosition;
-                if (Owner.Renderer.flipX) pos.x = -pos.x;
-                pos += (Vector2)Owner.transform.position;
-                var size = comboData.datas[comboIndex].hitboxSize;
-                var filter = comboData.datas[comboIndex].filter;
-
-                DebugExtension.DrawBox(pos, size / 2f, Quaternion.identity, Color.forestGreen, 0.5f);
-                int count = Physics2D.BoxCast(pos, size, 0, Vector2.zero, filter, hitResults);
-                for (int i = 0; i < count; i++)
-                {
-                    if (hitResults[i].collider.TryGetComponent<IDamageable>(out var damageable))
-                    {
-                        damageable.TakeDamage(Owner.Damage);
-                    }
-                }
+                comboData.datas[comboIndex].Attack(Owner);
             }
             
             timer += Time.deltaTime;

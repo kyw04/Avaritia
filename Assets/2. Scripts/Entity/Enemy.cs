@@ -22,7 +22,8 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>, IDamageable, IAttacker
     public float CurrentHealth => stats.Get<float>(StatType.CurrentHealth);
     public float MoveSpeed => stats.Get<float>(StatType.MoveSpeed);
     public float Damage => stats.Get<float>(StatType.Damage);
-    
+    public bool IsAttacking { get; set; }
+
     private void Awake()
     {
         Owner = this;

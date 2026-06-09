@@ -212,7 +212,8 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  statData: {fileID: 11400000, guid: 3ce9f5085006b01478fe45ccda66d4b8, type: 2}
+  statDataAsset: {fileID: 11400000, guid: 3ce9f5085006b01478fe45ccda66d4b8, type: 2}
+  healthBarImage: {fileID: 0}
 --- !u!114 &5379797011840322666
 MonoBehaviour:
   m_ObjectHideFlags: 0

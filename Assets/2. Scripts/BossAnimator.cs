@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BossAnimator : MonoBehaviour,
+public class BossAnimator : AnimatorBase,
     IObserver<BossIdleEvent>,
     IObserver<BossMovedEvent>,
     IObserver<BossJumpedEvent>,
@@ -9,14 +9,8 @@ public class BossAnimator : MonoBehaviour,
     IObserver<BossDeadEvent>,
     IObserver<BossAttackStartEvent>
 {
-    private Animator animator;
     private static readonly int Speed = Animator.StringToHash("Speed");
-
-    private void Awake()
-    {
-        animator = GetComponent<Animator>();
-    }
-
+    
     private void OnEnable()
     {
         EventBus.Subscribe<BossIdleEvent>(this);
@@ -32,17 +26,32 @@ public class BossAnimator : MonoBehaviour,
         EventBus.UnsubscribeAll(this);
     }
     
-    public void OnNotify(BossIdleEvent e) => animator.Play("idle");
+    public void OnNotify(BossIdleEvent e) => PlayAnimation("idle");
     public void OnNotify(BossMovedEvent e)
     {
         animator.SetFloat(Speed, e.Speed);
-        animator.Play("Move");
+        PlayAnimation("Move");
     }
-    public void OnNotify(BossJumpedEvent e) => animator.Play("jump");
-    public void OnNotify(BossFallingEvent e) => animator.Play("fall_loop");
-    public void OnNotify(BossLandedEvent e) => animator.Play("land");
-    public void OnNotify(BossDeadEvent e) => animator.Play("dead");
-    
-    public void OnNotify(BossAttackStartEvent e) => animator.Play(e.Data.animClip.name);
+    public void OnNotify(BossJumpedEvent e) => PlayAnimation("jump");
+    public void OnNotify(BossFallingEvent e) => PlayAnimation("fall_loop");
+    public void OnNotify(BossLandedEvent e) => PlayAnimation("land");
+    public void OnNotify(BossDeadEvent e) => PlayAnimation("dead");
 
+    public void OnNotify(BossAttackStartEvent e)
+    {
+        string attackAnimName = e.Data.attackAnimClip.name;
+        var readyClip = e.Data.readyAnimClip;
+        if (readyClip != null)
+        {
+            if (animCoroutine != null)
+                StopCoroutine(animCoroutine);
+            
+            PlayAnimation(readyClip.name);
+            animCoroutine = StartCoroutine(PlayAnimationAfterDelay(attackAnimName, readyClip.length));
+        }
+        else
+        {
+            PlayAnimation(attackAnimName);
+        }
+    }
 }

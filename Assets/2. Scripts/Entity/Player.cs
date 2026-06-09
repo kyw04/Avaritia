@@ -1,27 +1,34 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 
-public class Player : MonoBehaviour, IStateOwner<Player>, IAttacker
+public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
 {
     public Player Owner { get; private set; }
     public IStateMachine Machine { get; private set; }
-    
     public MonoBehaviour Mono => this;
     public Rigidbody2D Rb { get; private set; }
     public SpriteRenderer Renderer { get; private set; }
     
-    public bool IsGrounded { get; private set; }
-    private bool wasGroundCheckerChanged;
-    private bool isTurning;
-
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundRadius;
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private StatData statData;
+    [SerializeField] private StatData statDataAsset;
+    [SerializeField] private Image healthBarImage;
 
-    public float MoveSpeed => statData.TryGetValue<float>(StatType.MoveSpeed);
-    public float JumpForce => statData.TryGetValue<float>(StatType.JumpForce);
-    public float Damage => statData.TryGetValue<float>(StatType.Damage);
+    private RuntimeStats stats;
+    private bool wasGroundCheckerChanged;
+    private bool isTurning;
+    private bool isDead;
     
+    public bool IsGrounded { get; private set; }
+    public bool IsAttacking { get; set; }
+    public float MaxHealth => stats.Get<float>(StatType.MaxHealth);
+    public float CurrentHealth => stats.Get<float>(StatType.CurrentHealth);
+    public float MoveSpeed => stats.Get<float>(StatType.MoveSpeed);
+    public float JumpForce => stats.Get<float>(StatType.JumpForce);
+    public float Damage => stats.Get<float>(StatType.Damage);
+
     private float acceleration = 20f; // 지면 가속도
     private float deceleration = 10f; // 지면 감속도
     
@@ -30,12 +37,13 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IAttacker
     
     private void Awake()
     {
+        Rb = GetComponent<Rigidbody2D>();
+        stats = new RuntimeStats(statDataAsset);
+        Renderer = GetComponentInChildren<SpriteRenderer>();
+        
         Owner = this;
         Machine = new PlayerStateMachine(Owner);
         Machine.Init();
-        
-        Rb = GetComponent<Rigidbody2D>();
-        Renderer = GetComponentInChildren<SpriteRenderer>();
         
         wasGroundCheckerChanged = !IsGrounded;
     }
@@ -119,6 +127,25 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IAttacker
     public void Jump()
     {
         Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, JumpForce);
+    }
+    
+    public void Die()
+    {
+        if (isDead) 
+            return;
+        isDead = true;
+        
+        StateManager.Instance.Unregister(Machine);
+        Debug.Log("Player: 사망");
+    }
+
+    public void TakeDamage(float damage)
+    {
+        stats.Set(StatType.CurrentHealth, CurrentHealth - damage);
+        healthBarImage.fillAmount = CurrentHealth / MaxHealth;
+        
+        if (CurrentHealth <= 0)
+            Die();
     }
 
     private void OnDrawGizmosSelected()

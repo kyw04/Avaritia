@@ -64,10 +64,10 @@ public class AttackDataEditor : Editor
 
     private void DrawSpriteInScene(AttackData data)
     {
-        if (data.animClip == null) return;
+        if (data.attackAnimClip == null) return;
 
-        float animTime = (float)(EditorApplication.timeSinceStartup % data.animClip.length);
-        Sprite sprite = GetSpriteFromClip(data.animClip, animTime);
+        float animTime = (float)(EditorApplication.timeSinceStartup % data.attackAnimClip.length);
+        Sprite sprite = GetSpriteFromClip(data.attackAnimClip, animTime);
         if (sprite == null || sprite.texture == null) return;
 
         float ppu = sprite.pixelsPerUnit;

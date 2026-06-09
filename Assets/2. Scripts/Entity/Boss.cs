@@ -9,7 +9,7 @@ public class Boss : MonoBehaviour, IDamageable, IAttacker
     public Rigidbody2D Rb { get; private set; }
     public MonoBehaviour Mono => this;
     public Transform Target { get; private set; }
-    public bool IsAttacking { get; private set; }
+    public bool IsAttacking { get; set; }
 
     [SerializeField] private StatData statDataAsset;
     [SerializeField] private BossAttackData attackData;
@@ -26,10 +26,12 @@ public class Boss : MonoBehaviour, IDamageable, IAttacker
 
     private void Awake()
     {
+        var player = FindAnyObjectByType<Player>();
+        if (player != null) 
+            Target = player.transform;
+        
         Rb = GetComponent<Rigidbody2D>();
         stats = new RuntimeStats(statDataAsset);
-        var player = FindAnyObjectByType<Player>();
-        if (player != null) Target = player.transform;
         Machine = new BossBehaviorTree(this);
         Machine.Init();
     }
@@ -49,15 +51,8 @@ public class Boss : MonoBehaviour, IDamageable, IAttacker
 
     public void StartAttack(BossAttackEntry entry)
     {
-        StartCoroutine(AttackRoutine(entry));
-    }
-
-    private IEnumerator AttackRoutine(BossAttackEntry entry)
-    {
-        IsAttacking = true;
         cooldownEndTimes[entry] = Time.time + entry.cooldown;
-        yield return StartCoroutine(entry.data.Execute(this));
-        IsAttacking = false;
+        entry.data.Attack(this, Target);
     }
 
     public void MoveToTarget()
@@ -83,10 +78,5 @@ public class Boss : MonoBehaviour, IDamageable, IAttacker
         
         if (CurrentHealth <= 0)
             Die();
-    }
-
-    private void OnDestroy()
-    {
-        if (!isDead) StateManager.Instance.Unregister(Machine);
     }
 }

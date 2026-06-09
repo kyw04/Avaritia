@@ -7,7 +7,7 @@ public class SurroundAttackData : AttackData
     public float radius;
     private Collider2D[] hits = new Collider2D[10];
 
-    public override IEnumerator Execute(IAttacker attacker, Transform target = null)
+    protected override IEnumerator Execute(IAttacker attacker, Transform target = null)
     {
         float dmg = attacker.Damage * damageMultiplier;
         Physics2D.OverlapCircle(attacker.Mono.transform.position, radius, filter, hits);
