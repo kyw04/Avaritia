@@ -19,6 +19,7 @@ public class Player : MonoBehaviour, IStateOwner<Player>
 
     public float MoveSpeed => statData.TryGetValue<float>(StatType.MoveSpeed);
     public float JumpForce => statData.TryGetValue<float>(StatType.JumpForce);
+    public float Damage => statData.TryGetValue<float>(StatType.Damage);
     
     private float acceleration = 20f; // 지면 가속도
     private float deceleration = 10f; // 지면 감속도

@@ -288,7 +288,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
                 {
                     if (hitResults[i].collider.TryGetComponent<IDamageable>(out var damageable))
                     {
-                        damageable.TakeDamage(10f);
+                        damageable.TakeDamage(Owner.Damage);
                     }
                 }
             }

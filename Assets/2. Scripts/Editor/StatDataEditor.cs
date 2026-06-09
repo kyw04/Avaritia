@@ -9,7 +9,7 @@ public class StatDataEditor : Editor
     private StatType newKey;
     private StatType preKey;
     private StatData.StatValue newValue;
-    private Dictionary<StatType, StatData.StatValue> statDictionary = new();
+    private SortedDictionary<StatType, StatData.StatValue> statDictionary = new();
 
     public void OnEnable()
     {
