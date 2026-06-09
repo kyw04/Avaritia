@@ -2,18 +2,18 @@ using System.Collections.Generic;
 
 public class StateManager : Singleton<StateManager>
 {
-    List<IStateMachine> machines = new();
-    
-    public void Register(IStateMachine machine)
+    private List<IAIController> machines = new();
+
+    public void Register(IAIController machine)
     {
         machines.Add(machine);
     }
-        
-    public void Unregister(IStateMachine machine)
+
+    public void Unregister(IAIController machine)
     {
         machines.Remove(machine);
     }
-        
+
     private void Update()
     {
         foreach (var machine in machines)
