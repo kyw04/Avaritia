@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Boss : MonoBehaviour, IDamageable
@@ -5,26 +7,54 @@ public class Boss : MonoBehaviour, IDamageable
     public IAIController Machine { get; private set; }
     public Rigidbody2D Rb { get; private set; }
     public Transform Target { get; private set; }
+    public bool IsAttacking { get; private set; }
 
     [SerializeField] private StatData statDataAsset;
-    private bool isDead;
+    [SerializeField] private BossAttackData attackData;
+
     private RuntimeStats stats;
+    private bool isDead;
+    private readonly Dictionary<BossAttackEntry, float> cooldownEndTimes = new();
 
     public float MaxHealth => stats.Get<float>(StatType.MaxHealth);
     public float CurrentHealth => stats.Get<float>(StatType.CurrentHealth);
     public float MoveSpeed => stats.Get<float>(StatType.MoveSpeed);
+    public float Damage => stats.Get<float>(StatType.Damage);
 
     private void Awake()
     {
         Rb = GetComponent<Rigidbody2D>();
         stats = new RuntimeStats(statDataAsset);
+        var player = FindObjectOfType<Player>();
+        if (player != null) Target = player.transform;
         Machine = new BossBehaviorTree(this);
         Machine.Init();
     }
 
-    private void OnDestroy()
+    public List<BossAttackEntry> GetAvailableAttacks(float targetDistance)
     {
-        StateManager.Instance.Unregister(Machine);
+        var available = new List<BossAttackEntry>();
+        if (attackData == null) return available;
+        foreach (var entry in attackData.entries)
+        {
+            if (targetDistance > entry.maxRange) continue;
+            if (cooldownEndTimes.TryGetValue(entry, out var endTime) && Time.time < endTime) continue;
+            available.Add(entry);
+        }
+        return available;
+    }
+
+    public void StartAttack(BossAttackEntry entry)
+    {
+        StartCoroutine(AttackRoutine(entry));
+    }
+
+    private IEnumerator AttackRoutine(BossAttackEntry entry)
+    {
+        IsAttacking = true;
+        cooldownEndTimes[entry] = Time.time + entry.cooldown;
+        yield return StartCoroutine(entry.data.Execute(this));
+        IsAttacking = false;
     }
 
     public void MoveToTarget()
@@ -35,11 +65,6 @@ public class Boss : MonoBehaviour, IDamageable
         Rb.linearVelocity = new Vector2(transform.right.x * MoveSpeed, Rb.linearVelocityY);
     }
 
-    public void MeleeAttack()
-    {
-        Debug.Log("Boss: 근접 공격");
-    }
-
     public void Die()
     {
         if (isDead) return;
@@ -48,10 +73,15 @@ public class Boss : MonoBehaviour, IDamageable
         Debug.Log("Boss: 사망");
     }
 
-    public void SetTarget(Transform target) => Target = target;
-
     public void TakeDamage(float damage)
     {
         stats.Set(StatType.CurrentHealth, CurrentHealth - damage);
+        if (CurrentHealth <= 0)
+            Die();
+    }
+
+    private void OnDestroy()
+    {
+        if (!isDead) StateManager.Instance.Unregister(Machine);
     }
 }
