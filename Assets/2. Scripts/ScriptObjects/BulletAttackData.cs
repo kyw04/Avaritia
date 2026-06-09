@@ -9,6 +9,7 @@ public class BulletAttackData : AttackData
     public float upSpeed;
     public float upDuration;
     public float redirectSpeed;
+    public float redirectDelay;
     public GameObject bulletPrefab;
 
     protected override IEnumerator Execute(IAttacker attacker, Transform target = null)
@@ -16,6 +17,12 @@ public class BulletAttackData : AttackData
         if (bulletPrefab == null)
         {
             Debug.LogError("BulletAttackData: bulletPrefab not assigned");
+            yield break;
+        }
+
+        if (target == null)
+        {
+            Debug.LogError("BulletAttackData: target not assigned");
             yield break;
         }
 
@@ -33,27 +40,33 @@ public class BulletAttackData : AttackData
                 continue;
             }
             dealer.damage = attacker.Damage * damageMultiplier;
-            attacker.Mono.StartCoroutine(MoveBullet(go.transform, attacker, target, angle));
+            var dir = (target.position - go.transform.position).normalized;
+            attacker.Mono.StartCoroutine(MoveBullet(go.transform, attacker, dir, angle));
         }
+        
+        yield return new WaitForSeconds(attackAnimClip.length);
         yield return new WaitForSeconds(duration);
+        attacker.IsAttacking = false;
     }
 
-    private IEnumerator MoveBullet(Transform bullet, IAttacker attacker, Transform target, float spreadDeg)
+    private IEnumerator MoveBullet(Transform bullet, IAttacker attacker, Vector3 dir, float spreadDeg)
     {
         float timer = 0f;
         Vector3 upDir = Quaternion.Euler(0f, 0f, spreadDeg) * Vector3.up;
         while (timer < upDuration)
         {
-            if (bullet == null) yield break;
-            bullet.position += upDir * upSpeed * Time.deltaTime;
-            timer += Time.deltaTime;
+            if (bullet == null)
+                yield break;
+            
+            bullet.position += upDir * upSpeed * Time.fixedDeltaTime;
+            timer += Time.fixedDeltaTime;
             yield return null;
         }
+
+        yield return new WaitForSeconds(Random.Range(0f, redirectDelay));
         while (bullet != null)
         {
-            if (target == null) { Object.Destroy(bullet.gameObject); yield break; }
-            var dir = (target.position - bullet.position).normalized;
-            bullet.position += dir * redirectSpeed * Time.deltaTime;
+            bullet.position += dir * redirectSpeed * Time.fixedDeltaTime;
             yield return null;
         }
     }

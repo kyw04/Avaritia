@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -67,6 +66,9 @@ public class Boss : MonoBehaviour, IDamageable, IAttacker
         int flip = Target.position.x > transform.position.x ? 1 : -1;
         float scale = Mathf.Abs(transform.localScale.x);
         transform.localScale = new Vector3(scale * flip, scale, scale);
+
+        if (Vector2.Distance(Target.position, transform.position) <= 0.5f)
+            return;
         
         Rb.linearVelocity = new Vector2(flip * MoveSpeed, Rb.linearVelocityY);
     }

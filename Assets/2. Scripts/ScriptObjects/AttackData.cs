@@ -45,7 +45,6 @@ public class AttackData : ScriptableObject
                 Debug.Log($"[Take Damage] {hit.name}");
                 d.TakeDamage(dmg);
             }
-
         }        
 
         yield return new WaitForSeconds(attackAnimClip.length);

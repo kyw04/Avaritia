@@ -15,6 +15,8 @@ public class SurroundAttackData : AttackData
             if (hit.TryGetComponent<IDamageable>(out var d))
                 d.TakeDamage(dmg);
         
+        yield return new WaitForSeconds(attackAnimClip.length);
         yield return new WaitForSeconds(duration);
+        attacker.IsAttacking = false;
     }
 }

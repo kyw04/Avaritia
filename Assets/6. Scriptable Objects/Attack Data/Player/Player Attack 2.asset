@@ -31,4 +31,4 @@ MonoBehaviour:
     maxNormalAngle: 0
   hitboxPosition: {x: 0.25, y: 0}
   hitboxSize: {x: 2, y: 1}
-  damageMultiplier: 1
+  damageMultiplier: 1.25
