@@ -1,16 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Boss : MonoBehaviour, IDamageable
+public class Boss : MonoBehaviour, IDamageable, IAttacker
 {
     public IAIController Machine { get; private set; }
     public Rigidbody2D Rb { get; private set; }
+    public MonoBehaviour Mono => this;
     public Transform Target { get; private set; }
     public bool IsAttacking { get; private set; }
 
     [SerializeField] private StatData statDataAsset;
     [SerializeField] private BossAttackData attackData;
+    [SerializeField] private Image healthBarImage;
 
     private RuntimeStats stats;
     private bool isDead;
@@ -25,7 +28,7 @@ public class Boss : MonoBehaviour, IDamageable
     {
         Rb = GetComponent<Rigidbody2D>();
         stats = new RuntimeStats(statDataAsset);
-        var player = FindObjectOfType<Player>();
+        var player = FindAnyObjectByType<Player>();
         if (player != null) Target = player.transform;
         Machine = new BossBehaviorTree(this);
         Machine.Init();
@@ -76,6 +79,8 @@ public class Boss : MonoBehaviour, IDamageable
     public void TakeDamage(float damage)
     {
         stats.Set(StatType.CurrentHealth, CurrentHealth - damage);
+        healthBarImage.fillAmount = CurrentHealth / MaxHealth;
+        
         if (CurrentHealth <= 0)
             Die();
     }

@@ -4,7 +4,7 @@ using UnityEngine;
 [CustomEditor(typeof(AttackData))]
 public class AttackDataEditor : Editor
 {
-    private float scale = 2f;
+    private float scale = 1f;
     
     private void OnEnable()
     {
@@ -17,10 +17,13 @@ public class AttackDataEditor : Editor
     }
 
     public override bool HasPreviewGUI() => false;
-
+    
     public override void OnInspectorGUI()
     {
+        serializedObject.Update();
+        scale = EditorGUILayout.FloatField("Inspector Sprite Scale", scale);
         DrawDefaultInspector();
+        serializedObject.ApplyModifiedProperties();
     }
 
     private void CustomOnSceneGUI(SceneView sceneView)

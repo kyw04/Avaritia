@@ -12,11 +12,11 @@ public class AttackData : ScriptableObject
     public Vector2 hitboxSize;
     public float damageMultiplier = 1f;
 
-    public virtual IEnumerator Execute(Boss boss)
+    public virtual IEnumerator Execute(IAttacker attacker, Transform target = null)
     {
-        float dmg = boss.Damage * damageMultiplier;
+        float dmg = attacker.Damage * damageMultiplier;
         var hits = new List<Collider2D>();
-        var pos = (Vector2)boss.transform.position + hitboxPosition;
+        var pos = (Vector2)attacker.Mono.transform.position + hitboxPosition;
         Physics2D.OverlapBox(pos, hitboxSize, 0f, filter, hits);
         foreach (var hit in hits)
             if (hit.TryGetComponent<IDamageable>(out var d))

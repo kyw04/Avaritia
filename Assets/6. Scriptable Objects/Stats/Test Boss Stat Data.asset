@@ -10,53 +10,53 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee431c950793c4d409cffdfc68b75dce, type: 3}
-  m_Name: Test Enemy Stat Data
+  m_Name: Test Boss Stat Data
   m_EditorClassIdentifier: Assembly-CSharp::StatData
   stats:
-  - rid: 4068540677251661903
-  - rid: 4068540677251661904
-  - rid: 4068540677251661905
-  - rid: 4068540677251661906
+  - rid: 4068540677251661924
+  - rid: 4068540677251661925
+  - rid: 4068540677251661926
+  - rid: 4068540677251661927
   references:
     version: 2
     RefIds:
-    - rid: 4068540615269810177
-      type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
-      data:
-        value: 100
     - rid: 4068540615269810288
       type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
       data:
         value: 1
-    - rid: 4068540615269810308
+    - rid: 4068540677251661915
       type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
       data:
-        value: 10
-    - rid: 4068540677251661903
+        value: 1000
+    - rid: 4068540677251661923
+      type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
+      data:
+        value: 1000
+    - rid: 4068540677251661924
       type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
       data:
         statType: 1
         value:
-          rid: 4068540615269810177
-    - rid: 4068540677251661904
+          rid: 4068540677251661915
+    - rid: 4068540677251661925
       type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
       data:
         statType: 2
         value:
-          rid: 4068540615269810308
-    - rid: 4068540677251661905
+          rid: 4068540677251661923
+    - rid: 4068540677251661926
       type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
       data:
         statType: 3
         value:
           rid: 4068540615269810288
-    - rid: 4068540677251661906
+    - rid: 4068540677251661927
       type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
       data:
         statType: 5
         value:
-          rid: 4068540677251661907
-    - rid: 4068540677251661907
+          rid: 4068540677251661928
+    - rid: 4068540677251661928
       type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
       data:
-        value: 5
+        value: 10

@@ -1,10 +1,11 @@
 using UnityEngine;
 
-public class Enemy : MonoBehaviour, IStateOwner<Enemy>, IDamageable
+public class Enemy : MonoBehaviour, IStateOwner<Enemy>, IDamageable, IAttacker
 {
     public Enemy Owner { get;  private set; }
     public IStateMachine Machine { get; private set; }
     public Rigidbody2D Rb { get;  private set; }
+    public MonoBehaviour Mono => this;
     public Transform Target { get; private set; }
     public bool HasTarget => Target != null;
     
@@ -20,7 +21,8 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>, IDamageable
     public float MaxHealth => stats.Get<float>(StatType.MaxHealth);
     public float CurrentHealth => stats.Get<float>(StatType.CurrentHealth);
     public float MoveSpeed => stats.Get<float>(StatType.MoveSpeed);
-
+    public float Damage => stats.Get<float>(StatType.Damage);
+    
     private void Awake()
     {
         Owner = this;

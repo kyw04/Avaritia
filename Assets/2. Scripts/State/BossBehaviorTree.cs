@@ -11,7 +11,6 @@ public class BossBehaviorTree : BT.BehaviorTree
     {
         return new BT.Selector(
 
-            // 사망 처리
             new BT.Sequence(
                 new BT.Condition(() => boss.CurrentHealth <= 0),
                 new BT.Action(() =>
@@ -21,10 +20,8 @@ public class BossBehaviorTree : BT.BehaviorTree
                 })
             ),
 
-            // 생존 행동
             new BT.Sequence(
 
-                // Blackboard 갱신: 거리 + 사용 가능한 공격 목록
                 new BT.Action(() =>
                 {
                     float dist = boss.Target != null
@@ -37,13 +34,11 @@ public class BossBehaviorTree : BT.BehaviorTree
 
                 new BT.Selector(
 
-                    // 공격 진행 중 → 대기
                     new BT.Sequence(
                         new BT.Condition(() => boss.IsAttacking),
                         new BT.Action(() => BT.NodeStatus.Running)
                     ),
 
-                    // 공격 가능한 공격이 있으면 랜덤 선택 후 시작
                     new BT.Sequence(
                         new BT.Condition(() =>
                             board.Get<List<BossAttackEntry>>(BBKey.AvailableAttacks).Count > 0),
@@ -55,7 +50,6 @@ public class BossBehaviorTree : BT.BehaviorTree
                         })
                     ),
 
-                    // 기본: 타겟 방향으로 이동
                     new BT.Action(() =>
                     {
                         boss.MoveToTarget();

@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 
-public class Player : MonoBehaviour, IStateOwner<Player>
+public class Player : MonoBehaviour, IStateOwner<Player>, IAttacker
 {
     public Player Owner { get; private set; }
     public IStateMachine Machine { get; private set; }
     
+    public MonoBehaviour Mono => this;
     public Rigidbody2D Rb { get; private set; }
     public SpriteRenderer Renderer { get; private set; }
     

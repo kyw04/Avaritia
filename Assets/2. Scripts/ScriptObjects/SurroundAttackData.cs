@@ -5,14 +5,16 @@ using UnityEngine;
 public class SurroundAttackData : AttackData
 {
     public float radius;
+    private Collider2D[] hits = new Collider2D[10];
 
-    public override IEnumerator Execute(Boss boss)
+    public override IEnumerator Execute(IAttacker attacker, Transform target = null)
     {
-        float dmg = boss.Damage * damageMultiplier;
-        var hits = Physics2D.OverlapCircleAll(boss.transform.position, radius, filter.layerMask);
+        float dmg = attacker.Damage * damageMultiplier;
+        Physics2D.OverlapCircle(attacker.Mono.transform.position, radius, filter, hits);
         foreach (var hit in hits)
             if (hit.TryGetComponent<IDamageable>(out var d))
                 d.TakeDamage(dmg);
+        
         yield return new WaitForSeconds(duration);
     }
 }
