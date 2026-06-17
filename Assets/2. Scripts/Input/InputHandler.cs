@@ -20,6 +20,7 @@ public class InputHandler : Singleton<InputHandler>
 
         InputAction.Gameplay.Jump.performed += OnJump;
         InputAction.Gameplay.Attack.performed += OnAttack;
+        InputAction.Gameplay.Dash.performed += OnDash;
         InputAction.Gameplay.Move.performed += OnMove;
         InputAction.Gameplay.Move.canceled += OnMoveStopped;
     }
@@ -29,6 +30,8 @@ public class InputHandler : Singleton<InputHandler>
         InputAction.Disable();
     }
 
+    private void OnDash(InputAction.CallbackContext context) =>
+        player.Machine.ChangeState<PlayerDashState>();
     private void OnJump(InputAction.CallbackContext context) => 
         player.Machine.ChangeState<PlayerJumpState>();
     private void OnAttack(InputAction.CallbackContext context)

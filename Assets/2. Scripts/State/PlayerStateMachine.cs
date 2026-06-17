@@ -45,6 +45,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             Machine.AddTransition<PlayerIdleState, PlayerJumpState>();
             Machine.AddTransition<PlayerIdleState, PlayerFallState>();
             Machine.AddTransition<PlayerIdleState, PlayerAttackState>();
+            Machine.AddTransition<PlayerIdleState, PlayerDashState>();
         }
 
         public override void Enter()
@@ -70,6 +71,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             Machine.AddTransition<PlayerMoveState, PlayerFallState>();
             Machine.AddTransition<PlayerMoveState, PlayerTurnState>();
             Machine.AddTransition<PlayerMoveState, PlayerAttackState>();
+            Machine.AddTransition<PlayerMoveState, PlayerDashState>();
         }
         
         public override void Enter()
@@ -162,6 +164,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         {
             AddChild(new PlayerFallState(owner));
             AddChild(new PlayerJumpState(owner));
+            AddChild(new PlayerDashState(owner));
         }
     }
     
@@ -169,6 +172,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
     {
         public PlayerJumpState(Player owner) : base(owner)
         {
+            Machine.AddTransition<PlayerJumpState, PlayerDashState>();
             Machine.AddTransition<PlayerJumpState, PlayerFallState>();
         }
 
@@ -189,6 +193,31 @@ public class PlayerStateMachine : StateMachineBase<Player>
             Owner.Move(InputHandler.Instance.MoveInput);
         }
     }
+
+    public class PlayerDashState : StateBase<Player>
+    {
+        private float dashTime = 0.2f;
+        private float dashStartTime;
+        public PlayerDashState(Player owner) : base(owner)
+        {
+            Machine.AddTransition<PlayerDashState, PlayerIdleState>();
+            Machine.AddTransition<PlayerDashState, PlayerFallState>();
+            Machine.AddTransition<PlayerDashState, PlayerJumpState>();
+            Machine.AddTransition<PlayerDashState, PlayerMoveState>();
+        }
+
+        public override void Enter()
+        {
+            Owner.Dash();
+            dashStartTime = Time.time;
+        }
+
+        public override void Execute()
+        {
+            if (dashStartTime + dashTime <= Time.time)
+                Owner.Machine.ChangeState<PlayerIdleState>();
+        }
+    }
     
     public class PlayerFallState : StateBase<Player>
     {
@@ -196,6 +225,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         {
             Machine.AddTransition<PlayerFallState, PlayerIdleState>();
             Machine.AddTransition<PlayerFallState, PlayerLandState>();
+            Machine.AddTransition<PlayerFallState, PlayerDashState>();
         }
 
         public override void Enter()
@@ -240,6 +270,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             EventBus.Subscribe<PlayerAttackBufferEvent>(this);
             
             Machine.AddTransition<PlayerAttackState, PlayerIdleState>();
+            Machine.AddTransition<PlayerAttackState, PlayerDashState>();
         }
 
         private async void DataLoad() // 데이터 받아오는 애 만들어서 관리 하면 좋을 듯

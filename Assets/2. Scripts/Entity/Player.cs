@@ -130,6 +130,13 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
     {
         Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, JumpForce);
     }
+
+    public void Dash()
+    {
+        Debug.Log("[Dash] starting dash");
+        Rb.linearVelocity = Vector2.zero;
+        Rb.AddForce(Vector2.right * transform.localScale.x * 50f, ForceMode2D.Impulse);
+    }
     
     public void Die()
     {
@@ -152,6 +159,9 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
 
     private void OnDrawGizmosSelected()
     {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.right * transform.localScale.x * 0.5f);
+        
         if (groundCheck != null)
         {
             if (IsGrounded) Gizmos.color = Color.green;
