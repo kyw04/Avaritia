@@ -208,6 +208,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Enter()
         {
+            Owner.Rb.gravityScale = 0f;
             Owner.Dash();
             dashStartTime = Time.time;
         }
@@ -215,7 +216,15 @@ public class PlayerStateMachine : StateMachineBase<Player>
         public override void Execute()
         {
             if (dashStartTime + dashTime <= Time.time)
-                Owner.Machine.ChangeState<PlayerIdleState>();
+            {
+                Owner.Rb.linearVelocity = Vector2.zero;
+                Owner.Machine.ChangeState<PlayerFallState>();
+            }
+        }
+
+        public override void Exit()
+        {
+            Owner.Rb.gravityScale = 1f;
         }
     }
     
@@ -231,6 +240,14 @@ public class PlayerStateMachine : StateMachineBase<Player>
         public override void Enter()
         {
             EventBus.Publish(new PlayerFallingEvent());
+        }
+
+        public override void Execute()
+        {
+            if (Owner.IsGrounded)
+            {
+                Owner.Machine.ChangeState<PlayerIdleState>();
+            }
         }
 
         public override void FixedExecute()
