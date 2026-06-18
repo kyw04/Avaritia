@@ -27,4 +27,9 @@ public class AnimatorBase : MonoBehaviour
         yield return new WaitForSeconds(length);
         PlayAnimation(animName);
     }
+
+    private void OnDisable()
+    {
+        EventBus.UnsubscribeAll(this);
+    }
 }

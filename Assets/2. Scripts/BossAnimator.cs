@@ -21,11 +21,6 @@ public class BossAnimator : AnimatorBase,
         EventBus.Subscribe<BossAttackStartEvent>(this);
     }
 
-    private void OnDisable()
-    {
-        EventBus.UnsubscribeAll(this);
-    }
-    
     public void OnNotify(BossIdleEvent e) => PlayAnimation("idle");
     public void OnNotify(BossMovedEvent e)
     {

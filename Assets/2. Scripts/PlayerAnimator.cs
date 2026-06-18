@@ -22,11 +22,6 @@ public class PlayerAnimator : AnimatorBase,
         EventBus.Subscribe<PlayerAttackStartEvent>(this);
     }
 
-    private void OnDisable()
-    {
-        EventBus.UnsubscribeAll(this);
-    }
-
     public void EndAttacking()
     {
         EventBus.Publish(new PlayerAttackEndEvent());

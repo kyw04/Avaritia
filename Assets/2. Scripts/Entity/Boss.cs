@@ -51,26 +51,28 @@ public class Boss : MonoBehaviour, IDamageable, IAttacker
     public void StartAttack(BossAttackEntry entry)
     {
         cooldownEndTimes[entry] = Time.time + entry.cooldown;
-        int flip = Target.position.x > transform.position.x ? 1 : -1;
-        float scale = Mathf.Abs(transform.localScale.x);
-        transform.localScale = new Vector3(scale * flip, scale, scale);
-        
+        FlipToTarget();
         entry.data.Attack(this, Target);
     }
 
     public void MoveToTarget()
     {
-        if (Target == null) 
+        if (Target == null)
             return;
-        
+
+        int flip = FlipToTarget();
+        if (Vector2.Distance(Target.position, transform.position) <= 0.5f)
+            return;
+
+        Rb.linearVelocity = new Vector2(flip * MoveSpeed, Rb.linearVelocityY);
+    }
+
+    private int FlipToTarget()
+    {
         int flip = Target.position.x > transform.position.x ? 1 : -1;
         float scale = Mathf.Abs(transform.localScale.x);
         transform.localScale = new Vector3(scale * flip, scale, scale);
-
-        if (Vector2.Distance(Target.position, transform.position) <= 0.5f)
-            return;
-        
-        Rb.linearVelocity = new Vector2(flip * MoveSpeed, Rb.linearVelocityY);
+        return flip;
     }
 
     public void Die()
