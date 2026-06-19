@@ -9,6 +9,7 @@ public struct PlayerJumpedEvent : ISubject { }
 public struct PlayerFallingEvent : ISubject { }
 public struct PlayerLandedEvent : ISubject { }
 public struct PlayerTurnEvent : ISubject { }
+public struct PlayerDashEvent : ISubject { }
 
 public struct PlayerAttackStartEvent : ISubject
 {
