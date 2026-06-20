@@ -20,7 +20,7 @@ public class PlayerAnimator : AnimatorBase,
         EventBus.Subscribe<PlayerFallingEvent>(this);
         EventBus.Subscribe<PlayerLandedEvent>(this);
         EventBus.Subscribe<PlayerTurnEvent>(this);
-        EventBus.Unsubscribe<PlayerDashEvent>(this);
+        EventBus.Subscribe<PlayerDashEvent>(this);
         EventBus.Subscribe<PlayerAttackStartEvent>(this);
     }
 
@@ -39,7 +39,12 @@ public class PlayerAnimator : AnimatorBase,
     public void OnNotify(PlayerFallingEvent e) => PlayAnimation("fall_loop");
     public void OnNotify(PlayerLandedEvent e) => PlayAnimation("land");
     public void OnNotify(PlayerTurnEvent e) => PlayAnimation("turn");
-    public void OnNotify(PlayerDashEvent e) => PlayAnimation("dash");
+
+    public void OnNotify(PlayerDashEvent e)
+    {
+        Debug.Log("Dash Animation");
+        PlayAnimation("dash");
+    }
 
     public void OnNotify(PlayerAttackStartEvent e)
     {

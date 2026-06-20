@@ -208,6 +208,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Enter()
         {
+            EventBus.Publish(new PlayerDashEvent());
             Owner.Rb.gravityScale = 0f;
             Owner.Dash();
             dashStartTime = Time.time;
