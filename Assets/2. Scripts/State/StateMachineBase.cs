@@ -1,13 +1,13 @@
+using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class StateMachineBase<T> : IStateMachine where T : IStateOwner<T>
 {
     public T Owner { get; private set;}
     
     private StateBase<T> currentState;
-    private Dictionary<System.Type, StateBase<T>> states = new();
-    private HashSet<(System.Type from, System.Type to)> transitionTable = new();
+    private Dictionary<Type, StateBase<T>> states = new();
+    private Dictionary<(Type from, Type to), Func<bool>> transitionTable = new();
 
     protected StateMachineBase(T owner)
     {
@@ -24,20 +24,20 @@ public class StateMachineBase<T> : IStateMachine where T : IStateOwner<T>
         states.Add(state.GetType(), state);
     }
     
-    public void AddTransition<From, To>() where From : IState where To :IState
+    public void AddTransition<From, To>(Func<bool> condition = null) where From : IState where To : IState
     {
-        transitionTable.Add((typeof(From), typeof(To)));
+        transitionTable[(typeof(From), typeof(To))] = condition;
     }
 
-    private bool CanTransition(System.Type to)
+    private bool CanTransition(Type to)
     {
         if (transitionTable.Count == 0) return true;
 
         var node = currentState;
         while (node != null)
         {
-            if (transitionTable.Contains((node.GetType(), to)))
-                return true;
+            if (transitionTable.TryGetValue((node.GetType(), to), out var condition))
+                return condition == null || condition();
             node = node.CurrentChild;
         }
         return false;
@@ -104,7 +104,7 @@ public class StateMachineBase<T> : IStateMachine where T : IStateOwner<T>
     private int FindLcaIndex(List<StateBase<T>> currentPath, List<StateBase<T>> targetPath)
     {
         int lca = -1;
-        int len = System.Math.Min(currentPath.Count, targetPath.Count);
+        int len = Math.Min(currentPath.Count, targetPath.Count);
 
         for (int i = 0; i < len; i++)
         {
@@ -116,7 +116,7 @@ public class StateMachineBase<T> : IStateMachine where T : IStateOwner<T>
         return lca;
     }
     
-    private List<StateBase<T>> FindPath(StateBase<T> node, System.Type targetType)
+    private List<StateBase<T>> FindPath(StateBase<T> node, Type targetType)
     {
         if (node.GetType() == targetType)
             return new List<StateBase<T>> { node };

@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -174,6 +175,8 @@ public class PlayerStateMachine : StateMachineBase<Player>
         {
             Machine.AddTransition<PlayerJumpState, PlayerDashState>();
             Machine.AddTransition<PlayerJumpState, PlayerFallState>();
+            Machine.AddTransition<PlayerFallState, PlayerJumpState>(
+                () => owner.JumpCount < owner.MaxJumpCount);
         }
 
         public override void Enter()
@@ -202,8 +205,9 @@ public class PlayerStateMachine : StateMachineBase<Player>
         {
             Machine.AddTransition<PlayerDashState, PlayerIdleState>();
             Machine.AddTransition<PlayerDashState, PlayerFallState>();
-            Machine.AddTransition<PlayerDashState, PlayerJumpState>();
             Machine.AddTransition<PlayerDashState, PlayerMoveState>();
+            Machine.AddTransition<PlayerDashState, PlayerJumpState>(
+                () => owner.JumpCount < owner.MaxJumpCount);
         }
 
         public override void Enter()

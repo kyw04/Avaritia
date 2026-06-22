@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
@@ -26,12 +25,13 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
     public float MaxHealth => stats.Get<float>(StatType.MaxHealth);
     public float CurrentHealth => stats.Get<float>(StatType.CurrentHealth);
     public float MoveSpeed => stats.Get<float>(StatType.MoveSpeed);
+    public int MaxJumpCount => statDataAsset.TryGetValue<int>(StatType.JumpCount);
+    public int JumpCount => stats.Get<int>(StatType.JumpCount);
     public float JumpForce => stats.Get<float>(StatType.JumpForce);
     public float Damage => stats.Get<float>(StatType.Damage);
-
+    
     private float acceleration = 20f; // 지면 가속도
     private float deceleration = 10f; // 지면 감속도
-    
     private float airAcceleration = 30f; // 공중 가속도
     private float airDeceleration = 15f; // 공중 감속도
     
@@ -61,6 +61,7 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
             wasGroundCheckerChanged = IsGrounded;
             if (IsGrounded)
             {
+                Owner.stats.Set(StatType.JumpCount, 0);
                 if (Rb.linearVelocityY <= -5)
                 {
                     Machine.ChangeState<PlayerLandState>();
@@ -128,12 +129,12 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
 
     public void Jump()
     {
+        stats.Set(StatType.JumpCount, JumpCount + 1);
         Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, JumpForce);
     }
 
     public void Dash()
     {
-        Debug.Log("[Dash] starting dash");
         Rb.linearVelocity = Vector2.zero;
         Rb.AddForce(Vector2.right * transform.localScale.x * 50f, ForceMode2D.Impulse);
     }
