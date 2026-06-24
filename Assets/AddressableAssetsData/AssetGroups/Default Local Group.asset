@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: 73389f34edd9c6846bb4e7f95475d8b5
   m_SerializeEntries:
+  - m_GUID: 3b2660f1302a92840af4a26428490af5
+    m_Address: jump_data/player_001
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: aa917b9b7cd923244bd2a65c4488f506
     m_Address: attack_combo/player_001
     m_ReadOnly: 0
