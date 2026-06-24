@@ -74,6 +74,14 @@ public class StateMachineBase<T> : IStateMachine where T : IStateOwner<T>
             var currentPath = GetActivePath(root);
             int lcaIndex = FindLcaIndex(currentPath, targetPath);
 
+            if (currentPath.Count == targetPath.Count && lcaIndex == targetPath.Count - 1)
+            {
+                targetPath[lcaIndex].Exit();
+                targetPath[lcaIndex].Enter();
+                currentState = targetPath[0];
+                return;
+            }
+
             for (int i = currentPath.Count - 1; i > lcaIndex; i--)
                 currentPath[i].Exit();
 

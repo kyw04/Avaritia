@@ -175,6 +175,8 @@ public class PlayerStateMachine : StateMachineBase<Player>
         {
             Machine.AddTransition<PlayerJumpState, PlayerDashState>();
             Machine.AddTransition<PlayerJumpState, PlayerFallState>();
+            Machine.AddTransition<PlayerJumpState, PlayerJumpState>(
+                () => owner.JumpCount < owner.MaxJumpCount);
             Machine.AddTransition<PlayerFallState, PlayerJumpState>(
                 () => owner.JumpCount < owner.MaxJumpCount);
         }
