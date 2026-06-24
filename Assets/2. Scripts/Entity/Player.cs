@@ -46,6 +46,7 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
         Machine.Init();
         
         wasGroundCheckerChanged = !IsGrounded;
+        Owner.stats.Set(StatType.JumpCount, 0);
     }
 
     private void Update()

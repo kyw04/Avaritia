@@ -171,6 +171,8 @@ public class PlayerStateMachine : StateMachineBase<Player>
     
     public class PlayerJumpState : StateBase<Player>
     {
+        private JumpDataList jumpDataList;
+
         public PlayerJumpState(Player owner) : base(owner)
         {
             Machine.AddTransition<PlayerJumpState, PlayerDashState>();
@@ -179,11 +181,29 @@ public class PlayerStateMachine : StateMachineBase<Player>
                 () => owner.JumpCount < owner.MaxJumpCount);
             Machine.AddTransition<PlayerFallState, PlayerJumpState>(
                 () => owner.JumpCount < owner.MaxJumpCount);
+
+            DataLoad();
+        }
+
+        private async void DataLoad()
+        {
+            try
+            {
+                var handle = Addressables.LoadAssetAsync<JumpDataList>("jump_data/player_001");
+                await handle.Task;
+                jumpDataList = handle.Result;
+                Debug.Log(jumpDataList.datas.Count);
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e.Message);
+            }
         }
 
         public override void Enter()
         {
-            EventBus.Publish(new PlayerJumpedEvent());
+            int index = Owner.JumpCount % Owner.MaxJumpCount;
+            EventBus.Publish(new PlayerJumpedEvent(jumpDataList.datas[index]));
             Owner.Jump();
         }
 

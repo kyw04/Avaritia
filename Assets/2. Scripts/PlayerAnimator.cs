@@ -35,7 +35,7 @@ public class PlayerAnimator : AnimatorBase,
         animator.SetFloat(Speed, e.Speed);
         PlayAnimation("Move");
     }
-    public void OnNotify(PlayerJumpedEvent e) => PlayAnimation("jump");
+    public void OnNotify(PlayerJumpedEvent e) => PlayAnimation(e.Data.jumpClip.name);
     public void OnNotify(PlayerFallingEvent e) => PlayAnimation("fall_loop");
     public void OnNotify(PlayerLandedEvent e) => PlayAnimation("land");
     public void OnNotify(PlayerTurnEvent e) => PlayAnimation("turn");

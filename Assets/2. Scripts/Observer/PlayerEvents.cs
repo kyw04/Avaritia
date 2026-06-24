@@ -5,7 +5,11 @@ public struct PlayerMovedEvent : ISubject
     public float Speed { get; private set; }
     public PlayerMovedEvent(float speed) { Speed = speed; }
 }
-public struct PlayerJumpedEvent : ISubject { }
+public struct PlayerJumpedEvent : ISubject
+{
+    public JumpData Data { get; private set; }
+    public PlayerJumpedEvent(JumpData data) { Data = data; }
+}
 public struct PlayerFallingEvent : ISubject { }
 public struct PlayerLandedEvent : ISubject { }
 public struct PlayerTurnEvent : ISubject { }
