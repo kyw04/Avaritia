@@ -175,7 +175,8 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public PlayerJumpState(Player owner) : base(owner)
         {
-            Machine.AddTransition<PlayerJumpState, PlayerDashState>();
+            Machine.AddTransition<PlayerJumpState, PlayerDashState>(
+                () => owner.DashCount < owner.MaxDashCount);
             Machine.AddTransition<PlayerJumpState, PlayerFallState>();
             Machine.AddTransition<PlayerJumpState, PlayerJumpState>(
                 () => owner.JumpCount < owner.MaxJumpCount);
@@ -230,6 +231,8 @@ public class PlayerStateMachine : StateMachineBase<Player>
             Machine.AddTransition<PlayerDashState, PlayerMoveState>();
             Machine.AddTransition<PlayerDashState, PlayerJumpState>(
                 () => owner.JumpCount < owner.MaxJumpCount);
+            Machine.AddTransition<PlayerDashState, PlayerDashState>(
+                () => owner.DashCount < owner.MaxDashCount);
         }
 
         public override void Enter()
@@ -261,7 +264,8 @@ public class PlayerStateMachine : StateMachineBase<Player>
         {
             Machine.AddTransition<PlayerFallState, PlayerIdleState>();
             Machine.AddTransition<PlayerFallState, PlayerLandState>();
-            Machine.AddTransition<PlayerFallState, PlayerDashState>();
+            Machine.AddTransition<PlayerFallState, PlayerDashState>(
+                () => owner.DashCount < owner.MaxDashCount);
         }
 
         public override void Enter()

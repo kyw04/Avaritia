@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
@@ -29,6 +30,9 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
     public int JumpCount => stats.Get<int>(StatType.JumpCount);
     public float JumpForce => stats.Get<float>(StatType.JumpForce);
     public float Damage => stats.Get<float>(StatType.Damage);
+    public int MaxDashCount => statDataAsset.TryGetValue<int>(StatType.DashCount);
+    public int DashCount => stats.Get<int>(StatType.DashCount);
+    public float DashCooldown => stats.Get<float>(StatType.DashCooldown);
     
     private float acceleration = 20f; // 지면 가속도
     private float deceleration = 10f; // 지면 감속도
@@ -47,6 +51,7 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
         
         wasGroundCheckerChanged = !IsGrounded;
         Owner.stats.Set(StatType.JumpCount, 0);
+        Owner.stats.Set(StatType.DashCount, 0);
     }
 
     private void Update()
@@ -136,8 +141,17 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
 
     public void Dash()
     {
+        stats.Set(StatType.DashCount, DashCount + 1);
         Rb.linearVelocity = Vector2.zero;
         Rb.AddForce(Vector2.right * transform.localScale.x * 50f, ForceMode2D.Impulse);
+
+        StartCoroutine(DashCooldownRoutine());
+    }
+
+    private IEnumerator DashCooldownRoutine()
+    {
+        yield return new WaitForSeconds(DashCooldown);
+        stats.Set(StatType.DashCount, DashCount - 1);
     }
     
     public void Die()

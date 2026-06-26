@@ -12,6 +12,8 @@ public enum StatType
     JumpForce,
     Damage,
     Armor,
+    DashCount,
+    DashCooldown,
 }
 
 public static class StatParameter
@@ -25,6 +27,8 @@ public static class StatParameter
         { StatType.JumpForce, typeof(float) },
         { StatType.Damage, typeof(float) },
         { StatType.Armor, typeof(int) },
+        { StatType.DashCount, typeof(int) },
+        { StatType.DashCooldown, typeof(float) },
     };
 
     public static Type GetStatParameter(StatType type)
