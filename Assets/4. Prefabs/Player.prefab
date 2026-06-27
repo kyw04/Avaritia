@@ -169,6 +169,7 @@ GameObject:
   - component: {fileID: 4739286354209235477}
   - component: {fileID: 2856072584327875828}
   - component: {fileID: 5379797011840322666}
+  - component: {fileID: 5204352993420418906}
   - component: {fileID: 5735150061085217394}
   - component: {fileID: 2389468441697128624}
   m_Layer: 6
@@ -227,6 +228,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputHandler
   player: {fileID: 2856072584327875828}
+--- !u!114 &5204352993420418906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4770807377537432152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4e2b19ca3fd72049b16a1d0c741a558, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DashCountUI
+  maxCountText: {fileID: 0}
+  countText: {fileID: 0}
 --- !u!50 &5735150061085217394
 Rigidbody2D:
   serializedVersion: 5
