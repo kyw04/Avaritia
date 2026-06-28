@@ -20,6 +20,7 @@ public class EnemyAliveState : StateBase<Enemy>
     public EnemyAliveState(Enemy owner) : base(owner)
     {
         AddChild(new EnemyPatrolState(Owner));
+        AddChild(new EnemyReturnToPatrolState(Owner));
         AddChild(new EnemyCombatState(Owner));
         
         Machine.AddTransition<EnemyAliveState, EnemyDeadState>();
@@ -47,7 +48,39 @@ public class EnemyPatrolState : StateBase<Enemy>
 }
     
 #endregion
-    
+
+#region ReturnToPatrol
+public class EnemyReturnToPatrolState : StateBase<Enemy>
+{
+    public EnemyReturnToPatrolState(Enemy owner) : base(owner)
+    {
+        Machine.AddTransition<EnemyReturnToPatrolState, EnemyPatrolState>();
+        Machine.AddTransition<EnemyReturnToPatrolState, EnemyCombatState>();
+    }
+
+    public override void Enter()
+    {
+        Owner.ClearTarget();
+        Owner.FaceTowardPatrolCenter();
+    }
+
+    public override void Execute()
+    {
+        if (Owner.IsInPatrolArea())
+        {
+            Machine.ChangeState<EnemyPatrolState>();
+            return;
+        }
+        Owner.FindTarget();
+    }
+
+    public override void FixedExecute()
+    {
+        Owner.Move();
+    }
+}
+#endregion
+
 #region CombatState
 public class EnemyCombatState : StateBase<Enemy>
 {
@@ -58,6 +91,7 @@ public class EnemyCombatState : StateBase<Enemy>
         AddChild(new EnemyHitState(Owner));
         
         Machine.AddTransition<EnemyCombatState, EnemyPatrolState>();
+        Machine.AddTransition<EnemyCombatState, EnemyReturnToPatrolState>();
     }
 }
 
@@ -73,7 +107,10 @@ public class EnemyMoveState : StateBase<Enemy>
 
         if (!Owner.HasTarget)
         {
-            Machine.ChangeState<EnemyPatrolState>();
+            if (Owner.IsInPatrolArea())
+                Machine.ChangeState<EnemyPatrolState>();
+            else
+                Machine.ChangeState<EnemyReturnToPatrolState>();
         }
     }
     

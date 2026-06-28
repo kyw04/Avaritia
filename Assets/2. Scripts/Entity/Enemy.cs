@@ -60,9 +60,31 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>, IDamageable, IAttacker
         {
             transform.Rotate(0, 180, 0);
         }
+        else if (!IsInPatrolArea())
+        {
+            FaceTowardPatrolCenter();
+        }
         
         FindTarget();
     }
+
+    public bool IsInPatrolArea()
+    {
+        if (patrolPoint == null) return true;
+        float x = transform.position.x;
+        float left  = patrolPoint.position.x - patrolPoint.size.x / 2f;
+        float right = patrolPoint.position.x + patrolPoint.size.x / 2f;
+        return x >= left && x <= right;
+    }
+
+    public void FaceTowardPatrolCenter()
+    {
+        if (patrolPoint == null) return;
+        float rot = patrolPoint.position.x > transform.position.x ? 0 : 180;
+        transform.rotation = Quaternion.Euler(0, rot, 0);
+    }
+
+    public void ClearTarget() => Target = null;
 
     public void FindTarget()
     {
