@@ -99,6 +99,7 @@ public class EnemyMoveState : StateBase<Enemy>
 {
     public EnemyMoveState(Enemy owner) : base(owner)
     {
+        Machine.AddTransition<EnemyMoveState, EnemyAttackState>();
     }
 
     public override void Execute()
@@ -111,19 +112,41 @@ public class EnemyMoveState : StateBase<Enemy>
                 Machine.ChangeState<EnemyPatrolState>();
             else
                 Machine.ChangeState<EnemyReturnToPatrolState>();
+            return;
         }
+
+        if (Owner.IsInAttackRange() && Owner.CanAttack())
+            Machine.ChangeState<EnemyAttackState>();
     }
-    
+
     public override void FixedExecute()
     {
-        Owner.Move();
+        if (!Owner.IsInAttackRange())
+            Owner.Move();
+        else
+        {
+            Owner.Rb.linearVelocity = new UnityEngine.Vector2(0, Owner.Rb.linearVelocityY);
+            Owner.FaceTarget();
+        }
     }
 }
-    
+
 public class EnemyAttackState : StateBase<Enemy>
 {
     public EnemyAttackState(Enemy owner) : base(owner)
     {
+        Machine.AddTransition<EnemyAttackState, EnemyMoveState>();
+    }
+
+    public override void Enter()
+    {
+        Owner.Attack();
+    }
+
+    public override void Execute()
+    {
+        if (!Owner.IsAttacking)
+            Machine.ChangeState<EnemyMoveState>();
     }
 }
     

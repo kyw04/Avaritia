@@ -16,6 +16,11 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>, IDamageable, IAttacker
     [SerializeField] private float viewRadius;
     [SerializeField] private float alertRadius;
 
+    [SerializeField] private AttackData attackData;
+    [SerializeField] private float attackRange;
+    [SerializeField] private float attackCooldown;
+    private float lastAttackTime = float.MinValue;
+
     [SerializeField] private StatData statDataAsset; // 수정 사항 Addressables로 관리
     private RuntimeStats stats;
     public float MaxHealth => stats.Get<float>(StatType.MaxHealth);
@@ -81,6 +86,27 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>, IDamageable, IAttacker
     {
         if (patrolPoint == null) return;
         float rot = patrolPoint.position.x > transform.position.x ? 0 : 180;
+        transform.rotation = Quaternion.Euler(0, rot, 0);
+    }
+
+    public bool IsInAttackRange()
+    {
+        if (!HasTarget) return false;
+        return Vector2.Distance(transform.position, Target.position) <= attackRange;
+    }
+
+    public bool CanAttack() => Time.time - lastAttackTime >= attackCooldown;
+
+    public void Attack()
+    {
+        lastAttackTime = Time.time;
+        attackData.Attack(this);
+    }
+
+    public void FaceTarget()
+    {
+        if (!HasTarget) return;
+        var rot = Target.position.x > transform.position.x ? 0 : 180;
         transform.rotation = Quaternion.Euler(0, rot, 0);
     }
 

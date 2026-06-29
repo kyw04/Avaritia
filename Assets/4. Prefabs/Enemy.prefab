@@ -55,6 +55,9 @@ MonoBehaviour:
   viewDensity: 25
   viewRadius: 15
   alertRadius: 3
+  attackData: {fileID: 11400000, guid: e163e958d9db4f44ba4f212d948fd655, type: 2}
+  attackRange: 1.5
+  attackCooldown: 2
   statDataAsset: {fileID: 11400000, guid: 39f96f962c1505e438aed6d89314079b, type: 2}
 --- !u!61 &6955552012763545146
 BoxCollider2D:

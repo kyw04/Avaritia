@@ -32,7 +32,7 @@ public class AttackData : ScriptableObject
         float dmg = attacker.Damage * damageMultiplier;
         var hits = new List<Collider2D>();
         var pos = hitboxPosition;
-        if (attacker.Mono.transform.localScale.x < 0)
+        if (attacker.Mono.transform.right.x < 0)
             pos.x = -pos.x;
         pos += (Vector2)attacker.Mono.transform.position;
         
@@ -40,12 +40,13 @@ public class AttackData : ScriptableObject
         DebugExtension.DrawBox(pos, hitboxSize / 2f, Quaternion.identity, Color.green, 1.0f);
         foreach (var hit in hits)
         {
+            if (hit.transform.IsChildOf(attacker.Mono.transform)) continue;
             if (hit.TryGetComponent<IDamageable>(out var d))
             {
                 Debug.Log($"[Take Damage] {hit.name}");
                 d.TakeDamage(dmg);
             }
-        }        
+        }
 
         yield return new WaitForSeconds(attackAnimClip.length);
         yield return new WaitForSeconds(duration);

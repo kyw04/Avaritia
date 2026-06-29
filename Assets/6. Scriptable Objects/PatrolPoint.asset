@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ecfb3e880484fb68f6fe4f053dee85f, type: 3}
   m_Name: PatrolPoint
   m_EditorClassIdentifier: Assembly-CSharp::PatrolPoint
-  position: {x: 0, y: 0}
+  position: {x: 20, y: 0}
   size: {x: 10, y: 10}
