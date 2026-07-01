@@ -53,6 +53,11 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
         Owner.stats.Set(StatType.DashCount, 0);
     }
 
+    private void Start()
+    {
+        EventBus.Publish(new PlayerDashCountChangedEvent(MaxDashCount, MaxDashCount));
+    }
+
     private void Update()
     {
         IsGrounded = Physics2D.OverlapCircle(
@@ -141,6 +146,7 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
     public void Dash()
     {
         stats.Set(StatType.DashCount, DashCount + 1);
+        EventBus.Publish(new PlayerDashCountChangedEvent(MaxDashCount - DashCount, MaxDashCount));
         Rb.linearVelocity = Vector2.zero;
         Rb.AddForce(Vector2.right * transform.localScale.x * 50f, ForceMode2D.Impulse);
 
@@ -151,6 +157,7 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
     {
         yield return new WaitForSeconds(DashCooldown);
         stats.Set(StatType.DashCount, DashCount - 1);
+        EventBus.Publish(new PlayerDashCountChangedEvent(MaxDashCount - DashCount, MaxDashCount));
     }
     
     public void Die()

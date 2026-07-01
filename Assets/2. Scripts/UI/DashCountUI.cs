@@ -1,21 +1,24 @@
 using TMPro;
 using UnityEngine;
 
-public class DashCountUI : MonoBehaviour
+public class DashCountUI : MonoBehaviour, IObserver<PlayerDashCountChangedEvent>
 {
-    private Player player;
     [SerializeField] private TextMeshProUGUI maxCountText;
     [SerializeField] private TextMeshProUGUI countText;
 
     private void Awake()
     {
-        player = GetComponent<Player>();
+        EventBus.Subscribe<PlayerDashCountChangedEvent>(this);
     }
 
-    private void Update()
+    private void OnDestroy()
     {
-        int count = player.MaxDashCount - player.DashCount;
-        maxCountText.text = player.MaxDashCount.ToString();
-        countText.text = count.ToString();
+        EventBus.Unsubscribe<PlayerDashCountChangedEvent>(this);
+    }
+
+    public void OnNotify(PlayerDashCountChangedEvent e)
+    {
+        maxCountText.text = e.Max.ToString();
+        countText.text = e.Current.ToString();
     }
 }

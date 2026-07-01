@@ -31,3 +31,10 @@ public struct PlayerHealthChangedEvent : ISubject
     public PlayerHealthChangedEvent(float ratio) { Ratio = ratio; }
 }
 
+public struct PlayerDashCountChangedEvent : ISubject
+{
+    public int Current { get; private set; }
+    public int Max { get; private set; }
+    public PlayerDashCountChangedEvent(int current, int max) { Current = current; Max = max; }
+}
+
