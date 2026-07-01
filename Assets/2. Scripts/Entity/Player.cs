@@ -14,7 +14,6 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
     [SerializeField] private float groundRadius;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private StatData statDataAsset;
-    [SerializeField] private Image healthBarImage;
 
     private RuntimeStats stats;
     private bool wasGroundCheckerChanged;
@@ -167,7 +166,7 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
     public void TakeDamage(float damage)
     {
         stats.Set(StatType.CurrentHealth, CurrentHealth - damage);
-        healthBarImage.fillAmount = CurrentHealth / MaxHealth;
+        PlayerHpUI.UpdateHealthBar(CurrentHealth /  MaxHealth);
         
         if (CurrentHealth <= 0)
             Die();
