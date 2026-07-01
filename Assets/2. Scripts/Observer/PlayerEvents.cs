@@ -25,3 +25,9 @@ public struct PlayerAttackBufferEvent : ISubject { }
 
 public struct PlayerAttackEndEvent : ISubject { }
 
+public struct PlayerHealthChangedEvent : ISubject
+{
+    public float Ratio { get; private set; }
+    public PlayerHealthChangedEvent(float ratio) { Ratio = ratio; }
+}
+

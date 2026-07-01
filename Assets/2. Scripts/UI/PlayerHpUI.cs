@@ -1,17 +1,23 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerHpUI : MonoBehaviour
+public class PlayerHpUI : MonoBehaviour, IObserver<PlayerHealthChangedEvent>
 {
-    private static Image healthBarImage;
+    private Image healthBarImage;
 
     private void Awake()
     {
         healthBarImage = GetComponent<Image>();
+        EventBus.Subscribe<PlayerHealthChangedEvent>(this);
     }
 
-    public static void UpdateHealthBar(float value)
+    private void OnDestroy()
     {
-        healthBarImage.fillAmount = value;
+        EventBus.Unsubscribe<PlayerHealthChangedEvent>(this);
+    }
+
+    public void OnNotify(PlayerHealthChangedEvent e)
+    {
+        healthBarImage.fillAmount = e.Ratio;
     }
 }

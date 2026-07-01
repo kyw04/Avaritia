@@ -166,7 +166,7 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
     public void TakeDamage(float damage)
     {
         stats.Set(StatType.CurrentHealth, CurrentHealth - damage);
-        PlayerHpUI.UpdateHealthBar(CurrentHealth /  MaxHealth);
+        EventBus.Publish(new PlayerHealthChangedEvent(CurrentHealth / MaxHealth));
         
         if (CurrentHealth <= 0)
             Die();
