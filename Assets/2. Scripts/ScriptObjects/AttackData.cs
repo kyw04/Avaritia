@@ -32,7 +32,7 @@ public class AttackData : ScriptableObject
         float dmg = attacker.Damage * damageMultiplier;
         var hits = new List<Collider2D>();
         var pos = hitboxPosition;
-        if (attacker.Mono.transform.right.x < 0)
+        if (attacker.LookDirection < 0)
             pos.x = -pos.x;
         pos += (Vector2)attacker.Mono.transform.position;
         

@@ -22,6 +22,7 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
     
     public bool IsGrounded { get; private set; }
     public bool IsAttacking { get; set; }
+    public int LookDirection => transform.localScale.x >= 0 ? 1 : -1;
     public float MaxHealth => stats.Get<float>(StatType.MaxHealth);
     public float CurrentHealth => stats.Get<float>(StatType.CurrentHealth);
     public float MoveSpeed => stats.Get<float>(StatType.MoveSpeed);

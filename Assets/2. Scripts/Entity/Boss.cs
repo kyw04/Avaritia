@@ -8,6 +8,7 @@ public class Boss : MonoBehaviour, IDamageable, IAttacker
     public MonoBehaviour Mono => this;
     public Transform Target { get; private set; }
     public bool IsAttacking { get; set; }
+    public int LookDirection => transform.localScale.x >= 0 ? 1 : -1;
 
     [SerializeField] private StatData statDataAsset;
     [SerializeField] private BossAttackData attackData;

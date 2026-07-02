@@ -28,6 +28,7 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>, IDamageable, IAttacker
     public float MoveSpeed => stats.Get<float>(StatType.MoveSpeed);
     public float Damage => stats.Get<float>(StatType.Damage);
     public bool IsAttacking { get; set; }
+    public int LookDirection => transform.right.x >= 0 ? 1 : -1;
 
     private void Awake()
     {
