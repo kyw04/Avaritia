@@ -1161,6 +1161,7 @@ GameObject:
   - component: {fileID: 833888203}
   - component: {fileID: 833888205}
   - component: {fileID: 833888204}
+  - component: {fileID: 833888206}
   m_Layer: 5
   m_Name: Boss Hp Bar
   m_TagString: Untagged
@@ -1225,6 +1226,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 833888202}
   m_CullTransparentMesh: 1
+--- !u!114 &833888206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 833888202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9811f80edab619f43a75ecdd14441a2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossHpUI
 --- !u!1 &976110478
 GameObject:
   m_ObjectHideFlags: 0
