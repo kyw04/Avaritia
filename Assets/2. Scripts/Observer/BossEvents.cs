@@ -12,5 +12,11 @@ public struct BossDeadEvent : ISubject { }
 public struct BossAttackStartEvent : ISubject
 {
     public AttackData Data { get; private set; }
-    public BossAttackStartEvent(AttackData data)  { Data = data; } 
+    public BossAttackStartEvent(AttackData data)  { Data = data; }
+}
+
+public struct BossHealthChangedEvent : ISubject
+{
+    public float Ratio { get; private set; }
+    public BossHealthChangedEvent(float ratio) { Ratio = ratio; }
 }

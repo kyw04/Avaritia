@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Boss : MonoBehaviour, IDamageable, IAttacker
 {
@@ -12,7 +11,6 @@ public class Boss : MonoBehaviour, IDamageable, IAttacker
 
     [SerializeField] private StatData statDataAsset;
     [SerializeField] private BossAttackData attackData;
-    [SerializeField] private Image healthBarImage;
 
     private RuntimeStats stats;
     private bool isDead;
@@ -86,8 +84,8 @@ public class Boss : MonoBehaviour, IDamageable, IAttacker
     public void TakeDamage(float damage)
     {
         stats.Set(StatType.CurrentHealth, CurrentHealth - damage);
-        healthBarImage.fillAmount = CurrentHealth / MaxHealth;
-        
+        EventBus.Publish(new BossHealthChangedEvent(CurrentHealth / MaxHealth));
+
         if (CurrentHealth <= 0)
             Die();
     }
