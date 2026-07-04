@@ -9,6 +9,6 @@ public class WeaponStrategy
 
     public void AttackStrategy()
     {
-        weapon.Attack();
+        weapon.Offensive();
     }
 }
