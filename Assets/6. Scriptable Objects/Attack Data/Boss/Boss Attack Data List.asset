@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7a98a99e791b5fe48b50ee7bc7c1e534, type: 3}
-  m_Name: Boss Attack Data
+  m_Name: Boss Attack Data List
   m_EditorClassIdentifier: Assembly-CSharp::BossAttackData
   entries:
   - data: {fileID: 11400000, guid: 606c7d49c271edd4da02d5750c1504d4, type: 2}
