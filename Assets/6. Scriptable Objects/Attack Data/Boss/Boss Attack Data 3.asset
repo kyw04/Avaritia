@@ -9,12 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e63246a11978fe4db3f09b22d6c5389, type: 3}
-  m_Name: Bullet Attack Data
-  m_EditorClassIdentifier: Assembly-CSharp::BulletAttackData
+  m_Script: {fileID: 11500000, guid: 66d99f0a6e5f4ccdad3bd77a2f0c5d2b, type: 3}
+  m_Name: Boss Attack Data 3
+  m_EditorClassIdentifier: Assembly-CSharp::AttackData
   duration: 1
   readyAnimClip: {fileID: 7400000, guid: d0514c61a09a03c4499ba09fb33ed63b, type: 2}
   attackAnimClip: {fileID: 7400000, guid: 9c339038ffaef384f8ae7ce8e364f79e, type: 2}
+  damageMultiplier: 2
   filter:
     useTriggers: 0
     useLayerMask: 1
@@ -29,13 +30,18 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  hitboxPosition: {x: 0, y: 0}
-  hitboxSize: {x: 0, y: 0}
-  damageMultiplier: 1
-  bulletCount: 5
-  spreadAngle: 160
-  upSpeed: 0.5
-  upDuration: 3
-  redirectSpeed: 2
-  redirectDelay: 0.5
-  bulletPrefab: {fileID: 8472889144798200028, guid: 706b7d7f91fbc1c40a6df1b125a9dad7, type: 3}
+  attackStrategy:
+    rid: 1772930754192081022
+  references:
+    version: 2
+    RefIds:
+    - rid: 1772930754192081022
+      type: {class: RangedAttackStrategy, ns: , asm: Assembly-CSharp}
+      data:
+        bulletPrefab: {fileID: 8472889144798200028, guid: 706b7d7f91fbc1c40a6df1b125a9dad7, type: 3}
+        bulletCount: 5
+        spreadAngle: 180
+        upSpeed: 1
+        upDuration: 2
+        redirectSpeed: 3
+        redirectDelay: 1

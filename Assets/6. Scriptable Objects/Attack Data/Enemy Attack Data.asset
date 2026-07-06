@@ -29,6 +29,13 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  hitboxPosition: {x: 0.5, y: 0}
-  hitboxSize: {x: 1, y: 1}
-  damageMultiplier: 1
+  attackStrategy:
+    rid: 1772930754192081019
+  references:
+    version: 2
+    RefIds:
+    - rid: 1772930754192081019
+      type: {class: MeleeAttackStrategy, ns: , asm: Assembly-CSharp}
+      data:
+        hitboxPosition: {x: 0, y: 0}
+        hitboxSize: {x: 1, y: 1}

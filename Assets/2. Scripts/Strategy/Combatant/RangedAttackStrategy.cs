@@ -1,29 +1,30 @@
-using System.Collections;
 using UnityEngine;
+using System.Collections;
 
-[CreateAssetMenu(menuName = "Scriptable Objects/BulletAttackData")]
-public class BulletAttackData : AttackData
+[System.Serializable]
+public class RangedAttackStrategy : IAttackStrategy
 {
+    public GameObject bulletPrefab;
     public int bulletCount;
     public float spreadAngle;
+    
     public float upSpeed;
     public float upDuration;
     public float redirectSpeed;
     public float redirectDelay;
-    public GameObject bulletPrefab;
-
-    protected override IEnumerator Execute(IAttacker attacker, Transform target = null)
+    
+    public void Offensive(IAttacker attacker, float damageMultiplier, ContactFilter2D filter, Transform target = null)
     {
         if (bulletPrefab == null)
         {
             Debug.LogError("BulletAttackData: bulletPrefab not assigned");
-            yield break;
+            return;
         }
 
         if (target == null)
         {
             Debug.LogError("BulletAttackData: target not assigned");
-            yield break;
+            return;
         }
 
         for (int i = 0; i < bulletCount; i++)
@@ -44,11 +45,8 @@ public class BulletAttackData : AttackData
             attacker.Mono.StartCoroutine(MoveBullet(go.transform, attacker, dir, angle));
         }
         
-        yield return new WaitForSeconds(attackAnimClip.length);
-        yield return new WaitForSeconds(duration);
-        attacker.IsAttacking = false;
     }
-
+    
     private IEnumerator MoveBullet(Transform bullet, IAttacker attacker, Vector3 dir, float spreadDeg)
     {
         float timer = 0f;

@@ -19,6 +19,6 @@ MonoBehaviour:
   - data: {fileID: 11400000, guid: b64fd81b8eac33146a61811fc4e93060, type: 2}
     cooldown: 10
     maxRange: 2
-  - data: {fileID: 11400000, guid: 4a759c7c9f6e7d3428c92e3e6164edbd, type: 2}
+  - data: {fileID: 11400000, guid: 24b963d587321024292bfa88241a49c7, type: 2}
     cooldown: 10
     maxRange: 1000

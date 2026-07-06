@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
 {
@@ -14,7 +13,8 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
     [SerializeField] private float groundRadius;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private StatData statDataAsset;
-
+    [SerializeField] private StatData weaponStatDataAsset;
+    
     private RuntimeStats stats;
     private bool wasGroundCheckerChanged;
     private bool isTurning;

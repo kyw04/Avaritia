@@ -15,6 +15,7 @@ MonoBehaviour:
   duration: 1
   readyAnimClip: {fileID: 7400000, guid: 54dba05ee14ea96429bb5896737b9b95, type: 2}
   attackAnimClip: {fileID: 7400000, guid: 962c9e0c7af67ba4091fbd84cfcfb78f, type: 2}
+  damageMultiplier: 1.5
   filter:
     useTriggers: 0
     useLayerMask: 1
@@ -29,6 +30,13 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  hitboxPosition: {x: 0, y: -0.5}
-  hitboxSize: {x: 9, y: 1}
-  damageMultiplier: 1
+  attackStrategy:
+    rid: 1772930754192081026
+  references:
+    version: 2
+    RefIds:
+    - rid: 1772930754192081026
+      type: {class: MeleeAttackStrategy, ns: , asm: Assembly-CSharp}
+      data:
+        hitboxPosition: {x: 0, y: -0.6}
+        hitboxSize: {x: 9, y: 1}

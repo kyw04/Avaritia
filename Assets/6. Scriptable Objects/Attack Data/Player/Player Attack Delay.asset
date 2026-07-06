@@ -29,6 +29,10 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  hitboxPosition: {x: 0, y: 0}
-  hitboxSize: {x: 0, y: 0}
-  damageMultiplier: 0
+  attackStrategy:
+    rid: -2
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

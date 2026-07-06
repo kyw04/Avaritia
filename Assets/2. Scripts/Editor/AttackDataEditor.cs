@@ -35,31 +35,34 @@ public class AttackDataEditor : Editor
 
         EditorGUI.BeginChangeCheck();
 
-        Vector3 worldCenter = Handles.PositionHandle(data.hitboxPosition, Quaternion.identity);
-        float handleSize = HandleUtility.GetHandleSize(worldCenter) * 0.8f;
-        Vector3 newSize = Handles.ScaleHandle(data.hitboxSize, worldCenter, Quaternion.identity, handleSize);
-
-        if (EditorGUI.EndChangeCheck())
+        if (data.attackStrategy is MeleeAttackStrategy strategy)
         {
-            Undo.RecordObject(data, "Modify Box Bounds");
+            Vector3 worldCenter = Handles.PositionHandle(strategy.hitboxPosition, Quaternion.identity);
+            float handleSize = HandleUtility.GetHandleSize(worldCenter) * 0.8f;
+            Vector3 newSize = Handles.ScaleHandle(strategy.hitboxSize, worldCenter, Quaternion.identity, handleSize);
 
-            data.hitboxPosition = worldCenter;
-            newSize.x = Mathf.Max(0.1f, newSize.x);
-            newSize.y = Mathf.Max(0.1f, newSize.y);
-            newSize.z = Mathf.Max(0.1f, newSize.z);
-            data.hitboxSize = newSize;
+            if (EditorGUI.EndChangeCheck())
+            {
+                Undo.RecordObject(data, "Modify Box Bounds");
 
-            EditorUtility.SetDirty(data);
+                strategy.hitboxPosition = worldCenter;
+                newSize.x = Mathf.Max(0.1f, newSize.x);
+                newSize.y = Mathf.Max(0.1f, newSize.y);
+                newSize.z = Mathf.Max(0.1f, newSize.z);
+                strategy.hitboxSize = newSize;
+
+                EditorUtility.SetDirty(data);
+            }
+
+            Matrix4x4 cubeTransform = Matrix4x4.TRS(worldCenter, Quaternion.identity, Vector3.one);
+            using (new Handles.DrawingScope(cubeTransform))
+            {
+                Handles.color = Color.green;
+                Handles.DrawWireCube(Vector3.zero, strategy.hitboxSize);
+            }
+
+            sceneView.Repaint();
         }
-
-        Matrix4x4 cubeTransform = Matrix4x4.TRS(worldCenter, Quaternion.identity, Vector3.one);
-        using (new Handles.DrawingScope(cubeTransform))
-        {
-            Handles.color = Color.green;
-            Handles.DrawWireCube(Vector3.zero, data.hitboxSize);
-        }
-
-        sceneView.Repaint();
     }
 
     private void DrawSpriteInScene(AttackData data)
