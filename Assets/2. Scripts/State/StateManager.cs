@@ -16,13 +16,13 @@ public class StateManager : Singleton<StateManager>
 
     private void Update()
     {
-        foreach (var machine in machines)
+        foreach (var machine in machines.ToArray())
             machine.Execute();
     }
 
     private void FixedUpdate()
     {
-        foreach (var machine in machines)
+        foreach (var machine in machines.ToArray())
             machine.FixedExecute();
     }
 }
