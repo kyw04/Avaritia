@@ -56,7 +56,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 0
-  patrolPoint: {fileID: 11400000, guid: a3cd3c13bc8b21f4384ba086b4e4f19b, type: 2}
+  patrolSize: {x: 5.275786, y: 8.160981}
   viewLayerMask:
     serializedVersion: 2
     m_Bits: 64
