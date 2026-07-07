@@ -40,8 +40,8 @@ MonoBehaviour:
       data:
         bulletPrefab: {fileID: 8472889144798200028, guid: 706b7d7f91fbc1c40a6df1b125a9dad7, type: 3}
         bulletCount: 5
-        spreadAngle: 180
+        spreadAngle: 90
         upSpeed: 1
-        upDuration: 2
+        upDuration: 1.5
         redirectSpeed: 3
         redirectDelay: 1

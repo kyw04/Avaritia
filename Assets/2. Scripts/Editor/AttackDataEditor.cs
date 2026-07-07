@@ -63,6 +63,27 @@ public class AttackDataEditor : Editor
 
             sceneView.Repaint();
         }
+        else if (data.attackStrategy is RangedAttackStrategy rangedStrategy)
+        {
+            DrawRangedAttackGizmo(rangedStrategy);
+            sceneView.Repaint();
+        }
+    }
+
+    private void DrawRangedAttackGizmo(RangedAttackStrategy strategy)
+    {
+        int count = Mathf.Max(1, strategy.bulletCount);
+        float rayLength = Mathf.Max(0.1f, strategy.upSpeed * strategy.upDuration);
+
+        Handles.color = Color.cyan;
+        for (int i = 0; i < count; i++)
+        {
+            float angle = count > 1
+                ? Mathf.Lerp(-strategy.spreadAngle / 2f, strategy.spreadAngle / 2f, (float)i / (count - 1))
+                : 0f;
+            Vector3 dir = Quaternion.Euler(0f, 0f, angle) * Vector3.up;
+            Handles.DrawLine(Vector3.zero, dir * rayLength);
+        }
     }
 
     private void DrawSpriteInScene(AttackData data)
