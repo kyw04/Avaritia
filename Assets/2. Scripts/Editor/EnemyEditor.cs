@@ -30,7 +30,8 @@ public class EnemyEditor : Editor
         {
             newSize.x = Mathf.Max(0f, newSize.x);
             newSize.y = Mathf.Max(0f, newSize.y);
-            sizeProp.vector2Value = new Vector2(newSize.x, newSize.y);
+            size = new Vector2(newSize.x, newSize.y);
+            sizeProp.vector2Value = size;
             serializedObject.ApplyModifiedProperties();
         }
 
