@@ -13,17 +13,69 @@ MonoBehaviour:
   m_Name: Player Stat Data
   m_EditorClassIdentifier: Assembly-CSharp::StatData
   stats:
-  - rid: 4068541069713211467
-  - rid: 4068541069713211468
-  - rid: 4068541069713211469
-  - rid: 4068541069713211470
-  - rid: 4068541069713211471
-  - rid: 4068541069713211472
-  - rid: 4068541069713211473
-  - rid: 4068541069713211474
+  - rid: 1772930779186724959
+  - rid: 1772930779186724960
+  - rid: 1772930779186724961
+  - rid: 1772930779186724962
+  - rid: 1772930779186724963
+  - rid: 1772930779186724964
+  - rid: 1772930779186724965
+  - rid: 1772930779186724966
   references:
     version: 2
     RefIds:
+    - rid: 1772930779186724959
+      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
+      data:
+        statType: 1
+        value:
+          rid: 4068540596746977533
+    - rid: 1772930779186724960
+      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
+      data:
+        statType: 2
+        value:
+          rid: 4068540615269810284
+    - rid: 1772930779186724961
+      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
+      data:
+        statType: 3
+        value:
+          rid: 4068540615269810275
+    - rid: 1772930779186724962
+      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
+      data:
+        statType: 4
+        value:
+          rid: 1772930779186724967
+    - rid: 1772930779186724963
+      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
+      data:
+        statType: 5
+        value:
+          rid: 4068540976827727980
+    - rid: 1772930779186724964
+      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
+      data:
+        statType: 6
+        value:
+          rid: 4068540976827727987
+    - rid: 1772930779186724965
+      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
+      data:
+        statType: 8
+        value:
+          rid: 4068541069713211466
+    - rid: 1772930779186724966
+      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
+      data:
+        statType: 9
+        value:
+          rid: 4068541069713211475
+    - rid: 1772930779186724967
+      type: {class: StatData/IntValue, ns: , asm: Assembly-CSharp}
+      data:
+        value: 1
     - rid: 4068540596746977533
       type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
       data:
@@ -36,10 +88,6 @@ MonoBehaviour:
       type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
       data:
         value: 100
-    - rid: 4068540976827727974
-      type: {class: StatData/IntValue, ns: , asm: Assembly-CSharp}
-      data:
-        value: 2
     - rid: 4068540976827727980
       type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
       data:
@@ -52,54 +100,6 @@ MonoBehaviour:
       type: {class: StatData/IntValue, ns: , asm: Assembly-CSharp}
       data:
         value: 2
-    - rid: 4068541069713211467
-      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
-      data:
-        statType: 1
-        value:
-          rid: 4068540596746977533
-    - rid: 4068541069713211468
-      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
-      data:
-        statType: 2
-        value:
-          rid: 4068540615269810284
-    - rid: 4068541069713211469
-      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
-      data:
-        statType: 3
-        value:
-          rid: 4068540615269810275
-    - rid: 4068541069713211470
-      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
-      data:
-        statType: 4
-        value:
-          rid: 4068540976827727974
-    - rid: 4068541069713211471
-      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
-      data:
-        statType: 5
-        value:
-          rid: 4068540976827727980
-    - rid: 4068541069713211472
-      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
-      data:
-        statType: 6
-        value:
-          rid: 4068540976827727987
-    - rid: 4068541069713211473
-      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
-      data:
-        statType: 8
-        value:
-          rid: 4068541069713211466
-    - rid: 4068541069713211474
-      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
-      data:
-        statType: 9
-        value:
-          rid: 4068541069713211475
     - rid: 4068541069713211475
       type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
       data:

@@ -179,9 +179,9 @@ public class PlayerStateMachine : StateMachineBase<Player>
                 () => owner.DashCount < owner.MaxDashCount);
             Machine.AddTransition<PlayerJumpState, PlayerFallState>();
             Machine.AddTransition<PlayerJumpState, PlayerJumpState>(
-                () => owner.JumpCount < owner.MaxJumpCount);
+                () => owner.DoubleJumpCount < owner.MaxDoubleJumpCount);
             Machine.AddTransition<PlayerFallState, PlayerJumpState>(
-                () => owner.JumpCount < owner.MaxJumpCount);
+                () => owner.DoubleJumpCount < owner.MaxDoubleJumpCount);
 
             DataLoad();
         }
@@ -193,7 +193,6 @@ public class PlayerStateMachine : StateMachineBase<Player>
                 var handle = Addressables.LoadAssetAsync<JumpDataList>("jump_data/player_001");
                 await handle.Task;
                 jumpDataList = handle.Result;
-                Debug.Log(jumpDataList.datas.Count);
             }
             catch (Exception e)
             {
@@ -203,7 +202,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Enter()
         {
-            int index = Owner.JumpCount % Owner.MaxJumpCount;
+            int index = Owner.IsGrounded ? 0 : 1;
             EventBus.Publish(new PlayerJumpedEvent(jumpDataList.datas[index]));
             Owner.Jump();
         }
@@ -230,7 +229,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             Machine.AddTransition<PlayerDashState, PlayerFallState>();
             Machine.AddTransition<PlayerDashState, PlayerMoveState>();
             Machine.AddTransition<PlayerDashState, PlayerJumpState>(
-                () => owner.JumpCount < owner.MaxJumpCount);
+                () => owner.DoubleJumpCount < owner.MaxDoubleJumpCount);
             Machine.AddTransition<PlayerDashState, PlayerDashState>(
                 () => owner.DashCount < owner.MaxDashCount);
         }

@@ -26,8 +26,8 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
     public float MaxHealth => stats.Get<float>(StatType.MaxHealth);
     public float CurrentHealth => stats.Get<float>(StatType.CurrentHealth);
     public float MoveSpeed => stats.Get<float>(StatType.MoveSpeed);
-    public int MaxJumpCount => statDataAsset.TryGetValue<int>(StatType.JumpCount);
-    public int JumpCount => stats.Get<int>(StatType.JumpCount);
+    public int MaxDoubleJumpCount => statDataAsset.TryGetValue<int>(StatType.DoubleJumpCount);
+    public int DoubleJumpCount => stats.Get<int>(StatType.DoubleJumpCount);
     public float JumpForce => stats.Get<float>(StatType.JumpForce);
     public float Damage => stats.Get<float>(StatType.Damage);
     public int MaxDashCount => statDataAsset.TryGetValue<int>(StatType.DashCount);
@@ -50,7 +50,7 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
         Machine.Init();
         
         wasGroundCheckerChanged = !IsGrounded;
-        Owner.stats.Set(StatType.JumpCount, 0);
+        Owner.stats.Set(StatType.DoubleJumpCount, 0);
         Owner.stats.Set(StatType.DashCount, 0);
     }
 
@@ -72,7 +72,7 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
             wasGroundCheckerChanged = IsGrounded;
             if (IsGrounded)
             {
-                Owner.stats.Set(StatType.JumpCount, 0);
+                Owner.stats.Set(StatType.DoubleJumpCount, 0);
                 if (Rb.linearVelocityY <= -5)
                 {
                     Machine.ChangeState<PlayerLandState>();
@@ -140,7 +140,9 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
 
     public void Jump()
     {
-        stats.Set(StatType.JumpCount, JumpCount + 1);
+        if (!IsGrounded)
+            stats.Set(StatType.DoubleJumpCount, DoubleJumpCount + 1);
+
         Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, JumpForce);
     }
 
