@@ -1,63 +1,22 @@
-﻿using System.Collections;
 using UnityEngine;
 
-public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
+public class Player : Entity, IStateOwner<Player>
 {
     public Player Owner { get; private set; }
     public IStateMachine Machine { get; private set; }
-    public MonoBehaviour Mono => this;
-    public Rigidbody2D Rb { get; private set; }
     public SpriteRenderer Renderer { get; private set; }
-    
-    [SerializeField] private Transform groundCheck;
-    [SerializeField] private float groundRadius;
-    [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private StatData statDataAsset;
-    [SerializeField] private Weapon weapon;
-    
-    private RuntimeStats stats;
-    private bool wasGroundCheckerChanged;
-    private bool isTurning;
-    private bool isDead;
-    
-    public bool IsGrounded { get; private set; }
-    public bool IsAttacking { get; set; }
-    public int LookDirection => transform.localScale.x >= 0 ? 1 : -1;
-    public float MaxHealth => stats.Get<float>(StatType.MaxHealth);
-    public float CurrentHealth => stats.Get<float>(StatType.CurrentHealth);
-    public float MoveSpeed => stats.Get<float>(StatType.MoveSpeed);
-    public int MaxDoubleJumpCount => statDataAsset.TryGetValue<int>(StatType.DoubleJumpCount);
-    public int DoubleJumpCount => stats.Get<int>(StatType.DoubleJumpCount);
-    public float JumpForce => stats.Get<float>(StatType.JumpForce);
-    public float Damage =>
-        stats.Get<float>(StatType.Damage) +
-        (weapon != null && weapon.TryGetStatBonus<float>(StatType.Damage, out var bonus) ? bonus : 0f);
-    public int MaxDashCount => statDataAsset.TryGetValue<int>(StatType.DashCount);
-    public int DashCount => stats.Get<int>(StatType.DashCount);
-    public float DashCooldown => stats.Get<float>(StatType.DashCooldown);
 
-    public Weapon Weapon => weapon;
-
-    public void EquipWeapon(Weapon newWeapon) => weapon = newWeapon;
-
-    private float acceleration = 20f; // 지면 가속도
-    private float deceleration = 10f; // 지면 감속도
-    private float airAcceleration = 30f; // 공중 가속도
-    private float airDeceleration = 15f; // 공중 감속도
-    
-    private void Awake()
+    protected override void Awake()
     {
-        Rb = GetComponent<Rigidbody2D>();
-        stats = new RuntimeStats(statDataAsset);
+        base.Awake();
         Renderer = GetComponentInChildren<SpriteRenderer>();
-        
+
         Owner = this;
         Machine = new PlayerStateMachine(Owner);
         Machine.Init();
-        
-        wasGroundCheckerChanged = !IsGrounded;
-        Owner.stats.Set(StatType.DoubleJumpCount, 0);
-        Owner.stats.Set(StatType.DashCount, 0);
+
+        stats.Set(StatType.DoubleJumpCount, 0);
+        stats.Set(StatType.DashCount, 0);
     }
 
     private void Start()
@@ -65,140 +24,54 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
         EventBus.Publish(new PlayerDashCountChangedEvent(MaxDashCount, MaxDashCount));
     }
 
-    private void Update()
+    protected override void OnGroundedChanged(bool grounded)
     {
-        IsGrounded = Physics2D.OverlapCircle(
-            groundCheck.position,
-            groundRadius,
-            groundLayer
-        );
+        base.OnGroundedChanged(grounded);
 
-        if (wasGroundCheckerChanged != IsGrounded)
+        if (grounded)
         {
-            wasGroundCheckerChanged = IsGrounded;
-            if (IsGrounded)
+            if (Rb.linearVelocityY <= -5)
             {
-                Owner.stats.Set(StatType.DoubleJumpCount, 0);
-                if (Rb.linearVelocityY <= -5)
-                {
-                    Machine.ChangeState<PlayerLandState>();
-                }
-                else
-                {
-                    Machine.ChangeState<PlayerIdleState>();
-                }
+                Machine.ChangeState<PlayerLandState>();
             }
-            else if (Rb.linearVelocityY <= 0)
+            else
             {
-                Machine.ChangeState<PlayerFallState>();
+                Machine.ChangeState<PlayerIdleState>();
             }
         }
+        else if (Rb.linearVelocityY <= 0)
+        {
+            Machine.ChangeState<PlayerFallState>();
+        }
     }
 
-    public void Move(Vector2 input)
+    protected override void OnDashCountChanged()
     {
-        float inputX = input.x;
-        if (inputX == 0)
-            return;
-
-        int flip = inputX > 0 ? 1 : -1;
-        float scale = Mathf.Abs(transform.localScale.x);
-        transform.localScale = new Vector3(scale * flip, scale, scale);
-        
-        float targetVelX  = inputX * MoveSpeed;
-        float currentVelX = Rb.linearVelocity.x;
- 
-        float accel, decel;
-        if (IsGrounded)
-        {
-            accel = acceleration;
-            decel = deceleration;
-        }
-        else
-        {
-            accel = airAcceleration;
-            decel = airDeceleration;
-        }
- 
-        bool isTurnStarting = (currentVelX > 0.1f && inputX < 0f) || (currentVelX < -0.1f && inputX > 0f);
-        float rate = accel;
-        float absCntSpeedPer = Mathf.Abs(currentVelX) / MoveSpeed;
-        if (!isTurning && isTurnStarting && absCntSpeedPer >= 0.9f)
-        {
-            rate = accel + decel;
-            isTurning = true;
-        }
-        if (isTurning)
-        {
-            Machine.ChangeState<PlayerTurnState>();
-            
-            if (absCntSpeedPer <= 0.55f)
-            {
-                isTurning = false;
-            }
-        }
-           
-        
-        float newVelX = Mathf.MoveTowards(currentVelX, targetVelX, rate * Time.fixedDeltaTime);
- 
-        Rb.linearVelocity = new Vector2(newVelX, Rb.linearVelocity.y);
-    }
-
-    public void Jump()
-    {
-        if (!IsGrounded)
-            stats.Set(StatType.DoubleJumpCount, DoubleJumpCount + 1);
-
-        Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, JumpForce);
-    }
-
-    public void Dash()
-    {
-        stats.Set(StatType.DashCount, DashCount + 1);
-        EventBus.Publish(new PlayerDashCountChangedEvent(MaxDashCount - DashCount, MaxDashCount));
-        Rb.linearVelocity = Vector2.zero;
-        Rb.AddForce(Vector2.right * transform.localScale.x * 50f, ForceMode2D.Impulse);
-
-        StartCoroutine(DashCooldownRoutine());
-    }
-
-    private IEnumerator DashCooldownRoutine()
-    {
-        yield return new WaitForSeconds(DashCooldown);
-        stats.Set(StatType.DashCount, DashCount - 1);
         EventBus.Publish(new PlayerDashCountChangedEvent(MaxDashCount - DashCount, MaxDashCount));
     }
-    
-    public void Die()
+
+    protected override void OnHealthChanged()
     {
-        if (isDead) 
-            return;
-        isDead = true;
-        
+        EventBus.Publish(new PlayerHealthChangedEvent(CurrentHealth / MaxHealth));
+    }
+
+    public override void Die()
+    {
+        if (!TryMarkDead()) return;
         StateManager.Instance.Unregister(Machine);
         Debug.Log("Player: 사망");
-    }
-
-    public void TakeDamage(float damage)
-    {
-        stats.Set(StatType.CurrentHealth, CurrentHealth - damage);
-        EventBus.Publish(new PlayerHealthChangedEvent(CurrentHealth / MaxHealth));
-        
-        if (CurrentHealth <= 0)
-            Die();
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(transform.position, transform.position + Vector3.right * transform.localScale.x * 0.5f);
-        
+
         if (groundCheck != null)
         {
             if (IsGrounded) Gizmos.color = Color.green;
             else Gizmos.color = Color.gray2;
             Gizmos.DrawWireSphere(groundCheck.position, groundRadius);
         }
-        
     }
 }
