@@ -11,5 +11,11 @@ public struct EnemyDeadEvent : ISubject { }
 public struct EnemyAttackEvent : ISubject
 {
     public AttackData Data { get; private set; }
-    public EnemyAttackEvent(AttackData data)  { Data = data; } 
+    public EnemyAttackEvent(AttackData data)  { Data = data; }
+}
+
+public struct EnemyHealthChangedEvent : ISubject
+{
+    public float Ratio { get; private set; }
+    public EnemyHealthChangedEvent(float ratio) { Ratio = ratio; }
 }
