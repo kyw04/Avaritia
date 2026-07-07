@@ -43,14 +43,14 @@ public class BossBehaviorTree : BT.BehaviorTree
 
                     new BT.Sequence(
                         new BT.Condition(() =>
-                            board.Get<List<BossAttackEntry>>(BBKey.AvailableAttacks).Count > 0),
+                            board.Get<List<AttackData>>(BBKey.AvailableAttacks).Count > 0),
                         new BT.Action(() =>
                         {
-                            var available = board.Get<List<BossAttackEntry>>(BBKey.AvailableAttacks);
+                            var available = board.Get<List<AttackData>>(BBKey.AvailableAttacks);
                             var randomIndex = Random.Range(0, available.Count);
                             boss.StartAttack(available[randomIndex]);
-                            EventBus.Publish(new BossAttackStartEvent(available[randomIndex].data));
-                            
+                            EventBus.Publish(new BossAttackStartEvent(available[randomIndex]));
+
                             return BT.NodeStatus.Running;
                         })
                     ),
