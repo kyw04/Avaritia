@@ -118,14 +118,26 @@ public class StatData : ScriptableObject
             {
                 if (stat.value.TryGetValue<T>(out var r))
                     return r;
-                
+
                 Debug.LogError($"Type error for type {statType}");
                 return default;
             }
         }
-        
+
         Debug.LogError($"No stat found for type {statType}");
         return default;
+    }
+
+    public bool TryGetValue<T>(StatType statType, out T result)
+    {
+        foreach (var stat in stats)
+        {
+            if (stat.statType == statType)
+                return stat.value.TryGetValue(out result);
+        }
+
+        result = default;
+        return false;
     }
 
     public void SetValue<T>(StatType statType, T value = default)
