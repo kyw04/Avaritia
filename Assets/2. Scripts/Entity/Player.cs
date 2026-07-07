@@ -13,7 +13,7 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
     [SerializeField] private float groundRadius;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private StatData statDataAsset;
-    [SerializeField] private StatData weaponStatDataAsset;
+    [SerializeField] private Weapon weapon;
     
     private RuntimeStats stats;
     private bool wasGroundCheckerChanged;
@@ -29,11 +29,17 @@ public class Player : MonoBehaviour, IStateOwner<Player>, IDamageable, IAttacker
     public int MaxDoubleJumpCount => statDataAsset.TryGetValue<int>(StatType.DoubleJumpCount);
     public int DoubleJumpCount => stats.Get<int>(StatType.DoubleJumpCount);
     public float JumpForce => stats.Get<float>(StatType.JumpForce);
-    public float Damage => stats.Get<float>(StatType.Damage);
+    public float Damage =>
+        stats.Get<float>(StatType.Damage) +
+        (weapon != null && weapon.TryGetStatBonus<float>(StatType.Damage, out var bonus) ? bonus : 0f);
     public int MaxDashCount => statDataAsset.TryGetValue<int>(StatType.DashCount);
     public int DashCount => stats.Get<int>(StatType.DashCount);
     public float DashCooldown => stats.Get<float>(StatType.DashCooldown);
-    
+
+    public Weapon Weapon => weapon;
+
+    public void EquipWeapon(Weapon newWeapon) => weapon = newWeapon;
+
     private float acceleration = 20f; // 지면 가속도
     private float deceleration = 10f; // 지면 감속도
     private float airAcceleration = 30f; // 공중 가속도
