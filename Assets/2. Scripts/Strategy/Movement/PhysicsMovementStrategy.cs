@@ -12,7 +12,12 @@ public class PhysicsMovementStrategy : IMovementStrategy
 
     public void Move(Entity mover, Rigidbody2D rb, Vector2 direction)
     {
-        var player = (Player)mover;
+        if (mover is not Player player)
+        {
+            Debug.LogError("PhysicsMovementStrategy: mover is not a Player");
+            return;
+        }
+
         float inputX = direction.x;
         if (inputX == 0)
             return;
