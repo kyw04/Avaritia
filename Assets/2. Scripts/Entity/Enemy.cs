@@ -1,14 +1,12 @@
 using UnityEngine;
 
-public class Enemy : MonoBehaviour, IStateOwner<Enemy>, IDamageable, IAttacker
+public class Enemy : Entity, IStateOwner<Enemy>
 {
-    public Enemy Owner { get;  private set; }
+    public Enemy Owner { get; private set; }
     public IStateMachine Machine { get; private set; }
-    public Rigidbody2D Rb { get;  private set; }
-    public MonoBehaviour Mono => this;
     public Transform Target { get; private set; }
     public bool HasTarget => Target != null;
-    
+
     [SerializeField] private PatrolArea patrolPoint;
     [SerializeField] private LayerMask viewLayerMask;
     [SerializeField, Range(0, 360)] private int viewAngle;
@@ -16,29 +14,16 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>, IDamageable, IAttacker
     [SerializeField] private float viewRadius;
     [SerializeField] private float alertRadius;
 
-    [SerializeField] private AttackData attackData;
-    [SerializeField] private float attackRange;
-    [SerializeField] private float attackCooldown;
     private float lastAttackTime = float.MinValue;
 
-    [SerializeField] private StatData statDataAsset; // 수정 사항 Addressables로 관리
-    private RuntimeStats stats;
-    public float MaxHealth => stats.Get<float>(StatType.MaxHealth);
-    public float CurrentHealth => stats.Get<float>(StatType.CurrentHealth);
-    public float MoveSpeed => stats.Get<float>(StatType.MoveSpeed);
-    public float Damage => stats.Get<float>(StatType.Damage);
-    public bool IsAttacking { get; set; }
-    public int LookDirection => transform.right.x >= 0 ? 1 : -1;
+    public override int LookDirection => transform.right.x >= 0 ? 1 : -1;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         Owner = this;
         Machine = new EnemyStateMachine(Owner);
         Machine.Init();
-        
-        Rb = GetComponent<Rigidbody2D>();
-
-        stats = new RuntimeStats(statDataAsset);
     }
 
     public void Move()
@@ -48,11 +33,10 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>, IDamageable, IAttacker
             var rot = Target.position.x > transform.position.x ? 0 : 180;
             transform.rotation = Quaternion.Euler(0, rot, 0);
         }
-        
-        float targetVelocityX = transform.right.x * MoveSpeed;
-        Rb.linearVelocity = new Vector2(targetVelocityX, Rb.linearVelocityY);
+
+        Move((Vector2)transform.right);
     }
-    
+
     public void Patrol()
     {
         bool onTurn = Physics2D.CircleCast(
@@ -70,7 +54,7 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>, IDamageable, IAttacker
         {
             FaceTowardPatrolCenter();
         }
-        
+
         FindTarget();
     }
 
@@ -92,16 +76,20 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>, IDamageable, IAttacker
 
     public bool IsInAttackRange()
     {
-        if (!HasTarget) return false;
-        return Vector2.Distance(transform.position, Target.position) <= attackRange;
+        if (!HasTarget || weapon == null || weapon.combo == null || weapon.combo.Count == 0) return false;
+        return Vector2.Distance(transform.position, Target.position) <= weapon.combo.datas[0].maxRange;
     }
 
-    public bool CanAttack() => Time.time - lastAttackTime >= attackCooldown;
+    public bool CanAttack()
+    {
+        if (weapon == null || weapon.combo == null || weapon.combo.Count == 0) return false;
+        return Time.time - lastAttackTime >= weapon.combo.datas[0].cooldown;
+    }
 
     public void Attack()
     {
         lastAttackTime = Time.time;
-        attackData.Attack(this);
+        weapon.combo.datas[0].Attack(this);
     }
 
     public void FaceTarget()
@@ -124,14 +112,14 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>, IDamageable, IAttacker
             Machine.ChangeState<EnemyCombatState>();
             return;
         }
-        
+
         var halfAngle = viewAngle / 2f;
-        var stepAngle = viewAngle / viewDensity; 
+        var stepAngle = viewAngle / viewDensity;
         for (int i = 0; i <= viewDensity; i++)
         {
             var currentAngle = -halfAngle + (stepAngle * i);
             var dir = Quaternion.Euler(0, 0, currentAngle) * transform.right;
-    
+
             hit = Physics2D.Raycast(currentPos, dir, viewRadius, ~(1 << gameObject.layer));
             if (hit)
             {
@@ -141,7 +129,7 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>, IDamageable, IAttacker
                     Machine.ChangeState<EnemyCombatState>();
                     return;
                 }
-                
+
                 Debug.DrawRay(currentPos, dir * hit.distance, Color.red);
             }
             else
@@ -162,7 +150,7 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>, IDamageable, IAttacker
         {
             var currentAngle = -halfAngle + (stepAngle * i);
             var dir = Quaternion.Euler(0, 0, currentAngle) * transform.right;
-            
+
             Gizmos.DrawRay(currentPos, dir *  viewRadius);
         }
 
@@ -171,19 +159,21 @@ public class Enemy : MonoBehaviour, IStateOwner<Enemy>, IDamageable, IAttacker
             Gizmos.color = new Color32(0, 255, 0, 50);
             Gizmos.DrawCube(patrolPoint.position, patrolPoint.size);
         }
-        
+
         Gizmos.color = Color.forestGreen;
         Gizmos.DrawWireSphere(transform.position +  transform.right * 0.5f, 0.25f);
     }
 
-    public void TakeDamage(float damage)
+    protected override void OnHealthChanged()
     {
-        stats.Set(StatType.CurrentHealth, CurrentHealth - damage);
-
-        if (CurrentHealth <= 0)
-        {
-            Machine.ChangeState<EnemyDeadState>();
-        }
+        EventBus.Publish(new EnemyHealthChangedEvent(CurrentHealth / MaxHealth));
         Debug.Log($"데미지 입음! 체력: {CurrentHealth}");
+    }
+
+    public override void Die()
+    {
+        if (!TryMarkDead()) return;
+        Machine.ChangeState<EnemyDeadState>();
+        StateManager.Instance.Unregister(Machine);
     }
 }
