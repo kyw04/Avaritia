@@ -214,7 +214,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   statDataAsset: {fileID: 11400000, guid: 3ce9f5085006b01478fe45ccda66d4b8, type: 2}
-  healthBarImage: {fileID: 0}
+  weapon: {fileID: 11400000, guid: d413ff329fa88d445a6a6c85c4eed3e9, type: 2}
 --- !u!114 &5379797011840322666
 MonoBehaviour:
   m_ObjectHideFlags: 0
