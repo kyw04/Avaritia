@@ -303,7 +303,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
     
     public class PlayerAttackState : StateBase<Player>, IObserver<PlayerAttackBufferEvent>
     {
-        private AttackDataCombo comboData;
+        private AttackDataCombo combo;
         private RaycastHit2D[] hitResults = new RaycastHit2D[10];
 
         private bool buffer;
@@ -313,36 +313,27 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public PlayerAttackState(Player owner) : base(owner)
         {
-            DataLoad();
             EventBus.Subscribe<PlayerAttackBufferEvent>(this);
-            
+
             Machine.AddTransition<PlayerAttackState, PlayerIdleState>();
             Machine.AddTransition<PlayerAttackState, PlayerDashState>();
         }
 
-        private async void DataLoad() // 데이터 받아오는 애 만들어서 관리 하면 좋을 듯
-        {
-            try
-            {
-                var handle = Addressables.LoadAssetAsync<AttackDataCombo>("attack_combo/player_001");
-                await handle.Task;
-            
-                comboData = handle.Result;
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e.Message);
-            }
-        }
-        
         public override void Enter()
         {
+            if (Owner.Weapon == null || Owner.Weapon.combo == null || Owner.Weapon.combo.Count == 0)
+            {
+                Machine.ChangeState<PlayerIdleState>();
+                return;
+            }
+
+            combo = Owner.Weapon.combo;
             comboIndex = 0;
             hasAttack = false;
             timer = 0f;
-          
+
             Owner.Rb.linearVelocity = Vector2.zero;
-            EventBus.Publish(new PlayerAttackStartEvent(comboData.datas[comboIndex]));
+            EventBus.Publish(new PlayerAttackStartEvent(combo.datas[comboIndex]));
         }
 
         public override void Execute()
@@ -354,18 +345,18 @@ public class PlayerStateMachine : StateMachineBase<Player>
             {
                 hasAttack = true;
 
-                comboData.datas[comboIndex].Attack(Owner);
+                combo.datas[comboIndex].Attack(Owner);
             }
-            
+
             timer += Time.deltaTime;
-            if (timer >= comboData.datas[comboIndex].duration)
+            if (timer >= combo.datas[comboIndex].duration)
             {
                 if (buffer)
                 {
-                    comboIndex = (comboIndex + 1) % comboData.Count;
+                    comboIndex = (comboIndex + 1) % combo.Count;
 
                     Owner.Rb.linearVelocity = Vector2.zero;
-                    EventBus.Publish(new PlayerAttackStartEvent(comboData.datas[comboIndex]));
+                    EventBus.Publish(new PlayerAttackStartEvent(combo.datas[comboIndex]));
                     buffer = false;
                     hasAttack = false;
                 }
