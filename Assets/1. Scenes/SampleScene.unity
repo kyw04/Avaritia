@@ -2931,10 +2931,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2856072584327875828, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
-      propertyPath: weapon
-      value: 
-      objectReference: {fileID: 11400000, guid: d413ff329fa88d445a6a6c85c4eed3e9, type: 2}
     - target: {fileID: 4739286354209235477, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
       propertyPath: m_LocalPosition.x
       value: 9.2
@@ -3040,17 +3036,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7499223493051732727, guid: a81a8c8f2e192794393d6488f54ab7aa, type: 3}
-      propertyPath: healthBarImage
-      value: 
-      objectReference: {fileID: 833888204}
     - target: {fileID: 7678781736317148054, guid: a81a8c8f2e192794393d6488f54ab7aa, type: 3}
       propertyPath: m_Name
       value: Boss
-      objectReference: {fileID: 0}
-    - target: {fileID: 7678781736317148054, guid: a81a8c8f2e192794393d6488f54ab7aa, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

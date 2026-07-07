@@ -9,10 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee431c950793c4d409cffdfc68b75dce, type: 3}
-  m_Name: Test Player StatData
-  m_EditorClassIdentifier: Assembly-CSharp::StatData
-  stats: []
-  references:
-    version: 2
-    RefIds: []
+  m_Script: {fileID: 11500000, guid: 2f935b32e47f32148a0e4aac5329210c, type: 3}
+  m_Name: Test Boss Weapon
+  m_EditorClassIdentifier: Assembly-CSharp::Weapon
+  combo: {fileID: 11400000, guid: 9a25ddba3fc186347bba1e2ed4d6c84a, type: 2}
+  statBonusData: {fileID: 0}

@@ -30,6 +30,8 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
+  maxRange: 3
+  cooldown: 3
   attackStrategy:
     rid: 1772930754192081026
   references:

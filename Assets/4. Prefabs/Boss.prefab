@@ -175,8 +175,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Boss
   statDataAsset: {fileID: 11400000, guid: 027ee85a5df17b2499498d5b862c1540, type: 2}
-  attackData: {fileID: 11400000, guid: 4ad35436ea3c4764e9740d088dd630f7, type: 2}
-  healthBarImage: {fileID: 0}
+  weapon: {fileID: 11400000, guid: 88323fb09eda76e488b0a89635f600b0, type: 2}
+  movementStrategy:
+    rid: 1772930779186724987
+  groundCheck: {fileID: 0}
+  groundRadius: 0
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 1772930779186724987
+      type: {class: ConstantVelocityMovementStrategy, ns: , asm: Assembly-CSharp}
+      data: 
 --- !u!50 &5302793644755587929
 Rigidbody2D:
   serializedVersion: 5

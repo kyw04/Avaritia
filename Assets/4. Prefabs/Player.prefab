@@ -208,13 +208,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4113bce7d5ab4dcd8815858b17eb087e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
+  statDataAsset: {fileID: 11400000, guid: 3ce9f5085006b01478fe45ccda66d4b8, type: 2}
+  weapon: {fileID: 11400000, guid: d413ff329fa88d445a6a6c85c4eed3e9, type: 2}
+  movementStrategy:
+    rid: 1772930779186724983
   groundCheck: {fileID: 2994277442230160801}
   groundRadius: 0.25
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  statDataAsset: {fileID: 11400000, guid: 3ce9f5085006b01478fe45ccda66d4b8, type: 2}
-  weapon: {fileID: 11400000, guid: d413ff329fa88d445a6a6c85c4eed3e9, type: 2}
+  references:
+    version: 2
+    RefIds:
+    - rid: 1772930779186724983
+      type: {class: PhysicsMovementStrategy, ns: , asm: Assembly-CSharp}
+      data:
+        acceleration: 20
+        deceleration: 10
+        airAcceleration: 30
+        airDeceleration: 15
 --- !u!114 &5379797011840322666
 MonoBehaviour:
   m_ObjectHideFlags: 0
