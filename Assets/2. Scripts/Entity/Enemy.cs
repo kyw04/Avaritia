@@ -7,7 +7,8 @@ public class Enemy : Entity, IStateOwner<Enemy>
     public Transform Target { get; private set; }
     public bool HasTarget => Target != null;
 
-    [SerializeField] private PatrolArea patrolPoint;
+    [SerializeField] private Vector2 patrolSize;
+    private Vector2 patrolCenter;
     [SerializeField] private LayerMask viewLayerMask;
     [SerializeField, Range(0, 360)] private int viewAngle;
     [SerializeField] private float viewDensity;
@@ -21,6 +22,7 @@ public class Enemy : Entity, IStateOwner<Enemy>
     protected override void Awake()
     {
         base.Awake();
+        patrolCenter = transform.position;
         Owner = this;
         Machine = new EnemyStateMachine(Owner);
         Machine.Init();
@@ -60,17 +62,15 @@ public class Enemy : Entity, IStateOwner<Enemy>
 
     public bool IsInPatrolArea()
     {
-        if (patrolPoint == null) return true;
         float x = transform.position.x;
-        float left  = patrolPoint.position.x - patrolPoint.size.x / 2f;
-        float right = patrolPoint.position.x + patrolPoint.size.x / 2f;
+        float left = patrolCenter.x - patrolSize.x / 2f;
+        float right = patrolCenter.x + patrolSize.x / 2f;
         return x >= left && x <= right;
     }
 
     public void FaceTowardPatrolCenter()
     {
-        if (patrolPoint == null) return;
-        float rot = patrolPoint.position.x > transform.position.x ? 0 : 180;
+        float rot = patrolCenter.x > transform.position.x ? 0 : 180;
         transform.rotation = Quaternion.Euler(0, rot, 0);
     }
 
@@ -154,11 +154,9 @@ public class Enemy : Entity, IStateOwner<Enemy>
             Gizmos.DrawRay(currentPos, dir *  viewRadius);
         }
 
-        if (patrolPoint != null)
-        {
-            Gizmos.color = new Color32(0, 255, 0, 50);
-            Gizmos.DrawCube(patrolPoint.position, patrolPoint.size);
-        }
+        Vector2 patrolGizmoCenter = Application.isPlaying ? patrolCenter : (Vector2)transform.position;
+        Gizmos.color = new Color32(0, 255, 0, 50);
+        Gizmos.DrawCube(patrolGizmoCenter, patrolSize);
 
         Gizmos.color = Color.forestGreen;
         Gizmos.DrawWireSphere(transform.position +  transform.right * 0.5f, 0.25f);
