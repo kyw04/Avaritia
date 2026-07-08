@@ -27,8 +27,9 @@ public struct PlayerAttackEndEvent : ISubject { }
 
 public struct PlayerHealthChangedEvent : ISubject
 {
-    public float Ratio { get; private set; }
-    public PlayerHealthChangedEvent(float ratio) { Ratio = ratio; }
+    public float Max { get; private set; }
+    public float Current { get; private set; }
+    public PlayerHealthChangedEvent(float max, float current) { Max = max; Current = current; }
 }
 
 public struct PlayerDashCountChangedEvent : ISubject
