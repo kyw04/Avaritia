@@ -16,4 +16,17 @@ public class Weapon : ScriptableObject
 
         return statBonusData.TryGetValue(type, out value);
     }
+
+    public T ApplyBonus<T>(StatType type, T baseValue)
+    {
+        if (!TryGetStatBonus<T>(type, out var bonus)) return baseValue;
+        return Add(baseValue, bonus);
+    }
+
+    private static T Add<T>(T a, T b)
+    {
+        if (typeof(T) == typeof(float)) return (T)(object)((float)(object)a + (float)(object)b);
+        if (typeof(T) == typeof(int)) return (T)(object)((int)(object)a + (int)(object)b);
+        return a;
+    }
 }
