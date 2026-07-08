@@ -22,18 +22,28 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker
 
     public virtual int LookDirection => transform.localScale.x >= 0 ? 1 : -1;
 
-    public float MaxHealth => stats.Get<float>(StatType.MaxHealth);
-    public float CurrentHealth => stats.Get<float>(StatType.CurrentHealth);
-    public float MoveSpeed => stats.Get<float>(StatType.MoveSpeed);
-    public virtual float Damage =>
-        stats.Get<float>(StatType.Damage) +
-        (weapon != null && weapon.TryGetStatBonus<float>(StatType.Damage, out var bonus) ? bonus : 0f);
-    public int MaxDoubleJumpCount => statDataAsset.TryGetValue<int>(StatType.DoubleJumpCount);
+    public float MaxHealth => GetStat<float>(StatType.MaxHealth);
+    public float CurrentHealth => GetStat<float>(StatType.CurrentHealth);
+    public float MoveSpeed => GetStat<float>(StatType.MoveSpeed);
+    public virtual float Damage => GetStat<float>(StatType.Damage);
+    public int MaxDoubleJumpCount => GetAssetStat<int>(StatType.DoubleJumpCount);
     public int DoubleJumpCount => stats.Get<int>(StatType.DoubleJumpCount);
-    public float JumpForce => stats.Get<float>(StatType.JumpForce);
-    public int MaxDashCount => statDataAsset.TryGetValue<int>(StatType.DashCount);
+    public float JumpForce => GetStat<float>(StatType.JumpForce);
+    public int MaxDashCount => GetAssetStat<int>(StatType.DashCount);
     public int DashCount => stats.Get<int>(StatType.DashCount);
-    public float DashCooldown => stats.Get<float>(StatType.DashCooldown);
+    public float DashCooldown => GetStat<float>(StatType.DashCooldown);
+
+    protected T GetStat<T>(StatType type)
+    {
+        var baseValue = stats.Get<T>(type);
+        return weapon != null ? weapon.ApplyBonus(type, baseValue) : baseValue;
+    }
+
+    protected T GetAssetStat<T>(StatType type)
+    {
+        var baseValue = statDataAsset.TryGetValue<T>(type);
+        return weapon != null ? weapon.ApplyBonus(type, baseValue) : baseValue;
+    }
 
     protected virtual void Awake()
     {
@@ -92,7 +102,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker
 
     public void TakeDamage(float damage)
     {
-        stats.Set(StatType.CurrentHealth, CurrentHealth - damage);
+        stats.Set(StatType.CurrentHealth, stats.Get<float>(StatType.CurrentHealth) - damage);
         OnHealthChanged();
         if (CurrentHealth <= 0) Die();
     }
