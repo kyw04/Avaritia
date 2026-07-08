@@ -52,6 +52,11 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker
         wasGroundCheckerChanged = !IsGrounded;
     }
 
+    protected virtual void Start()
+    {
+        OnHealthChanged();
+    }
+
     protected virtual void Update()
     {
         if (groundCheck == null) return;
@@ -69,7 +74,18 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker
         if (grounded) stats.Set(StatType.DoubleJumpCount, 0);
     }
 
-    public void EquipWeapon(Weapon newWeapon) => weapon = newWeapon;
+    public void EquipWeapon(Weapon newWeapon)
+    {
+        float healthRatio = MaxHealth > 0 ? CurrentHealth / MaxHealth : 0f;
+        weapon = newWeapon;
+
+        float newMaxHealth = MaxHealth;
+        float newCurrentHealth = healthRatio * newMaxHealth;
+        float currentHealthBonus = weapon != null && weapon.TryGetStatBonus<float>(StatType.CurrentHealth, out var bonus) ? bonus : 0f;
+        stats.Set(StatType.CurrentHealth, newCurrentHealth - currentHealthBonus);
+
+        OnHealthChanged();
+    }
 
     public void Move(Vector2 direction) => movementStrategy?.Move(this, Rb, direction);
 

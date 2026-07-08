@@ -19,8 +19,9 @@ public class Player : Entity, IStateOwner<Player>
         stats.Set(StatType.DashCount, 0);
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         EventBus.Publish(new PlayerDashCountChangedEvent(MaxDashCount, MaxDashCount));
     }
 
@@ -52,7 +53,7 @@ public class Player : Entity, IStateOwner<Player>
 
     protected override void OnHealthChanged()
     {
-        EventBus.Publish(new PlayerHealthChangedEvent(CurrentHealth / MaxHealth));
+        EventBus.Publish(new PlayerHealthChangedEvent(MaxHealth, CurrentHealth));
     }
 
     public override void Die()
