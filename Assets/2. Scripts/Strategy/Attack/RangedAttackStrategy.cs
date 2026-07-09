@@ -64,6 +64,9 @@ public class RangedAttackStrategy : IAttackStrategy
         }
 
         yield return new WaitForSeconds(Random.Range(0f, redirectDelay));
+        if (bullet == null)
+            yield break;
+
         angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         bullet.rotation = Quaternion.Euler(0, 0, angle);
         while (bullet != null)
