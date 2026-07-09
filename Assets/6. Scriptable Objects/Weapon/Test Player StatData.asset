@@ -13,61 +13,28 @@ MonoBehaviour:
   m_Name: Test Player StatData
   m_EditorClassIdentifier: Assembly-CSharp::StatData
   stats:
-  - rid: 1772930804314800226
-  - rid: 1772930804314800227
-  - rid: 1772930804314800228
-  - rid: 1772930804314800229
-  - rid: 1772930804314800230
+  - rid: 1772930829351125080
+  - rid: 1772930829351125081
   references:
     version: 2
     RefIds:
-    - rid: 1772930804314800199
-      type: {class: StatData/IntValue, ns: , asm: Assembly-CSharp}
-      data:
-        value: 1
-    - rid: 1772930804314800202
-      type: {class: StatData/IntValue, ns: , asm: Assembly-CSharp}
-      data:
-        value: 2
-    - rid: 1772930804314800211
+    - rid: 1772930829351125079
       type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
       data:
         value: 5
-    - rid: 1772930804314800224
-      type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
-      data:
-        value: 1000
-    - rid: 1772930804314800226
+    - rid: 1772930829351125080
       type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
       data:
         statType: 1
         value:
-          rid: 1772930804314800224
-    - rid: 1772930804314800227
+          rid: 1772930829351125082
+    - rid: 1772930829351125081
       type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
       data:
-        statType: 2
+        statType: 6
         value:
-          rid: 1772930804314800231
-    - rid: 1772930804314800228
-      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
-      data:
-        statType: 3
-        value:
-          rid: 1772930804314800211
-    - rid: 1772930804314800229
-      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
-      data:
-        statType: 4
-        value:
-          rid: 1772930804314800202
-    - rid: 1772930804314800230
-      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
-      data:
-        statType: 8
-        value:
-          rid: 1772930804314800199
-    - rid: 1772930804314800231
+          rid: 1772930829351125079
+    - rid: 1772930829351125082
       type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
       data:
-        value: 1000
+        value: 50

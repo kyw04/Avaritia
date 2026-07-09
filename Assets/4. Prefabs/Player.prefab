@@ -213,7 +213,7 @@ MonoBehaviour:
   movementStrategy:
     rid: 1772930779186724983
   groundCheck: {fileID: 2994277442230160801}
-  groundRadius: 0.25
+  groundRadius: 0.07
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
