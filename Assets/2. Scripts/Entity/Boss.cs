@@ -46,7 +46,7 @@ public class Boss : Entity
             return;
 
         int flip = FlipToTarget();
-        if (Vector2.Distance(Target.position, transform.position) <= 0.5f)
+        if (Mathf.Abs(Target.position.x) - Mathf.Abs(transform.position.x) <= 0.5f)
             return;
 
         Move(new Vector2(flip, 0));
