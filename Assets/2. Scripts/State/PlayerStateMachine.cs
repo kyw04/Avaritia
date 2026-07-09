@@ -51,7 +51,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Enter()
         {
-            EventBus.Publish(new PlayerIdleEvent());
+            EventBus.Publish(new EntityIdleEvent(Owner));
         }
 
         public override void Execute()
@@ -77,7 +77,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         
         public override void Enter()
         {
-            EventBus.Publish(new PlayerMovedEvent(currentSpeed));
+            EventBus.Publish(new EntityMovedEvent(Owner, currentSpeed));
         }
 
         public override void Execute()
@@ -89,7 +89,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             }
             else
             {
-                EventBus.Publish(new PlayerMovedEvent(currentSpeed));
+                EventBus.Publish(new EntityMovedEvent(Owner, currentSpeed));
             }
         }
 
@@ -100,7 +100,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Exit()
         {
-            EventBus.Publish(new PlayerMovedEvent(0));
+            EventBus.Publish(new EntityMovedEvent(Owner, 0));
         }
     }
 
@@ -117,7 +117,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             Machine.AddTransition<PlayerTurnState, PlayerMoveState>();
             
             moveDir = InputHandler.Instance.MoveInput;
-            EventBus.Publish(new PlayerTurnEvent());
+            EventBus.Publish(new EntityTurnEvent(Owner));
         }
 
         public override void Execute()
@@ -147,7 +147,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         public override void Enter()
         {
             landStartTime = Time.time;
-            EventBus.Publish(new PlayerLandedEvent());
+            EventBus.Publish(new EntityLandedEvent(Owner));
         }
 
         public override void Execute()
@@ -203,7 +203,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         public override void Enter()
         {
             int index = Owner.IsGrounded ? 0 : 1;
-            EventBus.Publish(new PlayerJumpedEvent(jumpDataList.datas[index]));
+            EventBus.Publish(new EntityJumpedEvent(Owner, jumpDataList.datas[index]));
             Owner.Jump();
         }
 
@@ -236,7 +236,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Enter()
         {
-            EventBus.Publish(new PlayerDashEvent());
+            EventBus.Publish(new EntityDashEvent(Owner));
             Owner.Rb.gravityScale = 0f;
             Owner.Dash();
             dashStartTime = Time.time;
@@ -269,7 +269,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Enter()
         {
-            EventBus.Publish(new PlayerFallingEvent());
+            EventBus.Publish(new EntityFallingEvent(Owner));
         }
 
         public override void Execute()
@@ -297,11 +297,11 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Enter()
         {
-            EventBus.Publish(new PlayerFallingEvent());
+            EventBus.Publish(new EntityFallingEvent(Owner));
         }
     }
     
-    public class PlayerAttackState : StateBase<Player>, IObserver<PlayerAttackBufferEvent>
+    public class PlayerAttackState : StateBase<Player>, IObserver<EntityAttackBufferEvent>
     {
         private AttackDataCombo combo;
         private RaycastHit2D[] hitResults = new RaycastHit2D[10];
@@ -313,7 +313,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public PlayerAttackState(Player owner) : base(owner)
         {
-            EventBus.Subscribe<PlayerAttackBufferEvent>(this);
+            EventBus.Subscribe<EntityAttackBufferEvent>(this);
 
             Machine.AddTransition<PlayerAttackState, PlayerIdleState>();
             Machine.AddTransition<PlayerAttackState, PlayerDashState>();
@@ -333,7 +333,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             timer = 0f;
 
             Owner.Rb.linearVelocity = Vector2.zero;
-            EventBus.Publish(new PlayerAttackStartEvent(combo.datas[comboIndex]));
+            EventBus.Publish(new EntityAttackStartEvent(Owner, combo.datas[comboIndex]));
         }
 
         public override void Execute()
@@ -356,7 +356,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
                     comboIndex = (comboIndex + 1) % combo.Count;
 
                     Owner.Rb.linearVelocity = Vector2.zero;
-                    EventBus.Publish(new PlayerAttackStartEvent(combo.datas[comboIndex]));
+                    EventBus.Publish(new EntityAttackStartEvent(Owner, combo.datas[comboIndex]));
                     buffer = false;
                     hasAttack = false;
                 }
@@ -369,7 +369,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             }
         }
 
-        public void OnNotify(PlayerAttackBufferEvent e) => buffer = true;
+        public void OnNotify(EntityAttackBufferEvent e) => buffer = true;
     }
 
 #endregion

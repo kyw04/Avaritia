@@ -54,7 +54,6 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker
 
     protected virtual void Start()
     {
-        OnHealthChanged();
     }
 
     protected virtual void Update()
@@ -71,7 +70,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker
 
     protected virtual void OnGroundedChanged(bool grounded)
     {
-        if (grounded) stats.Set(StatType.DoubleJumpCount, 0);
+        if (grounded)
+            stats.Set(StatType.DoubleJumpCount, 0);
     }
 
     public void EquipWeapon(Weapon newWeapon)
@@ -85,6 +85,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker
         stats.Set(StatType.CurrentHealth, newCurrentHealth - currentHealthBonus);
 
         OnHealthChanged();
+        OnDashCountChanged();
     }
 
     public void Move(Vector2 direction) => movementStrategy?.Move(this, Rb, direction);
@@ -107,8 +108,6 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker
         StartCoroutine(DashCooldownRoutine());
     }
 
-    protected virtual void OnDashCountChanged() { }
-
     private IEnumerator DashCooldownRoutine()
     {
         yield return new WaitForSeconds(DashCooldown);
@@ -130,6 +129,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker
         return true;
     }
 
-    protected abstract void OnHealthChanged();
+    private void OnHealthChanged() => EventBus.Publish(new EntityHealthChangedEvent(this, MaxHealth, CurrentHealth));
+    private void OnDashCountChanged() => EventBus.Publish(new EntityDashCountChangedEvent(this, MaxDashCount - DashCount, MaxDashCount));
+    
     public abstract void Die();
 }

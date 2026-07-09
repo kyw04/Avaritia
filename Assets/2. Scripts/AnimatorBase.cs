@@ -6,9 +6,10 @@ public class AnimatorBase : MonoBehaviour
     protected Animator animator;
     protected Coroutine animCoroutine;
     
-    private void Awake()
+    protected virtual void Awake()
     {
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
+        Debug.Log(animator.transform.parent.name);
     }
     
     protected void PlayAnimation(string animName)

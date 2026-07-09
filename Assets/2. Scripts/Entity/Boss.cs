@@ -60,11 +60,6 @@ public class Boss : Entity
         return flip;
     }
 
-    protected override void OnHealthChanged()
-    {
-        EventBus.Publish(new BossHealthChangedEvent(CurrentHealth / MaxHealth));
-    }
-
     public override void Die()
     {
         if (!TryMarkDead()) return;

@@ -22,7 +22,7 @@ public class Player : Entity, IStateOwner<Player>
     protected override void Start()
     {
         base.Start();
-        EventBus.Publish(new PlayerDashCountChangedEvent(MaxDashCount, MaxDashCount));
+        EventBus.Publish(new EntityDashCountChangedEvent(this, MaxDashCount, MaxDashCount));
     }
 
     protected override void OnGroundedChanged(bool grounded)
@@ -44,16 +44,6 @@ public class Player : Entity, IStateOwner<Player>
         {
             Machine.ChangeState<PlayerFallState>();
         }
-    }
-
-    protected override void OnDashCountChanged()
-    {
-        EventBus.Publish(new PlayerDashCountChangedEvent(MaxDashCount - DashCount, MaxDashCount));
-    }
-
-    protected override void OnHealthChanged()
-    {
-        EventBus.Publish(new PlayerHealthChangedEvent(MaxHealth, CurrentHealth));
     }
 
     public override void Die()

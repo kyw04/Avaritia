@@ -36,7 +36,7 @@ public class InputHandler : Singleton<InputHandler>
         player.Machine.ChangeState<PlayerJumpState>();
     private void OnAttack(InputAction.CallbackContext context)
     {
-        EventBus.Publish(new PlayerAttackBufferEvent());
+        EventBus.Publish(new EntityAttackBufferEvent());
         player.Machine.ChangeState<PlayerAttackState>();
     }
     

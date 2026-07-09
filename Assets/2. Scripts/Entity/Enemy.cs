@@ -162,12 +162,6 @@ public class Enemy : Entity, IStateOwner<Enemy>
         Gizmos.DrawWireSphere(transform.position +  transform.right * 0.5f, 0.25f);
     }
 
-    protected override void OnHealthChanged()
-    {
-        EventBus.Publish(new EnemyHealthChangedEvent(CurrentHealth / MaxHealth));
-        Debug.Log($"데미지 입음! 체력: {CurrentHealth}");
-    }
-
     public override void Die()
     {
         if (!TryMarkDead()) return;
