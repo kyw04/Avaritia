@@ -9,7 +9,6 @@ public class AnimatorBase : MonoBehaviour
     protected virtual void Awake()
     {
         animator = GetComponentInChildren<Animator>();
-        Debug.Log(animator.transform.parent.name);
     }
     
     protected void PlayAnimation(string animName)

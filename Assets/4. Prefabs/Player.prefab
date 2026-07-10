@@ -9,9 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3428059026018509911}
-  - component: {fileID: 7848186573868504589}
   - component: {fileID: 4182182711176251150}
-  - component: {fileID: 4270636475273112612}
+  - component: {fileID: 7848186573868504589}
   m_Layer: 6
   m_Name: Sprite
   m_TagString: Untagged
@@ -34,28 +33,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4739286354209235477}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &7848186573868504589
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3493618050049314724}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 61f389a5e3e233e41afd895fec8d1bde, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!212 &4182182711176251150
 SpriteRenderer:
   serializedVersion: 2
@@ -115,18 +92,28 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &4270636475273112612
-MonoBehaviour:
+--- !u!95 &7848186573868504589
+Animator:
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3493618050049314724}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 009b459ea2d0f2645ab6124936fb3102, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimator
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 61f389a5e3e233e41afd895fec8d1bde, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3734078060112766453
 GameObject:
   m_ObjectHideFlags: 0
@@ -169,6 +156,7 @@ GameObject:
   - component: {fileID: 4739286354209235477}
   - component: {fileID: 2856072584327875828}
   - component: {fileID: 5379797011840322666}
+  - component: {fileID: 5044805659046468182}
   - component: {fileID: 5735150061085217394}
   - component: {fileID: 2389468441697128624}
   m_Layer: 6
@@ -239,6 +227,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputHandler
   player: {fileID: 2856072584327875828}
+--- !u!114 &5044805659046468182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4770807377537432152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 009b459ea2d0f2645ab6124936fb3102, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EntityAnimator
 --- !u!50 &5735150061085217394
 Rigidbody2D:
   serializedVersion: 5
