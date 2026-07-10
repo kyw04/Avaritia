@@ -16,8 +16,7 @@ public class EntityAnimator : AnimatorBase,
     protected override void Awake()
     {
         base.Awake();
-        self = GetComponent<Entity>();
-        Debug.Log(self);
+        self = GetComponentInParent<Entity>();
     }
 
     private void OnEnable()

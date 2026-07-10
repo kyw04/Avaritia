@@ -8,7 +8,7 @@ public class AnimatorBase : MonoBehaviour
     
     protected virtual void Awake()
     {
-        animator = GetComponentInChildren<Animator>();
+        animator = GetComponent<Animator>();
     }
     
     protected void PlayAnimation(string animName)
