@@ -1,8 +1,10 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Entity : MonoBehaviour, IDamageable, IAttacker
+public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable
 {
+    [SerializeField] protected SkillData[] skill;
     [SerializeField] protected StatData statDataAsset;
     [SerializeField] protected Weapon weapon;
     [SerializeReference, SubclassSelector] protected IMovementStrategy movementStrategy;
@@ -13,6 +15,17 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker
     protected RuntimeStats stats;
     protected bool isDead;
     protected bool wasGroundCheckerChanged;
+
+    private class ActiveBuff
+    {
+        public object source;
+        public StatType type;
+        public BuffValueType valueType;
+        public float amount;
+        public float expireTime;
+    }
+
+    private readonly List<ActiveBuff> activeBuffs = new();
 
     public Rigidbody2D Rb { get; protected set; }
     public MonoBehaviour Mono => this;
@@ -36,7 +49,40 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker
     protected T GetStat<T>(StatType type)
     {
         var baseValue = stats.Get<T>(type);
-        return weapon != null ? weapon.ApplyBonus(type, baseValue) : baseValue;
+        var withWeapon = weapon != null ? weapon.ApplyBonus(type, baseValue) : baseValue;
+        return ApplyBuffs(type, withWeapon);
+    }
+
+    private T ApplyBuffs<T>(StatType type, T value)
+    {
+        if (typeof(T) != typeof(float)) return value;
+
+        activeBuffs.RemoveAll(b => b.expireTime <= Time.time);
+
+        float result = (float)(object)value;
+        float flatSum = 0f, percentSum = 0f;
+        foreach (var b in activeBuffs)
+        {
+            if (b.type != type) continue;
+            if (b.valueType == BuffValueType.Flat) flatSum += b.amount;
+            else percentSum += b.amount;
+        }
+        result = (result + flatSum) * (1f + percentSum / 100f);
+        return (T)(object)result;
+    }
+
+    public void ApplyBuff(object source, StatType type, BuffValueType valueType, float amount, float duration)
+    {
+        var existing = activeBuffs.Find(b => b.source == source && b.type == type && b.valueType == valueType);
+        if (existing != null)
+        {
+            existing.amount = amount;
+            existing.expireTime = Time.time + duration;
+        }
+        else
+        {
+            activeBuffs.Add(new ActiveBuff { source = source, type = type, valueType = valueType, amount = amount, expireTime = Time.time + duration });
+        }
     }
 
     protected T GetAssetStat<T>(StatType type)
