@@ -66,6 +66,11 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 - Do not commit `.md` files (e.g. docs/specs/plans) unless explicitly asked to.
 - Before committing, remove screenshots in `Assets/Screenshots/`.
 
+## 6. Unity Verification
+
+- When Unity MCP is connected, use it to verify C# changes: `refresh_unity` to trigger compilation, then `read_console` (errors only) to confirm no compile errors before considering a script change done.
+- Prefer Unity MCP over asking the user to manually check the Editor when it's available.
+
 ---
 
 **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
