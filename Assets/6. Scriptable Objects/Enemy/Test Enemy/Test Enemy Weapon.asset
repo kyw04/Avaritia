@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f935b32e47f32148a0e4aac5329210c, type: 3}
   m_Name: Test Enemy Weapon
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
-  combo: {fileID: 11400000, guid: 6ea9785544d8c1643a9f75864ee4af25, type: 2}
+  combo: {fileID: 0}
   statBonusData: {fileID: 0}
