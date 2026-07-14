@@ -7,6 +7,9 @@ public class AttackEffect : ISkillEffect
 
     public void Apply(IAttacker caster, Transform target)
     {
-        attackData?.Attack(caster, target);
+        if (attackData == null) return;
+        if (caster is Entity entity)
+            EventBus.Publish(new EntityAttackStartEvent(entity, attackData));
+        attackData.Attack(caster, target);
     }
 }
