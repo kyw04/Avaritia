@@ -179,7 +179,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a61f0e51e7ec4a24a68acd5c79bd8791, type: 2}
   - {fileID: 11400000, guid: fd50b532c15f4ddb99e54cbc8bc35f87, type: 2}
   statDataAsset: {fileID: 11400000, guid: 027ee85a5df17b2499498d5b862c1540, type: 2}
-  weapon: {fileID: 11400000, guid: 88323fb09eda76e488b0a89635f600b0, type: 2}
+  weapon: {fileID: 0}
   movementStrategy:
     rid: 1772930779186724987
   groundCheck: {fileID: 0}

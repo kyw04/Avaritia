@@ -50,7 +50,7 @@ MonoBehaviour:
   skill:
   - {fileID: 11400000, guid: 2c32ea8b83c64696b063dcd2db907a13, type: 2}
   statDataAsset: {fileID: 11400000, guid: 39f96f962c1505e438aed6d89314079b, type: 2}
-  weapon: {fileID: 11400000, guid: 9c5045b5d88fb774cbcc5e87f72e5d22, type: 2}
+  weapon: {fileID: 0}
   movementStrategy:
     rid: 1772930779186724988
   groundCheck: {fileID: 0}
