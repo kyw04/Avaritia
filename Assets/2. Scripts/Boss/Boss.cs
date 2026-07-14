@@ -1,12 +1,9 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Boss : Entity
 {
     public IAIController Machine { get; private set; }
     public Transform Target { get; private set; }
-
-    private readonly Dictionary<AttackData, float> cooldownEndTimes = new();
 
     protected override void Awake()
     {
@@ -18,26 +15,6 @@ public class Boss : Entity
 
         Machine = new BossBehaviorTree(this);
         Machine.Init();
-    }
-
-    public List<AttackData> GetAvailableAttacks(float targetDistance)
-    {
-        var available = new List<AttackData>();
-        if (weapon == null || weapon.combo == null) return available;
-        foreach (var entry in weapon.combo.datas)
-        {
-            if (targetDistance > entry.maxRange) continue;
-            if (cooldownEndTimes.TryGetValue(entry, out var endTime) && Time.time < endTime) continue;
-            available.Add(entry);
-        }
-        return available;
-    }
-
-    public void StartAttack(AttackData entry)
-    {
-        cooldownEndTimes[entry] = Time.time + entry.cooldown;
-        FlipToTarget();
-        entry.Attack(this, Target);
     }
 
     public void MoveToTarget()
