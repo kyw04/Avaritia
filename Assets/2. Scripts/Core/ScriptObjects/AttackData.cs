@@ -9,9 +9,7 @@ public class AttackData : ScriptableObject
     public AnimationClip attackAnimClip;
     public float damageMultiplier = 1f;
     public ContactFilter2D filter;
-    public float maxRange = float.MaxValue;
-    public float cooldown;
-    
+
     [SerializeReference, SubclassSelector] public IAttackStrategy attackStrategy;
 
     public void Attack(IAttacker attacker, Transform target = null)
