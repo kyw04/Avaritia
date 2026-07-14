@@ -13,7 +13,12 @@ MonoBehaviour:
   m_Name: New Skill Data
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
   cooldown: 0
-  effects: []
+  effects:
+  - rid: 1772930914514108508
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 1772930914514108508
+      type: {class: AttackEffect, ns: , asm: Assembly-CSharp}
+      data:
+        attackData: {fileID: 11400000, guid: 949e1639111b21e4b95e6de858e62615, type: 2}
