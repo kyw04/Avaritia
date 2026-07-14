@@ -15,8 +15,6 @@ public class Enemy : Entity, IStateOwner<Enemy>
     [SerializeField] private float viewRadius;
     [SerializeField] private float alertRadius;
 
-    private float lastAttackTime = float.MinValue;
-
     public override int LookDirection => transform.right.x >= 0 ? 1 : -1;
 
     protected override void Awake()
@@ -76,21 +74,18 @@ public class Enemy : Entity, IStateOwner<Enemy>
 
     public bool IsInAttackRange()
     {
-        if (!HasTarget || weapon == null || weapon.combo == null || weapon.combo.Count == 0) return false;
-        return Vector2.Distance(transform.position, Target.position) <= weapon.combo.datas[0].maxRange;
+        var first = Skills.SkillAt(0);
+        if (!HasTarget || first == null) return false;
+        return Vector2.Distance(transform.position, Target.position) <= first.maxRange;
     }
 
     public bool CanAttack()
     {
-        if (weapon == null || weapon.combo == null || weapon.combo.Count == 0) return false;
-        return Time.time - lastAttackTime >= weapon.combo.datas[0].cooldown;
+        var first = Skills.SkillAt(0);
+        return first != null && !Skills.IsOnCooldown(first);
     }
 
-    public void Attack()
-    {
-        lastAttackTime = Time.time;
-        weapon.combo.datas[0].Attack(this);
-    }
+    public void Attack() => Skills.TryUseSkill(Skills.SkillAt(0), this, Target);
 
     public void FaceTarget()
     {
