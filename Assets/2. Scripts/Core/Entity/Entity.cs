@@ -6,7 +6,6 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable
 {
     [SerializeField] protected SkillData[] skill;
     [SerializeField] protected StatData statDataAsset;
-    [SerializeField] protected Weapon weapon;
     [SerializeReference, SubclassSelector] protected IMovementStrategy movementStrategy;
     [SerializeField] protected Transform groundCheck;
     [SerializeField] protected float groundRadius;
@@ -30,7 +29,6 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable
     public Rigidbody2D Rb { get; protected set; }
     public MonoBehaviour Mono => this;
     public bool IsAttacking { get; set; }
-    public Weapon Weapon => weapon;
     public SkillManager Skills { get; private set; }
     public bool IsGrounded { get; protected set; }
 
@@ -50,9 +48,11 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable
     protected T GetStat<T>(StatType type)
     {
         var baseValue = stats.Get<T>(type);
-        var withWeapon = weapon != null ? weapon.ApplyBonus(type, baseValue) : baseValue;
+        var withWeapon = ApplyWeaponBonus(type, baseValue);
         return ApplyBuffs(type, withWeapon);
     }
+
+    protected virtual T ApplyWeaponBonus<T>(StatType type, T baseValue) => baseValue;
 
     private T ApplyBuffs<T>(StatType type, T value)
     {
@@ -89,7 +89,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable
     protected T GetAssetStat<T>(StatType type)
     {
         var baseValue = statDataAsset.TryGetValue<T>(type);
-        return weapon != null ? weapon.ApplyBonus(type, baseValue) : baseValue;
+        return ApplyWeaponBonus(type, baseValue);
     }
 
     protected virtual void Awake()
@@ -120,20 +120,6 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable
     {
         if (grounded)
             stats.Set(StatType.DoubleJumpCount, 0);
-    }
-
-    public void EquipWeapon(Weapon newWeapon)
-    {
-        float healthRatio = MaxHealth > 0 ? CurrentHealth / MaxHealth : 0f;
-        weapon = newWeapon;
-
-        float newMaxHealth = MaxHealth;
-        float newCurrentHealth = healthRatio * newMaxHealth;
-        float currentHealthBonus = weapon != null && weapon.TryGetStatBonus<float>(StatType.CurrentHealth, out var bonus) ? bonus : 0f;
-        stats.Set(StatType.CurrentHealth, newCurrentHealth - currentHealthBonus);
-
-        OnHealthChanged();
-        OnDashCountChanged();
     }
 
     public void Move(Vector2 direction) => movementStrategy?.Move(this, Rb, direction);
@@ -177,8 +163,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable
         return true;
     }
 
-    private void OnHealthChanged() => EventBus.Publish(new EntityHealthChangedEvent(this, MaxHealth, CurrentHealth));
-    private void OnDashCountChanged() => EventBus.Publish(new EntityDashCountChangedEvent(this, MaxDashCount - DashCount, MaxDashCount));
+    protected void OnHealthChanged() => EventBus.Publish(new EntityHealthChangedEvent(this, MaxHealth, CurrentHealth));
+    protected void OnDashCountChanged() => EventBus.Publish(new EntityDashCountChangedEvent(this, MaxDashCount - DashCount, MaxDashCount));
     
     public abstract void Die();
 }

@@ -2,9 +2,29 @@ using UnityEngine;
 
 public class Player : Entity, IStateOwner<Player>
 {
+    [SerializeField] private Weapon weapon;
+
     public Player Owner { get; private set; }
     public IStateMachine Machine { get; private set; }
     public SpriteRenderer Renderer { get; private set; }
+    public Weapon Weapon => weapon;
+
+    protected override T ApplyWeaponBonus<T>(StatType type, T baseValue) =>
+        weapon != null ? weapon.ApplyBonus(type, baseValue) : baseValue;
+
+    public void EquipWeapon(Weapon newWeapon)
+    {
+        float healthRatio = MaxHealth > 0 ? CurrentHealth / MaxHealth : 0f;
+        weapon = newWeapon;
+
+        float newMaxHealth = MaxHealth;
+        float newCurrentHealth = healthRatio * newMaxHealth;
+        float currentHealthBonus = weapon != null && weapon.TryGetStatBonus<float>(StatType.CurrentHealth, out var bonus) ? bonus : 0f;
+        stats.Set(StatType.CurrentHealth, newCurrentHealth - currentHealthBonus);
+
+        OnHealthChanged();
+        OnDashCountChanged();
+    }
 
     protected override void Awake()
     {
