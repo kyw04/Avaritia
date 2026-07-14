@@ -23,6 +23,8 @@ public class InputHandler : Singleton<InputHandler>
         InputAction.Gameplay.Dash.performed += OnDash;
         InputAction.Gameplay.Move.performed += OnMove;
         InputAction.Gameplay.Move.canceled += OnMoveStopped;
+        InputAction.Gameplay.Skill1.performed += OnSkill1;
+        InputAction.Gameplay.Skill2.performed += OnSkill2;
     }
 
     private void OnDisable()
@@ -39,7 +41,12 @@ public class InputHandler : Singleton<InputHandler>
         EventBus.Publish(new EntityAttackBufferEvent());
         player.Machine.ChangeState<PlayerAttackState>();
     }
-    
+
+    private void OnSkill1(InputAction.CallbackContext context) =>
+        player.Skills.TryUseSkill(player.Skills.SkillAt(0), player);
+    private void OnSkill2(InputAction.CallbackContext context) =>
+        player.Skills.TryUseSkill(player.Skills.SkillAt(1), player);
+
     private void OnMove(InputAction.CallbackContext context)
     {
         MoveInput = context.ReadValue<Vector2>();
