@@ -48,11 +48,11 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable
     protected T GetStat<T>(StatType type)
     {
         var baseValue = stats.Get<T>(type);
-        var withWeapon = ApplyWeaponBonus(type, baseValue);
-        return ApplyBuffs(type, withWeapon);
+        var withEquipment = ApplyEquipmentBonus(type, baseValue);
+        return ApplyBuffs(type, withEquipment);
     }
 
-    protected virtual T ApplyWeaponBonus<T>(StatType type, T baseValue) => baseValue;
+    protected virtual T ApplyEquipmentBonus<T>(StatType type, T baseValue) => baseValue;
 
     private T ApplyBuffs<T>(StatType type, T value)
     {
@@ -89,7 +89,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable
     protected T GetAssetStat<T>(StatType type)
     {
         var baseValue = statDataAsset.TryGetValue<T>(type);
-        return ApplyWeaponBonus(type, baseValue);
+        return ApplyEquipmentBonus(type, baseValue);
     }
 
     protected virtual void Awake()

@@ -9,7 +9,7 @@ public class Player : Entity, IStateOwner<Player>
     public SpriteRenderer Renderer { get; private set; }
     public Weapon Weapon => weapon;
 
-    protected override T ApplyWeaponBonus<T>(StatType type, T baseValue) =>
+    protected override T ApplyEquipmentBonus<T>(StatType type, T baseValue) =>
         weapon != null ? weapon.ApplyBonus(type, baseValue) : baseValue;
 
     public void EquipWeapon(Weapon newWeapon)
