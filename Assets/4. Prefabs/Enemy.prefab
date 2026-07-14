@@ -47,6 +47,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6664e6571a0d6404b92ea4d97f6c3f70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  skill:
+  - {fileID: 11400000, guid: 2c32ea8b83c64696b063dcd2db907a13, type: 2}
   statDataAsset: {fileID: 11400000, guid: 39f96f962c1505e438aed6d89314079b, type: 2}
   weapon: {fileID: 11400000, guid: 9c5045b5d88fb774cbcc5e87f72e5d22, type: 2}
   movementStrategy:

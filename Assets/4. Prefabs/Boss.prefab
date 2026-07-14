@@ -115,6 +115,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1886407705330697207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6576124845315233630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 009b459ea2d0f2645ab6124936fb3102, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EntityAnimator
 --- !u!1 &7678781736317148054
 GameObject:
   m_ObjectHideFlags: 0
@@ -162,6 +174,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c4ee0b9827f91d418d31a2c5b348cb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Boss
+  skill:
+  - {fileID: 11400000, guid: 66567d2103894c668eeb2a93baf7a0fe, type: 2}
+  - {fileID: 11400000, guid: a61f0e51e7ec4a24a68acd5c79bd8791, type: 2}
+  - {fileID: 11400000, guid: fd50b532c15f4ddb99e54cbc8bc35f87, type: 2}
   statDataAsset: {fileID: 11400000, guid: 027ee85a5df17b2499498d5b862c1540, type: 2}
   weapon: {fileID: 11400000, guid: 88323fb09eda76e488b0a89635f600b0, type: 2}
   movementStrategy:
@@ -177,18 +193,6 @@ MonoBehaviour:
     - rid: 1772930779186724987
       type: {class: ConstantVelocityMovementStrategy, ns: , asm: Assembly-CSharp}
       data: 
---- !u!114 &1886407705330697207
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6576124845315233630}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 009b459ea2d0f2645ab6124936fb3102, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EntityAnimator
 --- !u!50 &5302793644755587929
 Rigidbody2D:
   serializedVersion: 5
