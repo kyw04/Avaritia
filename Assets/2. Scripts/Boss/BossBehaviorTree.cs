@@ -48,6 +48,7 @@ public class BossBehaviorTree : BT.BehaviorTree
                         {
                             var available = board.Get<List<SkillData>>(BBKey.AvailableAttacks);
                             var randomIndex = Random.Range(0, available.Count);
+                            boss.FlipToTarget();
                             boss.Skills.TryUseSkill(available[randomIndex], boss, boss.Target);
 
                             return BT.NodeStatus.Running;

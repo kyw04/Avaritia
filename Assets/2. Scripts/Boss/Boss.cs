@@ -29,7 +29,7 @@ public class Boss : Entity
         Move(new Vector2(flip, 0));
     }
 
-    private int FlipToTarget()
+    public int FlipToTarget()
     {
         int flip = Target.position.x > transform.position.x ? 1 : -1;
         float scale = Mathf.Abs(transform.localScale.x);
