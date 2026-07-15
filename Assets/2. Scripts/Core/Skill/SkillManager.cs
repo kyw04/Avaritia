@@ -28,6 +28,14 @@ public class SkillManager
     public SkillData SkillAt(int index) =>
         index >= 0 && index < skills.Length ? skills[index] : null;
 
+    public SkillData SetSkill(int index, SkillData data)
+    {
+        if (index < 0 || index >= skills.Length) return null;
+        var previous = skills[index];
+        skills[index] = data;
+        return previous;
+    }
+
     public bool IsOnCooldown(SkillData data) =>
         data != null && cooldownEndTimes.TryGetValue(data, out var endTime) && Time.time < endTime;
 
