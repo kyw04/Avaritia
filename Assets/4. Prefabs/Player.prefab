@@ -115,6 +115,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5044805659046468182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3493618050049314724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 009b459ea2d0f2645ab6124936fb3102, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EntityAnimator
 --- !u!1 &3734078060112766453
 GameObject:
   m_ObjectHideFlags: 0
@@ -159,6 +171,7 @@ GameObject:
   - component: {fileID: 5379797011840322666}
   - component: {fileID: 5735150061085217394}
   - component: {fileID: 2389468441697128624}
+  - component: {fileID: 6477522951164393474}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -195,8 +208,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4113bce7d5ab4dcd8815858b17eb087e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
+  skill: []
   statDataAsset: {fileID: 11400000, guid: 3ce9f5085006b01478fe45ccda66d4b8, type: 2}
-  weapon: {fileID: 11400000, guid: d413ff329fa88d445a6a6c85c4eed3e9, type: 2}
   movementStrategy:
     rid: 1772930779186724983
   groundCheck: {fileID: 2994277442230160801}
@@ -204,6 +217,8 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  weapon: {fileID: 11400000, guid: d413ff329fa88d445a6a6c85c4eed3e9, type: 2}
+  pickupController: {fileID: 6477522951164393474}
   references:
     version: 2
     RefIds:
@@ -227,18 +242,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputHandler
   player: {fileID: 2856072584327875828}
---- !u!114 &5044805659046468182
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3493618050049314724}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 009b459ea2d0f2645ab6124936fb3102, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EntityAnimator
 --- !u!50 &5735150061085217394
 Rigidbody2D:
   serializedVersion: 5
@@ -303,3 +306,19 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.25, y: 1}
   m_Direction: 0
+--- !u!114 &6477522951164393474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4770807377537432152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b77e49f8209af3c4192ea9098196c2cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerPickupController
+  player: {fileID: 2856072584327875828}
+  detectRadius: 1.5
+  tapThreshold: 0.15
+  holdDuration: 0.6
