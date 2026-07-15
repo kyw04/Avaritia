@@ -10,18 +10,21 @@ public class WorldPickup : MonoBehaviour
     public IPickupable Payload { get; private set; }
     public PickupPromptUI Prompt => prompt;
 
+    private WorldPickupManager manager;
+
     private void Awake()
     {
         if (weaponAsset != null) Payload = new WeaponPickup(weaponAsset);
         else if (skillAsset != null) Payload = new SkillPickup(skillAsset);
 
         ApplyIcon();
-        WorldPickupManager.Instance.Register(this);
+        manager = WorldPickupManager.Instance;
+        manager.Register(this);
     }
 
     private void OnDestroy()
     {
-        WorldPickupManager.Instance.Unregister(this);
+        manager.Unregister(this);
     }
 
     public void Init(IPickupable payload)
