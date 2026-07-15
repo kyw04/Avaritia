@@ -85,6 +85,7 @@ public class PlayerPickupController : MonoBehaviour
         target.Payload.Pickup(player, choice, player.transform.position);
         current = null;
         prompt.Hide();
+        WorldPickupManager.Instance.Unregister(target);
         Destroy(target.gameObject);
     }
 }
