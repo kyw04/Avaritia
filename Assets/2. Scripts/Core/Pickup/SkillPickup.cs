@@ -9,6 +9,7 @@ public class SkillPickup : IPickupable
 
     public bool NeedsChoice(Player player) =>
         player.Skills.SkillAt(0) != null && player.Skills.SkillAt(1) != null;
+    public bool TapResolves(Player player) => true;
 
     public void Pickup(Player player, PickupChoice choice, Vector3 dropPosition)
     {

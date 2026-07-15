@@ -63,7 +63,7 @@ public class PlayerPickupController : MonoBehaviour
         if (current == null) return;
 
         float held = Time.time - pressStartTime;
-        if (held <= tapThreshold) Resolve(PickupChoice.Primary);
+        if (held <= tapThreshold && current.Payload.TapResolves(player)) Resolve(PickupChoice.Primary);
         else current.Prompt.SetProgress(0f);
     }
 
