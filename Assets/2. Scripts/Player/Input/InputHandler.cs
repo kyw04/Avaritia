@@ -25,6 +25,8 @@ public class InputHandler : Singleton<InputHandler>
         InputAction.Gameplay.Move.canceled += OnMoveStopped;
         InputAction.Gameplay.Skill1.performed += OnSkill1;
         InputAction.Gameplay.Skill2.performed += OnSkill2;
+        InputAction.Gameplay.Interact.started += OnInteractStarted;
+        InputAction.Gameplay.Interact.canceled += OnInteractCanceled;
     }
 
     private void OnDisable()
@@ -46,6 +48,10 @@ public class InputHandler : Singleton<InputHandler>
         player.Skills.TryUseSkill(player.Skills.SkillAt(0), player);
     private void OnSkill2(InputAction.CallbackContext context) =>
         player.Skills.TryUseSkill(player.Skills.SkillAt(1), player);
+    private void OnInteractStarted(InputAction.CallbackContext context) =>
+        player.PickupController.OnInteractStarted();
+    private void OnInteractCanceled(InputAction.CallbackContext context) =>
+        player.PickupController.OnInteractCanceled();
 
     private void OnMove(InputAction.CallbackContext context)
     {
