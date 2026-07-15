@@ -6,6 +6,7 @@ public class WeaponPickup : IPickupable
     public WeaponPickup(Weapon weapon) => this.weapon = weapon;
 
     public string DisplayName => weapon.name;
+    public Sprite Icon => weapon.icon;
     public bool NeedsChoice(Player player) => false;
 
     public void Pickup(Player player, PickupChoice choice, Vector3 dropPosition)

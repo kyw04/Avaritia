@@ -5,6 +5,7 @@ public class Weapon : ScriptableObject
 {
     public AttackDataCombo combo;
     public StatData statBonusData;
+    public Sprite icon;
 
     public bool TryGetStatBonus<T>(StatType type, out T value)
     {

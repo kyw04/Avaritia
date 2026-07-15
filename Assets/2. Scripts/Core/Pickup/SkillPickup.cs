@@ -6,6 +6,7 @@ public class SkillPickup : IPickupable
     public SkillPickup(SkillData skill) => this.skill = skill;
 
     public string DisplayName => skill.name;
+    public Sprite Icon => skill.icon;
 
     public bool NeedsChoice(Player player) =>
         player.Skills.SkillAt(0) != null && player.Skills.SkillAt(1) != null;
