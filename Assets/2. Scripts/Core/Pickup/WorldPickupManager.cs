@@ -17,7 +17,8 @@ public class WorldPickupManager : Singleton<WorldPickupManager>
         {
             if (p == null) continue;
             float sqr = (p.transform.position - position).sqrMagnitude;
-            if (sqr <= nearestSqr)
+            if (sqr > nearestSqr) continue;
+            if (nearest == null || sqr < nearestSqr)
             {
                 nearest = p;
                 nearestSqr = sqr;
