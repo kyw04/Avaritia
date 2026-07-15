@@ -3,6 +3,7 @@ using UnityEngine;
 public class PlayerPickupController : MonoBehaviour
 {
     [SerializeField] private Player player;
+    [SerializeField] private PickupPromptUI prompt;
     [SerializeField] private float detectRadius = 1.5f;
     [SerializeField] private float tapThreshold = 0.15f;
     [SerializeField] private float fillStartDelay = 0.5f;
@@ -25,9 +26,16 @@ public class PlayerPickupController : MonoBehaviour
         var nearest = WorldPickupManager.Instance.GetNearestInRange(player.transform.position, detectRadius);
         if (nearest == current) return;
 
-        if (current != null) current.Prompt.Hide();
         current = nearest;
-        if (current != null) current.Prompt.Show();
+        if (current != null)
+        {
+            prompt.transform.position = current.transform.position + Vector3.up;
+            prompt.Show();
+        }
+        else
+        {
+            prompt.Hide();
+        }
     }
 
     private void UpdateHold()
@@ -38,7 +46,7 @@ public class PlayerPickupController : MonoBehaviour
         if (elapsed < 0f) return;
 
         float t = elapsed / holdDuration;
-        current.Prompt.SetProgress(t);
+        prompt.SetProgress(t);
 
         if (t >= 1f)
         {
@@ -68,7 +76,7 @@ public class PlayerPickupController : MonoBehaviour
 
         float held = Time.time - pressStartTime;
         if (held <= tapThreshold) Resolve(PickupChoice.Primary);
-        else current.Prompt.SetProgress(0f);
+        else prompt.SetProgress(0f);
     }
 
     private void Resolve(PickupChoice choice)
@@ -76,6 +84,7 @@ public class PlayerPickupController : MonoBehaviour
         var target = current;
         target.Payload.Pickup(player, choice, player.transform.position);
         current = null;
+        prompt.Hide();
         Destroy(target.gameObject);
     }
 }

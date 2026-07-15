@@ -4,11 +4,9 @@ public class WorldPickup : MonoBehaviour
 {
     [SerializeField] private Weapon weaponAsset;
     [SerializeField] private SkillData skillAsset;
-    [SerializeField] private PickupPromptUI prompt;
     [SerializeField] private SpriteRenderer spriteRenderer;
 
     public IPickupable Payload { get; private set; }
-    public PickupPromptUI Prompt => prompt;
 
     private WorldPickupManager manager;
 
