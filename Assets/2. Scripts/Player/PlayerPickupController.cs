@@ -5,6 +5,7 @@ public class PlayerPickupController : MonoBehaviour
     [SerializeField] private Player player;
     [SerializeField] private float detectRadius = 1.5f;
     [SerializeField] private float tapThreshold = 0.15f;
+    [SerializeField] private float fillStartDelay = 0.5f;
     [SerializeField] private float holdDuration = 0.6f;
 
     private WorldPickup current;
@@ -33,7 +34,10 @@ public class PlayerPickupController : MonoBehaviour
     {
         if (current == null) { isHolding = false; return; }
 
-        float t = (Time.time - pressStartTime) / holdDuration;
+        float elapsed = Time.time - pressStartTime - fillStartDelay;
+        if (elapsed < 0f) return;
+
+        float t = elapsed / holdDuration;
         current.Prompt.SetProgress(t);
 
         if (t >= 1f)
