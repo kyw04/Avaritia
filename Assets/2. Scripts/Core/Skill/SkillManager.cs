@@ -35,6 +35,7 @@ public class SkillManager
         if (index < 0 || index >= skills.Length) return null;
         var previous = skills[index];
         skills[index] = data;
+        EventBus.Publish(new EntitySkillEquippedEvent(owner, index, data));
         return previous;
     }
 
