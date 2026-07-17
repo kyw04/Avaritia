@@ -55,19 +55,20 @@ public class EntityAnimator : AnimatorBase,
         if (e.Source != self)
             return;
 
-        string attackAnimName = e.Data.attackAnimClip.name;
+        var attackClip = e.Data.attackAnimClip;
         var readyClip = e.Data.readyAnimClip;
         if (readyClip != null)
         {
             if (animCoroutine != null)
                 StopCoroutine(animCoroutine);
-            
+
             PlayAnimation(readyClip.name);
-            animCoroutine = StartCoroutine(PlayAnimationAfterDelay(attackAnimName, readyClip.length));
+            if (attackClip != null)
+                animCoroutine = StartCoroutine(PlayAnimationAfterDelay(attackClip.name, readyClip.length));
         }
-        else
+        else if (attackClip != null)
         {
-            PlayAnimation(attackAnimName);
+            PlayAnimation(attackClip.name);
         }
     }
 

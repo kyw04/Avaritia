@@ -30,7 +30,8 @@ public class AttackData : ScriptableObject
     {
         attackStrategy?.Offensive(attacker, damageMultiplier, filter, target);
 
-        yield return new WaitForSeconds(attackAnimClip.length);
+        if (attackAnimClip)
+            yield return new WaitForSeconds(attackAnimClip.length);
         yield return new WaitForSeconds(duration);
         attacker.IsAttacking = false;
     }
