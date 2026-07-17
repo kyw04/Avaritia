@@ -86,3 +86,14 @@ public struct EntitySkillCooldownEvent : ISubject
         Source = source; SlotIndex = slotIndex; Duration = duration; EndTime = endTime;
     }
 }
+
+public struct EntitySkillEquippedEvent : ISubject
+{
+    public Entity Source { get; private set; }
+    public int SlotIndex { get; private set; }
+    public SkillData Skill { get; private set; }
+    public EntitySkillEquippedEvent(Entity source, int slotIndex, SkillData skill)
+    {
+        Source = source; SlotIndex = slotIndex; Skill = skill;
+    }
+}
