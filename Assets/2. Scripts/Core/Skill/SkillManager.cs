@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class SkillManager
 {
+    private readonly Entity owner;
     private readonly SkillData[] skills;
     private readonly Dictionary<SkillData, float> cooldownEndTimes = new();
 
-    public SkillManager(SkillData[] skills)
+    public SkillManager(Entity owner, SkillData[] skills)
     {
+        this.owner = owner;
         this.skills = skills ?? Array.Empty<SkillData>();
     }
 
@@ -43,7 +45,9 @@ public class SkillManager
     {
         if (data == null || IsOnCooldown(data)) return false;
 
-        cooldownEndTimes[data] = Time.time + data.cooldown;
+        float endTime = Time.time + data.cooldown;
+        cooldownEndTimes[data] = endTime;
+        EventBus.Publish(new EntitySkillCooldownEvent(owner, Array.IndexOf(skills, data), data.cooldown, endTime));
         data.Activate(caster, target);
         return true;
     }

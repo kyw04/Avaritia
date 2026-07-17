@@ -96,7 +96,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable
     {
         Rb = GetComponent<Rigidbody2D>();
         stats = new RuntimeStats(statDataAsset);
-        Skills = new SkillManager(skill);
+        Skills = new SkillManager(this, skill);
         wasGroundCheckerChanged = !IsGrounded;
     }
 
