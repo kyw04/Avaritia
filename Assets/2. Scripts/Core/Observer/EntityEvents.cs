@@ -74,3 +74,15 @@ public struct EntityDashCountChangedEvent : ISubject
     public int Max { get; private set; }
     public EntityDashCountChangedEvent(Entity source, int current, int max) { Source = source; Current = current; Max = max; }
 }
+
+public struct EntitySkillCooldownEvent : ISubject
+{
+    public Entity Source { get; private set; }
+    public int SlotIndex { get; private set; }
+    public float Duration { get; private set; }
+    public float EndTime { get; private set; }
+    public EntitySkillCooldownEvent(Entity source, int slotIndex, float duration, float endTime)
+    {
+        Source = source; SlotIndex = slotIndex; Duration = duration; EndTime = endTime;
+    }
+}
