@@ -10,6 +10,6 @@ public class DamageDealer : MonoBehaviour
         if ((targetLayer & (1 << other.gameObject.layer)) == 0) return;
         if (other.TryGetComponent<IDamageable>(out var d))
             d.TakeDamage(damage);
-        Destroy(gameObject);
+        ObjectPoolManager.Instance.Despawn(gameObject);
     }
 }
