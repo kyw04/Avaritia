@@ -24,7 +24,6 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         if (queue.Count > 0)
         {
             instance = queue.Dequeue();
-            instance.transform.SetParent(null);
             instance.transform.SetPositionAndRotation(position, rotation);
         }
         else
@@ -76,7 +75,6 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
             poolable.OnDespawn();
 
         instance.SetActive(false);
-        instance.transform.SetParent(transform);
         pools[prefab].Enqueue(instance);
     }
 
