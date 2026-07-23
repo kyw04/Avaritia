@@ -24,6 +24,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         if (queue.Count > 0)
         {
             instance = queue.Dequeue();
+            instance.transform.SetParent(null);
             instance.transform.SetPositionAndRotation(position, rotation);
         }
         else
@@ -51,6 +52,10 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         return go == null ? null : go.GetComponent<T>();
     }
 
+    /// <summary>
+    /// 풀에 반납할 때는 반드시 이 메서드를 통해서만 반환해야 한다. SetActive(false)로 직접 비활성화하면
+    /// activeSelf를 이용한 중복 반납 감지가 오작동하여 인스턴스가 유실될 수 있다.
+    /// </summary>
     public void Despawn(GameObject instance)
     {
         if (instance == null) return;
@@ -71,6 +76,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
             poolable.OnDespawn();
 
         instance.SetActive(false);
+        instance.transform.SetParent(transform);
         pools[prefab].Enqueue(instance);
     }
 
