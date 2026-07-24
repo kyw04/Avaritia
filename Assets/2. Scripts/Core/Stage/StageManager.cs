@@ -9,6 +9,7 @@ public class StageManager : Singleton<StageManager>
     private StageNode currentNode;
     private readonly HashSet<StageNode> clearedNodes = new();
 
+    public StageData CurrentStageData => currentStageData;
     public StageNode CurrentNode => currentNode;
     public bool IsCurrentRoomCleared => currentNode != null && clearedNodes.Contains(currentNode);
     public IReadOnlyList<StageNode> AvailableNextNodes => IsCurrentRoomCleared ? currentNode.nextNodes : EmptyNodes;

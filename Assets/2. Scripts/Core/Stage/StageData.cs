@@ -1,7 +1,12 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Scriptable Objects/Stage Data")]
-public class StageData : ScriptableObject
+public class StageData : MonoBehaviour
 {
     public StageNode startNode;
+    public List<GameObject> battleRoomPrefabs = new();
+    public GameObject bossRoomPrefab;
+    public GameObject shopRoomPrefab;
+    public GameObject enemyPrefab;
+    public GameObject bossPrefab;
 }

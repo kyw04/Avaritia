@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2856346610427328508
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8605212265257714450}
+  - component: {fileID: 5107011510984468057}
+  m_Layer: 0
+  m_Name: Test Stage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8605212265257714450
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2856346610427328508}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5107011510984468057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2856346610427328508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c98099953d7a06a4490adc65a477418c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StageData
+  startNode: {fileID: 11400000, guid: c884bffe2872d5b41a8fd7589d3b23e0, type: 2}
+  battleRoomPrefabs:
+  - {fileID: 8989647135807431895, guid: 32d9a762b5a818748a4c2447486bee93, type: 3}
+  bossRoomPrefab: {fileID: 7987230064300768565, guid: d1a56713a9af5c84d907e03d0da26f13, type: 3}
+  shopRoomPrefab: {fileID: 2530366176913585066, guid: cb2c8fab8ad00594faaec59ff6814ba6, type: 3}
+  enemyPrefab: {fileID: 4391163561257397444, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
+  bossPrefab: {fileID: 7678781736317148054, guid: a81a8c8f2e192794393d6488f54ab7aa, type: 3}
