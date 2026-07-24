@@ -163,4 +163,9 @@ public class Enemy : Entity, IStateOwner<Enemy>
         Machine.ChangeState<EnemyDeadState>();
         StateManager.Instance.Unregister(Machine);
     }
+
+    private void OnDestroy()
+    {
+        StateManager.Instance.Unregister(Machine);
+    }
 }

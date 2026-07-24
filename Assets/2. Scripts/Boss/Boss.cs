@@ -43,4 +43,9 @@ public class Boss : Entity
         StateManager.Instance.Unregister(Machine);
         Debug.Log("Boss: 사망");
     }
+
+    private void OnDestroy()
+    {
+        StateManager.Instance.Unregister(Machine);
+    }
 }

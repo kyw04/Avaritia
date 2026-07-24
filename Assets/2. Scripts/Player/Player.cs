@@ -75,6 +75,11 @@ public class Player : Entity, IStateOwner<Player>
         Debug.Log("Player: 사망");
     }
 
+    private void OnDestroy()
+    {
+        StateManager.Instance.Unregister(Machine);
+    }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.blue;
