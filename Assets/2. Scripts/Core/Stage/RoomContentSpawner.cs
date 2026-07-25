@@ -1,13 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoomContentSpawner : MonoBehaviour, IObserver<StageNodeChangedEvent>
+public class RoomContentSpawner : MonoBehaviour, IObserver<StageNodeChangedEvent>, IObserver<EntityDeadEvent>
 {
     private GameObject currentRoom;
+    private readonly List<Entity> aliveActors = new();
 
     private void Awake()
     {
         EventBus.Subscribe<StageNodeChangedEvent>(this);
+        EventBus.Subscribe<EntityDeadEvent>(this);
     }
 
     private void OnDestroy()
@@ -20,10 +22,21 @@ public class RoomContentSpawner : MonoBehaviour, IObserver<StageNodeChangedEvent
         Spawn(gameEvent.Current);
     }
 
+    public void OnNotify(EntityDeadEvent gameEvent)
+    {
+        if (!aliveActors.Remove(gameEvent.Source))
+            return;
+
+        if (aliveActors.Count == 0)
+            StageManager.Instance.NotifyRoomCleared();
+    }
+
     public void Spawn(StageNode node)
     {
         if (currentRoom != null)
             Destroy(currentRoom);
+
+        aliveActors.Clear();
 
         var stageData = StageManager.Instance.CurrentStageData;
         var roomPrefab = ResolveRoomPrefab(node.roomType, stageData);
@@ -45,7 +58,12 @@ public class RoomContentSpawner : MonoBehaviour, IObserver<StageNodeChangedEvent
             return;
 
         foreach (var spawnPoint in currentRoom.GetComponentsInChildren<EnemySpawnPoint>())
-            Instantiate(actorPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation, currentRoom.transform);
+        {
+            var actor = Instantiate(actorPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation, currentRoom.transform);
+            var entity = actor.GetComponent<Entity>();
+            if (entity != null)
+                aliveActors.Add(entity);
+        }
     }
 
     private GameObject ResolveRoomPrefab(RoomType roomType, StageData stageData)
