@@ -16,7 +16,6 @@ public class BossBehaviorTree : BT.BehaviorTree
                 new BT.Action(() =>
                 {
                     boss.Die();
-                    EventBus.Publish(new EntityDeadEvent(boss));
                     return BT.NodeStatus.Success;
                 })
             ),
