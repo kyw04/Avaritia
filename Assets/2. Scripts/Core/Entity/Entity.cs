@@ -160,6 +160,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable
     {
         if (isDead) return false;
         isDead = true;
+        EventBus.Publish(new EntityDeadEvent(this));
         return true;
     }
 
