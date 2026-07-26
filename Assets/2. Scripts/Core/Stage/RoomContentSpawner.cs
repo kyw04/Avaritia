@@ -35,10 +35,14 @@ public class RoomContentSpawner : MonoBehaviour, IObserver<StageNodeChangedEvent
     {
         if (currentRoom != null)
             Destroy(currentRoom);
-    
+
+        foreach (var actor in aliveActors)
+            if (actor != null)
+                ObjectPoolManager.Instance.Despawn(actor.gameObject);
         aliveActors.Clear();
+
         currentRoom = Instantiate(node.gameObject, Vector3.zero, Quaternion.identity);
-    
+
         var stageData = StageManager.Instance.CurrentStageData;
         SpawnActors(stageData);
     }
