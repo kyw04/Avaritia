@@ -7,6 +7,7 @@ public class SkillPickup : IInteractable
 
     public string DisplayName => skill.name;
     public Sprite Icon => skill.icon;
+    // Payload-only: never registered directly, always wrapped by WorldPickup.
     public Transform Transform => null;
 
     public bool NeedsChoice(Player player) =>

@@ -7,6 +7,7 @@ public class WeaponPickup : IInteractable
 
     public string DisplayName => weapon.name;
     public Sprite Icon => weapon.icon;
+    // Payload-only: never registered directly, always wrapped by WorldPickup.
     public Transform Transform => null;
     public bool NeedsChoice(Player player) => false;
 

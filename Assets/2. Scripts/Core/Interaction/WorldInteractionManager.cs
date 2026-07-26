@@ -15,7 +15,7 @@ public class WorldInteractionManager : Singleton<WorldInteractionManager>
         float nearestSqr = radius * radius;
         foreach (var i in interactables)
         {
-            if (i == null) continue;
+            if ((i as Object) == null) continue;
             float sqr = (i.Transform.position - position).sqrMagnitude;
             if (sqr > nearestSqr) continue;
             if (nearest == null || sqr < nearestSqr)
@@ -35,10 +35,11 @@ public class WorldInteractionManager : Singleton<WorldInteractionManager>
 
     public void ClearAll()
     {
-        foreach (var i in interactables)
+        interactables.RemoveAll(i =>
         {
-            if (i is WorldPickup wp) Destroy(wp.gameObject);
-        }
-        interactables.Clear();
+            if (i is not WorldPickup wp) return false;
+            Destroy(wp.gameObject);
+            return true;
+        });
     }
 }
