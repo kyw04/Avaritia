@@ -28,6 +28,8 @@ public class StageManager : Singleton<StageManager>
 
         currentNode = currentStageData.startNode;
         clearedNodes.Clear();
+        
+        MoveTo(currentNode);
     }
 
     public void NotifyRoomCleared()
@@ -43,7 +45,7 @@ public class StageManager : Singleton<StageManager>
 
     public void MoveTo(StageNode node)
     {
-        if (!IsCurrentRoomCleared)
+        if (IsCurrentRoomCleared)
         {
             Debug.LogError($"StageManager: cannot move to {(node == null ? "null" : node.name)} from current state");
             return;
