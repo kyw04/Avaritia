@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class PlayerPickupController : MonoBehaviour
+public class PlayerInteractionController : MonoBehaviour
 {
     [SerializeField] private Player player;
-    [SerializeField] private PickupPromptUI prompt;
+    [SerializeField] private InteractPromptUI prompt;
     [SerializeField] private float detectRadius = 1.5f;
     [SerializeField] private float tapThreshold = 0.15f;
     [SerializeField] private float fillStartDelay = 0.5f;

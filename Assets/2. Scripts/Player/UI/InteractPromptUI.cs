@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PickupPromptUI : MonoBehaviour
+public class InteractPromptUI : MonoBehaviour
 {
     [SerializeField] private GameObject root;
     [SerializeField] private Image fillImage;

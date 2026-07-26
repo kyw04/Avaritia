@@ -3,13 +3,13 @@ using UnityEngine;
 public class Player : Entity, IStateOwner<Player>
 {
     [SerializeField] private Weapon weapon;
-    [SerializeField] private PlayerPickupController pickupController;
+    [SerializeField] private PlayerInteractionController pickupController;
 
     public Player Owner { get; private set; }
     public IStateMachine Machine { get; private set; }
     public SpriteRenderer Renderer { get; private set; }
     public Weapon Weapon => weapon;
-    public PlayerPickupController PickupController => pickupController;
+    public PlayerInteractionController PickupController => pickupController;
 
     protected override T ApplyEquipmentBonus<T>(StatType type, T baseValue) =>
         weapon != null ? weapon.ApplyBonus(type, baseValue) : baseValue;
