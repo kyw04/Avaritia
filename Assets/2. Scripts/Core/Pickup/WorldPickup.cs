@@ -7,6 +7,7 @@ public class WorldPickup : MonoBehaviour, IInteractable
     [SerializeField] private SpriteRenderer spriteRenderer;
 
     private IInteractable payload;
+    private WorldInteractionManager manager;
 
     public string DisplayName => payload.DisplayName;
     public Sprite Icon => payload.Icon;
@@ -18,12 +19,13 @@ public class WorldPickup : MonoBehaviour, IInteractable
         else if (skillAsset != null) payload = new SkillPickup(skillAsset);
 
         ApplyIcon();
-        WorldInteractionManager.Instance.Register(this);
+        manager = WorldInteractionManager.Instance;
+        manager.Register(this);
     }
 
     private void OnDestroy()
     {
-        WorldInteractionManager.Instance.Unregister(this);
+        manager.Unregister(this);
     }
 
     public void Init(IInteractable payload)
