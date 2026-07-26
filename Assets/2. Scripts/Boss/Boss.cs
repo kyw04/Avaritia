@@ -9,14 +9,18 @@ public class Boss : Entity
     protected override void Awake()
     {
         base.Awake();
+        stateManager = StateManager.Instance;
+    }
 
+    public override void OnSpawn()
+    {
+        base.OnSpawn();
         var player = FindAnyObjectByType<Player>();
         if (player != null)
             Target = player.transform;
 
         Machine = new BossBehaviorTree(this);
         Machine.Init();
-        stateManager = StateManager.Instance;
     }
 
     public void MoveToTarget()
@@ -43,6 +47,7 @@ public class Boss : Entity
     {
         if (!TryMarkDead()) return;
         stateManager.Unregister(Machine);
+        ObjectPoolManager.Instance.Despawn(gameObject);
         Debug.Log("Boss: 사망");
     }
 

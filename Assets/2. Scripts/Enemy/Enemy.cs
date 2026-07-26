@@ -21,11 +21,17 @@ public class Enemy : Entity, IStateOwner<Enemy>
     protected override void Awake()
     {
         base.Awake();
-        patrolCenter = transform.position;
         Owner = this;
+        stateManager = StateManager.Instance;
+    }
+
+    public override void OnSpawn()
+    {
+        base.OnSpawn();
+        patrolCenter = transform.position;
+        Target = null;
         Machine = new EnemyStateMachine(Owner);
         Machine.Init();
-        stateManager = StateManager.Instance;
     }
 
     public void Move()
@@ -164,6 +170,7 @@ public class Enemy : Entity, IStateOwner<Enemy>
         if (!TryMarkDead()) return;
         Machine.ChangeState<EnemyDeadState>();
         stateManager.Unregister(Machine);
+        ObjectPoolManager.Instance.Despawn(gameObject);
     }
 
     private void OnDestroy()
