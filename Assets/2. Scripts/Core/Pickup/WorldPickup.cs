@@ -1,38 +1,47 @@
 using UnityEngine;
 
-public class WorldPickup : MonoBehaviour
+public class WorldPickup : MonoBehaviour, IInteractable
 {
     [SerializeField] private Weapon weaponAsset;
     [SerializeField] private SkillData skillAsset;
     [SerializeField] private SpriteRenderer spriteRenderer;
 
-    public IInteractable Payload { get; private set; }
+    private IInteractable payload;
 
-    private WorldPickupManager manager;
+    public string DisplayName => payload.DisplayName;
+    public Sprite Icon => payload.Icon;
+    public Transform Transform => transform;
 
     private void Awake()
     {
-        if (weaponAsset != null) Payload = new WeaponPickup(weaponAsset);
-        else if (skillAsset != null) Payload = new SkillPickup(skillAsset);
+        if (weaponAsset != null) payload = new WeaponPickup(weaponAsset);
+        else if (skillAsset != null) payload = new SkillPickup(skillAsset);
 
         ApplyIcon();
-        manager = WorldPickupManager.Instance;
-        manager.Register(this);
+        WorldInteractionManager.Instance.Register(this);
     }
 
     private void OnDestroy()
     {
-        manager.Unregister(this);
+        WorldInteractionManager.Instance.Unregister(this);
     }
 
     public void Init(IInteractable payload)
     {
-        Payload = payload;
+        this.payload = payload;
         ApplyIcon();
+    }
+
+    public bool NeedsChoice(Player player) => payload.NeedsChoice(player);
+
+    public void Interact(Player player, InteractChoice choice)
+    {
+        payload.Interact(player, choice);
+        Destroy(gameObject);
     }
 
     private void ApplyIcon()
     {
-        if (Payload?.Icon != null) spriteRenderer.sprite = Payload.Icon;
+        if (payload?.Icon != null) spriteRenderer.sprite = payload.Icon;
     }
 }

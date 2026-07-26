@@ -9,7 +9,7 @@ public class PlayerPickupController : MonoBehaviour
     [SerializeField] private float fillStartDelay = 0.5f;
     [SerializeField] private float holdDuration = 0.6f;
 
-    private WorldPickup current;
+    private IInteractable current;
     private bool isHolding;
     private float pressStartTime;
 
@@ -23,13 +23,13 @@ public class PlayerPickupController : MonoBehaviour
     {
         if (isHolding) return;
 
-        var nearest = WorldPickupManager.Instance.GetNearestInRange(player.transform.position, detectRadius);
+        var nearest = WorldInteractionManager.Instance.GetNearestInRange(player.transform.position, detectRadius);
         if (nearest == current) return;
 
         current = nearest;
         if (current != null)
         {
-            prompt.transform.position = current.transform.position + Vector3.up;
+            prompt.transform.position = current.Transform.position + Vector3.up;
             prompt.Show();
         }
         else
@@ -60,7 +60,7 @@ public class PlayerPickupController : MonoBehaviour
         if (current == null) return;
 
         pressStartTime = Time.time;
-        if (!current.Payload.NeedsChoice(player))
+        if (!current.NeedsChoice(player))
         {
             Resolve(InteractChoice.Primary);
             return;
@@ -82,10 +82,8 @@ public class PlayerPickupController : MonoBehaviour
     private void Resolve(InteractChoice choice)
     {
         var target = current;
-        target.Payload.Interact(player, choice, player.transform.position);
         current = null;
         prompt.Hide();
-        WorldPickupManager.Instance.Unregister(target);
-        Destroy(target.gameObject);
+        target.Interact(player, choice);
     }
 }

@@ -7,11 +7,12 @@ public class SkillPickup : IInteractable
 
     public string DisplayName => skill.name;
     public Sprite Icon => skill.icon;
+    public Transform Transform => null;
 
     public bool NeedsChoice(Player player) =>
         player.Skills.SkillAt(0) != null && player.Skills.SkillAt(1) != null;
 
-    public void Interact(Player player, InteractChoice choice, Vector3 dropPosition)
+    public void Interact(Player player, InteractChoice choice)
     {
         int index = NeedsChoice(player)
             ? (choice == InteractChoice.Primary ? 0 : 1)
@@ -19,6 +20,6 @@ public class SkillPickup : IInteractable
 
         var previous = player.Skills.SetSkill(index, skill);
         if (previous != null)
-            WorldPickupManager.Instance.Spawn(new SkillPickup(previous), dropPosition);
+            WorldInteractionManager.Instance.Spawn(new SkillPickup(previous), player.transform.position);
     }
 }

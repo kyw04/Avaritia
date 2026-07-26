@@ -1,0 +1,44 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+public class WorldInteractionManager : Singleton<WorldInteractionManager>
+{
+    [SerializeField] private WorldPickup pickupPrefab;
+    private readonly List<IInteractable> interactables = new();
+
+    public void Register(IInteractable interactable) => interactables.Add(interactable);
+    public void Unregister(IInteractable interactable) => interactables.Remove(interactable);
+
+    public IInteractable GetNearestInRange(Vector3 position, float radius)
+    {
+        IInteractable nearest = null;
+        float nearestSqr = radius * radius;
+        foreach (var i in interactables)
+        {
+            if (i == null) continue;
+            float sqr = (i.Transform.position - position).sqrMagnitude;
+            if (sqr > nearestSqr) continue;
+            if (nearest == null || sqr < nearestSqr)
+            {
+                nearest = i;
+                nearestSqr = sqr;
+            }
+        }
+        return nearest;
+    }
+
+    public void Spawn(IInteractable payload, Vector3 position)
+    {
+        var instance = Instantiate(pickupPrefab, position, Quaternion.identity);
+        instance.Init(payload);
+    }
+
+    public void ClearAll()
+    {
+        foreach (var i in interactables)
+        {
+            if (i is WorldPickup wp) Destroy(wp.gameObject);
+        }
+        interactables.Clear();
+    }
+}

@@ -7,13 +7,14 @@ public class WeaponPickup : IInteractable
 
     public string DisplayName => weapon.name;
     public Sprite Icon => weapon.icon;
+    public Transform Transform => null;
     public bool NeedsChoice(Player player) => false;
 
-    public void Interact(Player player, InteractChoice choice, Vector3 dropPosition)
+    public void Interact(Player player, InteractChoice choice)
     {
         var previous = player.Weapon;
         player.EquipWeapon(weapon);
         if (previous != null)
-            WorldPickupManager.Instance.Spawn(new WeaponPickup(previous), dropPosition);
+            WorldInteractionManager.Instance.Spawn(new WeaponPickup(previous), player.transform.position);
     }
 }
