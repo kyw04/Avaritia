@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable
+public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable, IPoolable
 {
     [SerializeField] protected SkillData[] skill;
     [SerializeField] protected StatData statDataAsset;
@@ -95,8 +95,19 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable
     protected virtual void Awake()
     {
         Rb = GetComponent<Rigidbody2D>();
+        ResetEntityState();
+    }
+
+    public virtual void OnSpawn() => ResetEntityState();
+
+    public virtual void OnDespawn() { }
+
+    private void ResetEntityState()
+    {
+        isDead = false;
         stats = new RuntimeStats(statDataAsset);
         Skills = new SkillManager(this, skill);
+        activeBuffs.Clear();
         wasGroundCheckerChanged = !IsGrounded;
     }
 
