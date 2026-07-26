@@ -13,6 +13,6 @@ public struct StageNodeChangedEvent : ISubject
 
 public struct StageCompletedEvent : ISubject
 {
-    public StageData Stage { get; private set; }
-    public StageCompletedEvent(StageData stage) { Stage = stage; }
+    public StageNode Stage { get; private set; }
+    public StageCompletedEvent(StageNode stage) { Stage = stage; }
 }

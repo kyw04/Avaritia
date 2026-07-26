@@ -122,6 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f146633110f06148a3c1645df842bb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawnPoint
+  entityPrefab: {fileID: 0}
 --- !u!1 &7987230064300768565
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,6 +132,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 840659372792498491}
+  - component: {fileID: 7954200374822473593}
   m_Layer: 0
   m_Name: Boss Room
   m_TagString: Untagged
@@ -157,6 +159,19 @@ Transform:
   - {fileID: 2950335356608978112}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7954200374822473593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7987230064300768565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de37d198497440c89a013bb0ca5b463c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StageNode
+  roomType: 2
 --- !u!1 &8081998619867812809
 GameObject:
   m_ObjectHideFlags: 0

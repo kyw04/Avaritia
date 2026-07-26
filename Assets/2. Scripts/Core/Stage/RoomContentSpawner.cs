@@ -17,14 +17,14 @@ public class RoomContentSpawner : MonoBehaviour, IObserver<StageNodeChangedEvent
         EventBus.UnsubscribeAll(this);
     }
 
-    public void OnNotify(StageNodeChangedEvent gameEvent)
+    public void OnNotify(StageNodeChangedEvent e)
     {
-        Spawn(gameEvent.Current);
+        Spawn(e.Current);
     }
 
-    public void OnNotify(EntityDeadEvent gameEvent)
+    public void OnNotify(EntityDeadEvent e)
     {
-        if (!aliveActors.Remove(gameEvent.Source))
+        if (!aliveActors.Remove(e.Source))
             return;
 
         if (aliveActors.Count == 0)
@@ -35,62 +35,22 @@ public class RoomContentSpawner : MonoBehaviour, IObserver<StageNodeChangedEvent
     {
         if (currentRoom != null)
             Destroy(currentRoom);
-
+    
         aliveActors.Clear();
-
+        currentRoom = Instantiate(node.gameObject, Vector3.zero, Quaternion.identity);
+    
         var stageData = StageManager.Instance.CurrentStageData;
-        var roomPrefab = ResolveRoomPrefab(node.roomType, stageData);
-
-        if (roomPrefab == null)
-        {
-            Debug.LogError($"RoomContentSpawner: no room prefab available for {node.roomType}");
-            return;
-        }
-
-        currentRoom = Instantiate(roomPrefab, Vector3.zero, Quaternion.identity);
-        SpawnActors(node.roomType, stageData);
+        SpawnActors(stageData);
     }
 
-    private void SpawnActors(RoomType roomType, StageData stageData)
+    private void SpawnActors(StageData stageData)
     {
-        var actorPrefab = ResolveActorPrefab(roomType, stageData);
-        if (actorPrefab == null)
-            return;
-
-        foreach (var spawnPoint in currentRoom.GetComponentsInChildren<EnemySpawnPoint>())
+        foreach (var spawnPoint in currentRoom.GetComponentsInChildren<EntitySpawnPoint>())
         {
-            var actor = Instantiate(actorPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation, currentRoom.transform);
+            var actor = ObjectPoolManager.Instance.Spawn(spawnPoint.entityPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
             var entity = actor.GetComponent<Entity>();
             if (entity != null)
                 aliveActors.Add(entity);
-        }
-    }
-
-    private GameObject ResolveRoomPrefab(RoomType roomType, StageData stageData)
-    {
-        switch (roomType)
-        {
-            case RoomType.Battle:
-                return PickRandom(stageData.battleRoomPrefabs);
-            case RoomType.Boss:
-                return stageData.bossRoomPrefab;
-            case RoomType.Shop:
-                return stageData.shopRoomPrefab;
-            default:
-                return null;
-        }
-    }
-
-    private GameObject ResolveActorPrefab(RoomType roomType, StageData stageData)
-    {
-        switch (roomType)
-        {
-            case RoomType.Battle:
-                return stageData.enemyPrefab;
-            case RoomType.Boss:
-                return stageData.bossPrefab;
-            default:
-                return null;
         }
     }
 

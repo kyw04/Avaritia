@@ -165,6 +165,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6280653982691510579}
+  - component: {fileID: -1521703388426580451}
   m_Layer: 0
   m_Name: Shop Room
   m_TagString: Untagged
@@ -190,6 +191,19 @@ Transform:
   - {fileID: 5485868795838130534}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-1521703388426580451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2530366176913585066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de37d198497440c89a013bb0ca5b463c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StageNode
+  roomType: 1
 --- !u!1 &5243654569081660059
 GameObject:
   m_ObjectHideFlags: 0

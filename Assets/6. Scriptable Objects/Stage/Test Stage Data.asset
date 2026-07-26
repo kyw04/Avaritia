@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecd7d74057f6d874988a676e9c2e839e, type: 3}
+  m_Name: Test Stage Data
+  m_EditorClassIdentifier: Assembly-CSharp::StageData
+  startNode: {fileID: -4546772831511800760, guid: 8359b627b3905ac40baa97f8f93913ba, type: 3}
+  battleNodes:
+  - {fileID: -554497293809541005, guid: 32d9a762b5a818748a4c2447486bee93, type: 3}
+  shopNode: {fileID: -1521703388426580451, guid: cb2c8fab8ad00594faaec59ff6814ba6, type: 3}
+  shopRoomDistance: 3
+  bossNode: {fileID: 7954200374822473593, guid: d1a56713a9af5c84d907e03d0da26f13, type: 3}
+  bossRoomDistance: 5
+  nextStage: {fileID: 11400000}

@@ -5,25 +5,28 @@ public class StageManager : Singleton<StageManager>
 {
     private static readonly List<StageNode> EmptyNodes = new();
 
-    private StageData currentStageData;
+     [SerializeField] private StageData currentStageData;
     private StageNode currentNode;
     private readonly HashSet<StageNode> clearedNodes = new();
 
     public StageData CurrentStageData => currentStageData;
     public StageNode CurrentNode => currentNode;
     public bool IsCurrentRoomCleared => currentNode != null && clearedNodes.Contains(currentNode);
-    public IReadOnlyList<StageNode> AvailableNextNodes => IsCurrentRoomCleared ? currentNode.nextNodes : EmptyNodes;
 
-    public void BeginStage(StageData data)
+    private void Start()
     {
-        if (data == null || data.startNode == null)
+        BeginStage();
+    }
+
+    public void BeginStage()
+    {
+        if (currentStageData == null)
         {
-            Debug.LogError("StageManager: StageData or its startNode is not assigned");
+            Debug.LogError("StageManager: StageNode or its startNode is not assigned");
             return;
         }
 
-        currentStageData = data;
-        currentNode = data.startNode;
+        currentNode = currentStageData.startNode;
         clearedNodes.Clear();
     }
 
@@ -34,13 +37,13 @@ public class StageManager : Singleton<StageManager>
 
         EventBus.Publish(new StageNodeClearedEvent(currentNode));
 
-        if (currentNode.nextNodes.Count == 0)
-            EventBus.Publish(new StageCompletedEvent(currentStageData));
+        // if (currentNode.nextNodes.Count == 0)
+        //     EventBus.Publish(new StageCompletedEvent(CurrentStageData));
     }
 
     public void MoveTo(StageNode node)
     {
-        if (!IsCurrentRoomCleared || !currentNode.nextNodes.Contains(node))
+        if (!IsCurrentRoomCleared)
         {
             Debug.LogError($"StageManager: cannot move to {(node == null ? "null" : node.name)} from current state");
             return;

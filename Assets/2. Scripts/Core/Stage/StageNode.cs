@@ -1,11 +1,8 @@
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public enum RoomType { Battle, Shop, Boss }
+public enum RoomType { None, Shop, Boss, Battle }
 
-[CreateAssetMenu(menuName = "Scriptable Objects/Stage Node")]
-public class StageNode : ScriptableObject
+public class StageNode : MonoBehaviour
 {
     public RoomType roomType;
-    public List<StageNode> nextNodes = new();
 }

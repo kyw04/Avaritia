@@ -1,12 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StageData : MonoBehaviour
+[CreateAssetMenu(menuName = "Scriptable Objects/Stage Data")]
+public class StageData : ScriptableObject
 {
     public StageNode startNode;
-    public List<GameObject> battleRoomPrefabs = new();
-    public GameObject bossRoomPrefab;
-    public GameObject shopRoomPrefab;
-    public GameObject enemyPrefab;
-    public GameObject bossPrefab;
+    public List<StageNode> battleNodes = new();
+    
+    public StageNode shopNode;
+    public int shopRoomDistance;
+    
+    public StageNode bossNode;
+    public int bossRoomDistance;
+    
+    public StageData nextStage;
 }

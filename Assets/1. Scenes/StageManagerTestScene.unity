@@ -513,6 +513,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 990ae40f068eac34aa1160021962caf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StageManager
+  currentStageData: {fileID: 5107011510984468057, guid: 8359b627b3905ac40baa97f8f93913ba, type: 3}
 --- !u!4 &1572352090
 Transform:
   m_ObjectHideFlags: 0

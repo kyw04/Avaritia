@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f146633110f06148a3c1645df842bb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawnPoint
+  entityPrefab: {fileID: 0}
 --- !u!1 &2366713997447209625
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,6 +365,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f146633110f06148a3c1645df842bb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawnPoint
+  entityPrefab: {fileID: 0}
 --- !u!1 &8545907889029096874
 GameObject:
   m_ObjectHideFlags: 0
@@ -511,6 +513,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4628893500082679639}
+  - component: {fileID: -554497293809541005}
   m_Layer: 0
   m_Name: Battle Room
   m_TagString: Untagged
@@ -538,3 +541,16 @@ Transform:
   - {fileID: 5252290853850897789}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-554497293809541005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8989647135807431895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de37d198497440c89a013bb0ca5b463c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StageNode
+  roomType: 3
