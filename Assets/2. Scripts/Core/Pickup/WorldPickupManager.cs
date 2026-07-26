@@ -27,7 +27,7 @@ public class WorldPickupManager : Singleton<WorldPickupManager>
         return nearest;
     }
 
-    public void Spawn(IPickupable payload, Vector3 position)
+    public void Spawn(IInteractable payload, Vector3 position)
     {
         var instance = Instantiate(pickupPrefab, position, Quaternion.identity);
         instance.Init(payload);

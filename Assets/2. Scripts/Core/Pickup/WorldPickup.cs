@@ -6,7 +6,7 @@ public class WorldPickup : MonoBehaviour
     [SerializeField] private SkillData skillAsset;
     [SerializeField] private SpriteRenderer spriteRenderer;
 
-    public IPickupable Payload { get; private set; }
+    public IInteractable Payload { get; private set; }
 
     private WorldPickupManager manager;
 
@@ -25,7 +25,7 @@ public class WorldPickup : MonoBehaviour
         manager.Unregister(this);
     }
 
-    public void Init(IPickupable payload)
+    public void Init(IInteractable payload)
     {
         Payload = payload;
         ApplyIcon();

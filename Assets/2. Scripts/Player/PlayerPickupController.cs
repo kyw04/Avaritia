@@ -51,7 +51,7 @@ public class PlayerPickupController : MonoBehaviour
         if (t >= 1f)
         {
             isHolding = false;
-            Resolve(PickupChoice.Secondary);
+            Resolve(InteractChoice.Secondary);
         }
     }
 
@@ -62,7 +62,7 @@ public class PlayerPickupController : MonoBehaviour
         pressStartTime = Time.time;
         if (!current.Payload.NeedsChoice(player))
         {
-            Resolve(PickupChoice.Primary);
+            Resolve(InteractChoice.Primary);
             return;
         }
         isHolding = true;
@@ -75,14 +75,14 @@ public class PlayerPickupController : MonoBehaviour
         if (current == null) return;
 
         float held = Time.time - pressStartTime;
-        if (held <= tapThreshold) Resolve(PickupChoice.Primary);
+        if (held <= tapThreshold) Resolve(InteractChoice.Primary);
         else prompt.SetProgress(0f);
     }
 
-    private void Resolve(PickupChoice choice)
+    private void Resolve(InteractChoice choice)
     {
         var target = current;
-        target.Payload.Pickup(player, choice, player.transform.position);
+        target.Payload.Interact(player, choice, player.transform.position);
         current = null;
         prompt.Hide();
         WorldPickupManager.Instance.Unregister(target);
