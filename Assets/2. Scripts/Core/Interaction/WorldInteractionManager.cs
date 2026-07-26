@@ -29,17 +29,14 @@ public class WorldInteractionManager : Singleton<WorldInteractionManager>
 
     public void Spawn(IInteractable payload, Vector3 position)
     {
-        var instance = Instantiate(pickupPrefab, position, Quaternion.identity);
+        var instance = ObjectPoolManager.Instance.Spawn(pickupPrefab, position, Quaternion.identity);
         instance.Init(payload);
     }
 
     public void ClearAll()
     {
-        interactables.RemoveAll(i =>
-        {
-            if (i is not WorldPickup wp) return false;
-            Destroy(wp.gameObject);
-            return true;
-        });
+        for (int i = interactables.Count - 1; i >= 0; i--)
+            if (interactables[i] is WorldPickup wp)
+                wp.Remove();
     }
 }
