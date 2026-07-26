@@ -6,6 +6,7 @@ public class Enemy : Entity, IStateOwner<Enemy>
     public IStateMachine Machine { get; private set; }
     public Transform Target { get; private set; }
     public bool HasTarget => Target != null;
+    private StateManager stateManager;
 
     [SerializeField] private Vector2 patrolSize;
     private Vector2 patrolCenter;
@@ -24,6 +25,7 @@ public class Enemy : Entity, IStateOwner<Enemy>
         Owner = this;
         Machine = new EnemyStateMachine(Owner);
         Machine.Init();
+        stateManager = StateManager.Instance;
     }
 
     public void Move()
@@ -161,11 +163,11 @@ public class Enemy : Entity, IStateOwner<Enemy>
     {
         if (!TryMarkDead()) return;
         Machine.ChangeState<EnemyDeadState>();
-        StateManager.Instance.Unregister(Machine);
+        stateManager.Unregister(Machine);
     }
 
     private void OnDestroy()
     {
-        StateManager.Instance.Unregister(Machine);
+        stateManager.Unregister(Machine);
     }
 }

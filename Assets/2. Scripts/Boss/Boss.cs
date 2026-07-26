@@ -4,6 +4,7 @@ public class Boss : Entity
 {
     public IAIController Machine { get; private set; }
     public Transform Target { get; private set; }
+    private StateManager stateManager;
 
     protected override void Awake()
     {
@@ -15,6 +16,7 @@ public class Boss : Entity
 
         Machine = new BossBehaviorTree(this);
         Machine.Init();
+        stateManager = StateManager.Instance;
     }
 
     public void MoveToTarget()
@@ -40,12 +42,12 @@ public class Boss : Entity
     public override void Die()
     {
         if (!TryMarkDead()) return;
-        StateManager.Instance.Unregister(Machine);
+        stateManager.Unregister(Machine);
         Debug.Log("Boss: 사망");
     }
 
     private void OnDestroy()
     {
-        StateManager.Instance.Unregister(Machine);
+        stateManager.Unregister(Machine);
     }
 }

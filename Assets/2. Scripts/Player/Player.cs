@@ -9,6 +9,7 @@ public class Player : Entity, IStateOwner<Player>
     public Player Owner { get; private set; }
     public IStateMachine Machine { get; private set; }
     public SpriteRenderer Renderer { get; private set; }
+    private StateManager stateManager;
     public Weapon Weapon => weapon;
     public PlayerInteractionController InteractionController => interactionController;
 
@@ -37,6 +38,7 @@ public class Player : Entity, IStateOwner<Player>
         Owner = this;
         Machine = new PlayerStateMachine(Owner);
         Machine.Init();
+        stateManager = StateManager.Instance;
 
         stats.Set(StatType.DoubleJumpCount, 0);
         stats.Set(StatType.DashCount, 0);
@@ -72,13 +74,13 @@ public class Player : Entity, IStateOwner<Player>
     public override void Die()
     {
         if (!TryMarkDead()) return;
-        StateManager.Instance.Unregister(Machine);
+        stateManager.Unregister(Machine);
         Debug.Log("Player: 사망");
     }
 
     private void OnDestroy()
     {
-        StateManager.Instance.Unregister(Machine);
+        stateManager.Unregister(Machine);
     }
 
     private void OnDrawGizmosSelected()
