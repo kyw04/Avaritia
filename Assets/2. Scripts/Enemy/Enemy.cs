@@ -18,6 +18,10 @@ public class Enemy : Entity, IStateOwner<Enemy>
 
     public override int LookDirection => transform.right.x >= 0 ? 1 : -1;
 
+    // Machine is built here too (not just OnSpawn) so a directly scene-placed
+    // (non-pooled) instance still gets a working state machine — OnSpawn only
+    // fires for pool-spawned instances. OnSpawn unregisters and rebuilds it
+    // again on every pool (re)spawn.
     protected override void Awake()
     {
         base.Awake();
@@ -31,6 +35,7 @@ public class Enemy : Entity, IStateOwner<Enemy>
     public override void OnSpawn()
     {
         base.OnSpawn();
+        if (Machine != null) stateManager.Unregister(Machine);
         patrolCenter = transform.position;
         Target = null;
         Machine = new EnemyStateMachine(Owner);

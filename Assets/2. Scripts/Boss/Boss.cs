@@ -6,6 +6,10 @@ public class Boss : Entity
     public Transform Target { get; private set; }
     private StateManager stateManager;
 
+    // Machine is built here too (not just OnSpawn) so a directly scene-placed
+    // (non-pooled) instance still gets a working state machine — OnSpawn only
+    // fires for pool-spawned instances. OnSpawn unregisters and rebuilds it
+    // again on every pool (re)spawn.
     protected override void Awake()
     {
         base.Awake();
@@ -22,6 +26,7 @@ public class Boss : Entity
     public override void OnSpawn()
     {
         base.OnSpawn();
+        if (Machine != null) stateManager.Unregister(Machine);
         var player = FindAnyObjectByType<Player>();
         if (player != null)
             Target = player.transform;
