@@ -49,9 +49,9 @@ public class InputHandler : Singleton<InputHandler>
     private void OnSkill2(InputAction.CallbackContext context) =>
         player.Skills.TryUseSkill(player.Skills.SkillAt(1), player);
     private void OnInteractStarted(InputAction.CallbackContext context) =>
-        player.PickupController.OnInteractStarted();
+        player.InteractionController.OnInteractStarted();
     private void OnInteractCanceled(InputAction.CallbackContext context) =>
-        player.PickupController.OnInteractCanceled();
+        player.InteractionController.OnInteractCanceled();
 
     private void OnMove(InputAction.CallbackContext context)
     {

@@ -1,15 +1,16 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Player : Entity, IStateOwner<Player>
 {
     [SerializeField] private Weapon weapon;
-    [SerializeField] private PlayerInteractionController pickupController;
+    [SerializeField, FormerlySerializedAs("pickupController")] private PlayerInteractionController interactionController;
 
     public Player Owner { get; private set; }
     public IStateMachine Machine { get; private set; }
     public SpriteRenderer Renderer { get; private set; }
     public Weapon Weapon => weapon;
-    public PlayerInteractionController PickupController => pickupController;
+    public PlayerInteractionController InteractionController => interactionController;
 
     protected override T ApplyEquipmentBonus<T>(StatType type, T baseValue) =>
         weapon != null ? weapon.ApplyBonus(type, baseValue) : baseValue;
