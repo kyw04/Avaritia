@@ -83,4 +83,6 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         if (instance == null) return;
         Despawn(instance.gameObject);
     }
+
+    public bool IsPooled(GameObject instance) => instance != null && instanceToPrefab.ContainsKey(instance);
 }
