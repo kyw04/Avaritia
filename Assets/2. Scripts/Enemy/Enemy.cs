@@ -23,6 +23,9 @@ public class Enemy : Entity, IStateOwner<Enemy>
         base.Awake();
         Owner = this;
         stateManager = StateManager.Instance;
+        patrolCenter = transform.position;
+        Machine = new EnemyStateMachine(Owner);
+        Machine.Init();
     }
 
     public override void OnSpawn()

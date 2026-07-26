@@ -10,6 +10,13 @@ public class Boss : Entity
     {
         base.Awake();
         stateManager = StateManager.Instance;
+
+        var player = FindAnyObjectByType<Player>();
+        if (player != null)
+            Target = player.transform;
+
+        Machine = new BossBehaviorTree(this);
+        Machine.Init();
     }
 
     public override void OnSpawn()
