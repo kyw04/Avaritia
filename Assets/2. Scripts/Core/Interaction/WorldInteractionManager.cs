@@ -31,6 +31,7 @@ public class WorldInteractionManager : Singleton<WorldInteractionManager>
     {
         var instance = ObjectPoolManager.Instance.Spawn(pickupPrefab, position, Quaternion.identity);
         instance.Init(payload);
+        EventBus.Publish(new PickupSpawnedEvent(instance));
         return instance;
     }
 
