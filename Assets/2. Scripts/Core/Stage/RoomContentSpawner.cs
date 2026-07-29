@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoomContentSpawner : MonoBehaviour, IObserver<StageNodeChangedEvent>, IObserver<EntityDeadEvent>
+public class RoomContentSpawner : MonoBehaviour, IObserver<StageNodeChangedEvent>, IObserver<EntityDeadEvent>, IObserver<PickupCollectedEvent>
 {
     private GameObject currentRoom;
     private readonly List<Entity> aliveActors = new();
@@ -11,6 +11,7 @@ public class RoomContentSpawner : MonoBehaviour, IObserver<StageNodeChangedEvent
     {
         EventBus.Subscribe<StageNodeChangedEvent>(this);
         EventBus.Subscribe<EntityDeadEvent>(this);
+        EventBus.Subscribe<PickupCollectedEvent>(this);
     }
 
     private void OnDestroy()
@@ -31,6 +32,8 @@ public class RoomContentSpawner : MonoBehaviour, IObserver<StageNodeChangedEvent
         if (aliveActors.Count == 0)
             StageManager.Instance.NotifyRoomCleared();
     }
+
+    public void OnNotify(PickupCollectedEvent e) => roomPickups.Remove(e.Pickup);
 
     public void Spawn(StageNode node)
     {

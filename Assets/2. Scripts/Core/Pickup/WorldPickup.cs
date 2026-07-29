@@ -52,6 +52,8 @@ public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
     // 풀에서 온 인스턴스면 반납(재사용), 씬에 직접 배치된 인스턴스면 기존처럼 파괴.
     public void Remove()
     {
+        EventBus.Publish(new PickupCollectedEvent(this));
+
         if (ObjectPoolManager.Instance.IsPooled(gameObject))
             ObjectPoolManager.Instance.Despawn(gameObject);
         else
