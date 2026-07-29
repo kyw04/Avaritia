@@ -5,6 +5,7 @@ public class RoomContentSpawner : MonoBehaviour, IObserver<StageNodeChangedEvent
 {
     private GameObject currentRoom;
     private readonly List<Entity> aliveActors = new();
+    private readonly List<WorldPickup> roomPickups = new();
 
     private void Awake()
     {
@@ -41,10 +42,16 @@ public class RoomContentSpawner : MonoBehaviour, IObserver<StageNodeChangedEvent
                 ObjectPoolManager.Instance.Despawn(actor.gameObject);
         aliveActors.Clear();
 
+        foreach (var pickup in roomPickups)
+            if (pickup != null && pickup.gameObject.activeSelf)
+                ObjectPoolManager.Instance.Despawn(pickup.gameObject);
+        roomPickups.Clear();
+
         currentRoom = Instantiate(node.gameObject, Vector3.zero, Quaternion.identity);
 
         var stageData = StageManager.Instance.CurrentStageData;
         SpawnActors(stageData);
+        SpawnPickups();
     }
 
     private void SpawnActors(StageData stageData)
@@ -55,6 +62,21 @@ public class RoomContentSpawner : MonoBehaviour, IObserver<StageNodeChangedEvent
             var entity = actor.GetComponent<Entity>();
             if (entity != null)
                 aliveActors.Add(entity);
+        }
+    }
+
+    private void SpawnPickups()
+    {
+        foreach (var point in currentRoom.GetComponentsInChildren<PickupSpawnPoint>())
+        {
+            IInteractable payload = null;
+            if (point.weaponAsset != null) payload = new WeaponPickup(point.weaponAsset);
+            else if (point.skillAsset != null) payload = new SkillPickup(point.skillAsset);
+
+            if (payload == null) continue;
+
+            var pickup = WorldInteractionManager.Instance.Spawn(payload, point.transform.position);
+            roomPickups.Add(pickup);
         }
     }
 
