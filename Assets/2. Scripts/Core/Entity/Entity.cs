@@ -10,6 +10,9 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     [SerializeField] protected Transform groundCheck;
     [SerializeField] protected float groundRadius;
     [SerializeField] protected LayerMask groundLayer;
+    [SerializeField] protected Weapon dropWeaponAsset;
+    [SerializeField] protected SkillData dropSkillAsset;
+    [SerializeField, Range(0, 100)] protected float dropChance;
 
     protected RuntimeStats stats;
     protected bool isDead;
@@ -172,7 +175,20 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         if (isDead) return false;
         isDead = true;
         EventBus.Publish(new EntityDeadEvent(this));
+        TryDropPickup();
         return true;
+    }
+
+    private void TryDropPickup()
+    {
+        IInteractable payload = null;
+        if (dropWeaponAsset != null) payload = new WeaponPickup(dropWeaponAsset);
+        else if (dropSkillAsset != null) payload = new SkillPickup(dropSkillAsset);
+
+        if (payload == null) return;
+        if (Random.Range(0f, 100f) >= dropChance) return;
+
+        WorldInteractionManager.Instance.Spawn(payload, transform.position);
     }
 
     protected void OnHealthChanged() => EventBus.Publish(new EntityHealthChangedEvent(this, MaxHealth, CurrentHealth));
