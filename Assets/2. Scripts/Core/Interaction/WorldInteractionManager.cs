@@ -27,10 +27,11 @@ public class WorldInteractionManager : Singleton<WorldInteractionManager>
         return nearest;
     }
 
-    public void Spawn(IInteractable payload, Vector3 position)
+    public WorldPickup Spawn(IInteractable payload, Vector3 position)
     {
         var instance = ObjectPoolManager.Instance.Spawn(pickupPrefab, position, Quaternion.identity);
         instance.Init(payload);
+        return instance;
     }
 
     public void ClearAll()
