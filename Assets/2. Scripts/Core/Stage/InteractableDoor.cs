@@ -5,6 +5,7 @@ public class InteractableDoor : MonoBehaviour, IInteractable, IObserver<StageNod
     [SerializeField] private StageNode targetNode;
     [SerializeField] private StageData targetStage;
 
+    private WorldInteractionManager manager;
     private bool isRegistered;
 
     public string DisplayName => "문";
@@ -13,6 +14,10 @@ public class InteractableDoor : MonoBehaviour, IInteractable, IObserver<StageNod
 
     private void Awake()
     {
+        if (targetNode == null && targetStage == null)
+            Debug.LogError($"InteractableDoor: neither targetNode nor targetStage is assigned on {name}");
+
+        manager = WorldInteractionManager.Instance;
         EventBus.Subscribe<StageNodeClearedEvent>(this);
         if (StageManager.Instance.IsCurrentRoomCleared)
             RegisterSelf();
@@ -22,7 +27,7 @@ public class InteractableDoor : MonoBehaviour, IInteractable, IObserver<StageNod
     {
         EventBus.UnsubscribeAll(this);
         if (isRegistered)
-            WorldInteractionManager.Instance.Unregister(this);
+            manager.Unregister(this);
     }
 
     public void OnNotify(StageNodeClearedEvent e) => RegisterSelf();
@@ -31,7 +36,7 @@ public class InteractableDoor : MonoBehaviour, IInteractable, IObserver<StageNod
     {
         if (isRegistered) return;
         isRegistered = true;
-        WorldInteractionManager.Instance.Register(this);
+        manager.Register(this);
     }
 
     public bool NeedsChoice(Player player) => false;
