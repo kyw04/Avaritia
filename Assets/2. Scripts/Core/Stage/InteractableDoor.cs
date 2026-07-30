@@ -15,7 +15,10 @@ public class InteractableDoor : MonoBehaviour, IInteractable, IObserver<StageNod
     private void Awake()
     {
         if (targetNode == null && targetStage == null)
+        {
             Debug.LogError($"InteractableDoor: neither targetNode nor targetStage is assigned on {name}");
+            return;
+        }
 
         manager = WorldInteractionManager.Instance;
         EventBus.Subscribe<StageNodeClearedEvent>(this);
