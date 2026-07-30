@@ -26,10 +26,8 @@ public class StageManager : Singleton<StageManager>
             return;
         }
 
-        currentNode = currentStageData.startNode;
         clearedNodes.Clear();
-        
-        MoveTo(currentNode);
+        SetCurrentNode(currentStageData.startNode);
     }
 
     public void NotifyRoomCleared()
@@ -45,12 +43,36 @@ public class StageManager : Singleton<StageManager>
 
     public void MoveTo(StageNode node)
     {
-        if (IsCurrentRoomCleared)
+        if (!IsCurrentRoomCleared)
         {
-            Debug.LogError($"StageManager: cannot move to {(node == null ? "null" : node.name)} from current state");
+            Debug.LogError($"StageManager: cannot move to {(node == null ? "null" : node.name)} - current room not cleared");
             return;
         }
 
+        SetCurrentNode(node);
+    }
+
+    public void AdvanceStage(StageData nextStage)
+    {
+        if (!IsCurrentRoomCleared)
+        {
+            Debug.LogError("StageManager: cannot advance stage - current room not cleared");
+            return;
+        }
+
+        if (nextStage == null)
+        {
+            Debug.LogError("StageManager: nextStage is null");
+            return;
+        }
+
+        currentStageData = nextStage;
+        clearedNodes.Clear();
+        SetCurrentNode(nextStage.startNode);
+    }
+
+    private void SetCurrentNode(StageNode node)
+    {
         var previous = currentNode;
         currentNode = node;
         EventBus.Publish(new StageNodeChangedEvent(previous, currentNode));
