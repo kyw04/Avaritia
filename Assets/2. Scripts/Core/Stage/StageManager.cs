@@ -43,13 +43,31 @@ public class StageManager : Singleton<StageManager>
 
     public void MoveTo(StageNode node)
     {
-        if (!IsCurrentRoomCleared)
+        if (node == null || !IsCurrentRoomCleared)
         {
             Debug.LogError($"StageManager: cannot move to {(node == null ? "null" : node.name)} - current room not cleared");
             return;
         }
-
         SetCurrentNode(node);
+    }
+
+    public StageNode GetStage(RoomType roomType)
+    {
+        var stage = currentStageData;
+        switch (roomType)
+        {
+            case RoomType.None:
+                return stage.startNode;
+            case RoomType.Shop:
+                return stage.shopNode;
+            case RoomType.Boss:
+                return stage.bossNode;
+            case RoomType.Battle:
+                int count = stage.battleNodes.Count;
+                return stage.battleNodes[Random.Range(0, count)];
+        }
+        
+        return null;
     }
 
     public void AdvanceStage(StageData nextStage)
@@ -76,5 +94,8 @@ public class StageManager : Singleton<StageManager>
         var previous = currentNode;
         currentNode = node;
         EventBus.Publish(new StageNodeChangedEvent(previous, currentNode));
+        
+        if (node.wasCleared)
+            NotifyRoomCleared();
     }
 }

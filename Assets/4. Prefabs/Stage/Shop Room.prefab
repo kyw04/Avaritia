@@ -204,6 +204,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StageNode
   roomType: 1
+  wasCleared: 1
 --- !u!1 &5243654569081660059
 GameObject:
   m_ObjectHideFlags: 0

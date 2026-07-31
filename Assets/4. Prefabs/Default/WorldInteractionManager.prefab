@@ -113,7 +113,7 @@ GameObject:
   - component: {fileID: 6455764198864739979}
   - component: {fileID: 8779896719491344389}
   m_Layer: 0
-  m_Name: WorldPickupManager
+  m_Name: WorldInteractionManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

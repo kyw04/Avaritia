@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class InteractableDoor : MonoBehaviour, IInteractable, IObserver<StageNodeClearedEvent>
 {
-    [SerializeField] private StageNode targetNode;
+    [SerializeField] private RoomType roomType;
     [SerializeField] private StageData targetStage;
 
     private WorldInteractionManager manager;
@@ -14,9 +14,9 @@ public class InteractableDoor : MonoBehaviour, IInteractable, IObserver<StageNod
 
     private void Awake()
     {
-        if (targetNode == null && targetStage == null)
+        if (targetStage == null)
         {
-            Debug.LogError($"InteractableDoor: neither targetNode nor targetStage is assigned on {name}");
+            Debug.LogError($"InteractableDoor: targetNode has not been assigned to {name}");
             return;
         }
 
@@ -46,9 +46,9 @@ public class InteractableDoor : MonoBehaviour, IInteractable, IObserver<StageNod
 
     public void Interact(Player player, InteractChoice choice)
     {
-        if (targetStage != null)
+        if (targetStage != StageManager.Instance.CurrentStageData)
             StageManager.Instance.AdvanceStage(targetStage);
         else
-            StageManager.Instance.MoveTo(targetNode);
+            StageManager.Instance.MoveTo(StageManager.Instance.GetStage(roomType));
     }
 }

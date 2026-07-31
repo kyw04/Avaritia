@@ -4472,6 +4472,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5735150061085217394, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
+      propertyPath: m_Interpolate
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6477522951164393474, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
       propertyPath: prompt
       value: 

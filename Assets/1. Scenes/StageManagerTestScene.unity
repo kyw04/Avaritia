@@ -119,6 +119,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &70236834 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2529535877576339803, guid: b88cbd999809e4240885239b6cf6a6a3, type: 3}
+  m_PrefabInstance: {fileID: 1147519075}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04d90b0a757e42349a409442aa94548a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PickupPromptUI
 --- !u!1001 &164815733
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -171,6 +182,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 6477522951164393474, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
+      propertyPath: prompt
+      value: 
+      objectReference: {fileID: 70236834}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
