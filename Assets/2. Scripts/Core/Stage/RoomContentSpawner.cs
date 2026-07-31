@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class RoomContentSpawner : MonoBehaviour, IObserver<StageNodeChangedEvent>, IObserver<EntityDeadEvent>, IObserver<PickupCollectedEvent>, IObserver<PickupSpawnedEvent>
 {
+    [SerializeField] private Player player;
+
     private GameObject currentRoom;
     private readonly List<Entity> aliveActors = new();
     private readonly List<WorldPickup> roomPickups = new();
@@ -55,9 +57,24 @@ public class RoomContentSpawner : MonoBehaviour, IObserver<StageNodeChangedEvent
 
         currentRoom = Instantiate(node.gameObject, Vector3.zero, Quaternion.identity);
 
+        PositionPlayer();
+
         var stageData = StageManager.Instance.CurrentStageData;
         SpawnActors(stageData);
         SpawnPickups();
+    }
+
+    private void PositionPlayer()
+    {
+        var spawnPoint = currentRoom.GetComponentInChildren<PlayerSpawnPoint>();
+        if (spawnPoint == null)
+        {
+            Debug.LogWarning($"RoomContentSpawner: no PlayerSpawnPoint found in {currentRoom.name}");
+            return;
+        }
+
+        player.Rb.position = spawnPoint.transform.position;
+        player.Rb.linearVelocity = Vector2.zero;
     }
 
     private void SpawnActors(StageData stageData)
