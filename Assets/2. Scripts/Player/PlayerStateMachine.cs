@@ -274,7 +274,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Execute()
         {
-            if (Owner.IsGrounded)
+            if (Owner.IsGrounded && Owner.Rb.linearVelocityY <= 0)
             {
                 Owner.Machine.ChangeState<PlayerIdleState>();
             }
