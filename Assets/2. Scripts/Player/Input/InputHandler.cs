@@ -36,8 +36,13 @@ public class InputHandler : Singleton<InputHandler>
 
     private void OnDash(InputAction.CallbackContext context) =>
         player.Machine.ChangeState<PlayerDashState>();
-    private void OnJump(InputAction.CallbackContext context) => 
+    private void OnJump(InputAction.CallbackContext context)
+    {
+        if (MoveInput.y < -0.5f && player.TryDropThroughPlatform())
+            return;
+
         player.Machine.ChangeState<PlayerJumpState>();
+    }
     private void OnAttack(InputAction.CallbackContext context)
     {
         EventBus.Publish(new EntityAttackBufferEvent());

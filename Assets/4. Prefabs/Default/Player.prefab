@@ -216,9 +216,16 @@ MonoBehaviour:
   groundRadius: 0.07
   groundLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 520
+  dropWeaponAsset: {fileID: 0}
+  dropSkillAsset: {fileID: 0}
+  dropChance: 0
   weapon: {fileID: 11400000, guid: d413ff329fa88d445a6a6c85c4eed3e9, type: 2}
   interactionController: {fileID: 6477522951164393474}
+  platformLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  dropThroughDuration: 1
   references:
     version: 2
     RefIds:

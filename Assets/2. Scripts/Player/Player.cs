@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -5,6 +6,9 @@ public class Player : Entity, IStateOwner<Player>
 {
     [SerializeField] private Weapon weapon;
     [SerializeField, FormerlySerializedAs("pickupController")] private PlayerInteractionController interactionController;
+    [SerializeField] private LayerMask platformLayer;
+    [SerializeField] private float dropThroughDuration = 1f;
+    private Collider2D col;
 
     public Player Owner { get; private set; }
     public IStateMachine Machine { get; private set; }
@@ -34,6 +38,7 @@ public class Player : Entity, IStateOwner<Player>
     {
         base.Awake();
         Renderer = GetComponentInChildren<SpriteRenderer>();
+        col = GetComponent<Collider2D>();
 
         Owner = this;
         Machine = new PlayerStateMachine(Owner);
@@ -42,6 +47,33 @@ public class Player : Entity, IStateOwner<Player>
 
         stats.Set(StatType.DoubleJumpCount, 0);
         stats.Set(StatType.DashCount, 0);
+    }
+
+    public bool TryDropThroughPlatform()
+    {
+        if (!IsGrounded) return false;
+
+        var platform = Physics2D.OverlapCircle(groundCheck.position, groundRadius, platformLayer);
+        if (platform == null) return false;
+
+        StartCoroutine(DropThroughRoutine(platform));
+        return true;
+    }
+
+    private IEnumerator DropThroughRoutine(Collider2D platform)
+    {
+        Physics2D.IgnoreCollision(col, platform, true);
+        Rb.WakeUp();
+
+        float elapsed = 0f;
+        while (platform != null && col.bounds.max.y > platform.bounds.min.y && elapsed < dropThroughDuration)
+        {
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        if (platform != null)
+            Physics2D.IgnoreCollision(col, platform, false);
     }
 
     protected override void Start()
