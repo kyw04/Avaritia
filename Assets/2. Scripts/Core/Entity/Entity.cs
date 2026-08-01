@@ -122,7 +122,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     {
         if (groundCheck == null) return;
 
-        IsGrounded = Physics2D.OverlapCircle(groundCheck.position, groundRadius, groundLayer);
+        var groundHit = Physics2D.OverlapCircle(groundCheck.position, groundRadius, groundLayer);
+        IsGrounded = groundHit != null && groundCheck.position.y >= groundHit.bounds.max.y - groundRadius;
         if (wasGroundCheckerChanged != IsGrounded)
         {
             wasGroundCheckerChanged = IsGrounded;
