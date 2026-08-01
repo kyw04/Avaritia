@@ -132,7 +132,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
 
     protected virtual void OnGroundedChanged(bool grounded)
     {
-        if (grounded)
+        if (grounded && Rb.linearVelocityY <= 0)
             stats.Set(StatType.DoubleJumpCount, 0);
     }
 
