@@ -86,7 +86,9 @@ public class Player : Entity, IStateOwner<Player>
     {
         base.OnGroundedChanged(grounded);
 
-        if (grounded)
+        bool landed = grounded && Rb.linearVelocityY <= 0;
+
+        if (landed)
         {
             if (Rb.linearVelocityY <= -5)
             {
@@ -97,7 +99,7 @@ public class Player : Entity, IStateOwner<Player>
                 Machine.ChangeState<PlayerIdleState>();
             }
         }
-        else if (Rb.linearVelocityY <= 0)
+        else if (!grounded && Rb.linearVelocityY <= 0)
         {
             Machine.ChangeState<PlayerFallState>();
         }
