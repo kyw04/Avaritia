@@ -15,6 +15,14 @@ MonoBehaviour:
   startNode: {fileID: -4546772831511800760, guid: 8359b627b3905ac40baa97f8f93913ba, type: 3}
   battleNodes:
   - {fileID: -554497293809541005, guid: 32d9a762b5a818748a4c2447486bee93, type: 3}
+  - {fileID: -554497293809541005, guid: b62f8c60cd0350e4daed081c1c03b796, type: 3}
+  - {fileID: -554497293809541005, guid: 76271acd1b517dc41b92bcc5764f5b9c, type: 3}
+  skillRewardPool:
+  - {fileID: 11400000, guid: 5f7051b18337f504facdcd71dc629842, type: 2}
+  - {fileID: 11400000, guid: 24897805a33703149908f3757c348de9, type: 2}
+  - {fileID: 11400000, guid: 1575af593c12af148935baeb4784cd8a, type: 2}
+  weaponRewardPool:
+  - {fileID: 11400000, guid: d413ff329fa88d445a6a6c85c4eed3e9, type: 2}
   shopNode: {fileID: -1521703388426580451, guid: cb2c8fab8ad00594faaec59ff6814ba6, type: 3}
   shopRoomDistance: 3
   bossNode: {fileID: 7954200374822473593, guid: d1a56713a9af5c84d907e03d0da26f13, type: 3}
