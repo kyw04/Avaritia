@@ -90,15 +90,33 @@ public class RoomContentSpawner : MonoBehaviour, IObserver<StageNodeChangedEvent
 
     private void SpawnPickups()
     {
+        var node = StageManager.Instance.CurrentNode;
+        var stageData = StageManager.Instance.CurrentStageData;
+
         foreach (var point in currentRoom.GetComponentsInChildren<PickupSpawnPoint>())
         {
-            IInteractable payload = null;
-            if (point.weaponAsset != null) payload = new WeaponPickup(point.weaponAsset);
-            else if (point.skillAsset != null) payload = new SkillPickup(point.skillAsset);
-
+            var payload = BuildPayload(point, node, stageData);
             if (payload == null) continue;
 
             WorldInteractionManager.Instance.Spawn(payload, point.transform.position);
+        }
+    }
+
+    private IInteractable BuildPayload(PickupSpawnPoint point, StageNode node, StageData stageData)
+    {
+        if (point.rewardAsset is Weapon weapon) return new WeaponPickup(weapon);
+        if (point.rewardAsset is SkillData skill) return new SkillPickup(skill);
+
+        if (node.roomType != RoomType.Battle) return null;
+
+        switch (node.battleRoomType)
+        {
+            case BattleRoomType.Skill when stageData.skillRewardPool.Count > 0:
+                return new SkillPickup(stageData.skillRewardPool[Random.Range(0, stageData.skillRewardPool.Count)]);
+            case BattleRoomType.Weapon when stageData.weaponRewardPool.Count > 0:
+                return new WeaponPickup(stageData.weaponRewardPool[Random.Range(0, stageData.weaponRewardPool.Count)]);
+            default:
+                return null;
         }
     }
 
