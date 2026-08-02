@@ -51,7 +51,7 @@ public class StageManager : Singleton<StageManager>
         SetCurrentNode(node);
     }
 
-    public StageNode GetStage(RoomType roomType)
+    public StageNode GetStage(RoomType roomType, BattleRoomTypeFilter battleFilter = BattleRoomTypeFilter.Any)
     {
         var stage = currentStageData;
         switch (roomType)
@@ -63,12 +63,32 @@ public class StageManager : Singleton<StageManager>
             case RoomType.Boss:
                 return stage.bossNode;
             case RoomType.Battle:
-                int count = stage.battleNodes.Count;
-                return stage.battleNodes[Random.Range(0, count)];
+                var candidates = stage.battleNodes;
+                if (battleFilter != BattleRoomTypeFilter.Any)
+                {
+                    var filtered = new List<StageNode>();
+                    foreach (var node in stage.battleNodes)
+                        if (Matches(battleFilter, node.battleRoomType))
+                            filtered.Add(node);
+
+                    if (filtered.Count > 0)
+                        candidates = filtered;
+                    else
+                        Debug.LogWarning($"StageManager: no battle node matches filter {battleFilter}, falling back to full random pool");
+                }
+                return candidates[Random.Range(0, candidates.Count)];
         }
-        
+
         return null;
     }
+
+    private static bool Matches(BattleRoomTypeFilter filter, BattleRoomType type) => filter switch
+    {
+        BattleRoomTypeFilter.Normal => type == BattleRoomType.Normal,
+        BattleRoomTypeFilter.Skill => type == BattleRoomType.Skill,
+        BattleRoomTypeFilter.Weapon => type == BattleRoomType.Weapon,
+        _ => false,
+    };
 
     public void AdvanceStage(StageData nextStage)
     {
