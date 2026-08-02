@@ -3,6 +3,7 @@ using UnityEngine;
 public class InteractableDoor : MonoBehaviour, IInteractable, IObserver<StageNodeClearedEvent>
 {
     [SerializeField] private RoomType roomType;
+    [SerializeField] private BattleRoomTypeFilter battleRoomTypeFilter;
     [SerializeField] private StageData targetStage;
 
     private WorldInteractionManager manager;
@@ -49,6 +50,6 @@ public class InteractableDoor : MonoBehaviour, IInteractable, IObserver<StageNod
         if (targetStage != StageManager.Instance.CurrentStageData)
             StageManager.Instance.AdvanceStage(targetStage);
         else
-            StageManager.Instance.MoveTo(StageManager.Instance.GetStage(roomType));
+            StageManager.Instance.MoveTo(StageManager.Instance.GetStage(roomType, battleRoomTypeFilter));
     }
 }
