@@ -188,6 +188,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StageNode
   roomType: 0
   wasCleared: 1
+  battleRoomType: 0
 --- !u!1 &3384982432305438711
 GameObject:
   m_ObjectHideFlags: 0
@@ -431,6 +432,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InteractableDoor
   roomType: 3
+  battleRoomTypeFilter: 0
   targetStage: {fileID: 11400000, guid: 3cfa7f7120bfbb9478a8f920b116bd39, type: 2}
 --- !u!1 &5684965474377272947
 GameObject:
