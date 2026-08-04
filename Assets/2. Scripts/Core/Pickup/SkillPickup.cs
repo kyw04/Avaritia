@@ -5,6 +5,7 @@ public class SkillPickup : IInteractable
     private readonly SkillData skill;
     public SkillPickup(SkillData skill) => this.skill = skill;
 
+    public SkillData Skill => skill;
     public string DisplayName => skill.name;
     public Sprite Icon => skill.icon;
     // Payload-only: never registered directly, always wrapped by WorldPickup.

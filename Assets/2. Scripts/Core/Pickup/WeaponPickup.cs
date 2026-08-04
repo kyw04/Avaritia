@@ -5,6 +5,7 @@ public class WeaponPickup : IInteractable
     private readonly Weapon weapon;
     public WeaponPickup(Weapon weapon) => this.weapon = weapon;
 
+    public Weapon Weapon => weapon;
     public string DisplayName => weapon.name;
     public Sprite Icon => weapon.icon;
     // Payload-only: never registered directly, always wrapped by WorldPickup.

@@ -38,6 +38,8 @@ public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
     public void Init(IInteractable payload)
     {
         this.payload = payload;
+        weaponAsset = (payload as WeaponPickup)?.Weapon;
+        skillAsset = (payload as SkillPickup)?.Skill;
         ApplyIcon();
     }
 
@@ -61,6 +63,9 @@ public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
 
     private void ApplyIcon()
     {
-        if (payload?.Icon != null) spriteRenderer.sprite = payload.Icon;
+        
+        spriteRenderer.sprite = payload?.Icon != null ?
+            payload.Icon : 
+            Sprite.Create(new Texture2D(16, 16), new Rect(0, 0, 16, 16), Vector2.zero);
     }
 }

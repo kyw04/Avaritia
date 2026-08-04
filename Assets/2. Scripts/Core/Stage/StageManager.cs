@@ -3,15 +3,13 @@ using UnityEngine;
 
 public class StageManager : Singleton<StageManager>
 {
-    private static readonly List<StageNode> EmptyNodes = new();
-
-     [SerializeField] private StageData currentStageData;
+    [SerializeField] private StageData currentStageData;
     private StageNode currentNode;
-    private readonly HashSet<StageNode> clearedNodes = new();
+    private bool isCurrentNodeCleared;
 
     public StageData CurrentStageData => currentStageData;
     public StageNode CurrentNode => currentNode;
-    public bool IsCurrentRoomCleared => currentNode != null && clearedNodes.Contains(currentNode);
+    public bool IsCurrentRoomCleared => currentNode != null && isCurrentNodeCleared;
 
     private void Start()
     {
@@ -26,15 +24,15 @@ public class StageManager : Singleton<StageManager>
             return;
         }
 
-        clearedNodes.Clear();
         SetCurrentNode(currentStageData.startNode);
     }
 
     public void NotifyRoomCleared()
     {
-        if (currentNode == null || !clearedNodes.Add(currentNode))
+        if (currentNode == null || isCurrentNodeCleared)
             return;
 
+        isCurrentNodeCleared = true;
         EventBus.Publish(new StageNodeClearedEvent(currentNode));
 
         // if (currentNode.nextNodes.Count == 0)
@@ -105,7 +103,6 @@ public class StageManager : Singleton<StageManager>
         }
 
         currentStageData = nextStage;
-        clearedNodes.Clear();
         SetCurrentNode(nextStage.startNode);
     }
 
@@ -113,8 +110,9 @@ public class StageManager : Singleton<StageManager>
     {
         var previous = currentNode;
         currentNode = node;
+        isCurrentNodeCleared = false;
         EventBus.Publish(new StageNodeChangedEvent(previous, currentNode));
-        
+
         if (node.wasCleared)
             NotifyRoomCleared();
     }
