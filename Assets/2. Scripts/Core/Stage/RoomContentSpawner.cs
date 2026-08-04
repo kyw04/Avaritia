@@ -1,7 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoomContentSpawner : MonoBehaviour, IObserver<StageNodeChangedEvent>, IObserver<EntityDeadEvent>, IObserver<PickupCollectedEvent>, IObserver<PickupSpawnedEvent>
+public class RoomContentSpawner : MonoBehaviour, 
+    IObserver<StageNodeChangedEvent>,
+    IObserver<EntityDeadEvent>,
+    IObserver<PickupCollectedEvent>,
+    IObserver<StageNodeClearedEvent>,
+    IObserver<PickupSpawnedEvent>
 {
     [SerializeField] private Player player;
 
@@ -14,6 +19,7 @@ public class RoomContentSpawner : MonoBehaviour, IObserver<StageNodeChangedEvent
         EventBus.Subscribe<StageNodeChangedEvent>(this);
         EventBus.Subscribe<EntityDeadEvent>(this);
         EventBus.Subscribe<PickupCollectedEvent>(this);
+        EventBus.Subscribe<StageNodeClearedEvent>(this);
         EventBus.Subscribe<PickupSpawnedEvent>(this);
     }
 
@@ -22,10 +28,7 @@ public class RoomContentSpawner : MonoBehaviour, IObserver<StageNodeChangedEvent
         EventBus.UnsubscribeAll(this);
     }
 
-    public void OnNotify(StageNodeChangedEvent e)
-    {
-        Spawn(e.Current);
-    }
+    public void OnNotify(StageNodeChangedEvent e)  => Spawn(e.Current);
 
     public void OnNotify(EntityDeadEvent e)
     {
@@ -37,7 +40,7 @@ public class RoomContentSpawner : MonoBehaviour, IObserver<StageNodeChangedEvent
     }
 
     public void OnNotify(PickupCollectedEvent e) => roomPickups.Remove(e.Pickup);
-
+    public void OnNotify(StageNodeClearedEvent e) => SpawnPickups();
     public void OnNotify(PickupSpawnedEvent e) => roomPickups.Add(e.Pickup);
 
     public void Spawn(StageNode node)
@@ -61,17 +64,13 @@ public class RoomContentSpawner : MonoBehaviour, IObserver<StageNodeChangedEvent
 
         var stageData = StageManager.Instance.CurrentStageData;
         SpawnActors(stageData);
-        SpawnPickups();
     }
 
     private void PositionPlayer()
     {
         var spawnPoint = currentRoom.GetComponentInChildren<PlayerSpawnPoint>();
         if (spawnPoint == null)
-        {
-            Debug.LogWarning($"RoomContentSpawner: no PlayerSpawnPoint found in {currentRoom.name}");
             return;
-        }
 
         player.Rb.position = spawnPoint.transform.position;
         player.Rb.linearVelocity = Vector2.zero;
@@ -92,24 +91,25 @@ public class RoomContentSpawner : MonoBehaviour, IObserver<StageNodeChangedEvent
     {
         var node = StageManager.Instance.CurrentNode;
         var stageData = StageManager.Instance.CurrentStageData;
+        if (node.roomType != RoomType.Battle)
+            return;
 
         foreach (var point in currentRoom.GetComponentsInChildren<PickupSpawnPoint>())
         {
-            var payload = BuildPayload(point, node, stageData);
+            var payload = BuildPayload(point, node.battleRoomType, stageData);
             if (payload == null) continue;
 
             WorldInteractionManager.Instance.Spawn(payload, point.transform.position);
         }
     }
 
-    private IInteractable BuildPayload(PickupSpawnPoint point, StageNode node, StageData stageData)
+    private IInteractable BuildPayload(PickupSpawnPoint point, BattleRoomType roomType, StageData stageData)
     {
         if (point.rewardAsset is Weapon weapon) return new WeaponPickup(weapon);
         if (point.rewardAsset is SkillData skill) return new SkillPickup(skill);
 
-        if (node.roomType != RoomType.Battle) return null;
 
-        switch (node.battleRoomType)
+        switch (roomType)
         {
             case BattleRoomType.Skill when stageData.skillRewardPool.Count > 0:
                 return new SkillPickup(stageData.skillRewardPool[Random.Range(0, stageData.skillRewardPool.Count)]);
@@ -118,13 +118,5 @@ public class RoomContentSpawner : MonoBehaviour, IObserver<StageNodeChangedEvent
             default:
                 return null;
         }
-    }
-
-    private GameObject PickRandom(List<GameObject> prefabs)
-    {
-        if (prefabs == null || prefabs.Count == 0)
-            return null;
-
-        return prefabs[Random.Range(0, prefabs.Count)];
     }
 }

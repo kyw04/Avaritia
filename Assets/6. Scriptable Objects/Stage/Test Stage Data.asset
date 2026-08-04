@@ -14,9 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StageData
   startNode: {fileID: -4546772831511800760, guid: 8359b627b3905ac40baa97f8f93913ba, type: 3}
   battleNodes:
-  - {fileID: -554497293809541005, guid: 32d9a762b5a818748a4c2447486bee93, type: 3}
-  - {fileID: -554497293809541005, guid: b62f8c60cd0350e4daed081c1c03b796, type: 3}
-  - {fileID: -554497293809541005, guid: 76271acd1b517dc41b92bcc5764f5b9c, type: 3}
+  - {fileID: -554497293809541005, guid: 3843d8f3b96d04f46a7c7f737d819354, type: 3}
+  - {fileID: -554497293809541005, guid: fad86066179559244b568972ac49526c, type: 3}
   skillRewardPool:
   - {fileID: 11400000, guid: 5f7051b18337f504facdcd71dc629842, type: 2}
   - {fileID: 11400000, guid: 24897805a33703149908f3757c348de9, type: 2}

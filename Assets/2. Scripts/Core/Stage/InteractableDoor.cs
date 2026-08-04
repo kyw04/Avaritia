@@ -15,12 +15,6 @@ public class InteractableDoor : MonoBehaviour, IInteractable, IObserver<StageNod
 
     private void Awake()
     {
-        if (targetStage == null)
-        {
-            Debug.LogError($"InteractableDoor: targetNode has not been assigned to {name}");
-            return;
-        }
-
         manager = WorldInteractionManager.Instance;
         EventBus.Subscribe<StageNodeClearedEvent>(this);
         if (StageManager.Instance.IsCurrentRoomCleared)
@@ -47,9 +41,9 @@ public class InteractableDoor : MonoBehaviour, IInteractable, IObserver<StageNod
 
     public void Interact(Player player, InteractChoice choice)
     {
-        if (targetStage != StageManager.Instance.CurrentStageData)
-            StageManager.Instance.AdvanceStage(targetStage);
-        else
+        if (targetStage == null)
             StageManager.Instance.MoveTo(StageManager.Instance.GetStage(roomType, battleRoomTypeFilter));
+        else if (targetStage != StageManager.Instance.CurrentStageData)
+            StageManager.Instance.AdvanceStage(targetStage);
     }
 }
