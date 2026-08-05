@@ -1,18 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoomContentSpawner : MonoBehaviour, 
+public class RoomContentSpawner : MonoBehaviour,
     IObserver<StageNodeChangedEvent>,
     IObserver<EntityDeadEvent>,
     IObserver<PickupCollectedEvent>,
     IObserver<StageNodeClearedEvent>,
-    IObserver<PickupSpawnedEvent>
+    IObserver<PickupSpawnedEvent>,
+    IObserver<ItemBoxSpawnedEvent>
 {
     [SerializeField] private Player player;
 
     private GameObject currentRoom;
     private readonly List<Entity> aliveActors = new();
     private readonly List<WorldPickup> roomPickups = new();
+    private readonly List<ItemBox> roomBoxes = new();
 
     private void Awake()
     {
@@ -21,6 +23,7 @@ public class RoomContentSpawner : MonoBehaviour,
         EventBus.Subscribe<PickupCollectedEvent>(this);
         EventBus.Subscribe<StageNodeClearedEvent>(this);
         EventBus.Subscribe<PickupSpawnedEvent>(this);
+        EventBus.Subscribe<ItemBoxSpawnedEvent>(this);
     }
 
     private void OnDestroy()
@@ -42,6 +45,7 @@ public class RoomContentSpawner : MonoBehaviour,
     public void OnNotify(PickupCollectedEvent e) => roomPickups.Remove(e.Pickup);
     public void OnNotify(StageNodeClearedEvent e) => SpawnPickups();
     public void OnNotify(PickupSpawnedEvent e) => roomPickups.Add(e.Pickup);
+    public void OnNotify(ItemBoxSpawnedEvent e) => roomBoxes.Add(e.Box);
 
     public void Spawn(StageNode node)
     {
@@ -57,6 +61,11 @@ public class RoomContentSpawner : MonoBehaviour,
             if (pickup != null && pickup.gameObject.activeSelf)
                 ObjectPoolManager.Instance.Despawn(pickup.gameObject);
         roomPickups.Clear();
+
+        foreach (var box in roomBoxes)
+            if (box != null && box.gameObject.activeSelf)
+                ObjectPoolManager.Instance.Despawn(box.gameObject);
+        roomBoxes.Clear();
 
         currentRoom = Instantiate(node.gameObject, Vector3.zero, Quaternion.identity);
 
@@ -90,33 +99,13 @@ public class RoomContentSpawner : MonoBehaviour,
     private void SpawnPickups()
     {
         var node = StageManager.Instance.CurrentNode;
-        var stageData = StageManager.Instance.CurrentStageData;
         if (node.roomType != RoomType.Battle)
             return;
 
         foreach (var point in currentRoom.GetComponentsInChildren<PickupSpawnPoint>())
         {
-            var payload = BuildPayload(point, node.battleRoomType, stageData);
-            if (payload == null) continue;
-
-            WorldInteractionManager.Instance.Spawn(payload, point.transform.position);
-        }
-    }
-
-    private IInteractable BuildPayload(PickupSpawnPoint point, BattleRoomType roomType, StageData stageData)
-    {
-        if (point.rewardAsset is Weapon weapon) return new WeaponPickup(weapon);
-        if (point.rewardAsset is SkillData skill) return new SkillPickup(skill);
-
-
-        switch (roomType)
-        {
-            case BattleRoomType.Skill when stageData.skillRewardPool.Count > 0:
-                return new SkillPickup(stageData.skillRewardPool[Random.Range(0, stageData.skillRewardPool.Count)]);
-            case BattleRoomType.Weapon when stageData.weaponRewardPool.Count > 0:
-                return new WeaponPickup(stageData.weaponRewardPool[Random.Range(0, stageData.weaponRewardPool.Count)]);
-            default:
-                return null;
+            if (point.rewardAsset == null) continue;
+            WorldInteractionManager.Instance.SpawnBox(point.rewardAsset, point.transform.position);
         }
     }
 }
