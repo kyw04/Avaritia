@@ -8,6 +8,7 @@ public class ItemBox : MonoBehaviour, IInteractable, IPoolable
     [SerializeField] private float scatterRadius = 0.75f;
 
     private bool opened;
+    private bool itemsSpawned;
     private WorldInteractionManager manager;
 
     public string DisplayName => "상자";
@@ -25,6 +26,12 @@ public class ItemBox : MonoBehaviour, IInteractable, IPoolable
     public void OnSpawn()
     {
         opened = false;
+        itemsSpawned = false;
+        if (animator != null)
+        {
+            animator.Rebind();
+            animator.Update(0f);
+        }
         manager.Unregister(this);
         manager.Register(this);
     }
@@ -35,6 +42,7 @@ public class ItemBox : MonoBehaviour, IInteractable, IPoolable
     {
         data = boxData;
         opened = false;
+        itemsSpawned = false;
     }
 
     public bool NeedsChoice(Player player) => false;
@@ -48,11 +56,16 @@ public class ItemBox : MonoBehaviour, IInteractable, IPoolable
         if (animator != null)
             animator.SetTrigger("Open");
         else
-            SpawnItems();
+            OnOpenAnimationComplete();
     }
 
     // Animation Event에서 호출된다 (오픈 애니메이션 클립 마지막 프레임에 이벤트 등록 필요).
-    public void OnOpenAnimationComplete() => SpawnItems();
+    public void OnOpenAnimationComplete()
+    {
+        if (itemsSpawned) return;
+        itemsSpawned = true;
+        SpawnItems();
+    }
 
     private void SpawnItems()
     {
