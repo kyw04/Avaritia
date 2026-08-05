@@ -148,6 +148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldPickupManager
   pickupPrefab: {fileID: 5773720602588636574, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
+  itemBoxPrefab: {fileID: 1786335993502011093, guid: 79a411170f16229438032f55807262e5, type: 3}
 --- !u!1 &1773929069943011082
 GameObject:
   m_ObjectHideFlags: 0
