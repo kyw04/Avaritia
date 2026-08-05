@@ -4,6 +4,7 @@ using UnityEngine;
 public class WorldInteractionManager : Singleton<WorldInteractionManager>
 {
     [SerializeField] private WorldPickup pickupPrefab;
+    [SerializeField] private ItemBox itemBoxPrefab;
     private readonly List<IInteractable> interactables = new();
 
     public void Register(IInteractable interactable) => interactables.Add(interactable);
@@ -32,6 +33,14 @@ public class WorldInteractionManager : Singleton<WorldInteractionManager>
         var instance = ObjectPoolManager.Instance.Spawn(pickupPrefab, position, Quaternion.identity);
         instance.Init(payload);
         EventBus.Publish(new PickupSpawnedEvent(instance));
+        return instance;
+    }
+
+    public ItemBox SpawnBox(ItemBoxData data, Vector3 position)
+    {
+        var instance = ObjectPoolManager.Instance.Spawn(itemBoxPrefab, position, Quaternion.identity);
+        instance.Init(data);
+        EventBus.Publish(new ItemBoxSpawnedEvent(instance));
         return instance;
     }
 
