@@ -544,6 +544,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4628893500082679639}
     m_Modifications:
+    - target: {fileID: 2856102615264361639, guid: eb65650cdeba53d409837e3b5ee4eb43, type: 3}
+      propertyPath: rewardAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 61544ab40d55dc44f8122312f59aea95, type: 2}
     - target: {fileID: 3543163330527932348, guid: eb65650cdeba53d409837e3b5ee4eb43, type: 3}
       propertyPath: m_LocalPosition.x
       value: 8

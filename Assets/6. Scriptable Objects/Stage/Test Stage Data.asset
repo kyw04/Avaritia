@@ -16,6 +16,7 @@ MonoBehaviour:
   battleNodes:
   - {fileID: -554497293809541005, guid: 3843d8f3b96d04f46a7c7f737d819354, type: 3}
   - {fileID: -554497293809541005, guid: fad86066179559244b568972ac49526c, type: 3}
+  - {fileID: -554497293809541005, guid: 4ece7b6a064243d458d51506764c0dab, type: 3}
   skillRewardPool:
   - {fileID: 11400000, guid: 5f7051b18337f504facdcd71dc629842, type: 2}
   - {fileID: 11400000, guid: 24897805a33703149908f3757c348de9, type: 2}

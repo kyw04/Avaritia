@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44660379483d5694abc78ac51a0a9aae, type: 3}
-  m_Name: Test Item Box Data
+  m_Name: Test Skill Item Box Data
   m_EditorClassIdentifier: Assembly-CSharp::ItemBoxData
   itemPool:
-  - {fileID: 11400000, guid: d413ff329fa88d445a6a6c85c4eed3e9, type: 2}
+  - {fileID: 11400000, guid: 24897805a33703149908f3757c348de9, type: 2}
   - {fileID: 11400000, guid: 5f7051b18337f504facdcd71dc629842, type: 2}
   - {fileID: 11400000, guid: 24897805a33703149908f3757c348de9, type: 2}
-  itemCount: 2
+  itemCount: 3
