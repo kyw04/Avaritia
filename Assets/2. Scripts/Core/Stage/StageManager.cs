@@ -49,6 +49,7 @@ public class StageManager : Singleton<StageManager>
         battleClearCount++;
         var stage = currentStageData;
 
+        // boss checked first: if both distances coincide, shop overwrites (rare misconfiguration, doesn't block progression)
         if (battleClearCount == stage.bossRoomDistance - 1)
             SetPendingSpecialNode(stage.preBossNode, "preBossNode");
 
