@@ -77,6 +77,7 @@ public class StageManager : Singleton<StageManager>
         SetCurrentNode(node);
     }
 
+    // For RoomType.Battle, consumes and clears pendingSpecialNode if one is set — calling this twice can yield different results.
     public StageNode GetStage(RoomType roomType, BattleRoomTypeFilter battleFilter = BattleRoomTypeFilter.Any)
     {
         var stage = currentStageData;
