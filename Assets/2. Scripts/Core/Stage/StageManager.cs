@@ -26,6 +26,8 @@ public class StageManager : Singleton<StageManager>
             return;
         }
 
+        battleClearCount = 0;
+        pendingSpecialNode = null;
         SetCurrentNode(currentStageData.startNode);
     }
 
@@ -139,6 +141,8 @@ public class StageManager : Singleton<StageManager>
         }
 
         currentStageData = nextStage;
+        battleClearCount = 0;
+        pendingSpecialNode = null;
         SetCurrentNode(nextStage.startNode);
     }
 
