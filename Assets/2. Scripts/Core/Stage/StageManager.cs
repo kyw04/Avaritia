@@ -89,6 +89,13 @@ public class StageManager : Singleton<StageManager>
             case RoomType.Boss:
                 return stage.bossNode;
             case RoomType.Battle:
+                if (pendingSpecialNode != null)
+                {
+                    var special = pendingSpecialNode;
+                    pendingSpecialNode = null;
+                    return special;
+                }
+
                 var candidates = stage.battleNodes;
                 if (battleFilter != BattleRoomTypeFilter.Any)
                 {
