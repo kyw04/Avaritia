@@ -6,6 +6,8 @@ public class StageManager : Singleton<StageManager>
     [SerializeField] private StageData currentStageData;
     private StageNode currentNode;
     private bool isCurrentNodeCleared;
+    private int battleClearCount;
+    private StageNode pendingSpecialNode;
 
     public StageData CurrentStageData => currentStageData;
     public StageNode CurrentNode => currentNode;
@@ -35,8 +37,33 @@ public class StageManager : Singleton<StageManager>
         isCurrentNodeCleared = true;
         EventBus.Publish(new StageNodeClearedEvent(currentNode));
 
+        if (currentNode.roomType == RoomType.Battle)
+            AdvanceBattleProgress();
+
         // if (currentNode.nextNodes.Count == 0)
         //     EventBus.Publish(new StageCompletedEvent(CurrentStageData));
+    }
+
+    private void AdvanceBattleProgress()
+    {
+        battleClearCount++;
+        var stage = currentStageData;
+
+        if (battleClearCount == stage.bossRoomDistance - 1)
+            SetPendingSpecialNode(stage.preBossNode, "preBossNode");
+
+        if (battleClearCount == stage.shopRoomDistance - 1)
+            SetPendingSpecialNode(stage.preShopNode, "preShopNode");
+    }
+
+    private void SetPendingSpecialNode(StageNode node, string fieldName)
+    {
+        if (node == null)
+        {
+            Debug.LogWarning($"StageManager: {fieldName} is not assigned, skipping special node reveal");
+            return;
+        }
+        pendingSpecialNode = node;
     }
 
     public void MoveTo(StageNode node)
