@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
@@ -8,6 +9,7 @@ public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
 
     private IInteractable payload;
     private WorldInteractionManager manager;
+    private List<WorldPickup> batchGroup;
 
     public string DisplayName => payload.DisplayName;
     public Sprite Icon => payload.Icon;
@@ -33,7 +35,11 @@ public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
         manager.Register(this);
     }
 
-    public void OnDespawn() => manager.Unregister(this);
+    public void OnDespawn()
+    {
+        manager.Unregister(this);
+        batchGroup = null;
+    }
 
     public void Init(IInteractable payload)
     {
@@ -43,13 +49,29 @@ public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
         ApplyIcon();
     }
 
+    public void SetBatchGroup(List<WorldPickup> group) => batchGroup = group;
+
     public bool NeedsChoice(Player player) => payload.NeedsChoice(player);
 
     public void Interact(Player player, InteractChoice choice)
     {
         EventBus.Publish(new PickupCollectedEvent(this));
         payload.Interact(player, choice);
+        RemoveBatchMates();
         Remove();
+    }
+
+    // 같은 박스에서 나온 나머지 픽업들을 즉시 제거한다 (하나만 습득 가능하게).
+    private void RemoveBatchMates()
+    {
+        if (batchGroup == null) return;
+
+        foreach (var mate in batchGroup)
+        {
+            if (mate != null && mate != this)
+                mate.Remove();
+        }
+        batchGroup = null;
     }
 
     // 풀에서 온 인스턴스면 반납(재사용), 씬에 직접 배치된 인스턴스면 기존처럼 파괴.
