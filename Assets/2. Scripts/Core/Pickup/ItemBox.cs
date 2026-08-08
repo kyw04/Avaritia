@@ -73,6 +73,7 @@ public class ItemBox : MonoBehaviour, IInteractable, IPoolable
 
         var pool = new List<ScriptableObject>(data.itemPool);
         int count = Mathf.Min(data.itemCount, pool.Count);
+        var spawned = new List<WorldPickup>();
 
         for (int i = 0; i < count; i++)
         {
@@ -84,7 +85,14 @@ public class ItemBox : MonoBehaviour, IInteractable, IPoolable
             if (payload == null) continue;
 
             Vector2 offset = Random.insideUnitCircle * scatterRadius;
-            WorldInteractionManager.Instance.Spawn(payload, transform.position + (Vector3)offset);
+            var pickup = WorldInteractionManager.Instance.Spawn(payload, transform.position + (Vector3)offset);
+            spawned.Add(pickup);
+        }
+
+        if (spawned.Count > 1)
+        {
+            foreach (var pickup in spawned)
+                pickup.SetBatchGroup(spawned);
         }
     }
 
