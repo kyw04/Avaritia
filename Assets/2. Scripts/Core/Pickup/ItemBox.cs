@@ -87,7 +87,7 @@ public class ItemBox : MonoBehaviour, IInteractable, IPoolable
 
             var pickup = WorldInteractionManager.Instance.Spawn(payload, transform.position);
             float direction = Random.value < 0.5f ? -1f : 1f;
-            float horizontalSpeed = Random.Range(0f, popHorizontalSpeed);
+            float horizontalSpeed = Random.Range(0.5f, popHorizontalSpeed);
             float verticalSpeed = Random.Range(popUpSpeed * 0.8f, popUpSpeed);
             pickup.Launch(new Vector2(direction * horizontalSpeed, verticalSpeed));
             spawned.Add(pickup);
