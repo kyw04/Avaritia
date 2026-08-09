@@ -5,7 +5,8 @@ public class ItemBox : MonoBehaviour, IInteractable, IPoolable
 {
     [SerializeField] private ItemBoxData data;
     [SerializeField] private Animator animator;
-    [SerializeField] private float scatterRadius = 0.75f;
+    [SerializeField] private float popUpSpeed = 5f;
+    [SerializeField] private float popHorizontalSpeed = 2f;
 
     private bool opened;
     private bool itemsSpawned;
@@ -84,8 +85,11 @@ public class ItemBox : MonoBehaviour, IInteractable, IPoolable
             var payload = BuildPayload(asset);
             if (payload == null) continue;
 
-            Vector2 offset = Random.insideUnitCircle * scatterRadius;
-            var pickup = WorldInteractionManager.Instance.Spawn(payload, transform.position + (Vector3)offset);
+            var pickup = WorldInteractionManager.Instance.Spawn(payload, transform.position);
+            float direction = Random.value < 0.5f ? -1f : 1f;
+            float horizontalSpeed = Random.Range(0f, popHorizontalSpeed);
+            float verticalSpeed = Random.Range(popUpSpeed * 0.8f, popUpSpeed);
+            pickup.Launch(new Vector2(direction * horizontalSpeed, verticalSpeed));
             spawned.Add(pickup);
         }
 
