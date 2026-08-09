@@ -6,6 +6,7 @@ public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
     [SerializeField] private Weapon weaponAsset;
     [SerializeField] private SkillData skillAsset;
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private Rigidbody2D rb;
 
     private IInteractable payload;
     private WorldInteractionManager manager;
@@ -33,6 +34,7 @@ public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
     {
         manager.Unregister(this);
         manager.Register(this);
+        rb.bodyType = RigidbodyType2D.Dynamic;
     }
 
     public void OnDespawn()
@@ -50,6 +52,19 @@ public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
     }
 
     public void SetBatchGroup(List<WorldPickup> group) => batchGroup = group;
+
+    // 상자에서 튀어나올 때 위/좌우 속도를 부여한다. Floor/Platform에 닿으면 OnCollisionEnter2D에서 고정된다.
+    public void Launch(Vector2 velocity) => rb.linearVelocity = velocity;
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        int layer = collision.gameObject.layer;
+        if (layer != LayerMask.NameToLayer("Floor") && layer != LayerMask.NameToLayer("Platform"))
+            return;
+
+        rb.linearVelocity = Vector2.zero;
+        rb.bodyType = RigidbodyType2D.Kinematic;
+    }
 
     public bool NeedsChoice(Player player) => payload.NeedsChoice(player);
 
