@@ -35,6 +35,7 @@ public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
         manager.Unregister(this);
         manager.Register(this);
         rb.bodyType = RigidbodyType2D.Dynamic;
+        rb.linearVelocity = Vector2.zero;
     }
 
     public void OnDespawn()
