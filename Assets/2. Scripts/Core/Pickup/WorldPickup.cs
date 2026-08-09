@@ -34,7 +34,7 @@ public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
     {
         manager.Unregister(this);
         manager.Register(this);
-        rb.bodyType = RigidbodyType2D.Dynamic;
+        rb.bodyType = RigidbodyType2D.Kinematic;
         rb.linearVelocity = Vector2.zero;
     }
 
@@ -55,7 +55,11 @@ public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
     public void SetBatchGroup(List<WorldPickup> group) => batchGroup = group;
 
     // 상자에서 튀어나올 때 위/좌우 속도를 부여한다. Floor/Platform에 닿으면 OnCollisionEnter2D에서 고정된다.
-    public void Launch(Vector2 velocity) => rb.linearVelocity = velocity;
+    public void Launch(Vector2 velocity)
+    {
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        rb.linearVelocity = velocity;
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
