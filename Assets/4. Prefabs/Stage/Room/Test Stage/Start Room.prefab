@@ -574,7 +574,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4442336187962542899, guid: 5aca10149d4e7fb49877867e474247b3, type: 3}
       propertyPath: battleRoomTypeFilter
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7550513700700983266, guid: 5aca10149d4e7fb49877867e474247b3, type: 3}
       propertyPath: m_Name

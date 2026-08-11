@@ -15,6 +15,7 @@ MonoBehaviour:
   duration: 0.5
   readyAnimClip: {fileID: 0}
   attackAnimClip: {fileID: 7400000, guid: b1e46fcbfcee5a948a5e3df314b32f13, type: 2}
+  damageMultiplier: 1
   filter:
     useTriggers: 0
     useLayerMask: 1

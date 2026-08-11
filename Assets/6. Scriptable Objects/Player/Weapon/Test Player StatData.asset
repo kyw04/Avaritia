@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: Test Player StatData
   m_EditorClassIdentifier: Assembly-CSharp::StatData
   stats:
-  - rid: 1772930829351125080
-  - rid: 1772930829351125081
+  - rid: 2542396576000901193
+  - rid: 2542396576000901194
+  - rid: 2542396576000901195
   references:
     version: 2
     RefIds:
@@ -22,19 +23,29 @@ MonoBehaviour:
       type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
       data:
         value: 5
-    - rid: 1772930829351125080
+    - rid: 1772930829351125082
+      type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
+      data:
+        value: 50
+    - rid: 2542396576000901193
       type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
       data:
         statType: 1
         value:
           rid: 1772930829351125082
-    - rid: 1772930829351125081
+    - rid: 2542396576000901194
+      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
+      data:
+        statType: 4
+        value:
+          rid: 2542396576000901196
+    - rid: 2542396576000901195
       type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
       data:
         statType: 6
         value:
           rid: 1772930829351125079
-    - rid: 1772930829351125082
-      type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
+    - rid: 2542396576000901196
+      type: {class: StatData/IntValue, ns: , asm: Assembly-CSharp}
       data:
-        value: 50
+        value: 3
