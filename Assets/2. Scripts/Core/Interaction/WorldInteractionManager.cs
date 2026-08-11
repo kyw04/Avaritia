@@ -36,10 +36,10 @@ public class WorldInteractionManager : Singleton<WorldInteractionManager>
         return instance;
     }
 
-    public ItemBox SpawnBox(ItemBoxData data, Vector3 position)
+    public ItemBox SpawnBox(List<ScriptableObject> pool, int count, Vector3 position)
     {
         var instance = ObjectPoolManager.Instance.Spawn(itemBoxPrefab, position, Quaternion.identity);
-        instance.Init(data);
+        instance.Init(pool, count);
         EventBus.Publish(new ItemBoxSpawnedEvent(instance));
         return instance;
     }

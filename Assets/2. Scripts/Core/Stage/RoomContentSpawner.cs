@@ -102,10 +102,17 @@ public class RoomContentSpawner : MonoBehaviour,
         if (node.roomType != RoomType.Battle)
             return;
 
+        var (pool, count) = ResolvePool(StageManager.Instance.CurrentStageData, StageManager.Instance.CurrentBattleRoomType);
+        if (pool == null) return;
+
         foreach (var point in currentRoom.GetComponentsInChildren<PickupSpawnPoint>())
-        {
-            if (point.rewardAsset == null) continue;
-            WorldInteractionManager.Instance.SpawnBox(point.rewardAsset, point.transform.position);
-        }
+            WorldInteractionManager.Instance.SpawnBox(pool, count, point.transform.position);
     }
+
+    private static (List<ScriptableObject> pool, int count) ResolvePool(StageData stageData, BattleRoomType type) => type switch
+    {
+        BattleRoomType.Weapon => (stageData.weaponRewardPool.ConvertAll(w => (ScriptableObject)w), stageData.weaponBoxItemCount),
+        BattleRoomType.Skill => (stageData.skillRewardPool.ConvertAll(s => (ScriptableObject)s), stageData.skillBoxItemCount),
+        _ => (null, 0),
+    };
 }

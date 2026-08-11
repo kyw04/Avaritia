@@ -12,6 +12,7 @@ public class StageManager : Singleton<StageManager>
     public StageData CurrentStageData => currentStageData;
     public StageNode CurrentNode => currentNode;
     public bool IsCurrentRoomCleared => currentNode != null && isCurrentNodeCleared;
+    public BattleRoomType CurrentBattleRoomType { get; private set; }
 
     private void Start()
     {
@@ -80,6 +81,7 @@ public class StageManager : Singleton<StageManager>
     }
 
     // For RoomType.Battle, consumes and clears pendingSpecialNode if one is set — calling this twice can yield different results.
+    // Also sets CurrentBattleRoomType as a side effect for RoomType.Battle — this is the only point that decides "what type is this visit's room".
     public StageNode GetStage(RoomType roomType, BattleRoomTypeFilter battleFilter = BattleRoomTypeFilter.Any)
     {
         var stage = currentStageData;
@@ -96,34 +98,24 @@ public class StageManager : Singleton<StageManager>
                 {
                     var special = pendingSpecialNode;
                     pendingSpecialNode = null;
+                    CurrentBattleRoomType = BattleRoomType.Normal;
                     return special;
                 }
 
+                CurrentBattleRoomType = ResolveBattleRoomType(battleFilter);
                 var candidates = stage.battleNodes;
-                if (battleFilter != BattleRoomTypeFilter.Any)
-                {
-                    var filtered = new List<StageNode>();
-                    foreach (var node in stage.battleNodes)
-                        if (Matches(battleFilter, node.battleRoomType))
-                            filtered.Add(node);
-
-                    if (filtered.Count > 0)
-                        candidates = filtered;
-                    else
-                        Debug.LogWarning($"StageManager: no battle node matches filter {battleFilter}, falling back to full random pool");
-                }
                 return candidates[Random.Range(0, candidates.Count)];
         }
 
         return null;
     }
 
-    private static bool Matches(BattleRoomTypeFilter filter, BattleRoomType type) => filter switch
+    private static BattleRoomType ResolveBattleRoomType(BattleRoomTypeFilter filter) => filter switch
     {
-        BattleRoomTypeFilter.Normal => type == BattleRoomType.Normal,
-        BattleRoomTypeFilter.Skill => type == BattleRoomType.Skill,
-        BattleRoomTypeFilter.Weapon => type == BattleRoomType.Weapon,
-        _ => false,
+        BattleRoomTypeFilter.Normal => BattleRoomType.Normal,
+        BattleRoomTypeFilter.Skill => BattleRoomType.Skill,
+        BattleRoomTypeFilter.Weapon => BattleRoomType.Weapon,
+        _ => (BattleRoomType)Random.Range(0, 3),
     };
 
     public void AdvanceStage(StageData nextStage)

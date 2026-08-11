@@ -3,11 +3,12 @@ using UnityEngine;
 
 public class ItemBox : MonoBehaviour, IInteractable, IPoolable
 {
-    [SerializeField] private ItemBoxData data;
     [SerializeField] private Animator animator;
     [SerializeField] private float popUpSpeed = 5f;
     [SerializeField] private float popHorizontalSpeed = 2f;
 
+    private List<ScriptableObject> itemPool;
+    private int itemCount;
     private bool opened;
     private bool itemsSpawned;
     private WorldInteractionManager manager;
@@ -39,9 +40,10 @@ public class ItemBox : MonoBehaviour, IInteractable, IPoolable
 
     public void OnDespawn() => manager.Unregister(this);
 
-    public void Init(ItemBoxData boxData)
+    public void Init(List<ScriptableObject> pool, int count)
     {
-        data = boxData;
+        itemPool = pool;
+        itemCount = count;
         opened = false;
         itemsSpawned = false;
     }
@@ -70,10 +72,10 @@ public class ItemBox : MonoBehaviour, IInteractable, IPoolable
 
     private void SpawnItems()
     {
-        if (data == null) return;
+        if (itemPool == null) return;
 
-        var pool = new List<ScriptableObject>(data.itemPool);
-        int count = Mathf.Min(data.itemCount, pool.Count);
+        var pool = new List<ScriptableObject>(itemPool);
+        int count = Mathf.Min(itemCount, pool.Count);
         var spawned = new List<WorldPickup>();
 
         for (int i = 0; i < count; i++)
