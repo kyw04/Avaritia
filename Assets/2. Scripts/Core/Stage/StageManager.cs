@@ -98,7 +98,7 @@ public class StageManager : Singleton<StageManager>
                 {
                     var special = pendingSpecialNode;
                     pendingSpecialNode = null;
-                    CurrentBattleRoomType = BattleRoomType.Normal;
+                    CurrentBattleRoomType = BattleRoomType.Weapon;
                     return special;
                 }
 
