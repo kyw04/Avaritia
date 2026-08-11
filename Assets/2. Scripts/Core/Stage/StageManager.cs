@@ -98,7 +98,7 @@ public class StageManager : Singleton<StageManager>
                 {
                     var special = pendingSpecialNode;
                     pendingSpecialNode = null;
-                    CurrentBattleRoomType = BattleRoomType.Weapon;
+                    CurrentBattleRoomType = BattleRoomType.Weapon; // pre-boss/pre-shop 보너스 방은 항상 무기 보상
                     return special;
                 }
 
