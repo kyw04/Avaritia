@@ -839,7 +839,7 @@ GameObject:
   - component: {fileID: 4628893500082679639}
   - component: {fileID: -554497293809541005}
   m_Layer: 0
-  m_Name: Battle Room - Normal
+  m_Name: Battle Room (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

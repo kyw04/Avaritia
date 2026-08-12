@@ -5,8 +5,10 @@ public class InteractableDoor : MonoBehaviour, IInteractable, IObserver<StageNod
     [SerializeField] private RoomType roomType;
     [SerializeField] private BattleRoomTypeFilter battleRoomTypeFilter;
     [SerializeField] private StageData targetStage;
+    [SerializeField] private Color specialColor = new Color(1f, 0.7255f, 0.6f);
 
     private WorldInteractionManager manager;
+    private SpriteRenderer spriteRenderer;
     private bool isRegistered;
 
     public string DisplayName => "문";
@@ -16,6 +18,7 @@ public class InteractableDoor : MonoBehaviour, IInteractable, IObserver<StageNod
     private void Awake()
     {
         manager = WorldInteractionManager.Instance;
+        spriteRenderer = GetComponent<SpriteRenderer>();
         EventBus.Subscribe<StageNodeClearedEvent>(this);
         if (StageManager.Instance.IsCurrentRoomCleared)
             RegisterSelf();
@@ -35,6 +38,9 @@ public class InteractableDoor : MonoBehaviour, IInteractable, IObserver<StageNod
         if (isRegistered) return;
         isRegistered = true;
         manager.Register(this);
+
+        if (roomType == RoomType.Battle && StageManager.Instance.HasPendingSpecialNode)
+            spriteRenderer.color = specialColor;
     }
 
     public bool NeedsChoice(Player player) => false;

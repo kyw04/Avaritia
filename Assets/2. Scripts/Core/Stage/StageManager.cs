@@ -12,6 +12,7 @@ public class StageManager : Singleton<StageManager>
     public StageData CurrentStageData => currentStageData;
     public StageNode CurrentNode => currentNode;
     public bool IsCurrentRoomCleared => currentNode != null && isCurrentNodeCleared;
+    public bool HasPendingSpecialNode => pendingSpecialNode != null;
     public BattleRoomType CurrentBattleRoomType { get; private set; }
 
     private void Start()
@@ -38,10 +39,11 @@ public class StageManager : Singleton<StageManager>
             return;
 
         isCurrentNodeCleared = true;
-        EventBus.Publish(new StageNodeClearedEvent(currentNode));
 
         if (currentNode.roomType == RoomType.Battle)
             AdvanceBattleProgress();
+
+        EventBus.Publish(new StageNodeClearedEvent(currentNode));
 
         // if (currentNode.nextNodes.Count == 0)
         //     EventBus.Publish(new StageCompletedEvent(CurrentStageData));
@@ -54,10 +56,10 @@ public class StageManager : Singleton<StageManager>
 
         // boss checked first: if both distances coincide, shop overwrites (rare misconfiguration, doesn't block progression)
         if (battleClearCount == stage.bossRoomDistance - 1)
-            SetPendingSpecialNode(stage.preBossNode, "preBossNode");
+            SetPendingSpecialNode(stage.bossNode, "bossNode");
 
         if (battleClearCount == stage.shopRoomDistance - 1)
-            SetPendingSpecialNode(stage.preShopNode, "preShopNode");
+            SetPendingSpecialNode(stage.shopNode, "shopNode");
     }
 
     private void SetPendingSpecialNode(StageNode node, string fieldName)
@@ -98,7 +100,6 @@ public class StageManager : Singleton<StageManager>
                 {
                     var special = pendingSpecialNode;
                     pendingSpecialNode = null;
-                    CurrentBattleRoomType = BattleRoomType.Weapon; // pre-boss/pre-shop 보너스 방은 항상 무기 보상
                     return special;
                 }
 
