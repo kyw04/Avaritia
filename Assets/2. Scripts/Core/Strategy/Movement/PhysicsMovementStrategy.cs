@@ -7,8 +7,10 @@ public class PhysicsMovementStrategy : IMovementStrategy
     public float deceleration = 10f;
     public float airAcceleration = 30f;
     public float airDeceleration = 15f;
+    public float noInputDecelDelay = 0.08f;
 
     private bool isTurning;
+    private float noInputTime;
 
     public void Move(Entity mover, Rigidbody2D rb, Vector2 direction)
     {
@@ -20,7 +22,17 @@ public class PhysicsMovementStrategy : IMovementStrategy
 
         float inputX = direction.x;
         if (inputX == 0)
+        {
+            noInputTime += Time.fixedDeltaTime;
+            if (noInputTime >= noInputDecelDelay)
+            {
+                float decelRate = player.IsGrounded ? deceleration : airDeceleration;
+                float stoppedVelX = Mathf.MoveTowards(rb.linearVelocity.x, 0f, decelRate * Time.fixedDeltaTime);
+                rb.linearVelocity = new Vector2(stoppedVelX, rb.linearVelocity.y);
+            }
             return;
+        }
+        noInputTime = 0f;
 
         int flip = inputX > 0 ? 1 : -1;
         float scale = Mathf.Abs(player.transform.localScale.x);
