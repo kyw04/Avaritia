@@ -9,6 +9,8 @@ public class AttackData : ScriptableObject
     public AnimationClip attackAnimClip;
     public float damageMultiplier = 1f;
     public ContactFilter2D filter;
+    public bool canTurn;
+    public bool canMove;
 
     [SerializeReference, SubclassSelector] public IAttackStrategy attackStrategy;
 
