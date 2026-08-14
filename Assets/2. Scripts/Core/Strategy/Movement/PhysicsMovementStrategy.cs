@@ -34,9 +34,7 @@ public class PhysicsMovementStrategy : IMovementStrategy
         }
         noInputTime = 0f;
 
-        int flip = inputX > 0 ? 1 : -1;
-        float scale = Mathf.Abs(player.transform.localScale.x);
-        player.transform.localScale = new Vector3(scale * flip, scale, scale);
+        UpdateFacing(mover, inputX);
 
         float targetVelX = inputX * player.MoveSpeed;
         float currentVelX = rb.linearVelocity.x;
@@ -73,5 +71,15 @@ public class PhysicsMovementStrategy : IMovementStrategy
 
         float newVelX = Mathf.MoveTowards(currentVelX, targetVelX, rate * Time.fixedDeltaTime);
         rb.linearVelocity = new Vector2(newVelX, rb.linearVelocity.y);
+    }
+
+    public void UpdateFacing(Entity mover, float inputX)
+    {
+        if (inputX == 0 || mover is not Player player)
+            return;
+
+        int flip = inputX > 0 ? 1 : -1;
+        float scale = Mathf.Abs(player.transform.localScale.x);
+        player.transform.localScale = new Vector3(scale * flip, scale, scale);
     }
 }

@@ -138,6 +138,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     }
 
     public void Move(Vector2 direction) => movementStrategy?.Move(this, Rb, direction);
+    public void UpdateFacing(Vector2 direction) => movementStrategy?.UpdateFacing(this, direction.x);
 
     public virtual void Jump()
     {

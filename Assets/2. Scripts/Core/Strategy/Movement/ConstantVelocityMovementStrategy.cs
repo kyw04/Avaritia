@@ -7,4 +7,6 @@ public class ConstantVelocityMovementStrategy : IMovementStrategy
     {
         rb.linearVelocity = new Vector2(direction.x * mover.MoveSpeed, rb.linearVelocity.y);
     }
+
+    public void UpdateFacing(Entity mover, float inputX) { }
 }
