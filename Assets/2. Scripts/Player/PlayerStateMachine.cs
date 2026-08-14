@@ -46,7 +46,8 @@ public class PlayerStateMachine : StateMachineBase<Player>
             Machine.AddTransition<PlayerIdleState, PlayerJumpState>();
             Machine.AddTransition<PlayerIdleState, PlayerFallState>();
             Machine.AddTransition<PlayerIdleState, PlayerAttackState>(
-                () => owner.Weapon != null && owner.Weapon.combo != null && owner.Weapon.combo.Count > 0);
+                () => owner.Weapon != null && owner.Weapon.combo != null && owner.Weapon.combo.Count > 0
+                    && Time.time >= owner.AttackReadyTime);
             Machine.AddTransition<PlayerIdleState, PlayerDashState>();
         }
 
@@ -73,7 +74,8 @@ public class PlayerStateMachine : StateMachineBase<Player>
             Machine.AddTransition<PlayerMoveState, PlayerFallState>();
             Machine.AddTransition<PlayerMoveState, PlayerTurnState>();
             Machine.AddTransition<PlayerMoveState, PlayerAttackState>(
-                () => owner.Weapon != null && owner.Weapon.combo != null && owner.Weapon.combo.Count > 0);
+                () => owner.Weapon != null && owner.Weapon.combo != null && owner.Weapon.combo.Count > 0
+                    && Time.time >= owner.AttackReadyTime);
             Machine.AddTransition<PlayerMoveState, PlayerDashState>();
         }
         
@@ -307,6 +309,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         private bool hasAttack;
         private float timer;
         private int comboIndex;
+        private Vector2 lockedMoveDirection;
 
         public PlayerAttackState(Player owner) : base(owner)
         {
@@ -314,6 +317,22 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
             Machine.AddTransition<PlayerAttackState, PlayerIdleState>();
             Machine.AddTransition<PlayerAttackState, PlayerDashState>();
+        }
+
+        private void BeginAttack(AttackData data)
+        {
+            if (data.canTurn)
+                Owner.UpdateFacing(InputHandler.Instance.MoveInput);
+
+            if (data.canMove)
+            {
+                float inputX = InputHandler.Instance.MoveInput.x;
+                float dirX = inputX != 0 ? Mathf.Sign(inputX) : Owner.LookDirection;
+                lockedMoveDirection = new Vector2(dirX, 0f);
+            }
+
+            Owner.Rb.linearVelocity = Vector2.zero;
+            EventBus.Publish(new EntityAttackStartEvent(Owner, data));
         }
 
         public override void Enter()
@@ -329,8 +348,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             hasAttack = false;
             timer = 0f;
 
-            Owner.Rb.linearVelocity = Vector2.zero;
-            EventBus.Publish(new EntityAttackStartEvent(Owner, combo.datas[comboIndex]));
+            BeginAttack(combo.datas[comboIndex]);
         }
 
         public override void Execute()
@@ -351,15 +369,14 @@ public class PlayerStateMachine : StateMachineBase<Player>
                 if (buffer)
                 {
                     comboIndex = (comboIndex + 1) % combo.Count;
-
-                    Owner.Rb.linearVelocity = Vector2.zero;
-                    EventBus.Publish(new EntityAttackStartEvent(Owner, combo.datas[comboIndex]));
                     buffer = false;
                     hasAttack = false;
+                    BeginAttack(combo.datas[comboIndex]);
                 }
                 else
                 {
                     comboIndex = 0;
+                    Owner.AttackReadyTime = Time.time + combo.cooldown;
                     Machine.ChangeState<PlayerIdleState>();
                 }
                 timer = 0f;
@@ -369,10 +386,10 @@ public class PlayerStateMachine : StateMachineBase<Player>
         public override void FixedExecute()
         {
             var data = combo.datas[comboIndex];
-            if (data.canMove)
-                Owner.Move(InputHandler.Instance.MoveInput);
-            else if (data.canTurn)
-                Owner.UpdateFacing(InputHandler.Instance.MoveInput);
+            if (data.canMove && timer < data.moveDuration)
+                Owner.Move(lockedMoveDirection);
+            else
+                Owner.Rb.linearVelocity = new Vector2(0f, Owner.Rb.linearVelocity.y);
         }
 
         public void OnNotify(EntityAttackBufferEvent e) => buffer = true;
