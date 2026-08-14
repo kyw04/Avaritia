@@ -16,6 +16,7 @@ public class Player : Entity, IStateOwner<Player>
     private StateManager stateManager;
     public Weapon Weapon => weapon;
     public PlayerInteractionController InteractionController => interactionController;
+    public float AttackReadyTime { get; set; }
 
     protected override T ApplyEquipmentBonus<T>(StatType type, T baseValue) =>
         weapon != null ? weapon.ApplyBonus(type, baseValue) : baseValue;

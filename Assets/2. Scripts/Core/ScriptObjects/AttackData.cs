@@ -11,6 +11,7 @@ public class AttackData : ScriptableObject
     public ContactFilter2D filter;
     public bool canTurn;
     public bool canMove;
+    public float moveDuration;
 
     [SerializeReference, SubclassSelector] public IAttackStrategy attackStrategy;
 
