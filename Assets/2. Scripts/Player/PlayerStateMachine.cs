@@ -366,6 +366,15 @@ public class PlayerStateMachine : StateMachineBase<Player>
             }
         }
 
+        public override void FixedExecute()
+        {
+            var data = combo.datas[comboIndex];
+            if (data.canMove)
+                Owner.Move(InputHandler.Instance.MoveInput);
+            else if (data.canTurn)
+                Owner.UpdateFacing(InputHandler.Instance.MoveInput);
+        }
+
         public void OnNotify(EntityAttackBufferEvent e) => buffer = true;
     }
 
