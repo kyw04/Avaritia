@@ -45,7 +45,8 @@ public class PlayerStateMachine : StateMachineBase<Player>
             Machine.AddTransition<PlayerIdleState, PlayerMoveState>();
             Machine.AddTransition<PlayerIdleState, PlayerJumpState>();
             Machine.AddTransition<PlayerIdleState, PlayerFallState>();
-            Machine.AddTransition<PlayerIdleState, PlayerAttackState>();
+            Machine.AddTransition<PlayerIdleState, PlayerAttackState>(
+                () => owner.Weapon != null && owner.Weapon.combo != null && owner.Weapon.combo.Count > 0);
             Machine.AddTransition<PlayerIdleState, PlayerDashState>();
         }
 
@@ -71,7 +72,8 @@ public class PlayerStateMachine : StateMachineBase<Player>
             Machine.AddTransition<PlayerMoveState, PlayerJumpState>();
             Machine.AddTransition<PlayerMoveState, PlayerFallState>();
             Machine.AddTransition<PlayerMoveState, PlayerTurnState>();
-            Machine.AddTransition<PlayerMoveState, PlayerAttackState>();
+            Machine.AddTransition<PlayerMoveState, PlayerAttackState>(
+                () => owner.Weapon != null && owner.Weapon.combo != null && owner.Weapon.combo.Count > 0);
             Machine.AddTransition<PlayerMoveState, PlayerDashState>();
         }
         
@@ -293,11 +295,6 @@ public class PlayerStateMachine : StateMachineBase<Player>
         public PlayerAction(Player owner) : base(owner)
         {
             AddChild(new PlayerAttackState(owner));
-        }
-
-        public override void Enter()
-        {
-            EventBus.Publish(new EntityFallingEvent(Owner));
         }
     }
     
