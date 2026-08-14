@@ -45,9 +45,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             Machine.AddTransition<PlayerIdleState, PlayerMoveState>();
             Machine.AddTransition<PlayerIdleState, PlayerJumpState>();
             Machine.AddTransition<PlayerIdleState, PlayerFallState>();
-            Machine.AddTransition<PlayerIdleState, PlayerAttackState>(
-                () => owner.Weapon != null && owner.Weapon.combo != null && owner.Weapon.combo.Count > 0
-                    && Time.time >= owner.AttackReadyTime);
+            Machine.AddTransition<PlayerIdleState, PlayerAttackState>(() => owner.CanAttack());
             Machine.AddTransition<PlayerIdleState, PlayerDashState>();
         }
 
@@ -73,9 +71,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             Machine.AddTransition<PlayerMoveState, PlayerJumpState>();
             Machine.AddTransition<PlayerMoveState, PlayerFallState>();
             Machine.AddTransition<PlayerMoveState, PlayerTurnState>();
-            Machine.AddTransition<PlayerMoveState, PlayerAttackState>(
-                () => owner.Weapon != null && owner.Weapon.combo != null && owner.Weapon.combo.Count > 0
-                    && Time.time >= owner.AttackReadyTime);
+            Machine.AddTransition<PlayerMoveState, PlayerAttackState>(() => owner.CanAttack());
             Machine.AddTransition<PlayerMoveState, PlayerDashState>();
         }
         
@@ -326,6 +322,8 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
             if (data.canMove)
             {
+                // Owner.Move() below also updates facing to match lockedMoveDirection (same as every other
+                // movement state) — canTurn only controls the stationary one-time facing choice, not this.
                 float inputX = InputHandler.Instance.MoveInput.x;
                 float dirX = inputX != 0 ? Mathf.Sign(inputX) : Owner.LookDirection;
                 lockedMoveDirection = new Vector2(dirX, 0f);

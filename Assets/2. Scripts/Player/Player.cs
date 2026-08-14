@@ -18,6 +18,8 @@ public class Player : Entity, IStateOwner<Player>
     public PlayerInteractionController InteractionController => interactionController;
     public float AttackReadyTime { get; set; }
 
+    public bool CanAttack() => Weapon != null && Weapon.combo != null && Weapon.combo.Count > 0 && Time.time >= AttackReadyTime;
+
     protected override T ApplyEquipmentBonus<T>(StatType type, T baseValue) =>
         weapon != null ? weapon.ApplyBonus(type, baseValue) : baseValue;
 
