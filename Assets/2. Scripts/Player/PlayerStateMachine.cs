@@ -364,18 +364,21 @@ public class PlayerStateMachine : StateMachineBase<Player>
             timer += Time.deltaTime;
             if (timer >= combo.datas[comboIndex].duration)
             {
-                if (buffer)
-                {
-                    comboIndex = (comboIndex + 1) % combo.Count;
-                    buffer = false;
-                    hasAttack = false;
-                    BeginAttack(combo.datas[comboIndex]);
-                }
-                else
+                comboIndex++;
+                
+                if (comboIndex >= combo.datas.Count)
                 {
                     comboIndex = 0;
                     Owner.AttackReadyTime = Time.time + combo.cooldown;
                     Machine.ChangeState<PlayerIdleState>();
+                    return;
+                }
+                
+                if (buffer)
+                {
+                    buffer = false;
+                    hasAttack = false;
+                    BeginAttack(combo.datas[comboIndex]);
                 }
                 timer = 0f;
             }
