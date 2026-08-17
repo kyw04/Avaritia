@@ -22,7 +22,29 @@ public class AttackDataEditor : Editor
     {
         serializedObject.Update();
         scale = EditorGUILayout.FloatField("Inspector Sprite Scale", scale);
-        DrawDefaultInspector();
+
+        SerializedProperty canTurnProp = serializedObject.FindProperty("canTurn");
+        SerializedProperty canMoveProp = serializedObject.FindProperty("canMove");
+
+        SerializedProperty iterator = serializedObject.GetIterator();
+        bool enterChildren = true;
+        while (iterator.NextVisible(enterChildren))
+        {
+            enterChildren = false;
+
+            if ((iterator.propertyPath == "canMove" || iterator.propertyPath == "moveDuration")
+                && !canTurnProp.boolValue)
+                continue;
+
+            using (new EditorGUI.DisabledScope(iterator.propertyPath == "m_Script"))
+            {
+                EditorGUILayout.PropertyField(iterator, true);
+            }
+
+            if (iterator.propertyPath == "canTurn" && !canTurnProp.boolValue)
+                canMoveProp.boolValue = false;
+        }
+
         serializedObject.ApplyModifiedProperties();
     }
 
