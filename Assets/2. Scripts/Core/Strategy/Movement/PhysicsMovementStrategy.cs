@@ -3,12 +3,12 @@ using UnityEngine;
 [System.Serializable]
 public class PhysicsMovementStrategy : IMovementStrategy
 {
-    public float acceleration = 20f;
-    public float deceleration = 10f;
-    public float airAcceleration = 30f;
-    public float airDeceleration = 15f;
-    public float noInputDecelDelay = 0.08f;
-
+    private float acceleration = 20f;
+    private float deceleration = 10f;
+    private float airAcceleration = 30f;
+    private float airDeceleration = 15f;
+    private float noInputDecelDelay = 0.08f;
+    
     private bool isTurning;
     private float noInputTime;
 
@@ -58,15 +58,12 @@ public class PhysicsMovementStrategy : IMovementStrategy
         {
             rate = accel + decel;
             isTurning = true;
-        }
-        if (isTurning)
-        {
             player.Machine.ChangeState<PlayerTurnState>();
+        }
 
-            if (absCntSpeedPer <= 0.55f)
-            {
-                isTurning = false;
-            }
+        if (isTurning && absCntSpeedPer <= 0.55f)
+        {
+            isTurning = false;
         }
 
         float newVelX = Mathf.MoveTowards(currentVelX, targetVelX, rate * Time.fixedDeltaTime);

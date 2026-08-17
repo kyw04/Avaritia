@@ -122,12 +122,13 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Execute()
         {
-            if (currentSpeed >= 0.5f)
+            bool turnedToNewDirection = Mathf.Sign(Owner.Rb.linearVelocityX) == Mathf.Sign(moveDir.x);
+            if (turnedToNewDirection && currentSpeed >= 0.25f)
             {
                 Machine.ChangeState<PlayerMoveState>();
             }
         }
-        
+
         public override void FixedExecute()
         {
             Owner.Move(moveDir);
