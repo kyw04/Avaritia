@@ -30,7 +30,7 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  canTurn: 0
+  canTurn: 1
   canMove: 1
   moveDuration: 0.1
   attackStrategy:

@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -138,13 +138,45 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2856072584327875828, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
+      propertyPath: movementStrategy
+      value: 2542396733759684709
+      objectReference: {fileID: 0}
+    - target: {fileID: 2856072584327875828, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
+      propertyPath: 'managedReferences[-2]'
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2856072584327875828, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
+      propertyPath: 'managedReferences[2542396733759684709]'
+      value: Assembly-CSharp PhysicsMovementStrategy
+      objectReference: {fileID: 0}
+    - target: {fileID: 2856072584327875828, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
+      propertyPath: managedReferences[2542396733759684709].acceleration
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2856072584327875828, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
+      propertyPath: managedReferences[2542396733759684709].deceleration
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2856072584327875828, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
+      propertyPath: managedReferences[2542396733759684709].airAcceleration
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 2856072584327875828, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
+      propertyPath: managedReferences[2542396733759684709].airDeceleration
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2856072584327875828, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
+      propertyPath: managedReferences[2542396733759684709].noInputDecelDelay
+      value: 0.08
+      objectReference: {fileID: 0}
     - target: {fileID: 4739286354209235477, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4739286354209235477, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.5
+      value: -2.1
       objectReference: {fileID: 0}
     - target: {fileID: 4739286354209235477, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
       propertyPath: m_LocalPosition.z
@@ -225,7 +257,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8133240403206615693, guid: 3b1815dce988a1349b5f5864f95274d8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.5999999
       objectReference: {fileID: 0}
     - target: {fileID: 8133240403206615693, guid: 3b1815dce988a1349b5f5864f95274d8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -400,7 +432,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5811709457767519640, guid: 4ce7eb9e35aa8f440ac5d1b9a79692eb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.5999999
       objectReference: {fileID: 0}
     - target: {fileID: 5811709457767519640, guid: 4ce7eb9e35aa8f440ac5d1b9a79692eb, type: 3}
       propertyPath: m_LocalPosition.z

@@ -32,7 +32,7 @@ MonoBehaviour:
     maxNormalAngle: 0
   canTurn: 1
   canMove: 0
-  moveDuration: 0
+  moveDuration: 0.1
   attackStrategy:
     rid: 1772930754192081014
   references:
