@@ -1,11 +1,16 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Scriptable Objects/Weapon")]
-public class Weapon : ScriptableObject
+public class Weapon : ScriptableObject, IInventoryItem
 {
     public AttackDataCombo combo;
     public StatData statBonusData;
     public Sprite icon;
+    [TextArea] public string description;
+
+    public string DisplayName => name;
+    public string Details => description;
+    public Sprite Icon => icon;
 
     public bool TryGetStatBonus<T>(StatType type, out T value)
     {
