@@ -3,7 +3,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class InventoryUI : MonoBehaviour
+public struct InventoryUIOnOffEvent : ISubject { }
+
+public class InventoryUI : MonoBehaviour, IObserver<InventoryUIOnOffEvent>
 {
     [SerializeField] private Image[] itemSlotImages;
     [SerializeField] private Image selectedItemImage;
@@ -14,6 +16,8 @@ public class InventoryUI : MonoBehaviour
 
     private void Awake()
     {
+        EventBus.Subscribe<InventoryUIOnOffEvent>(this);
+        
         target = FindAnyObjectByType<Player>();
         slotItems = new IInventoryItem[itemSlotImages.Length];
 
@@ -25,11 +29,6 @@ public class InventoryUI : MonoBehaviour
             entry.callback.AddListener(_ => SelectSlot(index));
             trigger.triggers.Add(entry);
         }
-    }
-
-    private void OnEnable()
-    {
-        Refresh();
     }
 
     private void Refresh()
@@ -61,5 +60,12 @@ public class InventoryUI : MonoBehaviour
     {
         selectedItemImage.enabled = false;
         detailsText.text = string.Empty;
+    }
+
+    public void OnNotify(InventoryUIOnOffEvent e)
+    {
+        Refresh();
+        var canvas = transform.GetChild(0).gameObject;
+        canvas.SetActive(!canvas.activeSelf);   
     }
 }

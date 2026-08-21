@@ -27,6 +27,7 @@ public class InputHandler : Singleton<InputHandler>
         InputAction.Gameplay.Skill2.performed += OnSkill2;
         InputAction.Gameplay.Interact.started += OnInteractStarted;
         InputAction.Gameplay.Interact.canceled += OnInteractCanceled;
+        InputAction.Gameplay.Inventory.started += OnInventoryOpen;
     }
 
     private void OnDisable()
@@ -68,4 +69,7 @@ public class InputHandler : Singleton<InputHandler>
         MoveInput = Vector2.zero;
         player.Move(MoveInput);
     }
+
+    private void OnInventoryOpen(InputAction.CallbackContext context) =>
+        EventBus.Publish(new InventoryUIOnOffEvent());
 }
