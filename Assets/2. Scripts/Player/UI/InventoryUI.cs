@@ -82,6 +82,7 @@ public class InventoryUI : MonoBehaviour,
     {
         var ui = transform.GetChild(0).gameObject;
         ui.SetActive(true);
+        Canvas.ForceUpdateCanvases();
         Refresh();
     }
 
