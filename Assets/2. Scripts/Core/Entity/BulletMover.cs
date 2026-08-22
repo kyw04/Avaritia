@@ -16,8 +16,8 @@ public class BulletMover : MonoBehaviour, IPoolable
         transform.rotation = Quaternion.Euler(0, 0, angle);
         while (timer < upDuration)
         {
-            transform.position += upDir * upSpeed * Time.fixedDeltaTime;
-            timer += Time.fixedDeltaTime;
+            transform.position += upDir * upSpeed * Time.deltaTime;
+            timer += Time.deltaTime;
             yield return null;
         }
 
@@ -27,7 +27,7 @@ public class BulletMover : MonoBehaviour, IPoolable
         transform.rotation = Quaternion.Euler(0, 0, angle);
         while (true)
         {
-            transform.position += dir * redirectSpeed * Time.fixedDeltaTime;
+            transform.position += dir * redirectSpeed * Time.deltaTime;
             yield return null;
         }
     }
