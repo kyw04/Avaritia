@@ -30,8 +30,9 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  maxRange: 3.4028235e+38
-  cooldown: 5
+  canTurn: 0
+  canMove: 0
+  moveDuration: 0
   attackStrategy:
     rid: 1772930754192081022
   references:
@@ -43,7 +44,7 @@ MonoBehaviour:
         bulletPrefab: {fileID: 8472889144798200028, guid: 706b7d7f91fbc1c40a6df1b125a9dad7, type: 3}
         bulletCount: 5
         spreadAngle: 90
-        upSpeed: 1
-        upDuration: 1.5
-        redirectSpeed: 3
+        upSpeed: 10
+        upDuration: 0.25
+        redirectSpeed: 15
         redirectDelay: 1
