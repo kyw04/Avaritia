@@ -35,14 +35,18 @@ public class InventoryUI : MonoBehaviour,
         var weapon = target.Weapon;
         weaponImage.sprite = weapon?.Icon;
         weaponImage.enabled = weapon != null;
-        weaponImage.GetComponent<InventorySlot>().Item = weapon;
+        var weaponSlot = weaponImage.GetComponent<InventorySlot>();
+        weaponSlot.Target = target;
+        weaponSlot.Item = weapon;
 
         for (int i = 0; i < skillImages.Length; i++)
         {
             var skill = target.Skills.SkillAt(i);
             skillImages[i].sprite = skill?.Icon;
             skillImages[i].enabled = skill != null;
-            skillImages[i].GetComponent<InventorySlot>().Item = skill;
+            var skillSlot = skillImages[i].GetComponent<InventorySlot>();
+            skillSlot.Target = target;
+            skillSlot.Item = skill;
         }
 
         var items = target.Inventory.Items;
@@ -51,7 +55,9 @@ public class InventoryUI : MonoBehaviour,
             var item = i < items.Count ? items[i] : null;
             itemSlotImages[i].sprite = item?.Icon;
             itemSlotImages[i].enabled = item != null;
-            itemSlotImages[i].GetComponent<InventorySlot>().Item = item;
+            var itemSlot = itemSlotImages[i].GetComponent<InventorySlot>();
+            itemSlot.Target = target;
+            itemSlot.Item = item;
         }
 
         EventSystem.current.SetSelectedGameObject(weaponImage.gameObject);
