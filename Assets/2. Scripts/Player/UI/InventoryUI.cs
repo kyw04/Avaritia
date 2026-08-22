@@ -8,6 +8,8 @@ public struct InventoryUIOnOffEvent : ISubject { }
 public class InventoryUI : MonoBehaviour, IObserver<InventoryUIOnOffEvent>
 {
     [SerializeField] private Image[] itemSlotImages;
+    [SerializeField] private Image weaponImage;
+    [SerializeField] private Image[] skillImages;
     [SerializeField] private Image selectedItemImage;
     [SerializeField] private TextMeshProUGUI detailsText;
 
@@ -35,6 +37,17 @@ public class InventoryUI : MonoBehaviour, IObserver<InventoryUIOnOffEvent>
     {
         ClearSelection();
         if (target == null) return;
+
+        var weapon = target.Weapon;
+        weaponImage.sprite = weapon?.Icon;
+        weaponImage.enabled = weapon != null;
+
+        for (int i = 0; i < skillImages.Length; i++)
+        {
+            var skill = target.Skills.SkillAt(i);
+            skillImages[i].sprite = skill?.Icon;
+            skillImages[i].enabled = skill != null;
+        }
 
         var items = target.Inventory.Items;
         for (int i = 0; i < itemSlotImages.Length; i++)
@@ -66,6 +79,6 @@ public class InventoryUI : MonoBehaviour, IObserver<InventoryUIOnOffEvent>
     {
         Refresh();
         var canvas = transform.GetChild(0).gameObject;
-        canvas.SetActive(!canvas.activeSelf);   
+        canvas.SetActive(!canvas.activeSelf);
     }
 }
