@@ -1,5 +1,4 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -367,7 +366,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             {
                 comboIndex++;
                 
-                if (comboIndex >= combo.datas.Count)
+                if (!buffer || comboIndex >= combo.datas.Count)
                 {
                     comboIndex = 0;
                     Owner.AttackReadyTime = Time.time + combo.cooldown;
@@ -375,12 +374,9 @@ public class PlayerStateMachine : StateMachineBase<Player>
                     return;
                 }
                 
-                if (buffer)
-                {
-                    buffer = false;
-                    hasAttack = false;
-                    BeginAttack(combo.datas[comboIndex]);
-                }
+                buffer = false;
+                hasAttack = false;
+                BeginAttack(combo.datas[comboIndex]);
                 timer = 0f;
             }
         }
