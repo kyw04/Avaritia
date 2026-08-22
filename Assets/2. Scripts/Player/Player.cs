@@ -11,6 +11,7 @@ public class Player : Entity, IStateOwner<Player>
     private Collider2D col;
 
     public Player Owner { get; private set; }
+    public Inventory Inventory { get; private set; }
     public IStateMachine Machine { get; private set; }
     public SpriteRenderer Renderer { get; private set; }
     private StateManager stateManager;
@@ -40,6 +41,8 @@ public class Player : Entity, IStateOwner<Player>
     protected override void Awake()
     {
         base.Awake();
+        Inventory = new Inventory();
+        
         Renderer = GetComponentInChildren<SpriteRenderer>();
         col = GetComponent<Collider2D>();
 

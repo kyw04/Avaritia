@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
   combo: {fileID: 11400000, guid: aa917b9b7cd923244bd2a65c4488f506, type: 2}
   statBonusData: {fileID: 11400000, guid: de01a4f835a2f23468991fd600cf4711, type: 2}
+  icon: {fileID: 1264902588, guid: 0542ff2471c68594d8fb3532afbf2eb1, type: 3}
+  description: 

@@ -1755,17 +1755,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &779990628 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3913073107214352450, guid: ad38412e7586c114cbf0c5c21acf10bb, type: 3}
-  m_PrefabInstance: {fileID: 5904934428735580030}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -2961,17 +2950,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1415065763}
   m_CullTransparentMesh: 1
---- !u!114 &1470667374 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8733678033118126968, guid: ad38412e7586c114cbf0c5c21acf10bb, type: 3}
-  m_PrefabInstance: {fileID: 5904934428735580030}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
 --- !u!1001 &1483893611
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3635,17 +3613,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1673874642}
   m_CullTransparentMesh: 1
---- !u!114 &1716711454 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4863032612472615247, guid: ad38412e7586c114cbf0c5c21acf10bb, type: 3}
-  m_PrefabInstance: {fileID: 5904934428735580030}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
 --- !u!1 &1718327429
 GameObject:
   m_ObjectHideFlags: 0
@@ -4609,22 +4576,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Inventory Canvas
       objectReference: {fileID: 0}
-    - target: {fileID: 9086429747231010809, guid: ad38412e7586c114cbf0c5c21acf10bb, type: 3}
-      propertyPath: weaponImage
-      value: 
-      objectReference: {fileID: 1716711454}
-    - target: {fileID: 9086429747231010809, guid: ad38412e7586c114cbf0c5c21acf10bb, type: 3}
-      propertyPath: skillImages.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 9086429747231010809, guid: ad38412e7586c114cbf0c5c21acf10bb, type: 3}
-      propertyPath: 'skillImages.Array.data[0]'
-      value: 
-      objectReference: {fileID: 1470667374}
-    - target: {fileID: 9086429747231010809, guid: ad38412e7586c114cbf0c5c21acf10bb, type: 3}
-      propertyPath: 'skillImages.Array.data[1]'
-      value: 
-      objectReference: {fileID: 779990628}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

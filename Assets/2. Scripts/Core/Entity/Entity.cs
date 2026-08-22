@@ -33,7 +33,6 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     public MonoBehaviour Mono => this;
     public bool IsAttacking { get; set; }
     public SkillManager Skills { get; private set; }
-    public Inventory Inventory { get; private set; }
     public bool IsGrounded { get; protected set; }
 
     public virtual int LookDirection => transform.localScale.x >= 0 ? 1 : -1;
@@ -111,7 +110,6 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         isDead = false;
         stats = new RuntimeStats(statDataAsset);
         Skills = new SkillManager(this, skill);
-        Inventory = new Inventory();
         activeBuffs.Clear();
         wasGroundCheckerChanged = !IsGrounded;
     }

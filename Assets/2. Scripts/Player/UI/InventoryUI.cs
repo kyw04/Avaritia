@@ -3,9 +3,10 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public struct InventoryUIOnOffEvent : ISubject { }
+public struct InventoryUIOnEvent : ISubject { }
+public struct InventoryUIOffEvent : ISubject { }
 
-public class InventoryUI : MonoBehaviour, IObserver<InventoryUIOnOffEvent>
+public class InventoryUI : MonoBehaviour, IObserver<InventoryUIOnEvent>, IObserver<InventoryUIOffEvent>
 {
     [SerializeField] private Image[] itemSlotImages;
     [SerializeField] private Image weaponImage;
@@ -18,7 +19,8 @@ public class InventoryUI : MonoBehaviour, IObserver<InventoryUIOnOffEvent>
 
     private void Awake()
     {
-        EventBus.Subscribe<InventoryUIOnOffEvent>(this);
+        EventBus.Subscribe<InventoryUIOnEvent>(this);
+        EventBus.Subscribe<InventoryUIOffEvent>(this);
         
         target = FindAnyObjectByType<Player>();
         slotItems = new IInventoryItem[itemSlotImages.Length];
@@ -75,10 +77,16 @@ public class InventoryUI : MonoBehaviour, IObserver<InventoryUIOnOffEvent>
         detailsText.text = string.Empty;
     }
 
-    public void OnNotify(InventoryUIOnOffEvent e)
+    public void OnNotify(InventoryUIOnEvent e)
     {
         Refresh();
-        var canvas = transform.GetChild(0).gameObject;
-        canvas.SetActive(!canvas.activeSelf);
+        var ui = transform.GetChild(0).gameObject;
+        ui.SetActive(true);
+    }
+
+    public void OnNotify(InventoryUIOffEvent e)
+    {
+        var ui = transform.GetChild(0).gameObject;
+        ui.SetActive(false);
     }
 }
