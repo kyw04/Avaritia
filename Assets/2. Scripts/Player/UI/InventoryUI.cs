@@ -74,9 +74,9 @@ public class InventoryUI : MonoBehaviour,
 
     public void OnNotify(InventoryUIOnEvent e)
     {
-        Refresh();
         var ui = transform.GetChild(0).gameObject;
         ui.SetActive(true);
+        Refresh();
     }
 
     public void OnNotify(InventoryUIOffEvent e)
