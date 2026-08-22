@@ -5,76 +5,71 @@ using UnityEngine.UI;
 
 public struct InventoryUIOnEvent : ISubject { }
 public struct InventoryUIOffEvent : ISubject { }
+public struct InventorySelectionChangedEvent : ISubject { }
 
-public class InventoryUI : MonoBehaviour, IObserver<InventoryUIOnEvent>, IObserver<InventoryUIOffEvent>
+public class InventoryUI : MonoBehaviour,
+    IObserver<InventoryUIOnEvent>, IObserver<InventoryUIOffEvent>, IObserver<InventorySelectionChangedEvent>
 {
-    [SerializeField] private Image[] itemSlotImages;
     [SerializeField] private Image weaponImage;
     [SerializeField] private Image[] skillImages;
+    [SerializeField] private Image[] itemSlotImages;
+    [SerializeField] private Image selectImage;
     [SerializeField] private Image selectedItemImage;
     [SerializeField] private TextMeshProUGUI detailsText;
 
     private Player target;
-    private IInventoryItem[] slotItems;
 
     private void Awake()
     {
         EventBus.Subscribe<InventoryUIOnEvent>(this);
         EventBus.Subscribe<InventoryUIOffEvent>(this);
-        
-        target = FindAnyObjectByType<Player>();
-        slotItems = new IInventoryItem[itemSlotImages.Length];
+        EventBus.Subscribe<InventorySelectionChangedEvent>(this);
 
-        for (int i = 0; i < itemSlotImages.Length; i++)
-        {
-            int index = i;
-            var trigger = itemSlotImages[i].gameObject.AddComponent<EventTrigger>();
-            var entry = new EventTrigger.Entry { eventID = EventTriggerType.PointerClick };
-            entry.callback.AddListener(_ => SelectSlot(index));
-            trigger.triggers.Add(entry);
-        }
+        target = FindAnyObjectByType<Player>();
     }
 
     private void Refresh()
     {
-        ClearSelection();
         if (target == null) return;
 
         var weapon = target.Weapon;
         weaponImage.sprite = weapon?.Icon;
         weaponImage.enabled = weapon != null;
+        weaponImage.GetComponent<InventorySlot>().Item = weapon;
 
         for (int i = 0; i < skillImages.Length; i++)
         {
             var skill = target.Skills.SkillAt(i);
             skillImages[i].sprite = skill?.Icon;
             skillImages[i].enabled = skill != null;
+            skillImages[i].GetComponent<InventorySlot>().Item = skill;
         }
 
         var items = target.Inventory.Items;
         for (int i = 0; i < itemSlotImages.Length; i++)
         {
             var item = i < items.Count ? items[i] : null;
-            slotItems[i] = item;
             itemSlotImages[i].sprite = item?.Icon;
             itemSlotImages[i].enabled = item != null;
+            itemSlotImages[i].GetComponent<InventorySlot>().Item = item;
         }
+
+        EventSystem.current.SetSelectedGameObject(weaponImage.gameObject);
     }
 
-    private void SelectSlot(int index)
+    private void UpdateSelectionDisplay()
     {
-        var item = slotItems[index];
-        if (item == null) return;
+        var selected = target?.Inventory.SelectedItem;
+        selectedItemImage.sprite = selected?.Icon;
+        selectedItemImage.enabled = selected != null;
+        detailsText.text = selected != null ? $"{selected.DisplayName}\n{selected.Details}" : string.Empty;
 
-        selectedItemImage.sprite = item.Icon;
-        selectedItemImage.enabled = true;
-        detailsText.text = $"{item.DisplayName}\n{item.Details}";
-    }
+        if (selectImage == null) return;
 
-    private void ClearSelection()
-    {
-        selectedItemImage.enabled = false;
-        detailsText.text = string.Empty;
+        var selectedGO = EventSystem.current.currentSelectedGameObject;
+        selectImage.enabled = selectedGO != null;
+        if (selectedGO != null)
+            selectImage.rectTransform.position = selectedGO.GetComponent<RectTransform>().position;
     }
 
     public void OnNotify(InventoryUIOnEvent e)
@@ -88,5 +83,10 @@ public class InventoryUI : MonoBehaviour, IObserver<InventoryUIOnEvent>, IObserv
     {
         var ui = transform.GetChild(0).gameObject;
         ui.SetActive(false);
+    }
+
+    public void OnNotify(InventorySelectionChangedEvent e)
+    {
+        UpdateSelectionDisplay();
     }
 }
