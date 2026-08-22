@@ -12,6 +12,7 @@ public class InputHandler : Singleton<InputHandler>
     {
         base.Awake();
         InputAction = new PlayerInputActions();
+        _ = GameFreezeManager.Instance;
     }
 
     private void OnEnable()
