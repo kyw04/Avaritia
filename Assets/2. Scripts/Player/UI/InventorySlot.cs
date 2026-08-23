@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class InventorySlot : MonoBehaviour, ISelectHandler
+public class InventorySlot : MonoBehaviour, ISelectHandler, IPointerEnterHandler
 {
     public IInventoryItem Item { get; set; }
     public Player Target { get; set; }
@@ -12,5 +13,13 @@ public class InventorySlot : MonoBehaviour, ISelectHandler
 
         Target.Inventory.Select(Item);
         EventBus.Publish(new InventorySelectionChangedEvent());
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (eventData.delta == Vector2.zero) return;
+        if (!GetComponent<Selectable>().IsInteractable()) return;
+
+        EventSystem.current.SetSelectedGameObject(gameObject);
     }
 }

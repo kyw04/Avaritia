@@ -38,6 +38,7 @@ public class InventoryUI : MonoBehaviour,
         var weaponSlot = weaponImage.GetComponent<InventorySlot>();
         weaponSlot.Target = target;
         weaponSlot.Item = weapon;
+        weaponSlot.GetComponent<Selectable>().interactable = weapon != null;
 
         for (int i = 0; i < skillImages.Length; i++)
         {
@@ -47,6 +48,7 @@ public class InventoryUI : MonoBehaviour,
             var skillSlot = skillImages[i].GetComponent<InventorySlot>();
             skillSlot.Target = target;
             skillSlot.Item = skill;
+            skillSlot.GetComponent<Selectable>().interactable = skill != null;
         }
 
         var items = target.Inventory.Items;
@@ -58,6 +60,7 @@ public class InventoryUI : MonoBehaviour,
             var itemSlot = itemSlotImages[i].GetComponent<InventorySlot>();
             itemSlot.Target = target;
             itemSlot.Item = item;
+            itemSlot.GetComponent<Selectable>().interactable = item != null;
         }
 
         EventSystem.current.SetSelectedGameObject(weaponImage.gameObject);

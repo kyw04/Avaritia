@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -14,18 +15,25 @@ public class InventoryKeyboardNavigator : MonoBehaviour
         if (kb == null) return;
 
         var selectable = selected.GetComponent<Selectable>();
-        Selectable next = null;
+        System.Func<Selectable, Selectable> findNext = null;
 
         if (kb.rightArrowKey.wasPressedThisFrame)
-            next = selectable.FindSelectableOnRight();
+            findNext = s => s.FindSelectableOnRight();
         else if (kb.leftArrowKey.wasPressedThisFrame)
-            next = selectable.FindSelectableOnLeft();
+            findNext = s => s.FindSelectableOnLeft();
         else if (kb.upArrowKey.wasPressedThisFrame)
-            next = selectable.FindSelectableOnUp();
+            findNext = s => s.FindSelectableOnUp();
         else if (kb.downArrowKey.wasPressedThisFrame)
-            next = selectable.FindSelectableOnDown();
+            findNext = s => s.FindSelectableOnDown();
 
-        if (next != null)
+        if (findNext == null) return;
+
+        var visited = new HashSet<Selectable> { selectable };
+        var next = findNext(selectable);
+        while (next != null && next.GetComponent<InventorySlot>().Item == null && visited.Add(next))
+            next = findNext(next);
+
+        if (next != null && next.GetComponent<InventorySlot>().Item != null)
             EventSystem.current.SetSelectedGameObject(next.gameObject);
     }
 }
