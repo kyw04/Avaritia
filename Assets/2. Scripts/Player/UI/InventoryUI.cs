@@ -6,9 +6,12 @@ using UnityEngine.UI;
 public struct InventoryUIOnEvent : ISubject { }
 public struct InventoryUIOffEvent : ISubject { }
 public struct InventorySelectionChangedEvent : ISubject { }
+public struct InventoryDropConfirmShownEvent : ISubject { public string ItemName; }
+public struct InventoryDropConfirmHiddenEvent : ISubject { }
 
 public class InventoryUI : MonoBehaviour,
-    IObserver<InventoryUIOnEvent>, IObserver<InventoryUIOffEvent>, IObserver<InventorySelectionChangedEvent>
+    IObserver<InventoryUIOnEvent>, IObserver<InventoryUIOffEvent>, IObserver<InventorySelectionChangedEvent>,
+    IObserver<InventoryDropConfirmShownEvent>, IObserver<InventoryDropConfirmHiddenEvent>
 {
     [SerializeField] private Image weaponImage;
     [SerializeField] private Image[] skillImages;
@@ -16,6 +19,8 @@ public class InventoryUI : MonoBehaviour,
     [SerializeField] private Image selectImage;
     [SerializeField] private Image selectedItemImage;
     [SerializeField] private TextMeshProUGUI detailsText;
+    [SerializeField] private GameObject dropConfirmPanel;
+    [SerializeField] private TextMeshProUGUI dropConfirmText;
 
     private Player target;
 
@@ -24,11 +29,13 @@ public class InventoryUI : MonoBehaviour,
         EventBus.Subscribe<InventoryUIOnEvent>(this);
         EventBus.Subscribe<InventoryUIOffEvent>(this);
         EventBus.Subscribe<InventorySelectionChangedEvent>(this);
+        EventBus.Subscribe<InventoryDropConfirmShownEvent>(this);
+        EventBus.Subscribe<InventoryDropConfirmHiddenEvent>(this);
 
         target = FindAnyObjectByType<Player>();
     }
 
-    private void Refresh()
+    public void Refresh()
     {
         if (target == null) return;
 
@@ -98,5 +105,16 @@ public class InventoryUI : MonoBehaviour,
     public void OnNotify(InventorySelectionChangedEvent e)
     {
         UpdateSelectionDisplay();
+    }
+
+    public void OnNotify(InventoryDropConfirmShownEvent e)
+    {
+        dropConfirmText.text = $"{e.ItemName}을(를) 버리시겠습니까?\n(Enter: 확인 / X: 취소)";
+        dropConfirmPanel.SetActive(true);
+    }
+
+    public void OnNotify(InventoryDropConfirmHiddenEvent e)
+    {
+        dropConfirmPanel.SetActive(false);
     }
 }
