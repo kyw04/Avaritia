@@ -113,7 +113,7 @@ public class InventoryUI : MonoBehaviour,
 
     public void OnNotify(InventoryDropConfirmShownEvent e)
     {
-        dropConfirmText.text = $"{e.ItemName}을(를) 버리시겠습니까?\n(Enter: 확인 / X: 취소)";
+        dropConfirmText.text = $"{e.ItemName}\n(Enter: Yes / X: No)";
         dropConfirmPanel.SetActive(true);
     }
 
