@@ -6,7 +6,11 @@ using UnityEngine.UI;
 public struct InventoryUIOnEvent : ISubject { }
 public struct InventoryUIOffEvent : ISubject { }
 public struct InventorySelectionChangedEvent : ISubject { }
-public struct InventoryDropConfirmShownEvent : ISubject { public string ItemName; }
+public struct InventoryDropConfirmShownEvent : ISubject
+{
+    public string ItemName { get; private set; }
+    public InventoryDropConfirmShownEvent(string itemName) { ItemName = itemName; }
+}
 public struct InventoryDropConfirmHiddenEvent : ISubject { }
 
 public class InventoryUI : MonoBehaviour,
