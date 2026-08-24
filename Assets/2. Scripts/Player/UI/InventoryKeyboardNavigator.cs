@@ -8,6 +8,8 @@ public class InventoryKeyboardNavigator : MonoBehaviour
 {
     private void Update()
     {
+        if (InventoryDropController.IsConfirming) return;
+
         var selected = EventSystem.current.currentSelectedGameObject;
         if (selected == null || selected.GetComponent<InventorySlot>() == null) return;
 
