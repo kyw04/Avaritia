@@ -40,7 +40,7 @@ public class InventoryDropController : MonoBehaviour
             {
                 ExecuteDrop(pendingPlayer, pendingItem);
                 CloseConfirm();
-                inventoryUI.Refresh();
+                if (inventoryUI != null) inventoryUI.Refresh();
             }
             else if (kb.xKey.wasPressedThisFrame)
             {
