@@ -329,7 +329,7 @@ MonoBehaviour:
   selectImage: {fileID: 6915656051257159794}
   selectedItemImage: {fileID: 87232389965432624}
   detailsText: {fileID: 6627765779282805094}
-  dropConfirmPanel: {fileID: 5966225396794536925}
+  dropConfirmUI: {fileID: 5966225396794536925}
   dropConfirmText: {fileID: 7579411528281598999}
 --- !u!1 &629141619993740102
 GameObject:

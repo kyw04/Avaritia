@@ -3,10 +3,12 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class UISelector
+public class UISelector : System.IDisposable
 {
     private PlayerInputActions inputAction;
-    public System.Func<Selectable, System.Func<Selectable, Selectable>, Selectable> MoveNext = 
+    // 현재 selectable과 방향 탐색 함수(next)를 받아 다음 selectable을 결정하는 훅.
+    // 기본값은 next를 그대로 적용하며, 빈 슬롯 건너뛰기 등 커스텀 탐색 규칙을 주입할 때 교체한다.
+    public System.Func<Selectable, System.Func<Selectable, Selectable>, Selectable> SelectionStrategy =
         (selectable, next) => next(selectable);
     public System.Action Submit;
     public bool IsActive { get; private set; }
@@ -22,6 +24,12 @@ public class UISelector
     }
     
     public void SetActive(bool active) => IsActive = active;
+
+    public void Dispose()
+    {
+        inputAction.UI.Navigate.performed -= OnMovePoint;
+        inputAction.UI.Submit.performed -= OnSubmit;
+    }
     
     private void OnMovePoint(InputAction.CallbackContext context)
     {
@@ -45,7 +53,7 @@ public class UISelector
         var select = EventSystem.current.currentSelectedGameObject;
         var selectable = select != null ? select.GetComponent<Selectable>() : lastSelectable;
 
-        selectable = MoveNext(selectable, findNext);
+        selectable = SelectionStrategy(selectable, findNext);
         if (selectable != null)
         {
             EventSystem.current.SetSelectedGameObject(selectable.gameObject);

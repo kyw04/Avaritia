@@ -25,6 +25,8 @@ public class InventoryDropController : MonoBehaviour
     // 그렇지 않으면 IsConfirming이 true로 남아 다음에 인벤토리를 열었을 때 방향키/마우스 선택이 계속 막힌다.
     private void OnDisable() => CloseConfirm();
 
+    private void OnDestroy() => selector.Dispose();
+
     private void OnSubmit()
     {
         var selected = EventSystem.current.currentSelectedGameObject;

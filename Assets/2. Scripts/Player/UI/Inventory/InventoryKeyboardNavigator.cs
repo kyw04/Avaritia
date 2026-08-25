@@ -9,7 +9,7 @@ public class InventoryKeyboardNavigator : MonoBehaviour
     {
         selector = new UISelector
         {
-            MoveNext = Move
+            SelectionStrategy = Move
         };
     }
 
@@ -21,6 +21,11 @@ public class InventoryKeyboardNavigator : MonoBehaviour
     private void OnDisable()
     {
         selector.SetActive(false);
+    }
+
+    private void OnDestroy()
+    {
+        selector.Dispose();
     }
 
     private Selectable Move(Selectable selectable, System.Func<Selectable, Selectable> findNext)
