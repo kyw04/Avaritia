@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 
 public class InventoryDropController : MonoBehaviour
 {
@@ -10,45 +9,50 @@ public class InventoryDropController : MonoBehaviour
     private IInventoryItem pendingItem;
     private Player pendingPlayer;
     private InventoryUI inventoryUI;
+    private UISelector selector;
+    private GameObject selectedItemGameObject;
 
-    private void Awake() => inventoryUI = FindAnyObjectByType<InventoryUI>();
+    private void Awake()
+    {
+        inventoryUI = FindAnyObjectByType<InventoryUI>();
+        selector = new UISelector
+        {
+            Submit = OnSubmit
+        };
+    }
 
     // 인벤토리가 닫힐 때(부모 GameObject 비활성화) 확인 팝업이 떠 있었다면 상태를 정리한다.
     // 그렇지 않으면 IsConfirming이 true로 남아 다음에 인벤토리를 열었을 때 방향키/마우스 선택이 계속 막힌다.
     private void OnDisable() => CloseConfirm();
 
-    private void Update()
+    private void OnSubmit()
     {
-        var kb = Keyboard.current;
-        if (kb == null) return;
-        
+        var selected = EventSystem.current.currentSelectedGameObject;
         if (!IsConfirming)
         {
-            if (!kb.xKey.wasPressedThisFrame) return;
-
-            var selected = EventSystem.current.currentSelectedGameObject;
             var slot = selected != null ? selected.GetComponent<InventorySlot>() : null;
             if (slot == null || slot.Item == null || slot.Target == null)
                 return;
-
+            
+            selectedItemGameObject = slot.gameObject;
             pendingItem = slot.Item;
             pendingPlayer = slot.Target;
             IsConfirming = true;
+            
+            selector.SetActive(true);
             EventSystem.current.SetSelectedGameObject(noImage);
             EventBus.Publish(new InventoryDropConfirmShownEvent(pendingItem.DisplayName));
         }
+        else if (selected == noImage)
+        {
+            CloseConfirm();
+        }
         else
         {
-            if (kb.enterKey.wasPressedThisFrame || kb.numpadEnterKey.wasPressedThisFrame)
-            {
-                ExecuteDrop(pendingPlayer, pendingItem);
-                CloseConfirm();
-                if (inventoryUI != null) inventoryUI.Refresh();
-            }
-            else if (kb.xKey.wasPressedThisFrame)
-            {
-                CloseConfirm();
-            }
+            ExecuteDrop(pendingPlayer, pendingItem);
+            CloseConfirm();
+            if (inventoryUI != null) 
+                inventoryUI.Refresh();
         }
     }
 
@@ -59,6 +63,9 @@ public class InventoryDropController : MonoBehaviour
         IsConfirming = false;
         pendingItem = null;
         pendingPlayer = null;
+        selector.SetActive(false);
+
+        EventSystem.current.SetSelectedGameObject(selectedItemGameObject);
         EventBus.Publish(new InventoryDropConfirmHiddenEvent());
     }
 

@@ -13,6 +13,16 @@ public class InventoryKeyboardNavigator : MonoBehaviour
         };
     }
 
+    private void OnEnable()
+    {
+        selector.SetActive(true);
+    }
+
+    private void OnDisable()
+    {
+        selector.SetActive(false);
+    }
+
     private Selectable Move(Selectable selectable, System.Func<Selectable, Selectable> findNext)
     {
         if (InventoryDropController.IsConfirming || selectable == null || findNext == null)
