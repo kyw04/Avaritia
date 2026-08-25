@@ -13,16 +13,18 @@ public class InventoryKeyboardNavigator : MonoBehaviour
         };
     }
 
-    private Selectable Move(Selectable selectable, System.Func<Selectable, Selectable> nextSelector)
+    private Selectable Move(Selectable selectable, System.Func<Selectable, Selectable> findNext)
     {
-        if (InventoryDropController.IsConfirming || selectable == null || nextSelector == null)
+        if (InventoryDropController.IsConfirming || selectable == null || findNext == null)
             return selectable;
 
         var next = selectable;
         var visited = new HashSet<Selectable> { next };
-        while (next.GetComponent<InventorySlot>().Item == null && visited.Add(next))
-            next = nextSelector(next);
-       
+        do
+        {
+            next = findNext(next);
+        } while (next != null && next.GetComponent<InventorySlot>().Item == null && visited.Add(next));
+        
         return next;
     }
 }

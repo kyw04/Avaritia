@@ -6,8 +6,8 @@ using UnityEngine.UI;
 public class UISelector
 {
     private PlayerInputActions inputAction;
-    public GameObject SelectedGameObject => EventSystem.current.currentSelectedGameObject;
-    public System.Func<Selectable, System.Func<Selectable, Selectable>, Selectable> MoveNext;
+    public System.Func<Selectable, System.Func<Selectable, Selectable>, Selectable> MoveNext = 
+        (selectable, next) => next(selectable);
 
     public UISelector()
     {
@@ -22,7 +22,6 @@ public class UISelector
             return;
         
         System.Func<Selectable, Selectable> findNext = null;
-
         if (input.x > 0)
             findNext = s => s.FindSelectableOnRight();
         if (input.x < 0)
@@ -32,12 +31,10 @@ public class UISelector
         if (input.y < 0)
             findNext = s => s.FindSelectableOnDown();
 
-        if (findNext == null)
-            return;
-        var selectable = SelectedGameObject.GetComponent<Selectable>();
-        var next = findNext(selectable);
-        next = MoveNext(next, findNext);
-        if (next != null)
-            EventSystem.current.SetSelectedGameObject(next.gameObject);
+        var select = EventSystem.current.currentSelectedGameObject;
+        var selectable = select.GetComponent<Selectable>();
+        selectable = MoveNext(selectable, findNext);
+        if (selectable != null)
+            EventSystem.current.SetSelectedGameObject(selectable.gameObject);
     }
 }
