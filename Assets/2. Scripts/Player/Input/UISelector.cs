@@ -10,7 +10,8 @@ public class UISelector
         (selectable, next) => next(selectable);
     public System.Action Submit;
     public bool IsActive { get; private set; }
-    
+    private Selectable lastSelectable;
+
     public UISelector()
     {
         IsActive = false;
@@ -42,15 +43,18 @@ public class UISelector
             findNext = s => s.FindSelectableOnDown();
 
         var select = EventSystem.current.currentSelectedGameObject;
-        var selectable = select.GetComponent<Selectable>();
+        var selectable = select != null ? select.GetComponent<Selectable>() : lastSelectable;
+
         selectable = MoveNext(selectable, findNext);
         if (selectable != null)
+        {
             EventSystem.current.SetSelectedGameObject(selectable.gameObject);
+            lastSelectable = selectable;
+        }
     }
 
     private void OnSubmit(InputAction.CallbackContext context)
     {
-        if (Submit != null)
-            Submit();
+        Submit?.Invoke();
     }
 }

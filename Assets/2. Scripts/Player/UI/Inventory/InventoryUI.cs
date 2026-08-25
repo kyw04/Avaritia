@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public struct InventoryUIOnEvent : ISubject { }
@@ -23,7 +24,7 @@ public class InventoryUI : MonoBehaviour,
     [SerializeField] private Image selectImage;
     [SerializeField] private Image selectedItemImage;
     [SerializeField] private TextMeshProUGUI detailsText;
-    [SerializeField] private GameObject dropConfirmPanel;
+    [SerializeField] private GameObject dropConfirmUI;
     [SerializeField] private TextMeshProUGUI dropConfirmText;
 
     private Player target;
@@ -113,12 +114,12 @@ public class InventoryUI : MonoBehaviour,
 
     public void OnNotify(InventoryDropConfirmShownEvent e)
     {
-        dropConfirmText.text = $"{e.ItemName}\n(Enter: Yes / X: No)";
-        dropConfirmPanel.SetActive(true);
+        dropConfirmText.text = $"{e.ItemName}";
+        dropConfirmUI.SetActive(true);
     }
 
     public void OnNotify(InventoryDropConfirmHiddenEvent e)
     {
-        dropConfirmPanel.SetActive(false);
+        dropConfirmUI.SetActive(false);
     }
 }
