@@ -6,6 +6,7 @@ public class InventoryDropController : MonoBehaviour
 {
     public static bool IsConfirming { get; private set; }
 
+    [SerializeField] private GameObject noImage;
     private IInventoryItem pendingItem;
     private Player pendingPlayer;
     private InventoryUI inventoryUI;
@@ -20,18 +21,20 @@ public class InventoryDropController : MonoBehaviour
     {
         var kb = Keyboard.current;
         if (kb == null) return;
-
+        
         if (!IsConfirming)
         {
             if (!kb.xKey.wasPressedThisFrame) return;
 
             var selected = EventSystem.current.currentSelectedGameObject;
             var slot = selected != null ? selected.GetComponent<InventorySlot>() : null;
-            if (slot == null || slot.Item == null || slot.Target == null) return;
+            if (slot == null || slot.Item == null || slot.Target == null)
+                return;
 
             pendingItem = slot.Item;
             pendingPlayer = slot.Target;
             IsConfirming = true;
+            EventSystem.current.SetSelectedGameObject(noImage);
             EventBus.Publish(new InventoryDropConfirmShownEvent(pendingItem.DisplayName));
         }
         else
@@ -61,20 +64,23 @@ public class InventoryDropController : MonoBehaviour
 
     private static void ExecuteDrop(Player player, IInventoryItem item)
     {
-        if (item is Weapon weapon)
+        switch (item)
         {
-            player.EquipWeapon(null);
-            WorldInteractionManager.Instance.Spawn(new WeaponPickup(weapon), player.transform.position);
-        }
-        else if (item is SkillData skill)
-        {
-            int index = player.Skills.SkillAt(0) == skill ? 0 : 1;
-            player.Skills.SetSkill(index, null);
-            WorldInteractionManager.Instance.Spawn(new SkillPickup(skill), player.transform.position);
-        }
-        else
-        {
-            player.Inventory.Remove(item);
+            case Weapon:
+                return;
+            
+            case SkillData skill:
+            {
+                int index = player.Skills.SkillAt(0) == skill ? 0 : 1;
+                player.Skills.SetSkill(index, null);
+                WorldInteractionManager.Instance.Spawn(new SkillPickup(skill), player.transform.position);
+                break;
+            }
+            
+            default:
+                player.Inventory.Remove(item);
+                // WorldInteractionManager.Instance.Spawn(new ItemPickup(item), player.transform.position);
+                break;
         }
     }
 }
