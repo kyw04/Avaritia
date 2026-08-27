@@ -13,6 +13,7 @@ public class InputHandler : Singleton<InputHandler>
         base.Awake();
         InputAction = new PlayerInputActions();
         _ = GameFreezeManager.Instance;
+        _ = UIManager.Instance;
     }
 
     private void OnEnable()
@@ -73,17 +74,9 @@ public class InputHandler : Singleton<InputHandler>
         player.Move(MoveInput);
     }
 
-    private void OnInventoryOpen(InputAction.CallbackContext context)
-    {
-        InputAction.Gameplay.Disable();
-        InputAction.UI.Enable();
-        EventBus.Publish(new InventoryUIOnEvent());
-    }
-    
-    private void OnInventoryClose(InputAction.CallbackContext context)
-    {
-        InputAction.UI.Disable();
-        InputAction.Gameplay.Enable();
-        EventBus.Publish(new InventoryUIOffEvent());
-    }
+    private void OnInventoryOpen(InputAction.CallbackContext context) =>
+        UIManager.Instance.Push(InventoryUI.Key);
+
+    private void OnInventoryClose(InputAction.CallbackContext context) =>
+        UIManager.Instance.Pop();
 }
