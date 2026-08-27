@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 
 public class InventoryDropController : MonoBehaviour
 {
+    public const string Key = "Confirm";
     public static bool IsConfirming { get; private set; }
 
     [SerializeField] private GameObject noImage;
@@ -19,6 +20,8 @@ public class InventoryDropController : MonoBehaviour
         {
             Submit = OnSubmit
         };
+
+        UIManager.Instance.Register(Key, open: ShowConfirm, close: CloseConfirm);
     }
 
     // 인벤토리가 닫힐 때(부모 GameObject 비활성화) 확인 팝업이 떠 있었다면 상태를 정리한다.
@@ -35,27 +38,31 @@ public class InventoryDropController : MonoBehaviour
             var slot = selected != null ? selected.GetComponent<InventorySlot>() : null;
             if (slot == null || slot.Item == null || slot.Target == null)
                 return;
-            
+
             selectedItemGameObject = slot.gameObject;
             pendingItem = slot.Item;
             pendingPlayer = slot.Target;
-            IsConfirming = true;
-            
-            selector.SetActive(true);
-            EventSystem.current.SetSelectedGameObject(noImage);
-            EventBus.Publish(new InventoryDropConfirmShownEvent(pendingItem.DisplayName));
+            UIManager.Instance.Push(Key);
         }
         else if (selected == noImage)
         {
-            CloseConfirm();
+            UIManager.Instance.Pop();
         }
         else
         {
             ExecuteDrop(pendingPlayer, pendingItem);
-            CloseConfirm();
-            if (inventoryUI != null) 
+            UIManager.Instance.Pop();
+            if (inventoryUI != null)
                 inventoryUI.Refresh();
         }
+    }
+
+    private void ShowConfirm()
+    {
+        IsConfirming = true;
+        selector.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(noImage);
+        EventBus.Publish(new InventoryDropConfirmShownEvent(pendingItem.DisplayName));
     }
 
     private void CloseConfirm()
@@ -77,7 +84,7 @@ public class InventoryDropController : MonoBehaviour
         {
             case Weapon:
                 return;
-            
+
             case SkillData skill:
             {
                 int index = player.Skills.SkillAt(0) == skill ? 0 : 1;
@@ -85,7 +92,7 @@ public class InventoryDropController : MonoBehaviour
                 WorldInteractionManager.Instance.Spawn(new SkillPickup(skill), player.transform.position);
                 break;
             }
-            
+
             default:
                 player.Inventory.Remove(item);
                 // WorldInteractionManager.Instance.Spawn(new ItemPickup(item), player.transform.position);
