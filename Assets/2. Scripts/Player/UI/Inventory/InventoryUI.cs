@@ -17,6 +17,8 @@ public class InventoryUI : MonoBehaviour,
     IObserver<InventoryUIOnEvent>, IObserver<InventoryUIOffEvent>, IObserver<InventorySelectionChangedEvent>,
     IObserver<InventoryDropConfirmShownEvent>, IObserver<InventoryDropConfirmHiddenEvent>
 {
+    public const string Key = "Inventory";
+
     [SerializeField] private Image weaponImage;
     [SerializeField] private Image[] skillImages;
     [SerializeField] private Image[] itemSlotImages;
@@ -30,6 +32,10 @@ public class InventoryUI : MonoBehaviour,
 
     private void Awake()
     {
+        UIManager.Instance.Register(Key,
+            open: () => EventBus.Publish(new InventoryUIOnEvent()),
+            close: () => EventBus.Publish(new InventoryUIOffEvent()));
+
         EventBus.Subscribe<InventoryUIOnEvent>(this);
         EventBus.Subscribe<InventoryUIOffEvent>(this);
         EventBus.Subscribe<InventorySelectionChangedEvent>(this);
