@@ -3,15 +3,10 @@ using UnityEngine.EventSystems;
 
 public class InventoryDropController : MonoBehaviour
 {
-    public const string Key = "Confirm";
-    public static bool IsConfirming { get; private set; }
-
-    [SerializeField] private GameObject noImage;
     private IInventoryItem pendingItem;
     private Player pendingPlayer;
     private InventoryUI inventoryUI;
     private UISelector selector;
-    private GameObject selectedItemGameObject;
 
     private void Awake()
     {
@@ -20,62 +15,29 @@ public class InventoryDropController : MonoBehaviour
         {
             Submit = OnSubmit
         };
-
-        UIManager.Instance.Register(Key, open: ShowConfirm, close: CloseConfirm);
     }
-
-    // 인벤토리가 닫힐 때(부모 GameObject 비활성화) 확인 팝업이 떠 있었다면 상태를 정리한다.
-    // 그렇지 않으면 IsConfirming이 true로 남아 다음에 인벤토리를 열었을 때 방향키/마우스 선택이 계속 막힌다.
-    private void OnDisable() => CloseConfirm();
 
     private void OnDestroy() => selector.Dispose();
 
     private void OnSubmit()
     {
+        if (ConfirmationPopup.IsConfirming) return;
+
         var selected = EventSystem.current.currentSelectedGameObject;
-        if (!IsConfirming)
-        {
-            var slot = selected != null ? selected.GetComponent<InventorySlot>() : null;
-            if (slot == null || slot.Item == null || slot.Target == null)
-                return;
+        var slot = selected != null ? selected.GetComponent<InventorySlot>() : null;
+        if (slot == null || slot.Item == null || slot.Target == null)
+            return;
 
-            selectedItemGameObject = slot.gameObject;
-            pendingItem = slot.Item;
-            pendingPlayer = slot.Target;
-            UIManager.Instance.Push(Key);
-        }
-        else if (selected == noImage)
-        {
-            UIManager.Instance.Pop();
-        }
-        else
-        {
-            ExecuteDrop(pendingPlayer, pendingItem);
-            UIManager.Instance.Pop();
-            if (inventoryUI != null)
-                inventoryUI.Refresh();
-        }
+        pendingItem = slot.Item;
+        pendingPlayer = slot.Target;
+        ConfirmationPopup.Instance.Show(pendingItem.DisplayName, OnConfirmDrop);
     }
 
-    private void ShowConfirm()
+    private void OnConfirmDrop()
     {
-        IsConfirming = true;
-        selector.SetActive(true);
-        EventSystem.current.SetSelectedGameObject(noImage);
-        EventBus.Publish(new InventoryDropConfirmShownEvent(pendingItem.DisplayName));
-    }
-
-    private void CloseConfirm()
-    {
-        if (!IsConfirming) return;
-
-        IsConfirming = false;
-        pendingItem = null;
-        pendingPlayer = null;
-        selector.SetActive(false);
-
-        EventSystem.current.SetSelectedGameObject(selectedItemGameObject);
-        EventBus.Publish(new InventoryDropConfirmHiddenEvent());
+        ExecuteDrop(pendingPlayer, pendingItem);
+        if (inventoryUI != null)
+            inventoryUI.Refresh();
     }
 
     private static void ExecuteDrop(Player player, IInventoryItem item)

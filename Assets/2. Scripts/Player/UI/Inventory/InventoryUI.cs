@@ -6,16 +6,9 @@ using UnityEngine.UI;
 public struct InventoryUIOnEvent : ISubject { }
 public struct InventoryUIOffEvent : ISubject { }
 public struct InventorySelectionChangedEvent : ISubject { }
-public struct InventoryDropConfirmShownEvent : ISubject
-{
-    public string ItemName { get; private set; }
-    public InventoryDropConfirmShownEvent(string itemName) { ItemName = itemName; }
-}
-public struct InventoryDropConfirmHiddenEvent : ISubject { }
 
 public class InventoryUI : MonoBehaviour,
-    IObserver<InventoryUIOnEvent>, IObserver<InventoryUIOffEvent>, IObserver<InventorySelectionChangedEvent>,
-    IObserver<InventoryDropConfirmShownEvent>, IObserver<InventoryDropConfirmHiddenEvent>
+    IObserver<InventoryUIOnEvent>, IObserver<InventoryUIOffEvent>, IObserver<InventorySelectionChangedEvent>
 {
     public const string Key = "Inventory";
 
@@ -25,8 +18,6 @@ public class InventoryUI : MonoBehaviour,
     [SerializeField] private Image selectImage;
     [SerializeField] private Image selectedItemImage;
     [SerializeField] private TextMeshProUGUI detailsText;
-    [SerializeField] private GameObject dropConfirmUI;
-    [SerializeField] private TextMeshProUGUI dropConfirmText;
 
     private Player target;
 
@@ -39,8 +30,6 @@ public class InventoryUI : MonoBehaviour,
         EventBus.Subscribe<InventoryUIOnEvent>(this);
         EventBus.Subscribe<InventoryUIOffEvent>(this);
         EventBus.Subscribe<InventorySelectionChangedEvent>(this);
-        EventBus.Subscribe<InventoryDropConfirmShownEvent>(this);
-        EventBus.Subscribe<InventoryDropConfirmHiddenEvent>(this);
 
         target = FindAnyObjectByType<Player>();
     }
@@ -115,16 +104,5 @@ public class InventoryUI : MonoBehaviour,
     public void OnNotify(InventorySelectionChangedEvent e)
     {
         UpdateSelectionDisplay();
-    }
-
-    public void OnNotify(InventoryDropConfirmShownEvent e)
-    {
-        dropConfirmText.text = $"{e.ItemName}";
-        dropConfirmUI.SetActive(true);
-    }
-
-    public void OnNotify(InventoryDropConfirmHiddenEvent e)
-    {
-        dropConfirmUI.SetActive(false);
     }
 }

@@ -9,7 +9,7 @@ public class InventorySlot : MonoBehaviour, ISelectHandler, IPointerEnterHandler
 
     public void OnSelect(BaseEventData eventData)
     {
-        if (InventoryDropController.IsConfirming) return;
+        if (ConfirmationPopup.IsConfirming) return;
         if (Target == null) return;
 
         Target.Inventory.Select(Item);
@@ -18,7 +18,7 @@ public class InventorySlot : MonoBehaviour, ISelectHandler, IPointerEnterHandler
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (InventoryDropController.IsConfirming) return;
+        if (ConfirmationPopup.IsConfirming) return;
         if (eventData.delta == Vector2.zero) return;
         if (!GetComponent<Selectable>().IsInteractable()) return;
 

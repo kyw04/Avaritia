@@ -30,7 +30,7 @@ public class InventoryKeyboardNavigator : MonoBehaviour
 
     private Selectable Move(Selectable selectable, System.Func<Selectable, Selectable> findNext)
     {
-        if (InventoryDropController.IsConfirming || selectable == null || findNext == null)
+        if (ConfirmationPopup.IsConfirming || selectable == null || findNext == null)
             return selectable;
 
         var next = selectable;
