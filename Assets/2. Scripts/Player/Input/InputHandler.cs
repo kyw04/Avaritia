@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[DefaultExecutionOrder(-1000)]
 public class InputHandler : Singleton<InputHandler>
 {
     public Player player;
