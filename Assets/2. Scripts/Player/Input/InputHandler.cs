@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+// UISelector의 생성자가 다른 오브젝트의 Awake에서 InputHandler.Instance.InputAction을 바로 읽는다.
+// InputHandler가 씬에 미리 배치된 컴포넌트라 Awake 순서가 보장되지 않으면 InputAction이 아직 null일 수 있어,
+// 다른 스크립트보다 먼저 Awake되도록 강제한다.
 [DefaultExecutionOrder(-1000)]
 public class InputHandler : Singleton<InputHandler>
 {
