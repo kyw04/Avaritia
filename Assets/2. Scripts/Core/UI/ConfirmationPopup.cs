@@ -32,6 +32,8 @@ public class ConfirmationPopup : Singleton<ConfirmationPopup>
 
     public void Show(string message, Action onConfirm, Action onCancel = null)
     {
+        if (IsConfirming) return;
+
         this.onConfirm = onConfirm;
         this.onCancel = onCancel;
         messageText.text = message;
