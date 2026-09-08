@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8133240403206615693}
   - component: {fileID: 7562008208287547359}
   - component: {fileID: 8925595428209436780}
+  - component: {fileID: 7112246994866901118}
   m_Layer: 0
   m_Name: CinemachineCamera
   m_TagString: Untagged
@@ -95,3 +96,15 @@ MonoBehaviour:
     RotationDamping: {x: 1, y: 1, z: 1}
     QuaternionDamping: 1
   FollowOffset: {x: 0, y: 1.5, z: -12}
+--- !u!114 &7112246994866901118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8602388445434068952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a8a05de0ac134f4f9d01bef6b9da077, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachinePixelPerfect

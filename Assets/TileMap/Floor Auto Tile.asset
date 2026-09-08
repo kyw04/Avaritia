@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Floor Auto Tile
   m_EditorClassIdentifier: Unity.2D.Tilemap.Extras::UnityEngine.Tilemaps.AutoTile
   m_DefaultSprite: {fileID: -1612626636, guid: 93029a609a844af44b578c4253fb98b8, type: 3}
-  m_DefaultGameObject: {fileID: 2708028552479248920, guid: 36b6ddd8721f8704fab6d28bf105fe1e, type: 3}
+  m_DefaultGameObject: {fileID: 1903029972199717808, guid: 30ed6e06b5bb8454ea67a1e418814373, type: 3}
   m_DefaultColliderType: 1
   m_MaskType: 1
   m_Random: 1
