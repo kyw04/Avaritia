@@ -15,6 +15,7 @@ MonoBehaviour:
   cooldown: 1
   maxRange: 3.4028235e+38
   icon: {fileID: 0}
+  description: 
   effects:
   - rid: 1772930914514108508
   references:
