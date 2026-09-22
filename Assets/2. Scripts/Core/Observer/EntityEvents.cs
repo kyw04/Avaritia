@@ -91,8 +91,8 @@ public struct EntitySkillEquippedEvent : ISubject
 {
     public Entity Source { get; private set; }
     public int SlotIndex { get; private set; }
-    public SkillData Skill { get; private set; }
-    public EntitySkillEquippedEvent(Entity source, int slotIndex, SkillData skill)
+    public AbilityData Skill { get; private set; }
+    public EntitySkillEquippedEvent(Entity source, int slotIndex, AbilityData skill)
     {
         Source = source; SlotIndex = slotIndex; Skill = skill;
     }

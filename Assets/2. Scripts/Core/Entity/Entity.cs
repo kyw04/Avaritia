@@ -4,14 +4,14 @@ using UnityEngine;
 
 public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable, IStatReadable, IStatMutable, IPoolable
 {
-    [SerializeField] protected SkillData[] skill;
+    [SerializeField] protected AbilityData[] abilities;
     [SerializeField] protected StatData statDataAsset;
     [SerializeReference, SubclassSelector] protected IMovementStrategy movementStrategy;
     [SerializeField] protected Transform groundCheck;
     [SerializeField] protected float groundRadius;
     [SerializeField] protected LayerMask groundLayer;
     [SerializeField] protected Weapon dropWeaponAsset;
-    [SerializeField] protected SkillData dropSkillAsset;
+    [SerializeField] protected AbilityData dropSkillAsset;
     [SerializeField, Range(0, 100)] protected float dropChance;
 
     protected RuntimeStats stats;
@@ -32,7 +32,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     public Rigidbody2D Rb { get; protected set; }
     public MonoBehaviour Mono => this;
     public bool IsAttacking { get; set; }
-    public SkillManager Skills { get; private set; }
+    public AbilityManager Abilities { get; private set; }
     public bool IsGrounded { get; protected set; }
 
     public virtual int LookDirection => transform.localScale.x >= 0 ? 1 : -1;
@@ -113,13 +113,14 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
 
     public virtual void OnSpawn() => ResetEntityState();
 
-    public virtual void OnDespawn() { }
+    public virtual void OnDespawn() => Abilities?.UnbindAll();
 
     private void ResetEntityState()
     {
         isDead = false;
         stats = new RuntimeStats(statDataAsset);
-        Skills = new SkillManager(this, skill);
+        Abilities = new AbilityManager(this, abilities);
+        Abilities.BindAll();
         activeBuffs.Clear();
         wasGroundCheckerChanged = !IsGrounded;
     }
@@ -194,7 +195,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     {
         IInteractable payload = null;
         if (dropWeaponAsset != null) payload = new WeaponPickup(dropWeaponAsset);
-        else if (dropSkillAsset != null) payload = new SkillPickup(dropSkillAsset);
+        else if (dropSkillAsset != null) payload = new AbilityPickup(dropSkillAsset);
 
         if (payload == null) return;
         if (Random.Range(0f, 100f) >= dropChance) return;
