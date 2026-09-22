@@ -1,4 +1,4 @@
-﻿public interface IAbilityCondition
+public interface IAbilityCondition
 {
-        
+    bool IsMet(AbilityContext context);
 }

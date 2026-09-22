@@ -1,4 +1,4 @@
-﻿public interface IAbilityEffect
+public interface IAbilityEffect
 {
-    
+    void Apply(AbilityContext context);
 }
