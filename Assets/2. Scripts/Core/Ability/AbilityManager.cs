@@ -19,13 +19,7 @@ public class AbilityManager
     public void BindAll()
     {
         foreach (var a in abilities)
-        {
-            if (a == null || a.trigger == null) continue;
-            states[a] = new AbilityRuntimeState();
-            var trigger = CloneTrigger(a.trigger);
-            boundTriggers[a] = trigger;
-            trigger.Bind(owner, ctx => TryActivate(a, ctx));
-        }
+            BindOne(a);
     }
 
     public void UnbindAll()
@@ -34,6 +28,26 @@ public class AbilityManager
             trigger.Unbind(owner);
         boundTriggers.Clear();
         states.Clear();
+    }
+
+    // Shared by BindAll (spawn) and SetAbility (runtime equip) so a newly-equipped ability gets
+    // the same AbilityRuntimeState/trigger binding a spawn-time one does — without this, TryActivate
+    // finds no `states` entry for an ability equipped after spawn and silently refuses to activate it.
+    private void BindOne(AbilityData data)
+    {
+        if (data == null || data.trigger == null) return;
+        states[data] = new AbilityRuntimeState();
+        var trigger = CloneTrigger(data.trigger);
+        boundTriggers[data] = trigger;
+        trigger.Bind(owner, ctx => TryActivate(data, ctx));
+    }
+
+    private void UnbindOne(AbilityData data)
+    {
+        if (data == null || !boundTriggers.TryGetValue(data, out var trigger)) return;
+        trigger.Unbind(owner);
+        boundTriggers.Remove(data);
+        states.Remove(data);
     }
 
     // AbilityData is a shared ScriptableObject asset multiple Entities can reference (e.g. several
@@ -69,6 +83,10 @@ public class AbilityManager
         if (index < 0 || index >= abilities.Length) return null;
         var previous = abilities[index];
         abilities[index] = data;
+
+        UnbindOne(previous);
+        BindOne(data);
+
         EventBus.Publish(new EntitySkillEquippedEvent(owner, index, data));
         return previous;
     }
