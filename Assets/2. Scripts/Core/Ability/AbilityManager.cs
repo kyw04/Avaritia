@@ -7,13 +7,15 @@ public class AbilityManager
 {
     private readonly Entity owner;
     private readonly AbilityData[] abilities;
+    private readonly bool publishEvents;
     private readonly Dictionary<AbilityData, AbilityRuntimeState> states = new();
     private readonly Dictionary<AbilityData, IAbilityTrigger> boundTriggers = new();
 
-    public AbilityManager(Entity owner, AbilityData[] abilities)
+    public AbilityManager(Entity owner, AbilityData[] abilities, bool publishEvents = true)
     {
         this.owner = owner;
         this.abilities = abilities ?? Array.Empty<AbilityData>();
+        this.publishEvents = publishEvents;
     }
 
     public void BindAll()
@@ -30,7 +32,7 @@ public class AbilityManager
         states.Clear();
     }
 
-    // Shared by BindAll (spawn) and SetAbility (runtime equip) so a newly-equipped ability gets
+    // Shared by BindAll (spawn/weapon-equip) and SetAbility (runtime equip) so a newly-equipped ability gets
     // the same AbilityRuntimeState/trigger binding a spawn-time one does — without this, TryActivate
     // finds no `states` entry for an ability equipped after spawn and silently refuses to activate it.
     private void BindOne(AbilityData data)
@@ -87,7 +89,8 @@ public class AbilityManager
         UnbindOne(previous);
         BindOne(data);
 
-        EventBus.Publish(new EntitySkillEquippedEvent(owner, index, data));
+        if (publishEvents)
+            EventBus.Publish(new EntitySkillEquippedEvent(owner, index, data));
         return previous;
     }
 
@@ -104,7 +107,8 @@ public class AbilityManager
             effect?.Apply(context);
 
         state.CooldownEndTime = Time.time + data.cooldown;
-        EventBus.Publish(new EntitySkillCooldownEvent(owner, Array.IndexOf(abilities, data), data.cooldown, state.CooldownEndTime));
+        if (publishEvents)
+            EventBus.Publish(new EntitySkillCooldownEvent(owner, Array.IndexOf(abilities, data), data.cooldown, state.CooldownEndTime));
         return true;
     }
 }

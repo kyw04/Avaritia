@@ -44,7 +44,7 @@ public class Player : Entity, IStateOwner<Player>
     private void RebindWeaponAbilities()
     {
         WeaponAbilities?.UnbindAll();
-        WeaponAbilities = new AbilityManager(this, weapon != null ? weapon.passiveAbilities.ToArray() : Array.Empty<AbilityData>());
+        WeaponAbilities = new AbilityManager(this, weapon != null ? weapon.passiveAbilities.ToArray() : Array.Empty<AbilityData>(), publishEvents: false);
         WeaponAbilities.BindAll();
     }
 
