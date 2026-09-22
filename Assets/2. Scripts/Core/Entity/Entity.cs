@@ -94,7 +94,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
 
     public void Heal(float amount)
     {
-        stats.Set(StatType.CurrentHealth, Mathf.Min(MaxHealth, CurrentHealth + amount));
+        float rawCurrent = stats.Get<float>(StatType.CurrentHealth);
+        stats.Set(StatType.CurrentHealth, Mathf.Min(MaxHealth, rawCurrent + amount));
         OnHealthChanged();
     }
 
