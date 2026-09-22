@@ -60,9 +60,22 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
 
     private T ApplyBuffs<T>(StatType type, T value)
     {
-        if (typeof(T) != typeof(float)) return value;
+        if (typeof(T) != typeof(float) && typeof(T) != typeof(int)) return value;
 
         activeBuffs.RemoveAll(b => b.expireTime <= Time.time);
+
+        if (typeof(T) == typeof(int))
+        {
+            // Int stats (DoubleJumpCount, DashCount, ...) only make sense as flat additions —
+            // a "Percent" modifier is ignored here rather than silently truncating.
+            int intResult = (int)(object)value;
+            foreach (var b in activeBuffs)
+            {
+                if (b.type != type || b.valueType != BuffValueType.Flat) continue;
+                intResult += (int)b.amount;
+            }
+            return (T)(object)intResult;
+        }
 
         float result = (float)(object)value;
         float flatSum = 0f, percentSum = 0f;
@@ -109,7 +122,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     protected T GetAssetStat<T>(StatType type)
     {
         var baseValue = statDataAsset.TryGetValue<T>(type);
-        return ApplyEquipmentBonus(type, baseValue);
+        var withEquipment = ApplyEquipmentBonus(type, baseValue);
+        return ApplyBuffs(type, withEquipment);
     }
 
     protected virtual void Awake()

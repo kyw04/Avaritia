@@ -12,8 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Scrap Recycling Furnace
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: f0ab123e3c7efef46a9e395bd33d9b99, type: 3}
   description: A terrifying internal furnace. It automatically scavenges and melts
     down the leftover parts of defeated enemies to rapidly weld and repair your own
     wounds.
-  passiveAbilities: []
+  trigger:
+    rid: 5230665391898361961
+  conditions: []
+  effects:
+  - rid: 5230665391898361962
+  references:
+    version: 2
+    RefIds:
+    - rid: 5230665391898361961
+      type: {class: OnKillTrigger, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 5230665391898361962
+      type: {class: HealthChangeEffect, ns: , asm: Assembly-CSharp}
+      data:
+        mode: 0
+        amount: 2
+        applyTo: 0

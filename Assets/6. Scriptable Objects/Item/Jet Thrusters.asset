@@ -12,7 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Jet Thrusters
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: 06ae195e6b867a641a76528f620aca45, type: 3}
   description: A set of directional vents attached to the soles. Blasts a concentrated
     jet of steam downward, allowing you to double-jump in mid-air.
-  passiveAbilities: []
+  trigger:
+    rid: 5230665391898361965
+  conditions: []
+  effects:
+  - rid: 5230665391898361966
+  references:
+    version: 2
+    RefIds:
+    - rid: 5230665391898361965
+      type: {class: OnEquippedTrigger, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 5230665391898361966
+      type: {class: BuffEffect, ns: , asm: Assembly-CSharp}
+      data:
+        modifiers:
+        - statType: 4
+          valueType: 0
+          amount: 1
+        duration: 9999
+        expireAbility: {fileID: 0}
+        applyTo: 0
