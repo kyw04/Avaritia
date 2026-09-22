@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable, IPoolable
+public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable, IStatReadable, IStatMutable, IPoolable
 {
     [SerializeField] protected SkillData[] skill;
     [SerializeField] protected StatData statDataAsset;
@@ -48,7 +48,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     public int DashCount => stats.Get<int>(StatType.DashCount);
     public float DashCooldown => GetStat<float>(StatType.DashCooldown);
 
-    protected T GetStat<T>(StatType type)
+    public T GetStat<T>(StatType type)
     {
         var baseValue = stats.Get<T>(type);
         var withEquipment = ApplyEquipmentBonus(type, baseValue);
@@ -87,6 +87,15 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         {
             activeBuffs.Add(new ActiveBuff { source = source, type = type, valueType = valueType, amount = amount, expireTime = Time.time + duration });
         }
+    }
+
+    public void AddBaseStat<T>(StatType type, T amount) =>
+        stats.Set(type, StatMath.Add(stats.Get<T>(type), amount));
+
+    public void Heal(float amount)
+    {
+        stats.Set(StatType.CurrentHealth, Mathf.Min(MaxHealth, CurrentHealth + amount));
+        OnHealthChanged();
     }
 
     protected T GetAssetStat<T>(StatType type)
