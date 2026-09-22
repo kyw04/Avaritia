@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -16,6 +17,7 @@ public class Player : Entity, IStateOwner<Player>
     public IStateMachine Machine { get; private set; }
     public SpriteRenderer Renderer { get; private set; }
     public AbilityManager WeaponAbilities { get; private set; }
+    public AbilityManager ItemAbilities { get; private set; }
     private StateManager stateManager;
     public Weapon Weapon => weapon;
     public PlayerInteractionController InteractionController => interactionController;
@@ -48,11 +50,23 @@ public class Player : Entity, IStateOwner<Player>
         WeaponAbilities.BindAll();
     }
 
+    private void RebindItemAbilities()
+    {
+        ItemAbilities?.UnbindAll();
+        var passives = new List<AbilityData>();
+        foreach (var invItem in Inventory.Items)
+            if (invItem is Item item)
+                passives.AddRange(item.passiveAbilities);
+        ItemAbilities = new AbilityManager(this, passives.ToArray(), publishEvents: false);
+        ItemAbilities.BindAll();
+    }
+
     protected override void Awake()
     {
         base.Awake();
         Inventory = new Inventory();
-        
+        Inventory.Changed += RebindItemAbilities;
+
         Renderer = GetComponentInChildren<SpriteRenderer>();
         col = GetComponent<Collider2D>();
 
@@ -65,6 +79,7 @@ public class Player : Entity, IStateOwner<Player>
         stats.Set(StatType.DashCount, 0);
 
         RebindWeaponAbilities();
+        RebindItemAbilities();
     }
 
     public bool TryDropThroughPlatform()
@@ -129,6 +144,7 @@ public class Player : Entity, IStateOwner<Player>
         stateManager.Unregister(Machine);
         Abilities?.UnbindAll();
         WeaponAbilities?.UnbindAll();
+        ItemAbilities?.UnbindAll();
         Debug.Log("Player: 사망");
     }
 
@@ -137,6 +153,7 @@ public class Player : Entity, IStateOwner<Player>
         stateManager.Unregister(Machine);
         Abilities?.UnbindAll();
         WeaponAbilities?.UnbindAll();
+        ItemAbilities?.UnbindAll();
     }
 
     private void OnDrawGizmosSelected()
