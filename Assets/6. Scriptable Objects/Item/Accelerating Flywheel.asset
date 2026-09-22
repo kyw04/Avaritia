@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
+  m_Name: Accelerating Flywheel
+  m_EditorClassIdentifier: Assembly-CSharp::Item
+  icon: {fileID: 21300000, guid: 6ac4487ab1d3b8d4aa3b669b5dbc8a79, type: 3}
+  description: An inertia wheel that spins faster the longer you maintain your assault.
+    As long as you don't stop attacking, your momentum continues to build.
+  passiveAbilities: []

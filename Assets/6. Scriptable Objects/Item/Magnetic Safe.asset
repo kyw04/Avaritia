@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
+  m_Name: Magnetic Safe
+  m_EditorClassIdentifier: Assembly-CSharp::Item
+  icon: {fileID: 21300000, guid: ab99142181f77a54b916c0ae4f8039bc, type: 3}
+  description: A heavy, magnetized lockbox that actively rips coins out of the pockets
+    of the dead. Increases overall wealth generation and saves you the trouble of
+    picking it up. The true start of Avaritia.
+  passiveAbilities: []
