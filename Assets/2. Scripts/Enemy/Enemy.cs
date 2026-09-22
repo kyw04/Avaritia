@@ -90,18 +90,18 @@ public class Enemy : Entity, IStateOwner<Enemy>
 
     public bool IsInAttackRange()
     {
-        var first = Skills.SkillAt(0);
+        var first = Abilities.AbilityAt(0);
         if (!HasTarget || first == null) return false;
         return Vector2.Distance(transform.position, Target.position) <= first.maxRange;
     }
 
     public bool CanAttack()
     {
-        var first = Skills.SkillAt(0);
-        return first != null && !Skills.IsOnCooldown(first);
+        var first = Abilities.AbilityAt(0);
+        return first != null && !Abilities.IsOnCooldown(first);
     }
 
-    public void Attack() => Skills.TryUseSkill(Skills.SkillAt(0), this, Target);
+    public void Attack() => Abilities.TryActivate(Abilities.AbilityAt(0), new AbilityContext { Caster = this, Target = Target });
 
     public void FaceTarget()
     {

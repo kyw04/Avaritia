@@ -28,7 +28,7 @@ public class BossBehaviorTree : BT.BehaviorTree
                         ? Vector2.Distance(boss.transform.position, boss.Target.position)
                         : float.MaxValue;
                     board.Set(BBKey.TargetDistance, dist);
-                    board.Set(BBKey.AvailableAttacks, boss.Skills.GetAvailableSkills(dist));
+                    board.Set(BBKey.AvailableAttacks, boss.Abilities.GetAvailableAbilities(dist));
 
                     return BT.NodeStatus.Success;
                 }),
@@ -42,13 +42,13 @@ public class BossBehaviorTree : BT.BehaviorTree
 
                     new BT.Sequence(
                         new BT.Condition(() =>
-                            board.Get<List<SkillData>>(BBKey.AvailableAttacks).Count > 0),
+                            board.Get<List<AbilityData>>(BBKey.AvailableAttacks).Count > 0),
                         new BT.Action(() =>
                         {
-                            var available = board.Get<List<SkillData>>(BBKey.AvailableAttacks);
+                            var available = board.Get<List<AbilityData>>(BBKey.AvailableAttacks);
                             var randomIndex = Random.Range(0, available.Count);
                             boss.FlipToTarget();
-                            boss.Skills.TryUseSkill(available[randomIndex], boss, boss.Target);
+                            boss.Abilities.TryActivate(available[randomIndex], new AbilityContext { Caster = boss, Target = boss.Target });
 
                             return BT.NodeStatus.Running;
                         })

@@ -59,9 +59,9 @@ public class InputHandler : Singleton<InputHandler>
     }
 
     private void OnSkill1(InputAction.CallbackContext context) =>
-        player.Skills.TryUseSkill(player.Skills.SkillAt(0), player);
+        player.Abilities.TryActivate(player.Abilities.AbilityAt(0), new AbilityContext { Caster = player });
     private void OnSkill2(InputAction.CallbackContext context) =>
-        player.Skills.TryUseSkill(player.Skills.SkillAt(1), player);
+        player.Abilities.TryActivate(player.Abilities.AbilityAt(1), new AbilityContext { Caster = player });
     private void OnInteractStarted(InputAction.CallbackContext context) =>
         player.InteractionController.OnInteractStarted();
     private void OnInteractCanceled(InputAction.CallbackContext context) =>
