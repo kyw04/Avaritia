@@ -42,11 +42,11 @@ public class AbilityManager
     // overwrite another's owner/callback/coroutine state. Cloning gives each Entity its own trigger
     // instance to hold that per-binding state — the same reason AbilityRuntimeState (cooldown) is
     // kept outside AbilityData rather than as a field on it.
-    private static IAbilityTrigger CloneTrigger(IAbilityTrigger source)
-    {
-        var method = typeof(object).GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic);
-        return (IAbilityTrigger)method.Invoke(source, null);
-    }
+    private static readonly MethodInfo MemberwiseCloneMethod =
+        typeof(object).GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic);
+
+    private static IAbilityTrigger CloneTrigger(IAbilityTrigger source) =>
+        (IAbilityTrigger)MemberwiseCloneMethod.Invoke(source, null);
 
     public List<AbilityData> GetAvailableAbilities(float targetDistance)
     {

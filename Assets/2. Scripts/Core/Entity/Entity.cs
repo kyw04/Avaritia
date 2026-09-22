@@ -119,6 +119,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     {
         isDead = false;
         stats = new RuntimeStats(statDataAsset);
+        Abilities?.UnbindAll();
         Abilities = new AbilityManager(this, abilities);
         Abilities.BindAll();
         activeBuffs.Clear();
