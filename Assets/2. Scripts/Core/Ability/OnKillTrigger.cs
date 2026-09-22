@@ -15,6 +15,8 @@ public class OnKillTrigger : IAbilityTrigger, IObserver<EntityDeadEvent>
 
     public void Unbind(Entity owner) => EventBus.Unsubscribe(this);
 
+    // EntityDeadEvent에는 킬러 정보가 없으므로, 실제로는 "owner가 죽인 대상"이 아니라
+    // "owner 이외의 누군가가 죽었을 때" 발동한다. 킬 어트리뷰션이 필요해지면 데미지 소스 추적을 추가해야 한다.
     public void OnNotify(EntityDeadEvent e)
     {
         if (e.Source == owner) return;

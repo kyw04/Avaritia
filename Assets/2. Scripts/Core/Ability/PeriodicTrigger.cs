@@ -10,6 +10,7 @@ public class PeriodicTrigger : IAbilityTrigger
 
     public void Bind(Entity owner, Action<AbilityContext> fire)
     {
+        if (routine != null) return;
         routine = owner.StartCoroutine(Loop(owner, fire));
     }
 
