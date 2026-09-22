@@ -106,6 +106,7 @@ public class ItemBox : MonoBehaviour, IInteractable, IPoolable
     {
         if (asset is Weapon weapon) return new WeaponPickup(weapon);
         if (asset is AbilityData ability) return new AbilityPickup(ability);
+        if (asset is Item item) return new ItemPickup(item);
         return null;
     }
 }
