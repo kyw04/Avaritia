@@ -55,6 +55,7 @@ public class ItemReplaceController : Singleton<ItemReplaceController>
         IsReplacing = false;
         pendingItem = null;
         pendingPlayer = null;
-        inventoryUI.Refresh();
+        if (inventoryUI != null)
+            inventoryUI.Refresh();
     }
 }
