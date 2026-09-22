@@ -49,15 +49,17 @@ public class Player : Entity, IStateOwner<Player>
         WeaponAbilities.BindAll();
     }
 
+    // Reconciles ItemAbilities to the current Inventory contents instead of tearing everything
+    // down and rebuilding it every time. A full rebuild would hand every held item a fresh
+    // AbilityRuntimeState on every pickup/drop, which breaks per-copy buff stacking (see
+    // AbilityManager.Rebind) and loses cooldown progress for items that didn't actually change.
     private void RebindItemAbilities()
     {
-        ItemAbilities?.UnbindAll();
         var passives = new List<AbilityData>();
         foreach (var invItem in Inventory.Items)
             if (invItem is AbilityData item)
                 passives.Add(item);
-        ItemAbilities = new AbilityManager(this, passives.ToArray(), publishEvents: false);
-        ItemAbilities.BindAll();
+        ItemAbilities.Rebind(passives.ToArray());
     }
 
     protected override void Awake()
@@ -65,6 +67,7 @@ public class Player : Entity, IStateOwner<Player>
         base.Awake();
         Inventory = new Inventory();
         Inventory.Changed += RebindItemAbilities;
+        ItemAbilities = new AbilityManager(this, Array.Empty<AbilityData>(), publishEvents: false);
 
         Renderer = GetComponentInChildren<SpriteRenderer>();
         col = GetComponent<Collider2D>();

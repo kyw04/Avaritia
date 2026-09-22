@@ -7,7 +7,7 @@ public class OnDamageTakenTrigger : IAbilityTrigger, IObserver<EntityHealthChang
     private Action<AbilityContext> fire;
     private float lastHealth;
 
-    public void Bind(Entity owner, Action<AbilityContext> fire)
+    public void Bind(Entity owner, AbilityData data, Action<AbilityContext> fire)
     {
         this.owner = owner;
         this.fire = fire;

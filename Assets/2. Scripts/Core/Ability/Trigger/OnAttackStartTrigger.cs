@@ -6,7 +6,7 @@ public class OnAttackStartTrigger : IAbilityTrigger, IObserver<EntityAttackStart
     private Entity owner;
     private Action<AbilityContext> fire;
 
-    public void Bind(Entity owner, Action<AbilityContext> fire)
+    public void Bind(Entity owner, AbilityData data, Action<AbilityContext> fire)
     {
         this.owner = owner;
         this.fire = fire;

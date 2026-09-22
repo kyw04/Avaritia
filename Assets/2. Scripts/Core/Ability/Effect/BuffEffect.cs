@@ -25,7 +25,10 @@ public class BuffEffect : IAbilityEffect
         Transform t = applyTo == BuffTarget.Self ? context.Caster.Mono.transform : context.Target;
         if (t == null || !t.TryGetComponent<IBuffable>(out var buffable)) return;
 
+        // context.State identifies this specific binding (e.g. one particular copy of a held
+        // Item), not the shared BuffEffect asset data — using `this` here would make two copies
+        // of the same item collide on the same buff slot instead of stacking independently.
         foreach (var mod in modifiers)
-            buffable.ApplyBuff(this, mod.statType, mod.valueType, mod.amount, duration, expireAbility);
+            buffable.ApplyBuff(context.State, mod.statType, mod.valueType, mod.amount, duration, expireAbility);
     }
 }

@@ -8,7 +8,7 @@ public class PeriodicTrigger : IAbilityTrigger
     public float interval;
     private Coroutine routine;
 
-    public void Bind(Entity owner, Action<AbilityContext> fire)
+    public void Bind(Entity owner, AbilityData data, Action<AbilityContext> fire)
     {
         if (routine != null) return;
         routine = owner.StartCoroutine(Loop(owner, fire));

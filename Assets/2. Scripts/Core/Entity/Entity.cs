@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable, IStatReadable, IStatMutable, IPoolable,
-    IObserver<InventoryItemUnequip>
+public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable, IStatReadable, IStatMutable, IPoolable
 {
     [SerializeField] protected AbilityData[] abilities;
     [SerializeField] protected StatData statDataAsset;
@@ -140,7 +139,6 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
 
     protected virtual void Start()
     {
-        EventBus.Subscribe(this);
     }
 
     protected virtual void Update()
@@ -222,7 +220,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     protected void OnHealthChanged() => EventBus.Publish(new EntityHealthChangedEvent(this, MaxHealth, CurrentHealth));
     protected void OnDashCountChanged() => EventBus.Publish(new EntityDashCountChangedEvent(this, MaxDashCount - DashCount, MaxDashCount));
 
-    public void OnNotify(InventoryItemUnequip e) => activeBuffs.RemoveAll(b => b.expireAbility == e.ability);
+    public void RemoveBuffsBySource(object source) => activeBuffs.RemoveAll(b => b.source == source);
     
     public abstract void Die();
 }

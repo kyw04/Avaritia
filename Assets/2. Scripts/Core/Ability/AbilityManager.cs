@@ -5,11 +5,20 @@ using UnityEngine;
 
 public class AbilityManager
 {
+    // A single bound instance of an AbilityData. Multiple bindings can share the same `Data`
+    // reference (e.g. two copies of the same Item held at once) — each still gets its own
+    // trigger/state so they activate, go on cooldown, and stack buffs independently.
+    private class Binding
+    {
+        public AbilityData Data;
+        public IAbilityTrigger Trigger;
+        public AbilityRuntimeState State;
+    }
+
     private readonly Entity owner;
     private readonly AbilityData[] abilities;
     private readonly bool publishEvents;
-    private readonly Dictionary<AbilityData, AbilityRuntimeState> states = new();
-    private readonly Dictionary<AbilityData, IAbilityTrigger> boundTriggers = new();
+    private readonly List<Binding> bindings = new();
 
     public AbilityManager(Entity owner, AbilityData[] abilities, bool publishEvents = true)
     {
@@ -26,30 +35,70 @@ public class AbilityManager
 
     public void UnbindAll()
     {
-        foreach (var trigger in boundTriggers.Values)
-            trigger.Unbind(owner);
-        boundTriggers.Clear();
-        states.Clear();
+        foreach (var binding in bindings)
+            binding.Trigger.Unbind(owner);
+        bindings.Clear();
+    }
+
+    // Incrementally reconciles the bound abilities to `newAbilities` (a multiset — duplicate
+    // AbilityData references are meaningful, e.g. two copies of the same passive Item).
+    // Bindings whose AbilityData still appears are kept as-is (same AbilityRuntimeState/trigger,
+    // so their cooldown/buffs survive); ones no longer present are unbound and have any buffs
+    // they applied removed; new entries get a fresh binding. This is what lets Player.ItemAbilities
+    // rebuild on every Inventory change without losing per-copy state or leaking buffs.
+    public void Rebind(AbilityData[] newAbilities)
+    {
+        var remaining = new List<Binding>(bindings);
+        var next = new List<Binding>();
+
+        foreach (var data in newAbilities)
+        {
+            var match = remaining.Find(b => b.Data == data);
+            if (match != null)
+            {
+                remaining.Remove(match);
+                next.Add(match);
+            }
+            else
+            {
+                var created = CreateBinding(data);
+                if (created != null) next.Add(created);
+            }
+        }
+
+        foreach (var gone in remaining)
+        {
+            gone.Trigger.Unbind(owner);
+            owner.RemoveBuffsBySource(gone.State);
+        }
+
+        bindings.Clear();
+        bindings.AddRange(next);
     }
 
     // Shared by BindAll (spawn/weapon-equip) and SetAbility (runtime equip) so a newly-equipped ability gets
     // the same AbilityRuntimeState/trigger binding a spawn-time one does — without this, TryActivate
-    // finds no `states` entry for an ability equipped after spawn and silently refuses to activate it.
+    // finds no bound state for an ability equipped after spawn and silently refuses to activate it.
     private void BindOne(AbilityData data)
     {
-        if (data == null || data.trigger == null) return;
-        states[data] = new AbilityRuntimeState();
-        var trigger = CloneTrigger(data.trigger);
-        boundTriggers[data] = trigger;
-        trigger.Bind(owner, ctx => TryActivate(data, ctx));
+        var binding = CreateBinding(data);
+        if (binding != null) bindings.Add(binding);
+    }
+
+    private Binding CreateBinding(AbilityData data)
+    {
+        if (data == null || data.trigger == null) return null;
+        var binding = new Binding { Data = data, State = new AbilityRuntimeState(), Trigger = CloneTrigger(data.trigger) };
+        binding.Trigger.Bind(owner, data, ctx => TryActivate(binding, ctx));
+        return binding;
     }
 
     private void UnbindOne(AbilityData data)
     {
-        if (data == null || !boundTriggers.TryGetValue(data, out var trigger)) return;
-        trigger.Unbind(owner);
-        boundTriggers.Remove(data);
-        states.Remove(data);
+        var binding = bindings.Find(b => b.Data == data);
+        if (binding == null) return;
+        binding.Trigger.Unbind(owner);
+        bindings.Remove(binding);
     }
 
     // AbilityData is a shared ScriptableObject asset multiple Entities can reference (e.g. several
@@ -94,21 +143,30 @@ public class AbilityManager
         return previous;
     }
 
-    public bool IsOnCooldown(AbilityData data) =>
-        data != null && states.TryGetValue(data, out var s) && Time.time < s.CooldownEndTime;
+    public bool IsOnCooldown(AbilityData data)
+    {
+        var binding = bindings.Find(b => b.Data == data);
+        return binding != null && Time.time < binding.State.CooldownEndTime;
+    }
 
     public bool TryActivate(AbilityData data, AbilityContext context)
     {
-        if (data == null || !states.TryGetValue(data, out var state)) return false;
-        context.State = state;
+        var binding = bindings.Find(b => b.Data == data);
+        return binding != null && TryActivate(binding, context);
+    }
+
+    private bool TryActivate(Binding binding, AbilityContext context)
+    {
+        var data = binding.Data;
+        context.State = binding.State;
         if (data.conditions.Count > 0 && data.conditions.Exists(c => !c.IsMet(context))) return false;
 
         foreach (var effect in data.effects)
             effect?.Apply(context);
 
-        state.CooldownEndTime = Time.time + data.cooldown;
+        binding.State.CooldownEndTime = Time.time + data.cooldown;
         if (publishEvents)
-            EventBus.Publish(new EntitySkillCooldownEvent(owner, Array.IndexOf(abilities, data), data.cooldown, state.CooldownEndTime));
+            EventBus.Publish(new EntitySkillCooldownEvent(owner, Array.IndexOf(abilities, data), data.cooldown, binding.State.CooldownEndTime));
         return true;
     }
 }
