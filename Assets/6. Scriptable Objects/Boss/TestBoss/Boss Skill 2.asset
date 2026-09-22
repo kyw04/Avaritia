@@ -9,17 +9,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9b155786d3b4349abff3d5015655cfe, type: 3}
+  m_Script: {fileID: 11500000, guid: eb0df744d57e40cb9ea6b9de91702fea, type: 3}
   m_Name: Boss Skill 2
-  m_EditorClassIdentifier: Assembly-CSharp::SkillData
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityData
   cooldown: 3
   maxRange: 3
+  icon: {fileID: 0}
+  description: 
+  trigger:
+    rid: 5230665391898361941
+  conditions:
+  - rid: 5230665391898361942
   effects:
-  - rid: 1772930990000000002
+  - rid: 5230665391898361943
   references:
     version: 2
     RefIds:
-    - rid: 1772930990000000002
+    - rid: 5230665391898361941
+      type: {class: ManualTrigger, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 5230665391898361942
+      type: {class: CooldownCondition, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 5230665391898361943
       type: {class: AttackEffect, ns: , asm: Assembly-CSharp}
       data:
         attackData: {fileID: 11400000, guid: b64fd81b8eac33146a61811fc4e93060, type: 2}

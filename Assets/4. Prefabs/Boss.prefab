@@ -174,7 +174,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c4ee0b9827f91d418d31a2c5b348cb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Boss
-  skill:
+  abilities:
   - {fileID: 11400000, guid: 66567d2103894c668eeb2a93baf7a0fe, type: 2}
   - {fileID: 11400000, guid: a61f0e51e7ec4a24a68acd5c79bd8791, type: 2}
   - {fileID: 11400000, guid: fd50b532c15f4ddb99e54cbc8bc35f87, type: 2}
