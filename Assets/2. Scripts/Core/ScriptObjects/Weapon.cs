@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Scriptable Objects/Weapon")]
@@ -7,6 +8,9 @@ public class Weapon : ScriptableObject, IInventoryItem
     public StatData statBonusData;
     public Sprite icon;
     [TextArea] public string description;
+    // ManualTrigger abilities here never fire — there's no "use weapon passive" input.
+    // Fine to leave empty on ordinary weapons; only Event/Periodic triggers self-activate.
+    public List<AbilityData> passiveAbilities = new();
 
     public string DisplayName => name;
     public string Details => description;

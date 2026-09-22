@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -14,6 +15,7 @@ public class Player : Entity, IStateOwner<Player>
     public Inventory Inventory { get; private set; }
     public IStateMachine Machine { get; private set; }
     public SpriteRenderer Renderer { get; private set; }
+    public AbilityManager WeaponAbilities { get; private set; }
     private StateManager stateManager;
     public Weapon Weapon => weapon;
     public PlayerInteractionController InteractionController => interactionController;
@@ -28,6 +30,7 @@ public class Player : Entity, IStateOwner<Player>
     {
         float healthRatio = MaxHealth > 0 ? CurrentHealth / MaxHealth : 0f;
         weapon = newWeapon;
+        RebindWeaponAbilities();
 
         float newMaxHealth = MaxHealth;
         float newCurrentHealth = healthRatio * newMaxHealth;
@@ -38,11 +41,18 @@ public class Player : Entity, IStateOwner<Player>
         OnDashCountChanged();
     }
 
+    private void RebindWeaponAbilities()
+    {
+        WeaponAbilities?.UnbindAll();
+        WeaponAbilities = new AbilityManager(this, weapon != null ? weapon.passiveAbilities.ToArray() : Array.Empty<AbilityData>());
+        WeaponAbilities.BindAll();
+    }
+
     protected override void Awake()
     {
         base.Awake();
         Inventory = new Inventory();
-        
+
         Renderer = GetComponentInChildren<SpriteRenderer>();
         col = GetComponent<Collider2D>();
 
@@ -53,6 +63,8 @@ public class Player : Entity, IStateOwner<Player>
 
         stats.Set(StatType.DoubleJumpCount, 0);
         stats.Set(StatType.DashCount, 0);
+
+        RebindWeaponAbilities();
     }
 
     public bool TryDropThroughPlatform()
@@ -115,12 +127,16 @@ public class Player : Entity, IStateOwner<Player>
     {
         if (!TryMarkDead()) return;
         stateManager.Unregister(Machine);
+        Abilities?.UnbindAll();
+        WeaponAbilities?.UnbindAll();
         Debug.Log("Player: 사망");
     }
 
     private void OnDestroy()
     {
         stateManager.Unregister(Machine);
+        Abilities?.UnbindAll();
+        WeaponAbilities?.UnbindAll();
     }
 
     private void OnDrawGizmosSelected()
