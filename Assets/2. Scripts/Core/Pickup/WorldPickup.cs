@@ -4,7 +4,7 @@ using UnityEngine;
 public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
 {
     [SerializeField] private Weapon weaponAsset;
-    [SerializeField] private SkillData skillAsset;
+    [SerializeField] private AbilityData skillAsset;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Rigidbody2D rb;
 
@@ -21,7 +21,7 @@ public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
     private void Awake()
     {
         if (weaponAsset != null) payload = new WeaponPickup(weaponAsset);
-        else if (skillAsset != null) payload = new SkillPickup(skillAsset);
+        else if (skillAsset != null) payload = new AbilityPickup(skillAsset);
 
         ApplyIcon();
         manager = WorldInteractionManager.Instance;
@@ -48,7 +48,7 @@ public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
     {
         this.payload = payload;
         weaponAsset = (payload as WeaponPickup)?.Weapon;
-        skillAsset = (payload as SkillPickup)?.Skill;
+        skillAsset = (payload as AbilityPickup)?.Ability;
         ApplyIcon();
     }
 

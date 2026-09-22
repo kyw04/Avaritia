@@ -15,7 +15,7 @@ public class StageData : ScriptableObject
 
     public List<Weapon> weaponRewardPool = new();
     public int weaponBoxItemCount = 1;
-    public List<SkillData> skillRewardPool = new();
+    public List<AbilityData> skillRewardPool = new();
     public int skillBoxItemCount = 1;
 
     public StageData nextStage;
