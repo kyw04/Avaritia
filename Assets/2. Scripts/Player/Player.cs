@@ -52,7 +52,7 @@ public class Player : Entity, IStateOwner<Player>
     {
         base.Awake();
         Inventory = new Inventory();
-
+        
         Renderer = GetComponentInChildren<SpriteRenderer>();
         col = GetComponent<Collider2D>();
 
