@@ -17,7 +17,6 @@ public class BuffEffect : IAbilityEffect
 {
     public List<StatModifier> modifiers = new();
     public float duration;
-    public AbilityData expireAbility;
     public BuffTarget applyTo = BuffTarget.Self;
 
     public void Apply(AbilityContext context)
@@ -29,6 +28,6 @@ public class BuffEffect : IAbilityEffect
         // Item), not the shared BuffEffect asset data — using `this` here would make two copies
         // of the same item collide on the same buff slot instead of stacking independently.
         foreach (var mod in modifiers)
-            buffable.ApplyBuff(context.State, mod.statType, mod.valueType, mod.amount, duration, expireAbility);
+            buffable.ApplyBuff(context.State, mod.statType, mod.valueType, mod.amount, duration);
     }
 }

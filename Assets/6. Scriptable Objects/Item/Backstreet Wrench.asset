@@ -41,5 +41,5 @@ MonoBehaviour:
           valueType: 0
           amount: 10
         duration: 9999
-        expireAbility: {fileID: 11400000}
+        expireAbility: {fileID: 0}
         applyTo: 0

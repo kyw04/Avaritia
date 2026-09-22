@@ -25,7 +25,6 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         public BuffValueType valueType;
         public float amount;
         public float expireTime;
-        public AbilityData expireAbility;
     }
 
     private readonly List<ActiveBuff> activeBuffs = new();
@@ -90,8 +89,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         return (T)(object)result;
     }
 
-    public void ApplyBuff(object source, StatType type, BuffValueType valueType, float amount, float duration,
-        AbilityData expireAbility)
+    public void ApplyBuff(object source, StatType type, BuffValueType valueType, float amount, float duration)
     {
         var existing = activeBuffs.Find(b => b.source == source && b.type == type && b.valueType == valueType);
         if (existing != null)
@@ -103,8 +101,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         {
             activeBuffs.Add(new ActiveBuff
             {
-                source = source, type = type, valueType = valueType, amount = amount, expireTime = Time.time + duration,
-                expireAbility = expireAbility
+                source = source, type = type, valueType = valueType, amount = amount, expireTime = Time.time + duration
             });
         }
     }
