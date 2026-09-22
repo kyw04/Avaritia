@@ -81,6 +81,10 @@ public class InputHandler : Singleton<InputHandler>
     private void OnInventoryOpen(InputAction.CallbackContext context) =>
         UIManager.Instance.Push(InventoryUI.Key);
 
-    private void OnInventoryClose(InputAction.CallbackContext context) =>
+    private void OnInventoryClose(InputAction.CallbackContext context)
+    {
+        if (ItemReplaceController.IsReplacing)
+            ItemReplaceController.Instance.CancelReplace();
         UIManager.Instance.Pop();
+    }
 }
