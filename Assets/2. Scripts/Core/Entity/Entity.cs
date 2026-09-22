@@ -91,17 +91,22 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
 
     public void ApplyBuff(object source, StatType type, BuffValueType valueType, float amount, float duration)
     {
+        // duration <= 0 (the Inspector default when a designer leaves it unset) means "never expires
+        // on its own" — it only ever ends when its binding is torn down (drop/replace), same as any
+        // other buff, via AbilityManager.Rebind -> RemoveBuffsBySource.
+        float expireTime = duration > 0f ? Time.time + duration : float.MaxValue;
+
         var existing = activeBuffs.Find(b => b.source == source && b.type == type && b.valueType == valueType);
         if (existing != null)
         {
             existing.amount = amount;
-            existing.expireTime = Time.time + duration;
+            existing.expireTime = expireTime;
         }
         else
         {
             activeBuffs.Add(new ActiveBuff
             {
-                source = source, type = type, valueType = valueType, amount = amount, expireTime = Time.time + duration
+                source = source, type = type, valueType = valueType, amount = amount, expireTime = expireTime
             });
         }
     }

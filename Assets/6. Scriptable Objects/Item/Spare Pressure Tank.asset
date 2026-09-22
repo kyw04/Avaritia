@@ -35,6 +35,5 @@ MonoBehaviour:
         - statType: 8
           valueType: 0
           amount: 1
-        duration: 9999
-        expireAbility: {fileID: 0}
+        duration: 0
         applyTo: 0

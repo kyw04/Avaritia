@@ -16,7 +16,7 @@ public class StatModifier
 public class BuffEffect : IAbilityEffect
 {
     public List<StatModifier> modifiers = new();
-    public float duration;
+    public float duration; // 0(기본값) = 만료되지 않음(장착 해제될 때만 사라짐). 양수면 그 초만큼 지속.
     public BuffTarget applyTo = BuffTarget.Self;
 
     public void Apply(AbilityContext context)
