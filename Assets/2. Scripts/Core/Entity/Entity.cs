@@ -205,6 +205,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
 
     public void TakeDamage(float damage)
     {
+        if (Random.Range(0f, 100f) < GetStat<float>(StatType.Evasion)) return;
+
         stats.Set(StatType.CurrentHealth, stats.Get<float>(StatType.CurrentHealth) - damage);
         OnHealthChanged();
         if (CurrentHealth <= 0) Die();

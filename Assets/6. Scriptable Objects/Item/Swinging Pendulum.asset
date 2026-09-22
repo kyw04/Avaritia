@@ -12,8 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Swinging Pendulum
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: 81db08ff6b1b7e94abbdb4fe523af89b, type: 3}
   description: A heavy gyroscope device that constantly and unpredictably shifts
     your center of gravity. Enemies will find it incredibly difficult to land a solid
     hit on you.
-  passiveAbilities: []
+  trigger:
+    rid: 5230665391898361975
+  conditions: []
+  effects:
+  - rid: 5230665391898361976
+  references:
+    version: 2
+    RefIds:
+    - rid: 5230665391898361975
+      type: {class: OnEquippedTrigger, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 5230665391898361976
+      type: {class: BuffEffect, ns: , asm: Assembly-CSharp}
+      data:
+        modifiers:
+        - statType: 10
+          valueType: 0
+          amount: 12
+        duration: 0
+        applyTo: 0

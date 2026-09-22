@@ -40,7 +40,10 @@ public class RangedAttackStrategy : IAttackStrategy
                 ObjectPoolManager.Instance.Despawn(go);
                 continue;
             }
-            dealer.damage = attacker.Damage * damageMultiplier;
+            float dmg = attacker.Damage * damageMultiplier;
+            if (attacker is IStatReadable readable && Random.Range(0f, 100f) < readable.GetStat<float>(StatType.CritRate))
+                dmg *= CritConfig.Multiplier;
+            dealer.damage = dmg;
             var dir = (target.position - go.transform.position).normalized;
             mover.Launch(dir, angle, upSpeed, upDuration, redirectSpeed, redirectDelay);
         }

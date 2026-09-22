@@ -14,6 +14,8 @@ public enum StatType
     Armor,
     DashCount,
     DashCooldown,
+    Evasion, // 0~100(%). 새 값은 항상 마지막에 추가할 것 — 기존 에셋의 statType 직렬화 인덱스가 밀리면 안 됨.
+    CritRate, // 0~100(%)
 }
 
 public static class StatParameter
@@ -29,6 +31,8 @@ public static class StatParameter
         { StatType.Armor, typeof(int) },
         { StatType.DashCount, typeof(int) },
         { StatType.DashCooldown, typeof(float) },
+        { StatType.Evasion, typeof(float) },
+        { StatType.CritRate, typeof(float) },
     };
 
     public static Type GetStatParameter(StatType type)

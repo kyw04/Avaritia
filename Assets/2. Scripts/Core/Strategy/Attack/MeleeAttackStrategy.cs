@@ -6,10 +6,12 @@ public class MeleeAttackStrategy : IAttackStrategy
 {
     public Vector2 hitboxPosition;
     public Vector2 hitboxSize;
-    
+
     public void Offensive(IAttacker attacker, float damageMultiplier, ContactFilter2D filter, Transform target = null)
     {
         float dmg = attacker.Damage * damageMultiplier;
+        if (attacker is IStatReadable readable && Random.Range(0f, 100f) < readable.GetStat<float>(StatType.CritRate))
+            dmg *= CritConfig.Multiplier;
         var hits = new List<Collider2D>();
         var pos = hitboxPosition;
         if (attacker.LookDirection < 0)

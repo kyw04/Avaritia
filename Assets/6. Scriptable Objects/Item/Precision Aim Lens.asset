@@ -12,7 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Precision Aim Lens
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: b0d2ef0da87dd574e87273b50471c3ba, type: 3}
   description: A flawless magnifying lens meticulously crafted by a master watchmaker.
     It allows the user to see and pierce mechanical weak points with pinpoint accuracy.
-  passiveAbilities: []
+  trigger:
+    rid: 5230665391898361983
+  conditions: []
+  effects:
+  - rid: 5230665391898361984
+  references:
+    version: 2
+    RefIds:
+    - rid: 5230665391898361983
+      type: {class: OnEquippedTrigger, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 5230665391898361984
+      type: {class: BuffEffect, ns: , asm: Assembly-CSharp}
+      data:
+        modifiers:
+        - statType: 11
+          valueType: 0
+          amount: 15
+        duration: 0
+        applyTo: 0
