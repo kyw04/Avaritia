@@ -21,7 +21,7 @@ public class InventoryDropController : MonoBehaviour
 
     private void OnSubmit()
     {
-        if (ConfirmationPopup.IsConfirming) return;
+        if (ConfirmationPopup.IsConfirming || ItemReplaceController.IsReplacing) return;
 
         var selected = EventSystem.current.currentSelectedGameObject;
         var slot = selected != null ? selected.GetComponent<InventorySlot>() : null;
@@ -57,7 +57,7 @@ public class InventoryDropController : MonoBehaviour
 
             default:
                 player.Inventory.Remove(item);
-                // WorldInteractionManager.Instance.Spawn(new ItemPickup(item), player.transform.position);
+                WorldInteractionManager.Instance.Spawn(new ItemPickup((Item)item), player.transform.position);
                 break;
         }
     }
