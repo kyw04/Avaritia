@@ -2,12 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class Player : Entity, IStateOwner<Player>
 {
     [SerializeField] private Weapon weapon;
-    [SerializeField, FormerlySerializedAs("pickupController")] private PlayerInteractionController interactionController;
+    [SerializeField] private PlayerInteractionController interactionController;
     [SerializeField] private LayerMask platformLayer;
     [SerializeField] private float dropThroughDuration = 1f;
     private Collider2D col;
@@ -55,8 +54,8 @@ public class Player : Entity, IStateOwner<Player>
         ItemAbilities?.UnbindAll();
         var passives = new List<AbilityData>();
         foreach (var invItem in Inventory.Items)
-            if (invItem is Item item)
-                passives.AddRange(item.passiveAbilities);
+            if (invItem is AbilityData item)
+                passives.Add(item);
         ItemAbilities = new AbilityManager(this, passives.ToArray(), publishEvents: false);
         ItemAbilities.BindAll();
     }

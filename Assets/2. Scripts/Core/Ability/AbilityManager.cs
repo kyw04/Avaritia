@@ -101,7 +101,7 @@ public class AbilityManager
     {
         if (data == null || !states.TryGetValue(data, out var state)) return false;
         context.State = state;
-        if (data.conditions.Exists(c => !c.IsMet(context))) return false;
+        if (data.conditions.Count > 0 && data.conditions.Exists(c => !c.IsMet(context))) return false;
 
         foreach (var effect in data.effects)
             effect?.Apply(context);

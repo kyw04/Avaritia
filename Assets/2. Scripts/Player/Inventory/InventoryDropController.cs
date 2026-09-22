@@ -40,25 +40,30 @@ public class InventoryDropController : MonoBehaviour
             inventoryUI.Refresh();
     }
 
-    private static void ExecuteDrop(Player player, IInventoryItem item)
+    private static void ExecuteDrop(Player player, IInventoryItem inventoryItem)
     {
-        switch (item)
+        switch (inventoryItem)
         {
             case Weapon:
-                return;
-
-            case AbilityData skill:
+                return; 
+                
+            case Item item:
             {
-                int index = player.Abilities.AbilityAt(0) == skill ? 0 : 1;
-                player.Abilities.SetAbility(index, null);
-                WorldInteractionManager.Instance.Spawn(new AbilityPickup(skill), player.transform.position);
+                player.Inventory.Remove(inventoryItem);
+                WorldInteractionManager.Instance.Spawn(new ItemPickup(item), player.transform.position);
+                EventBus.Publish(new InventoryItemUnequip(item));
                 break;
             }
 
-            default:
-                player.Inventory.Remove(item);
-                WorldInteractionManager.Instance.Spawn(new ItemPickup((Item)item), player.transform.position);
+            case AbilityData ability:
+            {
+                int index = player.Abilities.AbilityAt(0) == ability ? 0 : 1;
+                player.Abilities.SetAbility(index, null);
+                WorldInteractionManager.Instance.Spawn(new AbilityPickup(ability), player.transform.position);
+                EventBus.Publish(new InventoryItemUnequip(ability));
                 break;
+            }
         }
+        
     }
 }

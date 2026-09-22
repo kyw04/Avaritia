@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 
-[System.Serializable]
-public class OnAttackStartTrigger : IAbilityTrigger, IObserver<EntityAttackStartEvent>
+[Serializable]
+public class OnEquippedTrigger : IAbilityTrigger, IObserver<InventoryItemEquip>
 {
     private Entity owner;
     private Action<AbilityContext> fire;
@@ -15,9 +15,8 @@ public class OnAttackStartTrigger : IAbilityTrigger, IObserver<EntityAttackStart
 
     public void Unbind(Entity owner) => EventBus.Unsubscribe(this);
 
-    public void OnNotify(EntityAttackStartEvent e)
+    public void OnNotify(InventoryItemEquip e)
     {
-        if (e.Source != owner) return;
         fire(new AbilityContext { Caster = owner, Target = owner.transform });
     }
 }

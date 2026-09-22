@@ -17,6 +17,7 @@ public class BuffEffect : IAbilityEffect
 {
     public List<StatModifier> modifiers = new();
     public float duration;
+    public AbilityData expireAbility;
     public BuffTarget applyTo = BuffTarget.Self;
 
     public void Apply(AbilityContext context)
@@ -25,6 +26,6 @@ public class BuffEffect : IAbilityEffect
         if (t == null || !t.TryGetComponent<IBuffable>(out var buffable)) return;
 
         foreach (var mod in modifiers)
-            buffable.ApplyBuff(this, mod.statType, mod.valueType, mod.amount, duration);
+            buffable.ApplyBuff(this, mod.statType, mod.valueType, mod.amount, duration, expireAbility);
     }
 }

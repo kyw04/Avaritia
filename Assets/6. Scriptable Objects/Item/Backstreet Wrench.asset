@@ -12,7 +12,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Backstreet Wrench
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: 51e0c86086996cb4a9b560c1845ed68b, type: 3}
   description: The favored tool of a shady mechanic who scoffs at fair fights. Wait
     for the enemy to turn around, then strike where they can't defend.
-  passiveAbilities: []
+  trigger:
+    rid: 5230665391898361953
+  conditions:
+  - rid: 5230665391898361955
+  effects:
+  - rid: 5230665391898361960
+  references:
+    version: 2
+    RefIds:
+    - rid: 5230665391898361953
+      type: {class: OnEquippedTrigger, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 5230665391898361955
+      type: {class: ChanceCondition, ns: , asm: Assembly-CSharp}
+      data:
+        percent: 100
+    - rid: 5230665391898361960
+      type: {class: BuffEffect, ns: , asm: Assembly-CSharp}
+      data:
+        modifiers:
+        - statType: 3
+          valueType: 0
+          amount: 10
+        duration: 9999
+        expireAbility: {fileID: 11400000}
+        applyTo: 0

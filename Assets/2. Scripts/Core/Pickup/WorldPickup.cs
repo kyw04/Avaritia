@@ -4,7 +4,7 @@ using UnityEngine;
 public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
 {
     [SerializeField] private Weapon weaponAsset;
-    [SerializeField] private AbilityData skillAsset;
+    [SerializeField] private AbilityData abilityAsset;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Rigidbody2D rb;
 
@@ -20,8 +20,10 @@ public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
     // OnSpawn은 풀 재사용 시 다시 등록한다(이중 등록 방지를 위해 먼저 해제 후 등록).
     private void Awake()
     {
-        if (weaponAsset != null) payload = new WeaponPickup(weaponAsset);
-        else if (skillAsset != null) payload = new AbilityPickup(skillAsset);
+        if (weaponAsset != null)
+            payload = new WeaponPickup(weaponAsset);
+        else if (abilityAsset != null)
+            payload = abilityAsset is Item item ? new ItemPickup(item) : new AbilityPickup(abilityAsset);
 
         ApplyIcon();
         manager = WorldInteractionManager.Instance;
@@ -48,7 +50,8 @@ public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
     {
         this.payload = payload;
         weaponAsset = (payload as WeaponPickup)?.Weapon;
-        skillAsset = (payload as AbilityPickup)?.Ability;
+        abilityAsset = (payload as AbilityPickup)?.Ability;
+        abilityAsset = (payload as ItemPickup)?.Item;
         ApplyIcon();
     }
 
@@ -105,7 +108,6 @@ public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
 
     private void ApplyIcon()
     {
-        
         spriteRenderer.sprite = payload?.Icon != null ?
             payload.Icon : 
             Sprite.Create(new Texture2D(16, 16), new Rect(0, 0, 16, 16), Vector2.zero);

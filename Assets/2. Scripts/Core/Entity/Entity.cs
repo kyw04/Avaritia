@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable, IStatReadable, IStatMutable, IPoolable
+public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable, IStatReadable, IStatMutable, IPoolable,
+    IObserver<InventoryItemUnequip>
 {
     [SerializeField] protected AbilityData[] abilities;
     [SerializeField] protected StatData statDataAsset;
@@ -11,7 +12,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     [SerializeField] protected float groundRadius;
     [SerializeField] protected LayerMask groundLayer;
     [SerializeField] protected Weapon dropWeaponAsset;
-    [SerializeField] protected AbilityData dropSkillAsset;
+    [SerializeField] protected AbilityData dropAbilityAsset;
     [SerializeField, Range(0, 100)] protected float dropChance;
 
     protected RuntimeStats stats;
@@ -25,6 +26,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         public BuffValueType valueType;
         public float amount;
         public float expireTime;
+        public AbilityData expireAbility;
     }
 
     private readonly List<ActiveBuff> activeBuffs = new();
@@ -71,11 +73,13 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
             if (b.valueType == BuffValueType.Flat) flatSum += b.amount;
             else percentSum += b.amount;
         }
+
         result = (result + flatSum) * (1f + percentSum / 100f);
         return (T)(object)result;
     }
 
-    public void ApplyBuff(object source, StatType type, BuffValueType valueType, float amount, float duration)
+    public void ApplyBuff(object source, StatType type, BuffValueType valueType, float amount, float duration,
+        AbilityData expireAbility)
     {
         var existing = activeBuffs.Find(b => b.source == source && b.type == type && b.valueType == valueType);
         if (existing != null)
@@ -85,7 +89,11 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         }
         else
         {
-            activeBuffs.Add(new ActiveBuff { source = source, type = type, valueType = valueType, amount = amount, expireTime = Time.time + duration });
+            activeBuffs.Add(new ActiveBuff
+            {
+                source = source, type = type, valueType = valueType, amount = amount, expireTime = Time.time + duration,
+                expireAbility = expireAbility
+            });
         }
     }
 
@@ -113,7 +121,11 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
 
     public virtual void OnSpawn() => ResetEntityState();
 
-    public virtual void OnDespawn() => Abilities?.UnbindAll();
+    public virtual void OnDespawn()
+    {
+        Abilities?.UnbindAll();
+        EventBus.UnsubscribeAll(this);
+    }
 
     private void ResetEntityState()
     {
@@ -128,6 +140,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
 
     protected virtual void Start()
     {
+        EventBus.Subscribe(this);
     }
 
     protected virtual void Update()
@@ -195,8 +208,10 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     private void TryDropPickup()
     {
         IInteractable payload = null;
-        if (dropWeaponAsset != null) payload = new WeaponPickup(dropWeaponAsset);
-        else if (dropSkillAsset != null) payload = new AbilityPickup(dropSkillAsset);
+        if (dropWeaponAsset != null)
+            payload = new WeaponPickup(dropWeaponAsset);
+        else if (dropAbilityAsset != null)
+            payload = dropAbilityAsset is Item item ? new ItemPickup(item) : new AbilityPickup(dropAbilityAsset);
 
         if (payload == null) return;
         if (Random.Range(0f, 100f) >= dropChance) return;
@@ -206,6 +221,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
 
     protected void OnHealthChanged() => EventBus.Publish(new EntityHealthChangedEvent(this, MaxHealth, CurrentHealth));
     protected void OnDashCountChanged() => EventBus.Publish(new EntityDashCountChangedEvent(this, MaxDashCount - DashCount, MaxDashCount));
+
+    public void OnNotify(InventoryItemUnequip e) => activeBuffs.RemoveAll(b => b.expireAbility == e.ability);
     
     public abstract void Die();
 }
