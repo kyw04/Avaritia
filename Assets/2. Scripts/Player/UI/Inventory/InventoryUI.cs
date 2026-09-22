@@ -48,7 +48,7 @@ public class InventoryUI : MonoBehaviour,
 
         for (int i = 0; i < skillImages.Length; i++)
         {
-            var skill = target.Skills.SkillAt(i);
+            var skill = target.Abilities.AbilityAt(i);
             skillImages[i].sprite = skill?.Icon;
             skillImages[i].enabled = skill != null;
             var skillSlot = skillImages[i].GetComponent<InventorySlot>();

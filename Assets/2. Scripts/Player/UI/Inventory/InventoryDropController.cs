@@ -47,11 +47,11 @@ public class InventoryDropController : MonoBehaviour
             case Weapon:
                 return;
 
-            case SkillData skill:
+            case AbilityData skill:
             {
-                int index = player.Skills.SkillAt(0) == skill ? 0 : 1;
-                player.Skills.SetSkill(index, null);
-                WorldInteractionManager.Instance.Spawn(new SkillPickup(skill), player.transform.position);
+                int index = player.Abilities.AbilityAt(0) == skill ? 0 : 1;
+                player.Abilities.SetAbility(index, null);
+                WorldInteractionManager.Instance.Spawn(new AbilityPickup(skill), player.transform.position);
                 break;
             }
 

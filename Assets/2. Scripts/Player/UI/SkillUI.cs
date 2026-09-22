@@ -29,8 +29,8 @@ public class SkillUI : MonoBehaviour, IObserver<EntitySkillCooldownEvent>, IObse
     private void Start()
     {
         if (target == null) return;
-        SetIcon(Skill1, target.Skills.SkillAt(0));
-        SetIcon(Skill2, target.Skills.SkillAt(1));
+        SetIcon(Skill1, target.Abilities.AbilityAt(0));
+        SetIcon(Skill2, target.Abilities.AbilityAt(1));
     }
 
     private void OnDestroy()
@@ -58,7 +58,7 @@ public class SkillUI : MonoBehaviour, IObserver<EntitySkillCooldownEvent>, IObse
         SetIcon(slot, e.Skill);
     }
 
-    private static void SetIcon(SkillImage slot, SkillData skill)
+    private static void SetIcon(SkillImage slot, AbilityData skill)
     {
         if (slot?.image == null) return;
         slot.image.sprite = skill != null ? skill.icon : null;
