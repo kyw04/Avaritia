@@ -12,7 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Riveted Armor Plate
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: 899f59d64225e6b438d0931186c5dd06, type: 3}
   description: Thick, crude iron plating bolted directly onto your chassis. It absorbs
     incoming impacts completely until it is chipped away.
-  passiveAbilities: []
+  trigger:
+    rid: 5230665525031600224
+  conditions: []
+  effects:
+  - rid: 5230665525031600225
+  references:
+    version: 2
+    RefIds:
+    - rid: 5230665525031600224
+      type: {class: OnRoomEnterTrigger, ns: , asm: Assembly-CSharp}
+      data:
+        fireOnBind: 1
+    - rid: 5230665525031600225
+      type: {class: ShieldEffect, ns: , asm: Assembly-CSharp}
+      data:
+        amount: 20
