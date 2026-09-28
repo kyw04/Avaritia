@@ -12,7 +12,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Maintenance Certificate
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: 7f9f8168377454d47a51178d5da6d734, type: 3}
   description: Proof that your mechanical body is in pristine condition. Maximum
     thruster output can only be achieved when you are completely undamaged.
-  passiveAbilities: []
+  trigger:
+    rid: 5230665525031600228
+  conditions: []
+  effects:
+  - rid: 5230665525031600229
+  references:
+    version: 2
+    RefIds:
+    - rid: 5230665525031600228
+      type: {class: OnEquippedTrigger, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 5230665525031600229
+      type: {class: BuffEffect, ns: , asm: Assembly-CSharp}
+      data:
+        modifiers:
+        - statType: 13
+          valueType: 1
+          amount: 40
+        duration: 0
+        applyTo: 0
+        activeWhile:
+        - rid: 5230665525031600230
+    - rid: 5230665525031600230
+      type: {class: HealthRatioCondition, ns: , asm: Assembly-CSharp}
+      data:
+        comparison: 3
+        percent: 100
