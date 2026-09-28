@@ -178,7 +178,7 @@ PrefabInstance:
     - target: {fileID: 5773720602588636574, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
       propertyPath: abilityAsset
       value: 
-      objectReference: {fileID: 11400000, guid: 24897805a33703149908f3757c348de9, type: 2}
+      objectReference: {fileID: 11400000, guid: acdca23e09042ef458df425efd454ab2, type: 2}
     - target: {fileID: 6021740498178327085, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
       propertyPath: m_Color.b
       value: 1

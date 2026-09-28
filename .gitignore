@@ -79,3 +79,4 @@ crashlytics-build.properties
 # Screenshots
 /[Aa]ssets/[Ss]creenshots.meta
 /[Aa]ssets/[Ss]creenshots/
+*.md
