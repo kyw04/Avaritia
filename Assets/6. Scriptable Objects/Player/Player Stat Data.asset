@@ -23,6 +23,8 @@ MonoBehaviour:
   - rid: 2542396891127873647
   - rid: 5230665391898361973
   - rid: 5230665391898361985
+  - rid: 5230665525031600202
+  - rid: 5230665525031600203
   references:
     version: 2
     RefIds:
@@ -126,3 +128,23 @@ MonoBehaviour:
       type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
       data:
         value: 0
+    - rid: 5230665525031600202
+      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
+      data:
+        statType: 12
+        value:
+          rid: 5230665525031600204
+    - rid: 5230665525031600203
+      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
+      data:
+        statType: 13
+        value:
+          rid: 5230665525031600205
+    - rid: 5230665525031600204
+      type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
+      data:
+        value: 0
+    - rid: 5230665525031600205
+      type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
+      data:
+        value: 50

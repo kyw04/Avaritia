@@ -161,12 +161,14 @@ public class AbilityManager
         context.State = binding.State;
         if (data.conditions.Count > 0 && data.conditions.Exists(c => !c.IsMet(context))) return false;
 
+        binding.State.ActivationCount++;
         foreach (var effect in data.effects)
             effect?.Apply(context);
 
-        binding.State.CooldownEndTime = Time.time + data.cooldown;
+        float cooldown = data.cooldown * (1f - owner.GetStat<float>(StatType.CooldownReduction) / 100f);
+        binding.State.CooldownEndTime = Time.time + cooldown;
         if (publishEvents)
-            EventBus.Publish(new EntitySkillCooldownEvent(owner, Array.IndexOf(abilities, data), data.cooldown, binding.State.CooldownEndTime));
+            EventBus.Publish(new EntitySkillCooldownEvent(owner, Array.IndexOf(abilities, data), cooldown, binding.State.CooldownEndTime));
         return true;
     }
 }

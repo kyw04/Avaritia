@@ -16,6 +16,8 @@ public enum StatType
     DashCooldown,
     Evasion, // 0~100(%). 새 값은 항상 마지막에 추가할 것 — 기존 에셋의 statType 직렬화 인덱스가 밀리면 안 됨.
     CritRate, // 0~100(%)
+    CooldownReduction, // 0~100(%). 스킬/아이템 어빌리티 쿨다운 감소율
+    DashForce, // 대시 임펄스 세기 (기존 하드코딩 값 50)
 }
 
 public static class StatParameter
@@ -33,6 +35,8 @@ public static class StatParameter
         { StatType.DashCooldown, typeof(float) },
         { StatType.Evasion, typeof(float) },
         { StatType.CritRate, typeof(float) },
+        { StatType.CooldownReduction, typeof(float) },
+        { StatType.DashForce, typeof(float) },
     };
 
     public static Type GetStatParameter(StatType type)

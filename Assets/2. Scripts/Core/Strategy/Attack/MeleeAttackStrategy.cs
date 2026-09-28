@@ -9,9 +9,10 @@ public class MeleeAttackStrategy : IAttackStrategy
 
     public void Offensive(IAttacker attacker, float damageMultiplier, ContactFilter2D filter, Transform target = null)
     {
-        float dmg = attacker.Damage * damageMultiplier;
+        float scale = damageMultiplier;
         if (attacker is IStatReadable readable && Random.Range(0f, 100f) < readable.GetStat<float>(StatType.CritRate))
-            dmg *= CritConfig.Multiplier;
+            scale *= CritConfig.Multiplier;
+        var attackerEntity = attacker as Entity;
         var hits = new List<Collider2D>();
         var pos = hitboxPosition;
         if (attacker.LookDirection < 0)
@@ -26,7 +27,9 @@ public class MeleeAttackStrategy : IAttackStrategy
             if (hit.TryGetComponent<IDamageable>(out var d))
             {
                 Debug.Log($"[Take Damage] {hit.name}");
-                d.TakeDamage(dmg);
+                // Per target, so target-dependent buffs (e.g. Debtor's Contract) are evaluated against this hit.
+                float baseDmg = attackerEntity != null ? attackerEntity.GetDamageAgainst(hit.transform) : attacker.Damage;
+                d.TakeDamage(baseDmg * scale, attackerEntity);
             }
         }
     }

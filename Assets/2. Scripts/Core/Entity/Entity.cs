@@ -25,9 +25,16 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         public BuffValueType valueType;
         public float amount;
         public float expireTime;
+        public List<IAbilityCondition> conditions;
+        public bool clearOnDamageTaken;
     }
 
     private readonly List<ActiveBuff> activeBuffs = new();
+    // Keyed by the granting binding's AbilityRuntimeState (same as buff sources), so each copy
+    // of an item refills/loses only its own share and RemoveBuffsBySource can drop it on unequip.
+    private readonly Dictionary<object, float> shields = new();
+    private readonly Dictionary<object, int> hitBlocks = new();
+    private float invincibleUntil;
 
     public Rigidbody2D Rb { get; protected set; }
     public MonoBehaviour Mono => this;
@@ -47,6 +54,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     public int MaxDashCount => GetAssetStat<int>(StatType.DashCount);
     public int DashCount => stats.Get<int>(StatType.DashCount);
     public float DashCooldown => GetStat<float>(StatType.DashCooldown);
+    public float DashForce => GetStat<float>(StatType.DashForce);
 
     public T GetStat<T>(StatType type)
     {
@@ -55,13 +63,30 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         return ApplyBuffs(type, withEquipment);
     }
 
+    // Damage against a specific target: also counts buffs whose conditions depend on the target
+    // (e.g. "HP lower than the target's"), which plain `Damage` (no target) always leaves out.
+    public float GetDamageAgainst(Transform target)
+    {
+        var withEquipment = ApplyEquipmentBonus(StatType.Damage, stats.Get<float>(StatType.Damage));
+        return ApplyBuffs(StatType.Damage, withEquipment, target);
+    }
+
     protected virtual T ApplyEquipmentBonus<T>(StatType type, T baseValue) => baseValue;
 
-    private T ApplyBuffs<T>(StatType type, T value)
+    // A buff's conditions may themselves read stats (e.g. HealthRatioCondition -> MaxHealth), which
+    // re-enters ApplyBuffs — so this must never mutate activeBuffs; expired ones are skipped here and
+    // pruned in ApplyBuff instead.
+    private bool IsBuffActive(ActiveBuff b, Transform target)
+    {
+        if (b.expireTime <= Time.time) return false;
+        if (b.conditions == null || b.conditions.Count == 0) return true;
+        var context = new AbilityContext { Caster = this, Target = target, State = b.source as AbilityRuntimeState };
+        return b.conditions.TrueForAll(c => c == null || c.IsMet(context));
+    }
+
+    private T ApplyBuffs<T>(StatType type, T value, Transform target = null)
     {
         if (typeof(T) != typeof(float) && typeof(T) != typeof(int)) return value;
-
-        activeBuffs.RemoveAll(b => b.expireTime <= Time.time);
 
         if (typeof(T) == typeof(int))
         {
@@ -70,7 +95,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
             int intResult = (int)(object)value;
             foreach (var b in activeBuffs)
             {
-                if (b.type != type || b.valueType != BuffValueType.Flat) continue;
+                if (b.type != type || b.valueType != BuffValueType.Flat || !IsBuffActive(b, target)) continue;
                 intResult += (int)b.amount;
             }
             return (T)(object)intResult;
@@ -80,7 +105,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         float flatSum = 0f, percentSum = 0f;
         foreach (var b in activeBuffs)
         {
-            if (b.type != type) continue;
+            if (b.type != type || !IsBuffActive(b, target)) continue;
             if (b.valueType == BuffValueType.Flat) flatSum += b.amount;
             else percentSum += b.amount;
         }
@@ -89,8 +114,11 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         return (T)(object)result;
     }
 
-    public void ApplyBuff(object source, StatType type, BuffValueType valueType, float amount, float duration)
+    public void ApplyBuff(object source, StatType type, BuffValueType valueType, float amount, float duration,
+        List<IAbilityCondition> conditions = null, bool clearOnDamageTaken = false)
     {
+        activeBuffs.RemoveAll(b => b.expireTime <= Time.time);
+
         // duration <= 0 (the Inspector default when a designer leaves it unset) means "never expires
         // on its own" — it only ever ends when its binding is torn down (drop/replace), same as any
         // other buff, via AbilityManager.Rebind -> RemoveBuffsBySource.
@@ -101,22 +129,39 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         {
             existing.amount = amount;
             existing.expireTime = expireTime;
+            existing.conditions = conditions;
+            existing.clearOnDamageTaken = clearOnDamageTaken;
         }
         else
         {
             activeBuffs.Add(new ActiveBuff
             {
-                source = source, type = type, valueType = valueType, amount = amount, expireTime = expireTime
+                source = source, type = type, valueType = valueType, amount = amount, expireTime = expireTime,
+                conditions = conditions, clearOnDamageTaken = clearOnDamageTaken
             });
         }
     }
+
+    public float GetBuffAmount(object source, StatType type, BuffValueType valueType)
+    {
+        var existing = activeBuffs.Find(b => b.source == source && b.type == type && b.valueType == valueType && b.expireTime > Time.time);
+        return existing?.amount ?? 0f;
+    }
+
+    // Refills (not adds to) this source's share — re-granting every room shouldn't stack up.
+    public void GrantShield(object source, float amount) => shields[source] = amount;
+
+    public void GrantHitBlocks(object source, int count) => hitBlocks[source] = count;
+
+    public void SetInvincible(float duration) => invincibleUntil = Mathf.Max(invincibleUntil, Time.time + duration);
 
     public void AddBaseStat<T>(StatType type, T amount) =>
         stats.Set(type, StatMath.Add(stats.Get<T>(type), amount));
 
     public void Heal(float amount)
     {
-        float rawCurrent = stats.Get<float>(StatType.CurrentHealth);
+        // Clamped at 0 so healing from lethal (negative) HP — e.g. a revive — lands on the intended amount.
+        float rawCurrent = Mathf.Max(0f, stats.Get<float>(StatType.CurrentHealth));
         stats.Set(StatType.CurrentHealth, Mathf.Min(MaxHealth, rawCurrent + amount));
         OnHealthChanged();
     }
@@ -150,6 +195,9 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         Abilities = new AbilityManager(this, abilities);
         Abilities.BindAll();
         activeBuffs.Clear();
+        shields.Clear();
+        hitBlocks.Clear();
+        invincibleUntil = 0f;
         wasGroundCheckerChanged = !IsGrounded;
     }
 
@@ -191,7 +239,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         stats.Set(StatType.DashCount, DashCount + 1);
         OnDashCountChanged();
         Rb.linearVelocity = Vector2.zero;
-        Rb.AddForce(Vector2.right * transform.localScale.x * 50f, ForceMode2D.Impulse);
+        Rb.AddForce(Vector2.right * transform.localScale.x * DashForce, ForceMode2D.Impulse);
 
         StartCoroutine(DashCooldownRoutine());
     }
@@ -203,13 +251,47 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         OnDashCountChanged();
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, Entity attacker = null)
     {
+        if (Time.time < invincibleUntil) return;
         if (Random.Range(0f, 100f) < GetStat<float>(StatType.Evasion)) return;
+        if (TryConsumeHitBlock()) return;
+
+        damage = AbsorbWithShields(damage);
+        if (damage <= 0f) return;
 
         stats.Set(StatType.CurrentHealth, stats.Get<float>(StatType.CurrentHealth) - damage);
+        activeBuffs.RemoveAll(b => b.clearOnDamageTaken);
         OnHealthChanged();
+        EventBus.Publish(new EntityDamagedEvent(this, attacker, damage));
+
+        if (CurrentHealth > 0) return;
+        // Listeners (e.g. a revive item) may heal in response; only die if nothing did.
+        EventBus.Publish(new EntityLethalDamageEvent(this));
         if (CurrentHealth <= 0) Die();
+    }
+
+    private bool TryConsumeHitBlock()
+    {
+        foreach (var source in new List<object>(hitBlocks.Keys))
+        {
+            if (hitBlocks[source] <= 0) continue;
+            hitBlocks[source]--;
+            return true;
+        }
+        return false;
+    }
+
+    private float AbsorbWithShields(float damage)
+    {
+        foreach (var source in new List<object>(shields.Keys))
+        {
+            if (damage <= 0f) break;
+            float absorbed = Mathf.Min(shields[source], damage);
+            shields[source] -= absorbed;
+            damage -= absorbed;
+        }
+        return damage;
     }
 
     protected bool TryMarkDead()
@@ -238,7 +320,12 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     protected void OnHealthChanged() => EventBus.Publish(new EntityHealthChangedEvent(this, MaxHealth, CurrentHealth));
     protected void OnDashCountChanged() => EventBus.Publish(new EntityDashCountChangedEvent(this, MaxDashCount - DashCount, MaxDashCount));
 
-    public void RemoveBuffsBySource(object source) => activeBuffs.RemoveAll(b => b.source == source);
+    public void RemoveBuffsBySource(object source)
+    {
+        activeBuffs.RemoveAll(b => b.source == source);
+        shields.Remove(source);
+        hitBlocks.Remove(source);
+    }
     
     public abstract void Die();
 }

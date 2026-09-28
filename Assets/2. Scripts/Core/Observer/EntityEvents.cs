@@ -42,6 +42,22 @@ public struct EntityDeadEvent : ISubject
     public EntityDeadEvent(Entity source) { Source = source; }
 }
 
+// Source = the entity that took the damage. Attacker is null when unknown (bullets, effects).
+public struct EntityDamagedEvent : ISubject
+{
+    public Entity Source { get; private set; }
+    public Entity Attacker { get; private set; }
+    public float Amount { get; private set; }
+    public EntityDamagedEvent(Entity source, Entity attacker, float amount) { Source = source; Attacker = attacker; Amount = amount; }
+}
+
+// Published when Source's HP hits 0, before it dies — a listener that heals it cancels the death.
+public struct EntityLethalDamageEvent : ISubject
+{
+    public Entity Source { get; private set; }
+    public EntityLethalDamageEvent(Entity source) { Source = source; }
+}
+
 public struct EntityAttackEvent : ISubject
 {
     public AttackData Data { get; private set; }
