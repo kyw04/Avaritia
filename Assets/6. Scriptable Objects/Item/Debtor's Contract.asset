@@ -12,7 +12,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Debtor's Contract
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: 875b67eea71e9e34799686d5c443c7ae, type: 3}
   description: A blood-signed pact representing the desperation of one with nothing
     left to lose. The worse your situation looks, the harder you hit.
-  passiveAbilities: []
+  trigger:
+    rid: 5230665525031600214
+  conditions: []
+  effects:
+  - rid: 5230665525031600215
+  references:
+    version: 2
+    RefIds:
+    - rid: 5230665525031600214
+      type: {class: OnEquippedTrigger, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 5230665525031600215
+      type: {class: BuffEffect, ns: , asm: Assembly-CSharp}
+      data:
+        modifiers:
+        - statType: 6
+          valueType: 1
+          amount: 35
+        duration: 0
+        applyTo: 0
+        activeWhile:
+        - rid: 5230665525031600216
+    - rid: 5230665525031600216
+      type: {class: CasterHealthLowerCondition, ns: , asm: Assembly-CSharp}
+      data: 
