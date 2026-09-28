@@ -12,7 +12,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Airship Gunner's Goggles
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: 1c687c0a7a366f54bb3f8427fb3d3ce2, type: 3}
   description: Vintage aviator gear worn by elite gunners who rain fire from the
     sky. Grants a tactical damage advantage when you have the high ground.
-  passiveAbilities: []
+  trigger:
+    rid: 5230665525031600221
+  conditions: []
+  effects:
+  - rid: 5230665525031600222
+  references:
+    version: 2
+    RefIds:
+    - rid: 5230665525031600221
+      type: {class: OnEquippedTrigger, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 5230665525031600222
+      type: {class: BuffEffect, ns: , asm: Assembly-CSharp}
+      data:
+        modifiers:
+        - statType: 6
+          valueType: 1
+          amount: 25
+        duration: 0
+        applyTo: 0
+        activeWhile:
+        - rid: 5230665525031600223
+    - rid: 5230665525031600223
+      type: {class: AboveTargetCondition, ns: , asm: Assembly-CSharp}
+      data: 
