@@ -12,8 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Flawless Ledger
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: ca476702bd3330049a1913fde2ab686c, type: 3}
   description: Damage scales up with every consecutive hit, much like profits stacking
     up in a pristine ledger. Taking damage ruins the perfect record, resetting the
     buff to zero.
-  passiveAbilities: []
+  trigger:
+    rid: 5230665525031600231
+  conditions: []
+  effects:
+  - rid: 5230665525031600232
+  references:
+    version: 2
+    RefIds:
+    - rid: 5230665525031600231
+      type: {class: OnDamageDealtTrigger, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 5230665525031600232
+      type: {class: StackingBuffEffect, ns: , asm: Assembly-CSharp}
+      data:
+        modifier:
+          statType: 6
+          valueType: 1
+          amount: 3
+        maxStacks: 15
+        resetOnDamageTaken: 1
