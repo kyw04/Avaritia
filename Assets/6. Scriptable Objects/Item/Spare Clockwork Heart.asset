@@ -12,8 +12,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Spare Clockwork Heart
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: 88931a0262582514795a97d5cc1bab7e, type: 3}
   description: An intricate wind-up mechanism installed near the core. If your primary
     heart stops beating, this backup spring violently uncoils to shock you back to
     life.
-  passiveAbilities: []
+  trigger:
+    rid: 5230665525031600217
+  conditions:
+  - rid: 5230665525031600218
+  - rid: 5230665525031600219
+  effects:
+  - rid: 5230665525031600220
+  references:
+    version: 2
+    RefIds:
+    - rid: 5230665525031600217
+      type: {class: OnLethalDamageTrigger, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 5230665525031600218
+      type: {class: MaxActivationsCondition, ns: , asm: Assembly-CSharp}
+      data:
+        count: 1
+    - rid: 5230665525031600219
+      type: {class: StatThresholdCondition, ns: , asm: Assembly-CSharp}
+      data:
+        statType: 2
+        comparison: 1
+        value: 0
+    - rid: 5230665525031600220
+      type: {class: HealthChangeEffect, ns: , asm: Assembly-CSharp}
+      data:
+        mode: 0
+        amount: 30
+        percentOfMaxHealth: 1
+        applyTo: 0
