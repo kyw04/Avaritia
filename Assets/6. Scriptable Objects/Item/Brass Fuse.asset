@@ -12,8 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Brass Fuse
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: 1cf03be390866f54295918279ba82002, type: 3}
   description: A sacrificial component. When a fatal overload (enemy strike) occurs,
     the fuse blows out to protect the main system. You must find a new room to swap
     in a fresh one.
-  passiveAbilities: []
+  trigger:
+    rid: 5230665525031600212
+  conditions: []
+  effects:
+  - rid: 5230665525031600213
+  references:
+    version: 2
+    RefIds:
+    - rid: 5230665525031600212
+      type: {class: OnRoomEnterTrigger, ns: , asm: Assembly-CSharp}
+      data:
+        fireOnBind: 1
+    - rid: 5230665525031600213
+      type: {class: HitBlockEffect, ns: , asm: Assembly-CSharp}
+      data:
+        count: 1
