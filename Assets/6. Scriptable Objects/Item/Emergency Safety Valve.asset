@@ -12,8 +12,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Emergency Safety Valve
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 30
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: e6e9b41cfd2392846bd792bf17942450, type: 3}
   description: When your structural integrity (HP) reaches a critical low, the valve
     blows. This releases a blinding steam explosion that knocks enemies back and
     grants temporary invulnerability.
-  passiveAbilities: []
+  trigger:
+    rid: 5230665525031600206
+  conditions:
+  - rid: 5230665525031600207
+  - rid: 5230665525031600208
+  - rid: 5230665525031600209
+  effects:
+  - rid: 5230665525031600210
+  - rid: 5230665525031600211
+  references:
+    version: 2
+    RefIds:
+    - rid: 5230665525031600206
+      type: {class: OnDamageTakenTrigger, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 5230665525031600207
+      type: {class: HealthRatioCondition, ns: , asm: Assembly-CSharp}
+      data:
+        comparison: 1
+        percent: 25
+    - rid: 5230665525031600208
+      type: {class: StatThresholdCondition, ns: , asm: Assembly-CSharp}
+      data:
+        statType: 2
+        comparison: 2
+        value: 0
+    - rid: 5230665525031600209
+      type: {class: CooldownCondition, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 5230665525031600210
+      type: {class: InvincibleEffect, ns: , asm: Assembly-CSharp}
+      data:
+        duration: 2
+    - rid: 5230665525031600211
+      type: {class: KnockbackEffect, ns: , asm: Assembly-CSharp}
+      data:
+        radius: 3
+        force: 15
+        targetLayer:
+          serializedVersion: 2
+          m_Bits: 128
