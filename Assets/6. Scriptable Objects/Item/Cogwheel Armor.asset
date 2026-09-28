@@ -12,8 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Cogwheel Armor
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: 490d8432eae7e1748aaed96595e55da0, type: 3}
   description: Armor externally lined with violently spinning, sharpened gears. Anyone
     foolish enough to strike you in melee combat will find their own weapons and
     limbs ground down.
-  passiveAbilities: []
+  trigger:
+    rid: 5230665525031600233
+  conditions: []
+  effects:
+  - rid: 5230665525031600234
+  references:
+    version: 2
+    RefIds:
+    - rid: 5230665525031600233
+      type: {class: OnAttackedTrigger, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 5230665525031600234
+      type: {class: ReflectDamageEffect, ns: , asm: Assembly-CSharp}
+      data:
+        percent: 30
