@@ -10,6 +10,7 @@ public class Player : Entity, IStateOwner<Player>
     [SerializeField] private LayerMask platformLayer;
     [SerializeField] private float dropThroughDuration = 1f;
     private Collider2D col;
+    private float lastFallVelocityY;
 
     public Player Owner { get; private set; }
     public Inventory Inventory { get; private set; }
@@ -116,6 +117,12 @@ public class Player : Entity, IStateOwner<Player>
         base.Start();
         EventBus.Publish(new EntityDashCountChangedEvent(this, MaxDashCount, MaxDashCount));
     }
+    
+    private void FixedUpdate()
+    {
+        if (Rb.linearVelocityY < 0)
+            lastFallVelocityY = Rb.linearVelocityY;
+    }
 
     protected override void OnGroundedChanged(bool grounded)
     {
@@ -125,7 +132,10 @@ public class Player : Entity, IStateOwner<Player>
 
         if (landed)
         {
-            if (Rb.linearVelocityY <= -5)
+            bool hardLanding = lastFallVelocityY <= -7;
+            lastFallVelocityY = 0f;
+
+            if (hardLanding)
             {
                 Machine.ChangeState<PlayerLandState>();
             }
