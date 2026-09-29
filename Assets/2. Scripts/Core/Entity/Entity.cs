@@ -17,6 +17,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     protected RuntimeStats stats;
     protected bool isDead;
     protected bool wasGroundCheckerChanged;
+    
+    public T GetDefaultStat<T>(StatType statType) => statDataAsset.TryGetValue<T>(statType);
 
     private class ActiveBuff
     {

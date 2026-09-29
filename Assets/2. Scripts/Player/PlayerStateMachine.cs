@@ -28,6 +28,8 @@ public class PlayerStateMachine : StateMachineBase<Player>
 #region Grounded
     public class PlayerGrounded : StateBase<Player>
     {
+        public static readonly float SprintChangeSpeed = 0.25f;
+        
         public PlayerGrounded(Player owner) : base(owner)
         {
             AddChild(new PlayerIdleState(owner));
@@ -60,9 +62,10 @@ public class PlayerStateMachine : StateMachineBase<Player>
         }
     }
 
+    
     public class PlayerMoveState : StateBase<Player>
     {
-        private float currentSpeed => Mathf.Abs(Owner.Rb.linearVelocityX) / Owner.MoveSpeed;
+        private float currentSpeed => Mathf.Abs(Owner.Rb.linearVelocityX);
 
         public PlayerMoveState(Player owner) : base(owner)
         {
@@ -81,8 +84,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Execute()
         {
-            if (InputHandler.Instance.MoveInput.x == 0 &&
-                currentSpeed == 0)
+            if (InputHandler.Instance.MoveInput.x == 0 && currentSpeed == 0)
             {
                 Machine.ChangeState<PlayerIdleState>();
             }
@@ -105,7 +107,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
     public class PlayerTurnState : StateBase<Player>
     {
-        private float currentSpeed => Mathf.Abs(Owner.Rb.linearVelocityX) / Owner.MoveSpeed;
+        private float currentSpeed => Mathf.Abs(Owner.Rb.linearVelocityX);
         private Vector2 moveDir;
         
         public PlayerTurnState(Player owner) : base(owner) { }
@@ -121,8 +123,14 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Execute()
         {
+            if (InputHandler.Instance.MoveInput.x * moveDir.x <= 0f)
+            {
+                Machine.ChangeState<PlayerMoveState>();
+                return;
+            }
+
             bool turnedToNewDirection = Mathf.Sign(Owner.Rb.linearVelocityX) == Mathf.Sign(moveDir.x);
-            if (turnedToNewDirection && currentSpeed >= 0.25f)
+            if (turnedToNewDirection && currentSpeed >= PlayerGrounded.SprintChangeSpeed)
             {
                 Machine.ChangeState<PlayerMoveState>();
             }
@@ -154,6 +162,11 @@ public class PlayerStateMachine : StateMachineBase<Player>
         {
             if (landStartTime + landTime <= Time.time)
                 Machine.ChangeState<PlayerIdleState>();
+        }
+
+        public override void FixedExecute()
+        {
+            Owner.Move(InputHandler.Instance.MoveInput);
         }
     }
     
