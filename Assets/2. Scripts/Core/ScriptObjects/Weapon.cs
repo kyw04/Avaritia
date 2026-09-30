@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D.Animation;
 
 [CreateAssetMenu(menuName = "Scriptable Objects/Weapon")]
 public class Weapon : ScriptableObject, IInventoryItem
 {
+    public SpriteLibraryAsset spriteLibraryAsset;
     public AttackDataCombo combo;
     public StatData statBonusData;
     public Sprite icon;

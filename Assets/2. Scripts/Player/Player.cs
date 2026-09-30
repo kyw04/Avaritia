@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D.Animation;
 
 public class Player : Entity, IStateOwner<Player>
 {
@@ -11,6 +12,7 @@ public class Player : Entity, IStateOwner<Player>
     [SerializeField] private float dropThroughDuration = 1f;
     private Collider2D col;
     private float lastFallVelocityY;
+    private SpriteLibrary spriteLibrary;
 
     public Player Owner { get; private set; }
     public Inventory Inventory { get; private set; }
@@ -32,6 +34,7 @@ public class Player : Entity, IStateOwner<Player>
     {
         float healthRatio = MaxHealth > 0 ? CurrentHealth / MaxHealth : 0f;
         weapon = newWeapon;
+        spriteLibrary.spriteLibraryAsset = newWeapon.spriteLibraryAsset;
         RebindWeaponAbilities();
 
         float newMaxHealth = MaxHealth;
@@ -72,6 +75,7 @@ public class Player : Entity, IStateOwner<Player>
 
         Renderer = GetComponentInChildren<SpriteRenderer>();
         col = GetComponent<Collider2D>();
+        spriteLibrary = GetComponentInChildren<SpriteLibrary>();
 
         Owner = this;
         Machine = new PlayerStateMachine(Owner);

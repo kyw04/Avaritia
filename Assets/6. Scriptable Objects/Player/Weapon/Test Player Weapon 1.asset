@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2f935b32e47f32148a0e4aac5329210c, type: 3}
-  m_Name: Test Player Weapon
+  m_Name: Test Player Weapon 1
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
-  spriteLibraryAsset: {fileID: 7108339969198208228, guid: 88dd0a5dfd141cc48aa51ddb96005119, type: 3}
+  spriteLibraryAsset: {fileID: 7108339969198208228, guid: ecc38dd349438d74a9dbd0884d9a9b4f, type: 3}
   combo: {fileID: 11400000, guid: aa917b9b7cd923244bd2a65c4488f506, type: 2}
   statBonusData: {fileID: 11400000, guid: de01a4f835a2f23468991fd600cf4711, type: 2}
-  icon: {fileID: -4870798248371929716, guid: 68deb3f6af485bc43a8406c98c27c609, type: 3}
+  icon: {fileID: -6962444387732906006, guid: 209edbb8462a35b498339cda875e461e, type: 3}
   description: 
   passiveAbilities: []
