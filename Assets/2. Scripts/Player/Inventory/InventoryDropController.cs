@@ -21,7 +21,7 @@ public class InventoryDropController : MonoBehaviour
 
     private void OnSubmit()
     {
-        if (ConfirmationPopup.IsConfirming || ItemReplaceController.IsReplacing) return;
+        if (ConfirmationPopup.IsBlockingInput || ItemReplaceController.IsReplacing) return;
 
         var selected = EventSystem.current.currentSelectedGameObject;
         var slot = selected != null ? selected.GetComponent<InventorySlot>() : null;

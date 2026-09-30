@@ -69,6 +69,8 @@ public class InventoryUI : MonoBehaviour,
             itemSlot.GetComponent<Selectable>().interactable = item != null;
         }
 
+        // 이미 선택된 슬롯이면 OnSelect가 호출되지 않아 선택 정보가 갱신되지 않으므로 선택을 비운 뒤 다시 지정한다.
+        EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(weaponImage.gameObject);
     }
 

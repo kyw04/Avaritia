@@ -7,6 +7,9 @@ public class ConfirmationPopup : Singleton<ConfirmationPopup>
 {
     public const string Key = "Confirm";
     public static bool IsConfirming { get; private set; }
+    // 팝업을 닫은 Submit 입력이 같은 프레임의 다른 Submit 핸들러에서 재처리되지 않도록 막는다.
+    public static bool IsBlockingInput => IsConfirming || closedFrame == Time.frameCount;
+    private static int closedFrame = -1;
 
     [SerializeField] private GameObject panel;
     [SerializeField] private TextMeshProUGUI messageText;
@@ -73,6 +76,7 @@ public class ConfirmationPopup : Singleton<ConfirmationPopup>
         if (!IsConfirming) return;
 
         IsConfirming = false;
+        closedFrame = Time.frameCount;
         panel.SetActive(false);
         selector.SetActive(false);
         onConfirm = null;

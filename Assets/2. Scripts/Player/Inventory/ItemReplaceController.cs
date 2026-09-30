@@ -36,7 +36,7 @@ public class ItemReplaceController : Singleton<ItemReplaceController>
 
     private void OnSubmit()
     {
-        if (!IsReplacing || ConfirmationPopup.IsConfirming) return;
+        if (!IsReplacing || ConfirmationPopup.IsBlockingInput) return;
 
         var selected = EventSystem.current.currentSelectedGameObject;
         var slot = selected != null ? selected.GetComponent<InventorySlot>() : null;
