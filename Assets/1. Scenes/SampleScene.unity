@@ -10156,6 +10156,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Sprite
       objectReference: {fileID: 0}
+    - target: {fileID: 3806531361388095736, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
+      propertyPath: m_labelHash
+      value: 0.00000040954276
+      objectReference: {fileID: 0}
+    - target: {fileID: 3806531361388095736, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
+      propertyPath: m_SpriteHash
+      value: 379395835
+      objectReference: {fileID: 0}
     - target: {fileID: 4182182711176251150, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
       propertyPath: m_Size.x
       value: 4
@@ -10220,6 +10228,10 @@ PrefabInstance:
       propertyPath: prompt
       value: 
       objectReference: {fileID: 2105272076}
+    - target: {fileID: 8094264529646705531, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 1693390229234585388, guid: 374261b03d7786b4fa2007f7399402d0, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
