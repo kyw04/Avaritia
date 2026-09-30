@@ -30,7 +30,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 4739286354209235477}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -220,7 +220,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 520
   dropWeaponAsset: {fileID: 0}
-  dropSkillAsset: {fileID: 0}
+  dropAbilityAsset: {fileID: 0}
   dropChance: 0
   weapon: {fileID: 11400000, guid: d413ff329fa88d445a6a6c85c4eed3e9, type: 2}
   interactionController: {fileID: 6477522951164393474}

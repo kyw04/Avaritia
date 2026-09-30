@@ -43,7 +43,7 @@ public class EntityAnimator : AnimatorBase,
             return;
         
         float defaultSpeed = e.Source.GetDefaultStat<float>(StatType.MoveSpeed);
-        animator.SetFloat(Speed, e.Speed / defaultSpeed);
+        AnimatorComponent.SetFloat(Speed, e.Speed / defaultSpeed);
         PlayAnimation("Move");
     }
     public void OnNotify(EntityJumpedEvent e) { if (e.Source == self) PlayAnimation(e.Data.jumpClip.name); }

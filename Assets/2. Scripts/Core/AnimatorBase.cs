@@ -3,12 +3,12 @@ using System.Collections;
 
 public class AnimatorBase : MonoBehaviour
 {
-    protected Animator animator;
+    public Animator AnimatorComponent { get; private set; }
     protected Coroutine animCoroutine;
     
     protected virtual void Awake()
     {
-        animator = GetComponent<Animator>();
+        AnimatorComponent = GetComponent<Animator>();
     }
     
     protected void PlayAnimation(string animName)
@@ -19,7 +19,7 @@ public class AnimatorBase : MonoBehaviour
             animCoroutine = null;
         }
         
-        animator.Play(animName);
+        AnimatorComponent.Play(animName);
     }
     
     protected IEnumerator PlayAnimationAfterDelay(string animName, float length)
