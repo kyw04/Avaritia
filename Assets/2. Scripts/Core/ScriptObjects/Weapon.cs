@@ -9,10 +9,11 @@ public class Weapon : ScriptableObject, IInventoryItem
     public AttackDataCombo combo;
     public StatData statBonusData;
     public Sprite icon;
+    public string displayName;
     [TextArea] public string description;
     public List<AbilityData> passiveAbilities = new();
 
-    public string DisplayName => name;
+    public string DisplayName => displayName;
     public string Details => description;
     public Sprite Icon => icon;
 

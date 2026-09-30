@@ -16,5 +16,6 @@ MonoBehaviour:
   combo: {fileID: 11400000, guid: aa917b9b7cd923244bd2a65c4488f506, type: 2}
   statBonusData: {fileID: 11400000, guid: de01a4f835a2f23468991fd600cf4711, type: 2}
   icon: {fileID: -4870798248371929716, guid: 68deb3f6af485bc43a8406c98c27c609, type: 3}
+  displayName: asd
   description: 
   passiveAbilities: []
