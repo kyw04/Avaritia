@@ -84,5 +84,32 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         Despawn(instance.gameObject);
     }
 
+    public void Remove(GameObject instance)
+    {
+        if (instance == null || !instanceToPrefab.TryGetValue(instance, out var prefab)
+            || !pools.TryGetValue(prefab, out var queue))
+            return;
+
+        var found = false;
+        var count = queue.Count;
+        for (var i = 0; i < count; i++)
+        {
+            var front = queue.Dequeue();
+            if (instance == front)
+            {
+                found = true;
+                continue;
+            }
+
+            queue.Enqueue(front);
+        }
+
+        if (!found)
+            return;
+
+        instanceToPrefab.Remove(instance);
+        Destroy(instance);
+    }
+    
     public bool IsPooled(GameObject instance) => instance != null && instanceToPrefab.ContainsKey(instance);
 }

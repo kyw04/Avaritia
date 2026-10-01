@@ -4,4 +4,5 @@ using UnityEngine;
 public class JumpData : ScriptableObject
 {
     public AnimationClip jumpClip;
+    public PooledParticle particle;
 }
