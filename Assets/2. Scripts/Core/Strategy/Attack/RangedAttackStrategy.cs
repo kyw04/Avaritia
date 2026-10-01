@@ -11,18 +11,13 @@ public class RangedAttackStrategy : IAttackStrategy
     public float upDuration;
     public float redirectSpeed;
     public float redirectDelay;
+    public float lifeTime;
 
     public void Offensive(IAttacker attacker, float damageMultiplier, ContactFilter2D filter, Transform target = null)
     {
         if (bulletPrefab == null)
         {
             Debug.LogError("BulletAttackData: bulletPrefab not assigned");
-            return;
-        }
-
-        if (target == null)
-        {
-            Debug.LogError("BulletAttackData: target not assigned");
             return;
         }
 
@@ -44,8 +39,11 @@ public class RangedAttackStrategy : IAttackStrategy
             if (attacker is IStatReadable readable && Random.Range(0f, 100f) < readable.GetStat<float>(StatType.CritRate))
                 dmg *= CritConfig.Multiplier;
             dealer.damage = dmg;
-            var dir = (target.position - go.transform.position).normalized;
-            mover.Launch(dir, angle, upSpeed, upDuration, redirectSpeed, redirectDelay);
+            
+            var dir = Vector3.right * attacker.LookDirection;
+            if (target != null)
+                dir = (target.position - go.transform.position).normalized;
+            mover.Launch(dir, angle, upSpeed, upDuration, redirectSpeed, redirectDelay, lifeTime);
         }
     }
 }

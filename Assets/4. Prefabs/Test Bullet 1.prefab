@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: -9062028555724013171}
   - component: {fileID: -8666854707953307160}
   m_Layer: 0
-  m_Name: Test Bullet
+  m_Name: Test Bullet 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -142,7 +142,7 @@ MonoBehaviour:
   damage: 0
   targetLayer:
     serializedVersion: 2
-    m_Bits: 328
+    m_Bits: 392
 --- !u!114 &1333631079470740473
 MonoBehaviour:
   m_ObjectHideFlags: 0
