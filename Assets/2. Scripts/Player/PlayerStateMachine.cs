@@ -155,7 +155,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         public override void Enter()
         {
             landStartTime = Time.time;
-            EventBus.Publish(new EntityLandedEvent(Owner));
+            EventBus.Publish(new EntityLandedEvent(Owner, Owner.Particles.land));
         }
 
         public override void Execute()

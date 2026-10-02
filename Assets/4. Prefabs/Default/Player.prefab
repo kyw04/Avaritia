@@ -346,6 +346,8 @@ MonoBehaviour:
   dropWeaponAsset: {fileID: 0}
   dropAbilityAsset: {fileID: 0}
   dropChance: 0
+  particles:
+    land: {fileID: 3997078153917561944, guid: 121960c962a84982a420a44a2f68e135, type: 3}
   weapon: {fileID: 11400000, guid: d413ff329fa88d445a6a6c85c4eed3e9, type: 2}
   interactionController: {fileID: 6477522951164393474}
   platformLayer:

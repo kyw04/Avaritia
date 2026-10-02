@@ -11,7 +11,8 @@ public struct EntityFallingEvent : ISubject
 public struct EntityLandedEvent : ISubject
 {
     public Entity Source { get; private set; }
-    public EntityLandedEvent(Entity source) { Source = source; }
+    public PooledParticle Particle { get; private set; }
+    public EntityLandedEvent(Entity source, PooledParticle particle) { Source = source; Particle = particle; }
 }
 public struct EntityTurnEvent : ISubject
 {

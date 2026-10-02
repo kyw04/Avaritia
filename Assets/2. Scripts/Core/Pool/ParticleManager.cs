@@ -2,7 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ParticleManager : Singleton<ParticleManager>,
-    IObserver<EntityJumpedEvent>
+    IObserver<EntityJumpedEvent>,
+    IObserver<EntityLandedEvent>
 {
     public static readonly List<PooledParticle> usedParticlesList = new();
 
@@ -20,6 +21,7 @@ public class ParticleManager : Singleton<ParticleManager>,
     private void Start()
     {
         EventBus.Subscribe<EntityJumpedEvent>(this);
+        EventBus.Subscribe<EntityLandedEvent>(this);
         
         objectPoolManager = ObjectPoolManager.Instance;
         foreach (var p in prewarmParticles)
@@ -72,4 +74,5 @@ public class ParticleManager : Singleton<ParticleManager>,
     }
     
     public void OnNotify(EntityJumpedEvent e) => Spawn(e.Data.particle, e.Source.transform);
+    public void OnNotify(EntityLandedEvent e) => Spawn(e.Particle, e.Source.transform);
 }

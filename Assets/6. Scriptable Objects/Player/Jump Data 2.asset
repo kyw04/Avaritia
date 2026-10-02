@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Jump Data 2
   m_EditorClassIdentifier: Assembly-CSharp::JumpData
   jumpClip: {fileID: 7400000, guid: 8ddacaff7baac6a499eaad940b2da7b6, type: 2}
-  particle: {fileID: 7031813714008680, guid: 23847488505149a2be98a04bb2c23f71, type: 3}
+  particle: {fileID: -6220497041147768454, guid: cde97f1423b514943870f49d21afdd4a, type: 3}

@@ -13,12 +13,14 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     [SerializeField] protected Weapon dropWeaponAsset;
     [SerializeField] protected AbilityData dropAbilityAsset;
     [SerializeField, Range(0, 100)] protected float dropChance;
-
+    [SerializeField] protected EntityParticles particles;
+    
     protected RuntimeStats stats;
     protected bool isDead;
     protected bool wasGroundCheckerChanged;
     
     public T GetDefaultStat<T>(StatType statType) => statDataAsset.TryGetValue<T>(statType);
+    public EntityParticles Particles => particles;
 
     private class ActiveBuff
     {
