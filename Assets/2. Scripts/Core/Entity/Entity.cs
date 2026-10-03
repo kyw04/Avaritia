@@ -224,7 +224,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
 
     protected virtual void OnGroundedChanged(bool grounded)
     {
-        stats.Set(StatType.DoubleJumpCount, 0);
+        if (IsGrounded) stats.Set(StatType.DoubleJumpCount, 0);
     }
 
     public void Move(Vector2 direction) => movementStrategy?.Move(this, Rb, direction);

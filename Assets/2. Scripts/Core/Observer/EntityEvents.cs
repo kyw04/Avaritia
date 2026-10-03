@@ -17,12 +17,14 @@ public struct EntityLandedEvent : ISubject
 public struct EntityTurnEvent : ISubject
 {
     public Entity Source { get; private set; }
-    public EntityTurnEvent(Entity source) { Source = source; }
+    public PooledParticle Particle { get; private set; }
+    public EntityTurnEvent(Entity source, PooledParticle particle) { Source = source; Particle = particle; }
 }
 public struct EntityDashEvent : ISubject
 {
     public Entity Source { get; private set; }
-    public EntityDashEvent(Entity source) { Source = source; }
+    public PooledParticle Particle { get; private set; }
+    public EntityDashEvent(Entity source, PooledParticle particle) { Source = source; Particle = particle; }
 }
 public struct EntityJumpedEvent : ISubject
 {
