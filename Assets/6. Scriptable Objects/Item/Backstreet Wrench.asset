@@ -15,12 +15,12 @@ MonoBehaviour:
   cooldown: 0
   maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: 51e0c86086996cb4a9b560c1845ed68b, type: 3}
+  displayName: 
   description: The favored tool of a shady mechanic who scoffs at fair fights. Wait
     for the enemy to turn around, then strike where they can't defend.
   trigger:
     rid: 5230665391898361953
-  conditions:
-  - rid: 5230665391898361955
+  conditions: []
   effects:
   - rid: 5230665391898361960
   references:
@@ -29,10 +29,6 @@ MonoBehaviour:
     - rid: 5230665391898361953
       type: {class: OnEquippedTrigger, ns: , asm: Assembly-CSharp}
       data: 
-    - rid: 5230665391898361955
-      type: {class: ChanceCondition, ns: , asm: Assembly-CSharp}
-      data:
-        percent: 100
     - rid: 5230665391898361960
       type: {class: BuffEffect, ns: , asm: Assembly-CSharp}
       data:
@@ -42,3 +38,4 @@ MonoBehaviour:
           amount: 10
         duration: 0
         applyTo: 0
+        activeWhile: []
