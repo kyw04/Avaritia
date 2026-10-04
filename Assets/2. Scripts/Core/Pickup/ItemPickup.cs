@@ -15,10 +15,7 @@ public class ItemPickup : IInteractable
     public void Interact(Player player, InteractChoice choice)
     {
         if (player.Inventory.TryAdd(item))
-        {
-            EventBus.Publish(new InventoryItemEquip(item));
             return;
-        }
         ItemReplaceController.Instance.BeginReplace(player, item);
     }
 }

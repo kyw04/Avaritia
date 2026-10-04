@@ -23,7 +23,5 @@ public class AbilityPickup : IInteractable
         var previous = player.Abilities.SetAbility(index, ability);
         if (previous != null)
             WorldInteractionManager.Instance.Spawn(new AbilityPickup(previous), player.transform.position);
-        else
-            EventBus.Publish(new InventoryItemEquip(ability));
     }
 }
