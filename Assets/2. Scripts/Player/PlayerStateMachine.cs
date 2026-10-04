@@ -47,7 +47,8 @@ public class PlayerStateMachine : StateMachineBase<Player>
             Machine.AddTransition<PlayerIdleState, PlayerJumpState>();
             Machine.AddTransition<PlayerIdleState, PlayerFallState>();
             Machine.AddTransition<PlayerIdleState, PlayerAttackState>(() => owner.CanAttack());
-            Machine.AddTransition<PlayerIdleState, PlayerDashState>();
+            Machine.AddTransition<PlayerIdleState, PlayerDashState>(
+                () => owner.DashCount < owner.MaxDashCount);
         }
 
         public override void Enter()
@@ -74,7 +75,8 @@ public class PlayerStateMachine : StateMachineBase<Player>
             Machine.AddTransition<PlayerMoveState, PlayerFallState>();
             Machine.AddTransition<PlayerMoveState, PlayerTurnState>();
             Machine.AddTransition<PlayerMoveState, PlayerAttackState>(() => owner.CanAttack());
-            Machine.AddTransition<PlayerMoveState, PlayerDashState>();
+            Machine.AddTransition<PlayerMoveState, PlayerDashState>(
+                () => owner.DashCount < owner.MaxDashCount);
         }
         
         public override void Enter()
@@ -325,7 +327,8 @@ public class PlayerStateMachine : StateMachineBase<Player>
             EventBus.Subscribe<EntityAttackBufferEvent>(this);
 
             Machine.AddTransition<PlayerAttackState, PlayerIdleState>();
-            Machine.AddTransition<PlayerAttackState, PlayerDashState>();
+            Machine.AddTransition<PlayerAttackState, PlayerDashState>(
+                () => owner.DashCount < owner.MaxDashCount);
         }
 
         private void BeginAttack(AttackData data)
