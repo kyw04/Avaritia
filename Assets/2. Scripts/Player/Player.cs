@@ -32,15 +32,12 @@ public class Player : Entity, IStateOwner<Player>
 
     public void EquipWeapon(Weapon newWeapon)
     {
-        float healthRatio = MaxHealth > 0 ? CurrentHealth / MaxHealth : 0f;
-        weapon = newWeapon;
-        spriteLibrary.spriteLibraryAsset = newWeapon.spriteLibraryAsset;
-        RebindWeaponAbilities();
-
-        float newMaxHealth = MaxHealth;
-        float newCurrentHealth = healthRatio * newMaxHealth;
-        float currentHealthBonus = weapon != null && weapon.TryGetStatBonus<float>(StatType.CurrentHealth, out var bonus) ? bonus : 0f;
-        stats.Set(StatType.CurrentHealth, newCurrentHealth - currentHealthBonus);
+        PreserveHealthRatio(() =>
+        {
+            weapon = newWeapon;
+            spriteLibrary.spriteLibraryAsset = newWeapon.spriteLibraryAsset;
+            RebindWeaponAbilities();
+        });
 
         OnHealthChanged();
         OnDashCountChanged();

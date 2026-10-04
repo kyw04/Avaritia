@@ -39,6 +39,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     private readonly Dictionary<object, float> shields = new();
     private readonly Dictionary<object, int> hitBlocks = new();
     private float invincibleUntil;
+    private float trackedMaxHealth;
 
     public Rigidbody2D Rb { get; protected set; }
     public MonoBehaviour Mono => this;
@@ -128,6 +129,15 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         // other buff, via AbilityManager.Rebind -> RemoveBuffsBySource.
         float expireTime = duration > 0f ? Time.time + duration : float.MaxValue;
 
+        if (type == StatType.MaxHealth)
+            PreserveHealthRatio(() => AddOrUpdateBuff(source, type, valueType, amount, expireTime, conditions, clearOnDamageTaken));
+        else
+            AddOrUpdateBuff(source, type, valueType, amount, expireTime, conditions, clearOnDamageTaken);
+    }
+
+    private void AddOrUpdateBuff(object source, StatType type, BuffValueType valueType, float amount, float expireTime,
+        List<IAbilityCondition> conditions, bool clearOnDamageTaken)
+    {
         var existing = activeBuffs.Find(b => b.source == source && b.type == type && b.valueType == valueType);
         if (existing != null)
         {
@@ -146,6 +156,36 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         }
     }
 
+    // 최대 체력이 바뀌는 변경(버프 추가/제거, 기본 스탯, 무기 교체)을 감싸 현재 체력 비율을 유지한다.
+    protected void PreserveHealthRatio(System.Action change)
+    {
+        SyncHealthRatio();
+        float ratio = MaxHealth > 0f ? CurrentHealth / MaxHealth : 0f;
+        change();
+        SetHealthRatio(ratio);
+    }
+
+    // 조건부/만료 버프처럼 변경 시점을 알 수 없는 최대 체력 변화는 마지막으로 본 최대 체력과 비교해 맞춘다.
+    private void SyncHealthRatio()
+    {
+        if (Mathf.Approximately(MaxHealth, trackedMaxHealth)) return;
+        SetHealthRatio(trackedMaxHealth > 0f ? CurrentHealth / trackedMaxHealth : 0f);
+    }
+
+    private void SetHealthRatio(float ratio)
+    {
+        float maxHealth = MaxHealth;
+        trackedMaxHealth = maxHealth;
+
+        // CurrentHealth getter에는 장비/버프 보너스가 포함되므로 그 차이만큼 빼서 기본값으로 저장한다.
+        float raw = stats.Get<float>(StatType.CurrentHealth);
+        float target = ratio * maxHealth - (CurrentHealth - raw);
+        if (Mathf.Approximately(raw, target)) return;
+
+        stats.Set(StatType.CurrentHealth, target);
+        OnHealthChanged();
+    }
+
     public float GetBuffAmount(object source, StatType type, BuffValueType valueType)
     {
         var existing = activeBuffs.Find(b => b.source == source && b.type == type && b.valueType == valueType && b.expireTime > Time.time);
@@ -159,8 +199,13 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
 
     public void SetInvincible(float duration) => invincibleUntil = Mathf.Max(invincibleUntil, Time.time + duration);
 
-    public void AddBaseStat<T>(StatType type, T amount) =>
-        stats.Set(type, StatMath.Add(stats.Get<T>(type), amount));
+    public void AddBaseStat<T>(StatType type, T amount)
+    {
+        if (type == StatType.MaxHealth)
+            PreserveHealthRatio(() => stats.Set(type, StatMath.Add(stats.Get<T>(type), amount)));
+        else
+            stats.Set(type, StatMath.Add(stats.Get<T>(type), amount));
+    }
 
     public void Heal(float amount)
     {
@@ -195,12 +240,15 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     {
         isDead = false;
         stats = new RuntimeStats(statDataAsset);
+        // 에셋 기준(장비 보너스 제외) 비율에서 출발해, 스폰 시 장착된 무기/아이템 보너스도 비율 유지로 반영되게 한다.
+        trackedMaxHealth = stats.Get<float>(StatType.MaxHealth);
         Abilities?.UnbindAll();
-        Abilities = new AbilityManager(this, abilities);
-        Abilities.BindAll();
+        // 장착 즉시 발동하는 어빌리티(OnEquippedTrigger)의 버프가 지워지지 않도록 바인딩 전에 비운다.
         activeBuffs.Clear();
         shields.Clear();
         hitBlocks.Clear();
+        Abilities = new AbilityManager(this, abilities);
+        Abilities.BindAll();
         invincibleUntil = 0f;
         wasGroundCheckerChanged = !IsGrounded;
     }
@@ -211,6 +259,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
 
     protected virtual void Update()
     {
+        SyncHealthRatio();
+
         if (groundCheck == null) return;
 
         var groundHit = Physics2D.OverlapCircle(groundCheck.position, groundRadius, groundLayer);
@@ -326,7 +376,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
 
     public void RemoveBuffsBySource(object source)
     {
-        activeBuffs.RemoveAll(b => b.source == source);
+        PreserveHealthRatio(() => activeBuffs.RemoveAll(b => b.source == source));
         shields.Remove(source);
         hitBlocks.Remove(source);
     }

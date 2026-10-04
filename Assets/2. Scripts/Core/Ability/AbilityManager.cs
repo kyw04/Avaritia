@@ -36,7 +36,10 @@ public class AbilityManager
     public void UnbindAll()
     {
         foreach (var binding in bindings)
+        {
             binding.Trigger.Unbind(owner);
+            owner.RemoveBuffsBySource(binding.State);
+        }
         bindings.Clear();
     }
 
@@ -98,6 +101,7 @@ public class AbilityManager
         var binding = bindings.Find(b => b.Data == data);
         if (binding == null) return;
         binding.Trigger.Unbind(owner);
+        owner.RemoveBuffsBySource(binding.State);
         bindings.Remove(binding);
     }
 
