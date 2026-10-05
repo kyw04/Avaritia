@@ -102,7 +102,7 @@ public class AttackDataEditor : Editor
             float angle = count > 1
                 ? Mathf.Lerp(-strategy.spreadAngle / 2f, strategy.spreadAngle / 2f, (float)i / (count - 1))
                 : 0f;
-            Vector3 dir = Quaternion.Euler(0f, 0f, angle) * Vector3.up;
+            Vector3 dir = Quaternion.Euler(0f, 0f, angle) * Vector3.right;
             Handles.DrawLine(Vector3.zero, dir);
         }
     }

@@ -17,6 +17,8 @@ public class BulletMover : MonoBehaviour, IPoolable
 {
     public void Launch(BulletMoveSettings data, float lifeTime, float delay)
     {
+        float angle = Mathf.Atan2(data.dir.y, data.dir.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
         StartCoroutine(Move(data, lifeTime, delay));
     }
 

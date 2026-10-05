@@ -21,12 +21,6 @@ public class RangedAttackStrategy : IAttackStrategy
             Debug.LogError("BulletAttackData: bulletPrefab not assigned");
             return;
         }
-        var dealer = bulletPrefab.GetComponent<DamageDealer>();
-        if (dealer == null)
-        {
-            Debug.LogError("BulletAttackData: bulletPrefab missing DamageDealer component");
-            return;
-        }
         
         if (attacker is IStatReadable r)
         {
@@ -53,11 +47,12 @@ public class RangedAttackStrategy : IAttackStrategy
                 if (Random.Range(0f, 100f) < critRate)
                     dmg *= CritConfig.Multiplier;
             }
-            dealer.damage = dmg;
+            mover.GetComponent<DamageDealer>().damage = dmg;
             
             var dir = Vector3.right * attacker.LookDirection;
             if (target != null)
                 dir = (target.position - mover.transform.position).normalized;
+            dir = Quaternion.Euler(0f, 0f, angle) * dir;
             var setting = new BulletMoveSettings(dir, bulletSpeed);
             
             mover.Launch(setting, lifeTime, delay);
