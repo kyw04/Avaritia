@@ -15,8 +15,11 @@ MonoBehaviour:
   cooldown: 0
   maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: 8a88b2e77394e6549b218ef4daa89b72, type: 3}
-  description: A bulky secondary tank worn on the back. It stores just enough emergency
-    steam pressure to allow for one additional consecutive evasive maneuver.
+  displayName: "\uC608\uBE44 \uC555\uB825 \uD0F1\uD06C"
+  description: "\uB4F1\uC5D0 \uBA54\uB294 \uD07C\uC9C1\uD55C \uBCF4\uC870 \uD0F1\uD06C.
+    \uD68C\uD53C \uB3D9\uC791\uC744 \uD55C \uBC88 \uB354 \uC5F0\uC18D\uC73C\uB85C
+    \uC4F8 \uC218 \uC788\uC744 \uB9CC\uD07C\uC758 \uBE44\uC0C1 \uC99D\uAE30\uC555\uC744
+    \uC800\uC7A5\uD55C\uB2E4."
   trigger:
     rid: 5230665391898361963
   conditions: []
@@ -37,3 +40,4 @@ MonoBehaviour:
           amount: 1
         duration: 0
         applyTo: 0
+        activeWhile: []

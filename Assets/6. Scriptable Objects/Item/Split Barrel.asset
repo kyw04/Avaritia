@@ -12,8 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Split Barrel
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: 83d6468eda6200240bb8729dc2aea531, type: 3}
-  description: A heavily modified gun part featuring multiple welded barrels. Pulling
-    the trigger once unleashes a spread of bullets, turning a simple firearm into
-    a shotgun-like scattergun.
-  passiveAbilities: []
+  displayName: "\uBD84\uD560 \uCD1D\uC5F4"
+  description: "\uC5EC\uB7EC \uAC1C\uC758 \uCD1D\uC5F4\uC744 \uC6A9\uC811\uD574 \uBD99\uC778,
+    \uB300\uD3ED \uAC1C\uC870\uB41C \uCD1D\uAE30 \uBD80\uD488. \uBC29\uC544\uC1E0\uB97C
+    \uD55C \uBC88 \uB2F9\uAE30\uBA74 \uD0C4\uD658\uC774 \uD769\uBFCC\uB824\uC838
+    \uD3C9\uBC94\uD55C \uCD1D\uC774 \uC0B0\uD0C4\uCD1D\uCC98\uB7FC \uBCC0\uD55C\uB2E4."
+  trigger:
+    rid: -2
+  conditions: []
+  effects: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

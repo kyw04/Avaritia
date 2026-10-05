@@ -12,7 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Coil Spring Legs
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: e33e96a06a95b5749a7b43a14c9cad91, type: 3}
-  description: Massive, high-tension industrial springs replace your calves. Crouching
-    down compresses them, allowing you to launch yourself to incredible heights.
-  passiveAbilities: []
+  displayName: "\uCF54\uC77C \uC2A4\uD504\uB9C1 \uB2E4\uB9AC"
+  description: "\uC885\uC544\uB9AC\uB97C \uB300\uC2E0\uD558\uB294 \uAC70\uB300\uD55C
+    \uACE0\uC7A5\uB825 \uC0B0\uC5C5\uC6A9 \uC2A4\uD504\uB9C1. \uBAB8\uC744 \uC6C5\uD06C\uB9AC\uBA74
+    \uC2A4\uD504\uB9C1\uC774 \uC555\uCD95\uB418\uC5B4 \uC5C4\uCCAD\uB09C \uB192\uC774\uAE4C\uC9C0
+    \uB3C4\uC57D\uD560 \uC218 \uC788\uB2E4."
+  trigger:
+    rid: -2
+  conditions: []
+  effects: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

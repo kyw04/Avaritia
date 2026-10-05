@@ -15,9 +15,12 @@ MonoBehaviour:
   cooldown: 0
   maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: 490d8432eae7e1748aaed96595e55da0, type: 3}
-  description: Armor externally lined with violently spinning, sharpened gears. Anyone
-    foolish enough to strike you in melee combat will find their own weapons and
-    limbs ground down.
+  displayName: "\uD1B1\uB2C8\uBC14\uD034 \uAC11\uC637"
+  description: "\uB0A0\uCE74\uB86D\uAC8C \uAC04 \uD1B1\uB2C8\uBC14\uD034\uAC00 \uBC14\uAE65\uC5D0\uC11C
+    \uB9F9\uB82C\uD788 \uD68C\uC804\uD558\uB294 \uAC11\uC637. \uC5B4\uB9AC\uC11D\uAC8C\uB3C4
+    \uADFC\uC811\uC804\uC5D0\uC11C \uB2F9\uC2E0\uC744 \uACF5\uACA9\uD55C \uC790\uB294
+    \uC790\uC2E0\uC758 \uBB34\uAE30\uC640 \uD314\uB2E4\uB9AC\uAC00 \uAC08\uB824 \uB098\uAC00\uB294
+    \uAF34\uC744 \uBCF4\uAC8C \uB420 \uAC83\uC774\uB2E4."
   trigger:
     rid: 5230665525031600233
   conditions: []

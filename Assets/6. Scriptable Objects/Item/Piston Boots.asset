@@ -12,7 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Piston Boots
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: feb8150f9c446ac4693107d82b122d70, type: 3}
-  description: Heavy boots fitted with industrial pistons. The moment your dash concludes,
-    the pistons violently deploy into the ground, causing a localized shockwave.
-  passiveAbilities: []
+  displayName: "\uD53C\uC2A4\uD1A4 \uBD80\uCE20"
+  description: "\uC0B0\uC5C5\uC6A9 \uD53C\uC2A4\uD1A4\uC744 \uC7A5\uCC29\uD55C \uBB34\uAC70\uC6B4
+    \uBD80\uCE20. \uB300\uC2DC\uAC00 \uB05D\uB098\uB294 \uC21C\uAC04 \uD53C\uC2A4\uD1A4\uC774
+    \uC9C0\uBA74\uC744 \uAC15\uD558\uAC8C \uB0B4\uB9AC\uCC0D\uC5B4 \uC8FC\uBCC0\uC5D0
+    \uCDA9\uACA9\uD30C\uB97C \uC77C\uC73C\uD0A8\uB2E4."
+  trigger:
+    rid: -2
+  conditions: []
+  effects: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

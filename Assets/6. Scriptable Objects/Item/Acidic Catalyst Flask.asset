@@ -12,7 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Acidic Catalyst Flask
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: 3095812bee5478543962a5448f4d225f, type: 3}
-  description: A highly volatile chemical mixture designed to rust enemy joints and
-    jam their gears instantly. Greatly hinders enemy mobility and striking capabilities.
-  passiveAbilities: []
+  displayName: "\uC0B0\uC131 \uCD09\uB9E4 \uD50C\uB77C\uC2A4\uD06C"
+  description: "\uC801\uC758 \uAD00\uC808\uC744 \uC21C\uC2DD\uAC04\uC5D0 \uBD80\uC2DD\uC2DC\uD0A4\uACE0
+    \uD1B1\uB2C8\uBC14\uD034\uB97C \uBA48\uCDB0 \uC138\uC6B0\uB3C4\uB85D \uB9CC\uB4E0
+    \uADF9\uB3C4\uB85C \uBD88\uC548\uC815\uD55C \uD654\uD559 \uD63C\uD569\uBB3C.
+    \uC801\uC758 \uAE30\uB3D9\uB825\uACFC \uACF5\uACA9\uB825\uC744 \uD06C\uAC8C \uB5A8\uC5B4\uB728\uB9B0\uB2E4."
+  trigger:
+    rid: -2
+  conditions: []
+  effects: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

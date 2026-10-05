@@ -12,7 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Pressure Zone Signpost
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: 04f6079c29e486b4196755ac317ed4f7, type: 3}
-  description: Slam this sign into the ground to rupture subterranean steam pipes,
-    creating a designated "high-pressure" buff zone for you to fight within.
-  passiveAbilities: []
+  displayName: "\uACE0\uC555 \uAD6C\uC5ED \uD45C\uC9C0\uD310"
+  description: "\uC774 \uD45C\uC9C0\uD310\uC744 \uB545\uC5D0 \uB0B4\uB9AC\uAF42\uC544
+    \uC9C0\uD558 \uC99D\uAE30\uAD00\uC744 \uD130\uB728\uB9AC\uBA74, \uADF8 \uC548\uC5D0\uC11C
+    \uC2F8\uC6B8 \uC218 \uC788\uB294 '\uACE0\uC555' \uAC15\uD654 \uAD6C\uC5ED\uC774
+    \uB9CC\uB4E4\uC5B4\uC9C4\uB2E4."
+  trigger:
+    rid: -2
+  conditions: []
+  effects: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

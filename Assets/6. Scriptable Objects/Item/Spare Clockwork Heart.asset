@@ -15,9 +15,11 @@ MonoBehaviour:
   cooldown: 0
   maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: 88931a0262582514795a97d5cc1bab7e, type: 3}
-  description: An intricate wind-up mechanism installed near the core. If your primary
-    heart stops beating, this backup spring violently uncoils to shock you back to
-    life.
+  displayName: "\uC608\uBE44 \uD0DC\uC5FD \uC2EC\uC7A5"
+  description: "\uD575\uC2EC\uBD80 \uADFC\uCC98\uC5D0 \uC124\uCE58\uB41C \uC815\uAD50\uD55C
+    \uD0DC\uC5FD \uC7A5\uCE58. \uC8FC \uC2EC\uC7A5\uC774 \uBA48\uCD94\uBA74 \uC608\uBE44
+    \uC2A4\uD504\uB9C1\uC774 \uB9F9\uB82C\uD788 \uD480\uB9AC\uBA70 \uCDA9\uACA9\uC744
+    \uC8FC\uC5B4 \uB2E4\uC2DC \uC0B4\uC544\uB098\uAC8C \uD55C\uB2E4."
   trigger:
     rid: 5230665525031600217
   conditions:

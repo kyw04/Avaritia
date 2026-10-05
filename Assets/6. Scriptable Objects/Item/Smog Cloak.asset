@@ -12,8 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Smog Cloak
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: 080d0e2d6948ddc47b864bf18ba7bf35, type: 3}
-  description: A heavy trench coat saturated with thick factory soot and exhaust.
-    Dashing causes the soot to billow out, completely masking your presence in the
-    smoke.
-  passiveAbilities: []
+  displayName: "\uC2A4\uBAA8\uADF8 \uB9DD\uD1A0"
+  description: "\uACF5\uC7A5\uC758 \uC9D9\uC740 \uADF8\uC744\uC74C\uACFC \uBC30\uAE30\uAC00\uC2A4\uC5D0
+    \uCC0C\uB4E0 \uBB34\uAC70\uC6B4 \uD2B8\uB80C\uCE58\uCF54\uD2B8. \uB300\uC2DC\uD558\uBA74
+    \uADF8\uC744\uC74C\uC774 \uD53C\uC5B4\uC62C\uB77C \uC5F0\uAE30 \uC18D\uC5D0 \uBAA8\uC2B5\uC744
+    \uC644\uC804\uD788 \uAC10\uCD98\uB2E4."
+  trigger:
+    rid: -2
+  conditions: []
+  effects: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

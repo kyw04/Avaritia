@@ -15,8 +15,11 @@ MonoBehaviour:
   cooldown: 0
   maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: b0d2ef0da87dd574e87273b50471c3ba, type: 3}
-  description: A flawless magnifying lens meticulously crafted by a master watchmaker.
-    It allows the user to see and pierce mechanical weak points with pinpoint accuracy.
+  displayName: "\uC815\uBC00 \uC870\uC900 \uB80C\uC988"
+  description: "\uC7A5\uC778 \uC2DC\uACC4\uACF5\uC774 \uACF5\uB4E4\uC5EC \uAE4E\uC544
+    \uB9CC\uB4E0 \uD760\uC7A1\uC744 \uB370 \uC5C6\uB294 \uD655\uB300 \uB80C\uC988.
+    \uAE30\uACC4\uC758 \uC57D\uC810\uC744 \uC815\uD655\uD788 \uAFF0\uB6AB\uC5B4 \uBCF4\uACE0
+    \uCC0C\uB97C \uC218 \uC788\uAC8C \uD574\uC900\uB2E4."
   trigger:
     rid: 5230665391898361983
   conditions: []
@@ -37,3 +40,4 @@ MonoBehaviour:
           amount: 15
         duration: 0
         applyTo: 0
+        activeWhile: []

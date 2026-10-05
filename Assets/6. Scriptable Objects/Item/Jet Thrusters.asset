@@ -15,8 +15,11 @@ MonoBehaviour:
   cooldown: 0
   maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: 06ae195e6b867a641a76528f620aca45, type: 3}
-  description: A set of directional vents attached to the soles. Blasts a concentrated
-    jet of steam downward, allowing you to double-jump in mid-air.
+  displayName: "\uC81C\uD2B8 \uCD94\uC9C4\uAE30"
+  description: "\uBC1C\uBC14\uB2E5\uC5D0 \uBD80\uCC29\uB41C \uBC29\uD5A5 \uC870\uC808
+    \uBD84\uC0AC\uAD6C. \uC544\uB798\uB85C \uC99D\uAE30\uB97C \uAC15\uD558\uAC8C
+    \uBD84\uC0AC\uD574 \uACF5\uC911\uC5D0\uC11C \uD55C \uBC88 \uB354 \uB3C4\uC57D\uD560
+    \uC218 \uC788\uB2E4."
   trigger:
     rid: 5230665391898361965
   conditions: []
@@ -37,3 +40,4 @@ MonoBehaviour:
           amount: 1
         duration: 0
         applyTo: 0
+        activeWhile: []

@@ -12,7 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Tesla Coil
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: f5efc3c9f5f61904587eacc2be9ddc1e, type: 3}
-  description: A miniaturized high-voltage coil attached to your weapon. Upon a successful
-    hit, electrical current aggressively arcs to nearby hostiles.
-  passiveAbilities: []
+  displayName: "\uD14C\uC2AC\uB77C \uCF54\uC77C"
+  description: "\uBB34\uAE30\uC5D0 \uBD80\uCC29\uB41C \uC18C\uD615 \uACE0\uC804\uC555
+    \uCF54\uC77C. \uACF5\uACA9\uC774 \uC801\uC911\uD558\uBA74 \uC804\uB958\uAC00
+    \uC8FC\uBCC0 \uC801\uB4E4\uC5D0\uAC8C \uAC70\uC138\uAC8C \uD280\uC5B4 \uC624\uB978\uB2E4."
+  trigger:
+    rid: -2
+  conditions: []
+  effects: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

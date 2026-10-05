@@ -15,8 +15,11 @@ MonoBehaviour:
   cooldown: 0
   maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: e039379e59a178f43942666d3c8ec4e4, type: 3}
-  description: A forced-induction system that violently rams air into your engine,
-    significantly increasing RPM and allowing your abilities to cycle much faster.
+  displayName: "\uC288\uD37C\uCC28\uC800"
+  description: "\uC5D4\uC9C4\uC5D0 \uACF5\uAE30\uB97C \uAC15\uC81C\uB85C \uBC00\uC5B4
+    \uB123\uB294 \uACFC\uAE09 \uC7A5\uCE58. \uD68C\uC804\uC218\uB97C \uD06C\uAC8C
+    \uB192\uC5EC \uB2A5\uB825\uC744 \uD6E8\uC52C \uBE60\uB974\uAC8C \uC7AC\uC0AC\uC6A9\uD560
+    \uC218 \uC788\uB2E4."
   trigger:
     rid: 5230665525031600226
   conditions: []

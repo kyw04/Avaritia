@@ -15,8 +15,11 @@ MonoBehaviour:
   cooldown: 0
   maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: 899f59d64225e6b438d0931186c5dd06, type: 3}
-  description: Thick, crude iron plating bolted directly onto your chassis. It absorbs
-    incoming impacts completely until it is chipped away.
+  displayName: "\uB9AC\uBCB3 \uC7A5\uAC11\uD310"
+  description: "\uCC28\uCCB4\uC5D0 \uB9AC\uBCB3\uC73C\uB85C \uC9C1\uC811 \uBC15\uC544
+    \uB123\uC740 \uB450\uAECD\uACE0 \uD22C\uBC15\uD55C \uCCA0\uD310. \uAE68\uC838
+    \uB098\uAC00\uAE30 \uC804\uAE4C\uC9C0 \uB4E4\uC5B4\uC624\uB294 \uCDA9\uACA9\uC744
+    \uC644\uC804\uD788 \uD761\uC218\uD55C\uB2E4."
   trigger:
     rid: 5230665525031600224
   conditions: []

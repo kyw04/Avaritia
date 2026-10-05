@@ -12,7 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Stoker's Poker
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: caa2f911d24ad7c4696fe969593d8bbb, type: 3}
-  description: A red-hot, heavy iron rod formerly used by boiler room stokers to
-    stir coals. It sears flesh and metal alike, setting struck enemies ablaze.
-  passiveAbilities: []
+  displayName: "\uD654\uBD80\uC758 \uBD80\uC9C0\uAE7D\uC774"
+  description: "\uBCF4\uC77C\uB7EC\uC2E4 \uD654\uBD80\uB4E4\uC774 \uC11D\uD0C4\uC744
+    \uD718\uC813\uB358, \uC2DC\uBED8\uAC8B\uAC8C \uB2EC\uC544\uC624\uB978 \uBB34\uAC70\uC6B4
+    \uC1E0\uB9C9\uB300. \uC0B4\uACFC \uAE08\uC18D\uC744 \uAC00\uB9AC\uC9C0 \uC54A\uACE0
+    \uC9C0\uC838, \uB9DE\uC740 \uC801\uC5D0\uAC8C \uBD88\uC744 \uBD99\uC778\uB2E4."
+  trigger:
+    rid: -2
+  conditions: []
+  effects: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

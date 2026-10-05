@@ -15,9 +15,11 @@ MonoBehaviour:
   cooldown: 0
   maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: 1cf03be390866f54295918279ba82002, type: 3}
-  description: A sacrificial component. When a fatal overload (enemy strike) occurs,
-    the fuse blows out to protect the main system. You must find a new room to swap
-    in a fresh one.
+  displayName: "\uD669\uB3D9 \uD4E8\uC988"
+  description: "\uD76C\uC0DD\uC6A9 \uBD80\uD488. \uCE58\uBA85\uC801\uC778 \uACFC\uBD80\uD558(\uC801\uC758
+    \uACF5\uACA9)\uAC00 \uBC1C\uC0DD\uD558\uBA74 \uD4E8\uC988\uAC00 \uB04A\uC5B4\uC9C0\uBA70
+    \uBCF8\uCCB4\uB97C \uBCF4\uD638\uD55C\uB2E4. \uC0C8 \uD4E8\uC988\uB85C \uAC08\uC544
+    \uB07C\uC6B0\uB824\uBA74 \uC0C8\uB85C\uC6B4 \uBC29\uC744 \uCC3E\uC544\uC57C \uD55C\uB2E4."
   trigger:
     rid: 5230665525031600212
   conditions: []

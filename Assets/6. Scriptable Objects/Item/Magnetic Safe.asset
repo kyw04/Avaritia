@@ -12,8 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Magnetic Safe
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: ab99142181f77a54b916c0ae4f8039bc, type: 3}
-  description: A heavy, magnetized lockbox that actively rips coins out of the pockets
-    of the dead. Increases overall wealth generation and saves you the trouble of
-    picking it up. The true start of Avaritia.
-  passiveAbilities: []
+  displayName: "\uC790\uC11D \uAE08\uACE0"
+  description: "\uC4F0\uB7EC\uC9C4 \uC790\uB4E4\uC758 \uC8FC\uBA38\uB2C8\uC5D0\uC11C
+    \uB3D9\uC804\uC744 \uAC15\uC81C\uB85C \uB04C\uC5B4\uB2F9\uAE30\uB294 \uBB34\uAC70\uC6B4
+    \uC790\uC11D \uAE08\uACE0. \uC804\uCCB4 \uC7AC\uD654 \uD68D\uB4DD\uB7C9\uC774
+    \uB298\uC5B4\uB098\uACE0 \uC77C\uC77C\uC774 \uC8FC\uC6B8 \uC218\uACE0\uB3C4 \uB35C\uC5B4\uC900\uB2E4.
+    \uC9C4\uC815\uD55C \uC544\uBC14\uB9AC\uD2F0\uC544\uC758 \uC2DC\uC791."
+  trigger:
+    rid: -2
+  conditions: []
+  effects: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

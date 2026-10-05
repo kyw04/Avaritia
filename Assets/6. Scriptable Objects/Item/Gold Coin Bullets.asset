@@ -12,8 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Gold Coin Bullets
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: 1eb7e389a22b9084ba4d6ef3affd0bbc, type: 3}
-  description: The ultimate crystallization of the Avaritia theme. You are literally
-    firing your wealth. The richer you are, the heavier and more lethal the bullets
-    become.
-  passiveAbilities: []
+  displayName: "\uAE08\uD654 \uD0C4\uD658"
+  description: "\uC544\uBC14\uB9AC\uD2F0\uC544\uB77C\uB294 \uC8FC\uC81C\uC758 \uACB0\uC815\uCCB4.
+    \uB9D0 \uADF8\uB300\uB85C \uC7AC\uC0B0\uC744 \uC3D8\uC544 \uBCF4\uB0B8\uB2E4.
+    \uBD80\uC720\uD560\uC218\uB85D \uD0C4\uD658\uC740 \uB354 \uBB34\uAC81\uACE0 \uCE58\uBA85\uC801\uC774
+    \uB41C\uB2E4."
+  trigger:
+    rid: -2
+  conditions: []
+  effects: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

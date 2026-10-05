@@ -12,7 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Spring-Loaded Warhead
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: 06166fa3a5ca77640b04e1294b5eb4e0, type: 3}
-  description: Warheads embedded with high-tension springs. Instead of shattering
-    on impact, they violently ricochet off the target to strike another.
-  passiveAbilities: []
+  displayName: "\uC2A4\uD504\uB9C1 \uD0C4\uB450"
+  description: "\uACE0\uC7A5\uB825 \uC2A4\uD504\uB9C1\uC774 \uB0B4\uC7A5\uB41C \uD0C4\uB450.
+    \uCDA9\uB3CC\uD574\uB3C4 \uBD80\uC11C\uC9C0\uC9C0 \uC54A\uACE0 \uB300\uC0C1\uC5D0\uAC8C\uC11C
+    \uAC70\uC138\uAC8C \uD295\uACA8 \uB098\uAC00 \uB2E4\uB978 \uC801\uC744 \uD0C0\uACA9\uD55C\uB2E4."
+  trigger:
+    rid: -2
+  conditions: []
+  effects: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

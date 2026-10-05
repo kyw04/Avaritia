@@ -12,7 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Extended Barrel Kit
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
   icon: {fileID: 21300000, guid: ee2a6fd7704b6b54d8963cf8abac66c9, type: 3}
-  description: Seamlessly attached barrel extensions that improve bullet velocity
-    and aerodynamic stability. Ideal for keeping enemies at a safe distance.
-  passiveAbilities: []
+  displayName: "\uC5F0\uC7A5 \uCD1D\uC5F4 \uD0A4\uD2B8"
+  description: "\uD0C4\uC18D\uACFC \uACF5\uAE30\uC5ED\uD559\uC801 \uC548\uC815\uC131\uC744
+    \uB192\uC5EC\uC8FC\uB294, \uB9E4\uB048\uD558\uAC8C \uACB0\uD569\uB41C \uCD1D\uC5F4
+    \uC5F0\uC7A5 \uBD80\uD488. \uC801\uC744 \uC548\uC804\uD55C \uAC70\uB9AC\uC5D0
+    \uBB36\uC5B4\uB450\uAE30\uC5D0 \uC81C\uACA9\uC774\uB2E4."
+  trigger:
+    rid: -2
+  conditions: []
+  effects: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
