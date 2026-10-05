@@ -30,6 +30,9 @@ public class Player : Entity, IStateOwner<Player>
     protected override T ApplyEquipmentBonus<T>(StatType type, T baseValue) =>
         weapon != null ? weapon.ApplyBonus(type, baseValue) : baseValue;
 
+    protected override bool HasEquipmentBonus<T>(StatType type) =>
+        weapon != null && weapon.TryGetStatBonus<T>(type, out _);
+
     public void EquipWeapon(Weapon newWeapon)
     {
         PreserveHealthRatio(() =>

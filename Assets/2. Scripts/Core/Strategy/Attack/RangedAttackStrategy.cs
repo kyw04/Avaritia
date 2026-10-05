@@ -22,19 +22,23 @@ public class RangedAttackStrategy : IAttackStrategy
             return;
         }
         
+        int count = bulletCount;
+        float minDelay = bulletDelay;
+        float maxDelay = bulletMaxDelay;
+        float speed = bulletSpeed;
         if (attacker is IStatReadable r)
         {
-            if (r.TryGetStat(StatType.BulletCount, out int count)) bulletCount = count;
-            if (r.TryGetStat(StatType.BulletDelay, out float delay)) bulletDelay = delay;
-            if (r.TryGetStat(StatType.BulletMaxDelay, out float maxDelay)) bulletMaxDelay = maxDelay;
-            if (r.TryGetStat(StatType.BulletSpeed, out float speed)) bulletSpeed = speed;
+            if (r.TryGetStat(StatType.BulletCount, out int statCount)) count = statCount;
+            if (r.TryGetStat(StatType.BulletDelay, out float statDelay)) minDelay = statDelay;
+            if (r.TryGetStat(StatType.BulletMaxDelay, out float statMaxDelay)) maxDelay = statMaxDelay;
+            if (r.TryGetStat(StatType.BulletSpeed, out float statSpeed)) speed = statSpeed;
         }
-        bool useDelay = 1 < bulletCount;
+        bool useDelay = 1 < count;
         
-        for (int i = 0; i < bulletCount; i++)
+        for (int i = 0; i < count; i++)
         {
-            float angle = bulletCount > 1
-                ? Mathf.Lerp(-spreadAngle / 2f, spreadAngle / 2f, (float)i / (bulletCount - 1))
+            float angle = count > 1
+                ? Mathf.Lerp(-spreadAngle / 2f, spreadAngle / 2f, (float)i / (count - 1))
                 : 0f;
             BulletMover mover = ObjectPoolManager.Instance.Spawn(bulletPrefab, attacker.Mono.transform.position, Quaternion.identity);
             
@@ -42,7 +46,7 @@ public class RangedAttackStrategy : IAttackStrategy
             float delay = 0;
             if (attacker is IStatReadable readable)
             {
-                if (useDelay) delay = Random.Range(bulletDelay, bulletMaxDelay);
+                if (useDelay) delay = Random.Range(minDelay, maxDelay);
                 readable.TryGetStat<float>(StatType.CritRate, out var critRate);
                 if (Random.Range(0f, 100f) < critRate)
                     dmg *= CritConfig.Multiplier;
@@ -53,7 +57,7 @@ public class RangedAttackStrategy : IAttackStrategy
             if (target != null)
                 dir = (target.position - mover.transform.position).normalized;
             dir = Quaternion.Euler(0f, 0f, angle) * dir;
-            var setting = new BulletMoveSettings(dir, bulletSpeed);
+            var setting = new BulletMoveSettings(dir, speed);
             
             mover.Launch(setting, lifeTime, delay);
         }

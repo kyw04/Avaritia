@@ -61,15 +61,16 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     public float DashCooldown => GetStat<float>(StatType.DashCooldown);
     public float DashForce => GetStat<float>(StatType.DashForce);
 
+    // 기본 스탯에 없는 항목(예: 탄환 스탯)도 장비 보너스가 있으면 기본값 0에서 보너스를 더해 반환한다.
     public bool TryGetStat<T>(StatType type, out T stat)
     {
-        if (stats.TryGet<T>(type, out stat))
+        if (!stats.TryGet<T>(type, out var baseValue) && !HasEquipmentBonus<T>(type))
         {
-            stat = GetStat<T>(type);
-            return true;
+            stat = default;
+            return false;
         }
-        
-        return false;
+        stat = ApplyBuffs(type, ApplyEquipmentBonus(type, baseValue));
+        return true;
     }
 
     public T GetStat<T>(StatType type)
@@ -88,6 +89,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     }
 
     protected virtual T ApplyEquipmentBonus<T>(StatType type, T baseValue) => baseValue;
+    protected virtual bool HasEquipmentBonus<T>(StatType type) => false;
 
     // A buff's conditions may themselves read stats (e.g. HealthRatioCondition -> MaxHealth), which
     // re-enters ApplyBuffs — so this must never mutate activeBuffs; expired ones are skipped here and
