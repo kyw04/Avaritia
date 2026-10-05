@@ -21,11 +21,29 @@ MonoBehaviour:
     \uD55C \uBC88 \uB2F9\uAE30\uBA74 \uD0C4\uD658\uC774 \uD769\uBFCC\uB824\uC838
     \uD3C9\uBC94\uD55C \uCD1D\uC774 \uC0B0\uD0C4\uCD1D\uCC98\uB7FC \uBCC0\uD55C\uB2E4."
   trigger:
-    rid: -2
+    rid: 3411488935590494301
   conditions: []
-  effects: []
+  effects:
+  - rid: 3411488935590494302
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
+    - rid: 3411488935590494301
+      type: {class: OnEquippedTrigger, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 3411488935590494302
+      type: {class: BuffEffect, ns: , asm: Assembly-CSharp}
+      data:
+        modifiers:
+        - statType: 14
+          valueType: 0
+          amount: 5
+        - statType: 15
+          valueType: 0
+          amount: 0.1
+        - statType: 16
+          valueType: 0
+          amount: 0.5
+        duration: 0
+        applyTo: 0
+        activeWhile: []

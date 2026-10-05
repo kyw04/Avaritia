@@ -41,10 +41,10 @@ MonoBehaviour:
     - rid: 1772930754192081022
       type: {class: RangedAttackStrategy, ns: , asm: Assembly-CSharp}
       data:
-        bulletPrefab: {fileID: 8472889144798200028, guid: 706b7d7f91fbc1c40a6df1b125a9dad7, type: 3}
-        bulletCount: 5
+        bulletPrefab: {fileID: 1333631079470740473, guid: 706b7d7f91fbc1c40a6df1b125a9dad7, type: 3}
         spreadAngle: 90
-        upSpeed: 10
-        upDuration: 0.25
-        redirectSpeed: 15
-        redirectDelay: 1
+        lifeTime: 0
+        bulletCount: 5
+        bulletDelay: 0.1
+        bulletMaxDelay: 0.5
+        bulletSpeed: 15

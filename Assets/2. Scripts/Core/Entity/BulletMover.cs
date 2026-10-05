@@ -1,34 +1,33 @@
 using UnityEngine;
 using System.Collections;
 
+public struct BulletMoveSettings
+{
+    public Vector3 dir;
+    public float speed;
+
+    public BulletMoveSettings(Vector3 dir, float speed)
+    {
+        this.dir = dir;
+        this.speed = speed;
+    }
+}
+
 public class BulletMover : MonoBehaviour, IPoolable
 {
-    public void Launch(Vector3 dir, float spreadDeg, float upSpeed, float upDuration, float redirectSpeed, float redirectDelay, float lifeTime)
+    public void Launch(BulletMoveSettings data, float lifeTime, float delay)
     {
-        StartCoroutine(Move(dir, spreadDeg, upSpeed, upDuration, redirectSpeed, redirectDelay, lifeTime));
+        StartCoroutine(Move(data, lifeTime, delay));
     }
 
-    private IEnumerator Move(Vector3 dir, float spreadDeg, float upSpeed, float upDuration, float redirectSpeed, float redirectDelay, float lifeTime)
+    private IEnumerator Move(BulletMoveSettings data, float lifeTime, float delay)
     {
+        yield return new WaitForSeconds(delay);
+        
         float timer = 0f;
-        Vector3 upDir = Quaternion.Euler(0f, 0f, spreadDeg) * Vector3.up;
-        float angle = Mathf.Atan2(upDir.y, upDir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
-        while (timer < upDuration)
-        {
-            transform.position += upDir * upSpeed * Time.deltaTime;
-            timer += Time.deltaTime;
-            yield return null;
-        }
-
-        yield return new WaitForSeconds(Random.Range(0f, redirectDelay));
-
-        timer = 0f;
-        angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
         while (true)
         {
-            transform.position += dir * redirectSpeed * Time.deltaTime;
+            transform.position += data.dir * data.speed * Time.deltaTime;
             timer += Time.deltaTime;
             if (lifeTime != 0 && lifeTime <= timer)
                 break;

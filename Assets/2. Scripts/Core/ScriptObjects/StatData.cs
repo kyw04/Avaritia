@@ -18,6 +18,10 @@ public enum StatType
     CritRate, // 0~100(%)
     CooldownReduction, // 0~100(%). 스킬/아이템 어빌리티 쿨다운 감소율
     DashForce, // 대시 임펄스 세기 (기존 하드코딩 값 50)
+    BulletCount,
+    BulletDelay, // 여러개의 총알이 생성 될 때 생성 될 딜레이 (총알이 하나라면 무시함.)
+    BulletMaxDelay, // 여러개의 총알이 생성 될 때 생성 될 최대 딜레이
+    BulletSpeed,
 }
 
 public static class StatParameter
@@ -37,6 +41,10 @@ public static class StatParameter
         { StatType.CritRate, typeof(float) },
         { StatType.CooldownReduction, typeof(float) },
         { StatType.DashForce, typeof(float) },
+        { StatType.BulletCount, typeof(int) },
+        { StatType.BulletDelay, typeof(float) },
+        { StatType.BulletMaxDelay, typeof(float) },
+        { StatType.BulletSpeed, typeof(float) },
     };
 
     public static Type GetStatParameter(StatType type)

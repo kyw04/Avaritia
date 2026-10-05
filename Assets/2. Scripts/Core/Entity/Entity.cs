@@ -61,6 +61,17 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     public float DashCooldown => GetStat<float>(StatType.DashCooldown);
     public float DashForce => GetStat<float>(StatType.DashForce);
 
+    public bool TryGetStat<T>(StatType type, out T stat)
+    {
+        if (stats.TryGet<T>(type, out stat))
+        {
+            stat = GetStat<T>(type);
+            return true;
+        }
+        
+        return false;
+    }
+
     public T GetStat<T>(StatType type)
     {
         var baseValue = stats.Get<T>(type);

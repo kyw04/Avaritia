@@ -35,7 +35,7 @@ MonoBehaviour:
       type: {class: BuffEffect, ns: , asm: Assembly-CSharp}
       data:
         modifiers:
-        - statType: 3
+        - statType: 6
           valueType: 0
           amount: 10
         duration: 0

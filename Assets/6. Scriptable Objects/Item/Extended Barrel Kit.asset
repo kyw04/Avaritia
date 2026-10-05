@@ -21,11 +21,20 @@ MonoBehaviour:
     \uC5F0\uC7A5 \uBD80\uD488. \uC801\uC744 \uC548\uC804\uD55C \uAC70\uB9AC\uC5D0
     \uBB36\uC5B4\uB450\uAE30\uC5D0 \uC81C\uACA9\uC774\uB2E4."
   trigger:
-    rid: -2
+    rid: 3411488935590494291
   conditions: []
-  effects: []
+  effects:
+  - rid: 3411488935590494292
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
+    - rid: 3411488935590494291
+      type: {class: OnEquippedTrigger, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 3411488935590494292
+      type: {class: BuffEffect, ns: , asm: Assembly-CSharp}
+      data:
+        modifiers: []
+        duration: 0
+        applyTo: 0
+        activeWhile: []

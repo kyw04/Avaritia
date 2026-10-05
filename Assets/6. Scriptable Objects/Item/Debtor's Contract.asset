@@ -21,15 +21,19 @@ MonoBehaviour:
     \uC0C1\uD669\uC774 \uB098\uBE60 \uBCF4\uC77C\uC218\uB85D \uB354 \uAC15\uD558\uAC8C
     \uACF5\uACA9\uD55C\uB2E4."
   trigger:
-    rid: 5230665525031600214
-  conditions: []
+    rid: 3411488935590494289
+  conditions:
+  - rid: 3411488935590494290
   effects:
   - rid: 5230665525031600215
   references:
     version: 2
     RefIds:
-    - rid: 5230665525031600214
-      type: {class: OnEquippedTrigger, ns: , asm: Assembly-CSharp}
+    - rid: 3411488935590494289
+      type: {class: OnAttackedTrigger, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 3411488935590494290
+      type: {class: CasterHealthLowerCondition, ns: , asm: Assembly-CSharp}
       data: 
     - rid: 5230665525031600215
       type: {class: BuffEffect, ns: , asm: Assembly-CSharp}

@@ -95,7 +95,6 @@ public class AttackDataEditor : Editor
     private void DrawRangedAttackGizmo(RangedAttackStrategy strategy)
     {
         int count = Mathf.Max(1, strategy.bulletCount);
-        float rayLength = Mathf.Max(0.1f, strategy.upSpeed * strategy.upDuration);
 
         Handles.color = Color.cyan;
         for (int i = 0; i < count; i++)
@@ -104,7 +103,7 @@ public class AttackDataEditor : Editor
                 ? Mathf.Lerp(-strategy.spreadAngle / 2f, strategy.spreadAngle / 2f, (float)i / (count - 1))
                 : 0f;
             Vector3 dir = Quaternion.Euler(0f, 0f, angle) * Vector3.up;
-            Handles.DrawLine(Vector3.zero, dir * rayLength);
+            Handles.DrawLine(Vector3.zero, dir);
         }
     }
 
