@@ -22,11 +22,46 @@ MonoBehaviour:
   bossNode: {fileID: 7954200374822473593, guid: d1a56713a9af5c84d907e03d0da26f13, type: 3}
   bossRoomDistance: 5
   weaponRewardPool:
-  - {fileID: 11400000, guid: d413ff329fa88d445a6a6c85c4eed3e9, type: 2}
-  weaponBoxItemCount: 1
+    rewards:
+    - {fileID: 11400000, guid: d413ff329fa88d445a6a6c85c4eed3e9, type: 2}
+    itemCount: 1
   skillRewardPool:
-  - {fileID: 11400000, guid: 5f7051b18337f504facdcd71dc629842, type: 2}
-  - {fileID: 11400000, guid: 24897805a33703149908f3757c348de9, type: 2}
-  - {fileID: 11400000, guid: 1575af593c12af148935baeb4784cd8a, type: 2}
-  skillBoxItemCount: 3
+    rewards:
+    - {fileID: 11400000, guid: 5f7051b18337f504facdcd71dc629842, type: 2}
+    - {fileID: 11400000, guid: 24897805a33703149908f3757c348de9, type: 2}
+    - {fileID: 11400000, guid: 1575af593c12af148935baeb4784cd8a, type: 2}
+    itemCount: 3
+  itemRewardPool:
+    rewards:
+    - {fileID: 11400000, guid: 60ebf458ec6afb048aac0412682eb016, type: 2}
+    - {fileID: 11400000, guid: 21e2531993ac41e42887f3278973a216, type: 2}
+    - {fileID: 11400000, guid: acdca23e09042ef458df425efd454ab2, type: 2}
+    - {fileID: 11400000, guid: 702aa5f87b8ba064a8b287d8e4619cea, type: 2}
+    - {fileID: 11400000, guid: ec2e78060f478b542ba9dbcd5cb20fe1, type: 2}
+    - {fileID: 11400000, guid: 03d61bec9e3acd64e99c27e5de0a51da, type: 2}
+    - {fileID: 11400000, guid: 1783be28a4032d84c8a319d8dfc5f28f, type: 2}
+    - {fileID: 11400000, guid: 03ca082d6a1325248a48cc5160795f3e, type: 2}
+    - {fileID: 11400000, guid: b49276e1bf75e7b48aabc83c1b2c45a0, type: 2}
+    - {fileID: 11400000, guid: 0407e795084074d41ad1008715849157, type: 2}
+    - {fileID: 11400000, guid: 44dae7da85af4bd4fb83f1290c683293, type: 2}
+    - {fileID: 11400000, guid: 77998a843a9a48c449407754d76b5e23, type: 2}
+    - {fileID: 11400000, guid: 36057d4c6e0ff9d43b7b51b3967a3ab6, type: 2}
+    - {fileID: 11400000, guid: 80361ed4f2ae94a42905e814f1ed148e, type: 2}
+    - {fileID: 11400000, guid: b7824201edee251469e2656c0a4bdaf9, type: 2}
+    - {fileID: 11400000, guid: 8676ec41bf0fe8c4ab8ca428dbe14540, type: 2}
+    - {fileID: 11400000, guid: 11c10cc0a821248428272ac8b4b9616a, type: 2}
+    - {fileID: 11400000, guid: 1ce32cf1db5b6b8488579fd4c2161d06, type: 2}
+    - {fileID: 11400000, guid: c0d9e7153ba021c47bf6e28ee45fa92b, type: 2}
+    - {fileID: 11400000, guid: 33296a9945f5f3b4b939ed75c8008dfe, type: 2}
+    - {fileID: 11400000, guid: 3ac93c12ab401d641a5aaa4754bff6a6, type: 2}
+    - {fileID: 11400000, guid: 628b5bec167011341a5aac7bfbb0be07, type: 2}
+    - {fileID: 11400000, guid: 1bc8b87cd7ca01243bbe02bd1a5d4bf5, type: 2}
+    - {fileID: 11400000, guid: 0271641f28227f3408e247269078ee2f, type: 2}
+    - {fileID: 11400000, guid: 6a7591a3e3acc1142a16b801bd2f2621, type: 2}
+    - {fileID: 11400000, guid: e1cce9dbb12196b4586b1e603919c317, type: 2}
+    - {fileID: 11400000, guid: f5670e525f09e224b86757942828cd0c, type: 2}
+    - {fileID: 11400000, guid: f96aee135647fcc4aa842fa46e92bde2, type: 2}
+    - {fileID: 11400000, guid: 600be0640448a90438535266ec19a171, type: 2}
+    - {fileID: 11400000, guid: 4c771dd8e33b1af4488fcba8eddc6f30, type: 2}
+    itemCount: 3
   nextStage: {fileID: 0}

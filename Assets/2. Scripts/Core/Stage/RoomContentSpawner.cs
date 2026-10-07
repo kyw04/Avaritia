@@ -111,8 +111,9 @@ public class RoomContentSpawner : MonoBehaviour,
 
     private static (List<ScriptableObject> pool, int count) ResolvePool(StageData stageData, BattleRoomType type) => type switch
     {
-        BattleRoomType.Weapon => (stageData.weaponRewardPool.ConvertAll(w => (ScriptableObject)w), stageData.weaponBoxItemCount),
-        BattleRoomType.Skill => (stageData.skillRewardPool.ConvertAll(s => (ScriptableObject)s), stageData.skillBoxItemCount),
+        BattleRoomType.Weapon => (stageData.weaponRewardPool.rewards, stageData.weaponRewardPool.itemCount),
+        BattleRoomType.Skill => (stageData.skillRewardPool.rewards, stageData.skillRewardPool.itemCount),
+        BattleRoomType.Item => (stageData.itemRewardPool.rewards, stageData.itemRewardPool.itemCount),
         _ => (null, 0),
     };
 }

@@ -116,7 +116,8 @@ public class StageManager : Singleton<StageManager>
         BattleRoomTypeFilter.Normal => BattleRoomType.Normal,
         BattleRoomTypeFilter.Skill => BattleRoomType.Skill,
         BattleRoomTypeFilter.Weapon => BattleRoomType.Weapon,
-        _ => (BattleRoomType)Random.Range(0, 3),
+        BattleRoomTypeFilter.Item => BattleRoomType.Item,
+        _ => (BattleRoomType)Random.Range(0, 4),
     };
 
     public void AdvanceStage(StageData nextStage)

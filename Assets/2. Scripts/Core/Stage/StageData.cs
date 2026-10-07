@@ -13,10 +13,9 @@ public class StageData : ScriptableObject
     public StageNode bossNode;
     public int bossRoomDistance;
 
-    public List<Weapon> weaponRewardPool = new();
-    public int weaponBoxItemCount = 1;
-    public List<AbilityData> skillRewardPool = new();
-    public int skillBoxItemCount = 1;
+    public RewardPool weaponRewardPool;
+    public RewardPool skillRewardPool;
+    public RewardPool itemRewardPool;
 
     public StageData nextStage;
 }

@@ -2,8 +2,8 @@ using UnityEngine;
 
 public enum RoomType { None, Shop, Boss, Battle }
 
-public enum BattleRoomType { Normal, Skill, Weapon }
-public enum BattleRoomTypeFilter { Any, Normal, Skill, Weapon }
+public enum BattleRoomType { Normal, Skill, Weapon, Item }
+public enum BattleRoomTypeFilter { Any, Normal, Skill, Weapon, Item }
 
 public class StageNode : MonoBehaviour
 {
