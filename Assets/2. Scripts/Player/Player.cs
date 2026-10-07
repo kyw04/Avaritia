@@ -27,12 +27,6 @@ public class Player : Entity, IStateOwner<Player>
 
     public bool CanAttack() => Weapon != null && Weapon.combo != null && Weapon.combo.Count > 0 && Time.time >= AttackReadyTime;
 
-    protected override T ApplyEquipmentBonus<T>(StatType type, T baseValue) =>
-        weapon != null ? weapon.ApplyBonus(type, baseValue) : baseValue;
-
-    protected override bool HasEquipmentBonus<T>(StatType type) =>
-        weapon != null && weapon.TryGetStatBonus<T>(type, out _);
-
     public void EquipWeapon(Weapon newWeapon)
     {
         PreserveHealthRatio(() =>

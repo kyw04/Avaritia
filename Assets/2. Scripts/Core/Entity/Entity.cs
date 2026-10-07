@@ -61,35 +61,26 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     public float DashCooldown => GetStat<float>(StatType.DashCooldown);
     public float DashForce => GetStat<float>(StatType.DashForce);
 
-    // 기본 스탯에 없는 항목(예: 탄환 스탯)도 장비 보너스가 있으면 기본값 0에서 보너스를 더해 반환한다.
+    // 기본 스탯에 없는 항목(예: 탄환 스탯)도 활성 버프(무기 패시브 등)가 있으면 기본값 0에서 버프를 더해 반환한다.
     public bool TryGetStat<T>(StatType type, out T stat)
     {
-        if (!stats.TryGet<T>(type, out var baseValue) && !HasEquipmentBonus<T>(type))
+        if (!stats.TryGet<T>(type, out var baseValue) && !HasActiveBuff(type))
         {
             stat = default;
             return false;
         }
-        stat = ApplyBuffs(type, ApplyEquipmentBonus(type, baseValue));
+        stat = ApplyBuffs(type, baseValue);
         return true;
     }
 
-    public T GetStat<T>(StatType type)
-    {
-        var baseValue = stats.Get<T>(type);
-        var withEquipment = ApplyEquipmentBonus(type, baseValue);
-        return ApplyBuffs(type, withEquipment);
-    }
+    public T GetStat<T>(StatType type) => ApplyBuffs(type, stats.Get<T>(type));
 
     // Damage against a specific target: also counts buffs whose conditions depend on the target
     // (e.g. "HP lower than the target's"), which plain `Damage` (no target) always leaves out.
-    public float GetDamageAgainst(Transform target)
-    {
-        var withEquipment = ApplyEquipmentBonus(StatType.Damage, stats.Get<float>(StatType.Damage));
-        return ApplyBuffs(StatType.Damage, withEquipment, target);
-    }
+    public float GetDamageAgainst(Transform target) =>
+        ApplyBuffs(StatType.Damage, stats.Get<float>(StatType.Damage), target);
 
-    protected virtual T ApplyEquipmentBonus<T>(StatType type, T baseValue) => baseValue;
-    protected virtual bool HasEquipmentBonus<T>(StatType type) => false;
+    private bool HasActiveBuff(StatType type) => activeBuffs.Exists(b => b.type == type && IsBuffActive(b, null));
 
     // A buff's conditions may themselves read stats (e.g. HealthRatioCondition -> MaxHealth), which
     // re-enters ApplyBuffs — so this must never mutate activeBuffs; expired ones are skipped here and
@@ -230,9 +221,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
 
     protected T GetAssetStat<T>(StatType type)
     {
-        var baseValue = statDataAsset.TryGetValue<T>(type);
-        var withEquipment = ApplyEquipmentBonus(type, baseValue);
-        return ApplyBuffs(type, withEquipment);
+        return ApplyBuffs(type, statDataAsset.TryGetValue<T>(type));
     }
 
     protected virtual void Awake()

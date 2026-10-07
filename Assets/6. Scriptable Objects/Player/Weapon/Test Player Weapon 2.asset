@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 801ce89494f74eb47be585198362eac3, type: 3}
   combo: {fileID: 11400000, guid: b0cf0df8d9747d64985aa45fd8dd8088, type: 2}
-  statBonusData: {fileID: 11400000, guid: de01a4f835a2f23468991fd600cf4711, type: 2}
   icon: {fileID: 1693390229234585388, guid: 374261b03d7786b4fa2007f7399402d0, type: 3}
   displayName: ddddddd
   description: 
-  passiveAbilities: []
+  passiveAbilities:
+  - {fileID: 11400000, guid: aac30a3539ffbe346b1f0d5a8c697d97, type: 2}
