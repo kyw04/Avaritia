@@ -12,6 +12,7 @@ public class Weapon : ScriptableObject, IInventoryItem
     [TextArea] public string description;
     public List<AbilityData> passiveAbilities = new();
     public PooledParticle attackParticle;
+    public AudioClip hitSound;
     public float shakeForce = 0.3f;
     [Range(0f, 1f)] public float hitStopTimeScale = 0.1f;
     [Min(0)] public float hitStopDuration = 0.08f;
