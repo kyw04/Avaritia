@@ -352,6 +352,10 @@ MonoBehaviour:
     <Run>k__BackingField: {fileID: -3003488898790290654, guid: 760a10bcbb84467291be42163fabaecf, type: 3}
     <Dash>k__BackingField: {fileID: 2072696025078154306, guid: 5baab97e3efb4f179a93e126293db3fa, type: 3}
     <Hit>k__BackingField: {fileID: 0}
+  sounds:
+    <Land>k__BackingField: {fileID: 8300000, guid: 0c182e5639d11644b9bafcc858640069, type: 3}
+    <Dash>k__BackingField: {fileID: 8300000, guid: aaa431fdf475b504fb42b5ed4bdedd3f, type: 3}
+    <Hit>k__BackingField: {fileID: 0}
   weapon: {fileID: 11400000, guid: d413ff329fa88d445a6a6c85c4eed3e9, type: 2}
   interactionController: {fileID: 6477522951164393474}
   platformLayer:

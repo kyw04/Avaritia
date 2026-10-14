@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::JumpData
   jumpClip: {fileID: 7400000, guid: 8ddacaff7baac6a499eaad940b2da7b6, type: 2}
   particle: {fileID: -6220497041147768454, guid: cde97f1423b514943870f49d21afdd4a, type: 3}
+  sound: {fileID: 8300000, guid: d3b38b3d4c1dd9b489a34a69fa4c2aaa, type: 3}
