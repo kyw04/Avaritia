@@ -8107,11 +8107,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5811709457767519640, guid: 4ce7eb9e35aa8f440ac5d1b9a79692eb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.8
+      value: 21.5
       objectReference: {fileID: 0}
     - target: {fileID: 5811709457767519640, guid: 4ce7eb9e35aa8f440ac5d1b9a79692eb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 35
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 5811709457767519640, guid: 4ce7eb9e35aa8f440ac5d1b9a79692eb, type: 3}
       propertyPath: m_LocalPosition.z
@@ -8892,11 +8892,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1989622532717823825, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -18.1
+      value: 26.66
       objectReference: {fileID: 0}
     - target: {fileID: 1989622532717823825, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.3
+      value: -3.44
       objectReference: {fileID: 0}
     - target: {fileID: 1989622532717823825, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
       propertyPath: m_LocalPosition.z
@@ -8934,6 +8934,34 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
+      propertyPath: viewRadius
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
+      propertyPath: alertRadius
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
+      propertyPath: viewDensity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
+      propertyPath: patrolSize.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
+      propertyPath: patrolSize.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
+      propertyPath: abilities.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
+      propertyPath: particles.<Hit>k__BackingField
+      value: 
+      objectReference: {fileID: 8513416037555735887, guid: 597547e91e9bb084c807fef645e2cc15, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10312,11 +10340,11 @@ PrefabInstance:
       objectReference: {fileID: 707587006}
     - target: {fileID: 8133240403206615693, guid: 3b1815dce988a1349b5f5864f95274d8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.8
+      value: 21.5
       objectReference: {fileID: 0}
     - target: {fileID: 8133240403206615693, guid: 3b1815dce988a1349b5f5864f95274d8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 35
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 8133240403206615693, guid: 3b1815dce988a1349b5f5864f95274d8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -10425,6 +10453,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2856072584327875828, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
+      propertyPath: particles.<Hit>k__BackingField
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2856072584327875828, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
       propertyPath: particles.<Run>k__BackingField
       value: 
       objectReference: {fileID: -3003488898790290654, guid: 760a10bcbb84467291be42163fabaecf, type: 3}
@@ -10440,17 +10472,21 @@ PrefabInstance:
       propertyPath: particles.<Turn>k__BackingField
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 2856072584327875828, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
+      propertyPath: particles.<Attack>k__BackingField
+      value: 
+      objectReference: {fileID: 8513416037555735887, guid: 418edffde030b3d4b88b59e7d7c0502b, type: 3}
     - target: {fileID: 4182182711176251150, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
       propertyPath: m_SortingOrder
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4739286354209235477, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.8
+      value: 21.5
       objectReference: {fileID: 0}
     - target: {fileID: 4739286354209235477, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 33.5
+      value: -0.7
       objectReference: {fileID: 0}
     - target: {fileID: 4739286354209235477, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
       propertyPath: m_LocalPosition.z
