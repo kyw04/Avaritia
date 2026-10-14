@@ -94,7 +94,6 @@ public class ParticleManager : Singleton<ParticleManager>,
     public void OnNotify(EntityDashEvent e) => Spawn(e.Particle, e.Source.transform);
     public void OnNotify(EntityDamagedEvent e)
     {
-        // 탄환/효과 데미지는 Attacker가 null이므로 피격 파티클만 피격자 위치에 재생
         if (e.Attacker == null)
         {
             Spawn(e.Source.Particles.Hit, e.Source.transform.position);
