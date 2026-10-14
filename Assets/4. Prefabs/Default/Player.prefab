@@ -82,7 +82,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 999
+  m_SortingOrder: 10
   m_MaskInteraction: 0
   m_Sprite: {fileID: -6929352194190826025, guid: 0291a0a5714f7b849a585d0fc1bd26fb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -240,7 +240,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1000
+  m_SortingOrder: 11
   m_MaskInteraction: 0
   m_Sprite: {fileID: -4870798248371929716, guid: 68deb3f6af485bc43a8406c98c27c609, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -347,7 +347,11 @@ MonoBehaviour:
   dropAbilityAsset: {fileID: 0}
   dropChance: 0
   particles:
-    land: {fileID: 3997078153917561944, guid: 121960c962a84982a420a44a2f68e135, type: 3}
+    <Land>k__BackingField: {fileID: 3997078153917561944, guid: 121960c962a84982a420a44a2f68e135, type: 3}
+    <Turn>k__BackingField: {fileID: 0}
+    <Run>k__BackingField: {fileID: -3003488898790290654, guid: 760a10bcbb84467291be42163fabaecf, type: 3}
+    <Dash>k__BackingField: {fileID: 2072696025078154306, guid: 5baab97e3efb4f179a93e126293db3fa, type: 3}
+    <Hit>k__BackingField: {fileID: 0}
   weapon: {fileID: 11400000, guid: d413ff329fa88d445a6a6c85c4eed3e9, type: 2}
   interactionController: {fileID: 6477522951164393474}
   platformLayer:
