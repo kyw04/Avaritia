@@ -5,7 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(CinemachineImpulseSource))]
 public class CameraManager : MonoBehaviour, IObserver<EntityDamagedEvent>
 {
-    [SerializeField] private float attackShakeForce = 0.3f;
     [SerializeField] private float hitShakeForce = 1f;
     [SerializeField, Range(0f, 1f)] private float hitStopTimeScale = 0.1f;
     [SerializeField, Min(0)] private float hitStopDuration = 0.08f;
@@ -38,9 +37,10 @@ public class CameraManager : MonoBehaviour, IObserver<EntityDamagedEvent>
         {
             Shake(hitShakeForce);
         }
-        else if (e.Attacker is Player)
+        else if (e.Attacker is Player player)
         {
-            Shake(attackShakeForce);
+            if (player.Weapon != null)
+                Shake(player.Weapon.shakeForce);
             SlowMotion(hitStopTimeScale, hitStopDuration);
         }
     }

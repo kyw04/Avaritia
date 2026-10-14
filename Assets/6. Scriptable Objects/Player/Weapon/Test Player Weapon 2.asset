@@ -19,3 +19,5 @@ MonoBehaviour:
   description: 
   passiveAbilities:
   - {fileID: 11400000, guid: aac30a3539ffbe346b1f0d5a8c697d97, type: 2}
+  attackParticle: {fileID: 8513416037555735887, guid: 418edffde030b3d4b88b59e7d7c0502b, type: 3}
+  shakeForce: 0.3

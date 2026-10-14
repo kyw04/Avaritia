@@ -8846,7 +8846,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2131e0be83644aea556bc977cb340ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraManager
-  attackShakeForce: 0.3
   hitShakeForce: 1
   hitStopTimeScale: 0.1
   hitStopDuration: 0.08
@@ -10579,10 +10578,6 @@ PrefabInstance:
       propertyPath: particles.<Turn>k__BackingField
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 2856072584327875828, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
-      propertyPath: particles.<Attack>k__BackingField
-      value: 
-      objectReference: {fileID: 8513416037555735887, guid: 418edffde030b3d4b88b59e7d7c0502b, type: 3}
     - target: {fileID: 4182182711176251150, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
       propertyPath: m_SortingOrder
       value: 10

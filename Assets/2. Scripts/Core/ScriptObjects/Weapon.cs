@@ -11,6 +11,8 @@ public class Weapon : ScriptableObject, IInventoryItem
     public string displayName;
     [TextArea] public string description;
     public List<AbilityData> passiveAbilities = new();
+    public PooledParticle attackParticle;
+    public float shakeForce = 0.3f;
 
     public string DisplayName => displayName;
     public string Details => description;
