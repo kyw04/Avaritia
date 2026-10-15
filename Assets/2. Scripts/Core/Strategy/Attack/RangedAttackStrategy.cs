@@ -51,7 +51,9 @@ public class RangedAttackStrategy : IAttackStrategy
                 if (Random.Range(0f, 100f) < critRate)
                     dmg *= CritConfig.Multiplier;
             }
-            mover.GetComponent<DamageDealer>().damage = dmg;
+            var dealer = mover.GetComponent<DamageDealer>();
+            dealer.damage = dmg;
+            dealer.attacker = attacker as Entity;
             
             var dir = Vector3.right * attacker.LookDirection;
             if (target != null)

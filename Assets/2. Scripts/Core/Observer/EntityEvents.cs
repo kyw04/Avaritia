@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public struct EntityIdleEvent : ISubject
 {
     public Entity Source { get; private set; }
@@ -45,13 +47,14 @@ public struct EntityDeadEvent : ISubject
     public EntityDeadEvent(Entity source) { Source = source; }
 }
 
-// Source = the entity that took the damage. Attacker is null when unknown (bullets, effects).
+// Source = the entity that took the damage. Attacker is null when unknown (effects).
 public struct EntityDamagedEvent : ISubject
 {
     public Entity Source { get; private set; }
     public Entity Attacker { get; private set; }
     public float Amount { get; private set; }
-    public EntityDamagedEvent(Entity source, Entity attacker, float amount) { Source = source; Attacker = attacker; Amount = amount; }
+    public Vector3? HitPoint { get; private set; }
+    public EntityDamagedEvent(Entity source, Entity attacker, float amount, Vector3? hitPoint = null) { Source = source; Attacker = attacker; Amount = amount; HitPoint = hitPoint; }
 }
 
 // Published when Source's HP hits 0, before it dies — a listener that heals it cancels the death.

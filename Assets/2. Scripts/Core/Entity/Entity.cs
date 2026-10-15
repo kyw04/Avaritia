@@ -15,6 +15,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     [SerializeField, Range(0, 100)] protected float dropChance;
     [SerializeField] protected EntityParticles particles;
     [SerializeField] protected EntitySounds sounds;
+    [SerializeField, Range(0, 1)] protected float knockbackResistance;
 
     protected RuntimeStats stats;
     protected bool isDead;
@@ -41,6 +42,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     private readonly Dictionary<object, float> shields = new();
     private readonly Dictionary<object, int> hitBlocks = new();
     private float invincibleUntil;
+    private float knockbackUntil;
     private float trackedMaxHealth;
 
     public Rigidbody2D Rb { get; protected set; }
@@ -48,6 +50,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     public bool IsAttacking { get; set; }
     public AbilityManager Abilities { get; private set; }
     public bool IsGrounded { get; protected set; }
+    public bool IsKnockedBack => Time.time < knockbackUntil;
 
     public virtual int LookDirection => transform.localScale.x >= 0 ? 1 : -1;
 
@@ -254,6 +257,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         Abilities = new AbilityManager(this, abilities);
         Abilities.BindAll();
         invincibleUntil = 0f;
+        knockbackUntil = 0f;
         wasGroundCheckerChanged = !IsGrounded;
     }
 
@@ -281,7 +285,19 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         if (IsGrounded) stats.Set(StatType.DoubleJumpCount, 0);
     }
 
-    public void Move(Vector2 direction) => movementStrategy?.Move(this, Rb, direction);
+    // 넉백 중에는 이동 전략이 속도를 덮어써 넉백을 지우지 않도록 이동을 막는다.
+    public void Move(Vector2 direction)
+    {
+        if (IsKnockedBack) return;
+        movementStrategy?.Move(this, Rb, direction);
+    }
+
+    public void ApplyKnockback(Vector2 velocity, float duration)
+    {
+        if (knockbackResistance >= 1f) return;
+        Rb.linearVelocity = velocity * (1f - knockbackResistance);
+        knockbackUntil = Time.time + duration;
+    }
     public void UpdateFacing(Vector2 direction) => movementStrategy?.UpdateFacing(this, direction.x);
 
     public virtual void Jump()
@@ -309,7 +325,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         OnDashCountChanged();
     }
 
-    public void TakeDamage(float damage, Entity attacker = null)
+    public void TakeDamage(float damage, Entity attacker = null, Vector3? hitPoint = null)
     {
         if (Time.time < invincibleUntil) return;
         if (Random.Range(0f, 100f) < GetStat<float>(StatType.Evasion)) return;
@@ -321,7 +337,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         stats.Set(StatType.CurrentHealth, stats.Get<float>(StatType.CurrentHealth) - damage);
         activeBuffs.RemoveAll(b => b.clearOnDamageTaken);
         OnHealthChanged();
-        EventBus.Publish(new EntityDamagedEvent(this, attacker, damage));
+        EventBus.Publish(new EntityDamagedEvent(this, attacker, damage, hitPoint));
 
         if (CurrentHealth > 0) return;
         // Listeners (e.g. a revive item) may heal in response; only die if nothing did.

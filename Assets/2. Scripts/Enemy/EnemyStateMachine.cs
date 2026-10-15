@@ -121,6 +121,8 @@ public class EnemyMoveState : StateBase<Enemy>
 
     public override void FixedExecute()
     {
+        if (Owner.IsKnockedBack)
+            return;
         if (!Owner.IsInAttackRange())
             Owner.Move();
         else

@@ -100,7 +100,8 @@ public class ParticleManager : Singleton<ParticleManager>,
             return;
         }
 
-        Vector3 mid = (e.Source.transform.position + e.Attacker.transform.position) * 0.5f;
+        Vector3 from = e.HitPoint ?? e.Attacker.transform.position;
+        Vector3 mid = (e.Source.transform.position + from) * 0.5f;
         Spawn(e.Source.Particles.Hit, mid);
         if (e.Attacker is Player player && player.Weapon != null)
             Spawn(player.Weapon.attackParticle, mid);
