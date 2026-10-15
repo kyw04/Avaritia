@@ -8874,6 +8874,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 451785785379693136, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: ab99142181f77a54b916c0ae4f8039bc, type: 3}
+    - target: {fileID: 451785785379693136, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1989622532717823825, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
       propertyPath: m_LocalPosition.x
       value: 26.66
@@ -8939,13 +8947,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
+      propertyPath: knockbackResistance
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
       propertyPath: abilities.Array.size
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
       propertyPath: sounds.<Hit>k__BackingField
       value: 
-      objectReference: {fileID: 8300000, guid: 21a23957a77c3bc488f38c0c48b7cb7e, type: 3}
+      objectReference: {fileID: 8300000, guid: d5f73f90be4e72443a20f791be9cce6c, type: 3}
     - target: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
       propertyPath: particles.<Hit>k__BackingField
       value: 
