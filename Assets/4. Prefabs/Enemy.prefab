@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6004862550223445198}
   - component: {fileID: 6955552012763545146}
   - component: {fileID: 7411222152702535793}
+  - component: {fileID: 2976961367799137823}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Untagged
@@ -50,7 +51,6 @@ MonoBehaviour:
   abilities:
   - {fileID: 11400000, guid: 2c32ea8b83c64696b063dcd2db907a13, type: 2}
   statDataAsset: {fileID: 11400000, guid: 39f96f962c1505e438aed6d89314079b, type: 2}
-  weapon: {fileID: 0}
   movementStrategy:
     rid: 1772930779186724988
   groundCheck: {fileID: 0}
@@ -58,6 +58,20 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 0
+  dropWeaponAsset: {fileID: 0}
+  dropAbilityAsset: {fileID: 0}
+  dropChance: 0
+  particles:
+    <Land>k__BackingField: {fileID: 0}
+    <Turn>k__BackingField: {fileID: 0}
+    <Run>k__BackingField: {fileID: 0}
+    <Dash>k__BackingField: {fileID: 0}
+    <Hit>k__BackingField: {fileID: 0}
+  sounds:
+    <Land>k__BackingField: {fileID: 0}
+    <Dash>k__BackingField: {fileID: 0}
+    <Hit>k__BackingField: {fileID: 0}
+  knockbackResistance: 0
   patrolSize: {x: 5.275786, y: 8.160981}
   viewLayerMask:
     serializedVersion: 2
@@ -145,6 +159,20 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &2976961367799137823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4391163561257397444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e033b93f4101f444a61da30940f01ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitFlash
+  flashMaterial: {fileID: 2100000, guid: e6adc9dc78ad5504d9a8d911a210b4cf, type: 2}
+  duration: 0.1
 --- !u!1 &5450962051100456378
 GameObject:
   m_ObjectHideFlags: 0

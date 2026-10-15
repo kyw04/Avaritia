@@ -139,6 +139,7 @@ GameObject:
   - component: {fileID: 7499223493051732727}
   - component: {fileID: 5302793644755587929}
   - component: {fileID: 357216564599220113}
+  - component: {fileID: 8815859556016013024}
   m_Layer: 7
   m_Name: Boss
   m_TagString: Untagged
@@ -179,7 +180,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a61f0e51e7ec4a24a68acd5c79bd8791, type: 2}
   - {fileID: 11400000, guid: fd50b532c15f4ddb99e54cbc8bc35f87, type: 2}
   statDataAsset: {fileID: 11400000, guid: 027ee85a5df17b2499498d5b862c1540, type: 2}
-  weapon: {fileID: 0}
   movementStrategy:
     rid: 1772930779186724987
   groundCheck: {fileID: 0}
@@ -187,6 +187,20 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 0
+  dropWeaponAsset: {fileID: 0}
+  dropAbilityAsset: {fileID: 0}
+  dropChance: 0
+  particles:
+    <Land>k__BackingField: {fileID: 0}
+    <Turn>k__BackingField: {fileID: 0}
+    <Run>k__BackingField: {fileID: 0}
+    <Dash>k__BackingField: {fileID: 0}
+    <Hit>k__BackingField: {fileID: 0}
+  sounds:
+    <Land>k__BackingField: {fileID: 0}
+    <Dash>k__BackingField: {fileID: 0}
+    <Hit>k__BackingField: {fileID: 0}
+  knockbackResistance: 0
   references:
     version: 2
     RefIds:
@@ -257,3 +271,17 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1.5, y: 1.75}
   m_Direction: 0
+--- !u!114 &8815859556016013024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7678781736317148054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e033b93f4101f444a61da30940f01ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitFlash
+  flashMaterial: {fileID: 2100000, guid: e6adc9dc78ad5504d9a8d911a210b4cf, type: 2}
+  duration: 0.1

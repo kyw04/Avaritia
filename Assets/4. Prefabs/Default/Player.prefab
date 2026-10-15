@@ -296,6 +296,7 @@ GameObject:
   - component: {fileID: 5735150061085217394}
   - component: {fileID: 2389468441697128624}
   - component: {fileID: 6477522951164393474}
+  - component: {fileID: 258006038428868027}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -356,6 +357,7 @@ MonoBehaviour:
     <Land>k__BackingField: {fileID: 8300000, guid: 0c182e5639d11644b9bafcc858640069, type: 3}
     <Dash>k__BackingField: {fileID: 8300000, guid: aaa431fdf475b504fb42b5ed4bdedd3f, type: 3}
     <Hit>k__BackingField: {fileID: 0}
+  knockbackResistance: 0
   weapon: {fileID: 11400000, guid: d413ff329fa88d445a6a6c85c4eed3e9, type: 2}
   interactionController: {fileID: 6477522951164393474}
   platformLayer:
@@ -463,3 +465,17 @@ MonoBehaviour:
   tapThreshold: 0.15
   fillStartDelay: 0.5
   holdDuration: 0.6
+--- !u!114 &258006038428868027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4770807377537432152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e033b93f4101f444a61da30940f01ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitFlash
+  flashMaterial: {fileID: 2100000, guid: e6adc9dc78ad5504d9a8d911a210b4cf, type: 2}
+  duration: 0.1
