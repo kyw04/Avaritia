@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: M_Fog2D
-  m_Shader: {fileID: 4800000, guid: 886b7f5d82cfd694d8f352afec93c5aa, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 5c920f7631e9a5348875a23415b784ae, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
