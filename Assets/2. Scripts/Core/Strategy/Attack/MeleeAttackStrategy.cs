@@ -10,7 +10,8 @@ public class MeleeAttackStrategy : IAttackStrategy
     public void Offensive(IAttacker attacker, float damageMultiplier, ContactFilter2D filter, Transform target = null)
     {
         float scale = damageMultiplier;
-        if (attacker is IStatReadable readable && Random.Range(0f, 100f) < readable.GetStat<float>(StatType.CritRate))
+        bool isCritical = attacker is IStatReadable readable && Random.Range(0f, 100f) < readable.GetStat<float>(StatType.CritRate);
+        if (isCritical)
             scale *= CritConfig.Multiplier;
         var attackerEntity = attacker as Entity;
         var hits = new List<Collider2D>();
@@ -26,10 +27,8 @@ public class MeleeAttackStrategy : IAttackStrategy
             if (hit.transform.IsChildOf(attacker.Mono.transform)) continue;
             if (hit.TryGetComponent<IDamageable>(out var d))
             {
-                Debug.Log($"[Take Damage] {hit.name}");
-                // Per target, so target-dependent buffs (e.g. Debtor's Contract) are evaluated against this hit.
                 float baseDmg = attackerEntity != null ? attackerEntity.GetDamageAgainst(hit.transform) : attacker.Damage;
-                d.TakeDamage(baseDmg * scale, attackerEntity);
+                d.TakeDamage(baseDmg * scale, attackerEntity, null, isCritical);
             }
         }
     }

@@ -54,7 +54,17 @@ public struct EntityDamagedEvent : ISubject
     public Entity Attacker { get; private set; }
     public float Amount { get; private set; }
     public Vector3? HitPoint { get; private set; }
-    public EntityDamagedEvent(Entity source, Entity attacker, float amount, Vector3? hitPoint = null) { Source = source; Attacker = attacker; Amount = amount; HitPoint = hitPoint; }
+    public bool IsCritical { get; private set; }
+    public EntityDamagedEvent(Entity source, Entity attacker, float amount, Vector3? hitPoint = null, bool isCritical = false) { Source = source; Attacker = attacker; Amount = amount; HitPoint = hitPoint; IsCritical = isCritical; }
+}
+
+// Published when Source dodged an attack via the Evasion stat (no damage was applied).
+public struct EntityEvadedEvent : ISubject
+{
+    public Entity Source { get; private set; }
+    public Entity Attacker { get; private set; }
+    public Vector3? HitPoint { get; private set; }
+    public EntityEvadedEvent(Entity source, Entity attacker, Vector3? hitPoint = null) { Source = source; Attacker = attacker; HitPoint = hitPoint; }
 }
 
 // Published when Source's HP hits 0, before it dies — a listener that heals it cancels the death.

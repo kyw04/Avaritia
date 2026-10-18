@@ -1486,7 +1486,7 @@ PrefabInstance:
     - target: {fileID: 5773720602588636574, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
       propertyPath: abilityAsset
       value: 
-      objectReference: {fileID: 11400000, guid: 702aa5f87b8ba064a8b287d8e4619cea, type: 2}
+      objectReference: {fileID: 11400000, guid: 1ce32cf1db5b6b8488579fd4c2161d06, type: 2}
     - target: {fileID: 6021740498178327085, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
       propertyPath: m_Size.x
       value: 1
@@ -17708,7 +17708,7 @@ PrefabInstance:
     - target: {fileID: 451785785379693136, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 9452ae1262a74094f8a68013fbcd1834, type: 2}
+      objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     - target: {fileID: 1989622532717823825, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
       propertyPath: m_LocalPosition.x
       value: 26.66
@@ -19075,6 +19075,62 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
+--- !u!1 &1993247885
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1993247887}
+  - component: {fileID: 1993247886}
+  m_Layer: 0
+  m_Name: DamagePopupManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1993247886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1993247885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0641216855eb3744795553a39cfe8e55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamagePopupManager
+  popupPrefab: {fileID: 2919821090738885249, guid: f93df683bffc627428c4a2e9ae7f3534, type: 3}
+  spawnOffset: {x: 0, y: 1, z: 0}
+  normalStyle:
+    color: {r: 1, g: 1, b: 1, a: 1}
+    scale: 1
+  criticalStyle:
+    color: {r: 1, g: 0.25, b: 0.15, a: 1}
+    scale: 1.4
+  evadeStyle:
+    color: {r: 0.6, g: 0.85, b: 1, a: 1}
+    scale: 0.9
+  evadeText: MISS
+--- !u!4 &1993247887
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1993247885}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2031527059
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19930,3 +19986,4 @@ SceneRoots:
   - {fileID: 1625324217}
   - {fileID: 1786833348}
   - {fileID: 854493666}
+  - {fileID: 1993247887}

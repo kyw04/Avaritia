@@ -325,10 +325,14 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         OnDashCountChanged();
     }
 
-    public void TakeDamage(float damage, Entity attacker = null, Vector3? hitPoint = null)
+    public void TakeDamage(float damage, Entity attacker = null, Vector3? hitPoint = null, bool isCritical = false)
     {
         if (Time.time < invincibleUntil) return;
-        if (Random.Range(0f, 100f) < GetStat<float>(StatType.Evasion)) return;
+        if (Random.Range(0f, 100f) < GetStat<float>(StatType.Evasion))
+        {
+            EventBus.Publish(new EntityEvadedEvent(this, attacker, hitPoint));
+            return;
+        }
         if (TryConsumeHitBlock()) return;
 
         damage = AbsorbWithShields(damage);
@@ -337,7 +341,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         stats.Set(StatType.CurrentHealth, stats.Get<float>(StatType.CurrentHealth) - damage);
         activeBuffs.RemoveAll(b => b.clearOnDamageTaken);
         OnHealthChanged();
-        EventBus.Publish(new EntityDamagedEvent(this, attacker, damage, hitPoint));
+        EventBus.Publish(new EntityDamagedEvent(this, attacker, damage, hitPoint, isCritical));
 
         if (CurrentHealth > 0) return;
         // Listeners (e.g. a revive item) may heal in response; only die if nothing did.

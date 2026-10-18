@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66d99f0a6e5f4ccdad3bd77a2f0c5d2b, type: 3}
   m_Name: Player Attack 4
   m_EditorClassIdentifier: Assembly-CSharp::AttackData
-  duration: 0.5
+  duration: 0.05
   readyAnimClip: {fileID: 0}
   attackAnimClip: {fileID: 7400000, guid: b075438dbfab78a419918467d753e74c, type: 2}
-  damageMultiplier: 1.5
+  damageMultiplier: 1
   filter:
     useTriggers: 0
     useLayerMask: 1
@@ -32,7 +32,7 @@ MonoBehaviour:
     maxNormalAngle: 0
   canTurn: 1
   canMove: 1
-  moveDuration: 0.1
+  moveDuration: 0
   attackStrategy:
     rid: 3411488846322597888
   references:

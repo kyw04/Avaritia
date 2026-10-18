@@ -44,16 +44,19 @@ public class RangedAttackStrategy : IAttackStrategy
             
             float dmg = attacker.Damage * damageMultiplier;
             float delay = 0;
+            bool isCritical = false;
             if (attacker is IStatReadable readable)
             {
                 if (useDelay) delay = Random.Range(minDelay, maxDelay);
                 readable.TryGetStat<float>(StatType.CritRate, out var critRate);
-                if (Random.Range(0f, 100f) < critRate)
+                isCritical = Random.Range(0f, 100f) < critRate;
+                if (isCritical)
                     dmg *= CritConfig.Multiplier;
             }
             var dealer = mover.GetComponent<DamageDealer>();
             dealer.damage = dmg;
             dealer.attacker = attacker as Entity;
+            dealer.isCritical = isCritical;
             
             var dir = Vector3.right * attacker.LookDirection;
             if (target != null)
