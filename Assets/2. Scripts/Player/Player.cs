@@ -161,12 +161,11 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
     private void OnEnable() => EventBus.Subscribe<EntityDamagedEvent>(this);
     private void OnDisable() => EventBus.Unsubscribe<EntityDamagedEvent>(this);
 
-    // 내 공격에 맞은 대상을 무기 넉백 값만큼 밀어낸다(근접/탄환 공통).
+    // 내 공격에 맞은 대상을 플레이어가 바라보는 방향으로 무기 넉백 값만큼 밀어낸다(근접/탄환 공통).
     public void OnNotify(EntityDamagedEvent e)
     {
         if (e.Attacker != this || weapon == null || e.Source == this) return;
-        float dir = e.Source.transform.position.x >= transform.position.x ? 1f : -1f;
-        e.Source.ApplyKnockback(new Vector2(dir * weapon.knockbackForce, weapon.knockbackUpForce), weapon.knockbackDuration);
+        e.Source.ApplyKnockback(new Vector2(LookDirection * weapon.knockbackForce, weapon.knockbackUpForce), weapon.knockbackDuration);
     }
 
     private void OnDestroy()
