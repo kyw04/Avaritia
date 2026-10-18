@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 801ce89494f74eb47be585198362eac3, type: 3}
   combo: {fileID: 11400000, guid: b0cf0df8d9747d64985aa45fd8dd8088, type: 2}
+  holdToAttack: 1
   icon: {fileID: 1693390229234585388, guid: 374261b03d7786b4fa2007f7399402d0, type: 3}
   displayName: ddddddd
   description: 

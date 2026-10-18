@@ -9,6 +9,7 @@ public class InputHandler : Singleton<InputHandler>
 {
     public Player player;
     public Vector2 MoveInput { get; private set; }
+    public bool AttackHeld => InputAction.Gameplay.Attack.IsPressed();
     
     public PlayerInputActions InputAction { get; private set; }
     
@@ -41,6 +42,14 @@ public class InputHandler : Singleton<InputHandler>
     private void OnDisable()
     {
         InputAction.Disable();
+    }
+
+    // 누르고 있기 무기: 공격 중이 아닐 때(콤보가 끝나고 쿨다운이 지난 뒤) 키가 눌려 있으면 다시 공격을 시작한다.
+    // 공격 중이거나 쿨다운 중이면 상태 머신의 전환 조건에서 걸러진다.
+    private void Update()
+    {
+        if (player != null && player.Weapon != null && player.Weapon.holdToAttack && AttackHeld)
+            player.Machine.ChangeState<PlayerAttackState>();
     }
 
     private void OnDash(InputAction.CallbackContext context) =>

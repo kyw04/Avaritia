@@ -382,7 +382,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             {
                 comboIndex++;
                 
-                if (!buffer || comboIndex >= combo.datas.Count)
+                if (!(buffer || IsHoldingAttack()) || comboIndex >= combo.datas.Count)
                 {
                     comboIndex = 0;
                     Owner.AttackReadyTime = Time.time + combo.cooldown;
@@ -407,6 +407,8 @@ public class PlayerStateMachine : StateMachineBase<Player>
         }
 
         public void OnNotify(EntityAttackBufferEvent e) => buffer = true;
+
+        private bool IsHoldingAttack() => Owner.Weapon != null && Owner.Weapon.holdToAttack && InputHandler.Instance.AttackHeld;
     }
 
 #endregion

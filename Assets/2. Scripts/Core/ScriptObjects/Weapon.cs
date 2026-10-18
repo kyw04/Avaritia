@@ -7,6 +7,7 @@ public class Weapon : ScriptableObject, IInventoryItem
 {
     public SpriteLibraryAsset spriteLibraryAsset;
     public AttackDataCombo combo;
+    public bool holdToAttack;
     public Sprite icon;
     public string displayName;
     [TextArea] public string description;
