@@ -37,6 +37,7 @@ public class InputHandler : Singleton<InputHandler>
         InputAction.Gameplay.Inventory.started += OnInventoryOpen;
         
         InputAction.UI.Cancel.started += OnInventoryClose;
+        InputAction.UI.CloseInventory.started += OnInventoryCloseAll;
     }
 
     private void OnDisable()
@@ -95,5 +96,12 @@ public class InputHandler : Singleton<InputHandler>
         if (ItemReplaceController.IsReplacing)
             ItemReplaceController.Instance.CancelReplace();
         UIManager.Instance.Pop();
+    }
+
+    private void OnInventoryCloseAll(InputAction.CallbackContext context)
+    {
+        if (ItemReplaceController.IsReplacing)
+            ItemReplaceController.Instance.CancelReplace();
+        UIManager.Instance.PopUntil(InventoryUI.Key);
     }
 }

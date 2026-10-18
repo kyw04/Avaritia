@@ -440,6 +440,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "CloseInventory",
+                    "type": "Button",
+                    "id": "b3f1c2d4-5e6a-4b7c-8d9e-0f1a2b3c4d5e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Point",
                     "type": "PassThrough",
                     "id": "32b35790-4ed0-4e9a-aa41-69ac6d629449",
@@ -787,6 +796,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse;Gamepad;Touch;Joystick;XR",
                     "action": "Cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c4a2d3e5-6f7b-4c8d-9e0f-1a2b3c4d5e6f",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "CloseInventory",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

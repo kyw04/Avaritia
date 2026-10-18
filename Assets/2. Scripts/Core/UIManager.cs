@@ -44,4 +44,14 @@ public class UIManager : Singleton<UIManager>
             InputHandler.Instance.InputAction.Gameplay.Enable();
         }
     }
+
+    // key 패널 위에 쌓인 패널들을 모두 닫은 뒤 key 패널까지 닫는다. 스택에 없으면 아무것도 하지 않는다.
+    public void PopUntil(string key)
+    {
+        int index = stack.LastIndexOf(key);
+        if (index < 0) return;
+
+        while (stack.Count > index)
+            Pop();
+    }
 }
