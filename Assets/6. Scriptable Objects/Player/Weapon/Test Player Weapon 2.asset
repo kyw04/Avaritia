@@ -25,7 +25,7 @@ MonoBehaviour:
   hitSound: {fileID: 8300000, guid: 21a23957a77c3bc488f38c0c48b7cb7e, type: 3}
   shakeForce: 0.1
   hitStopTimeScale: 0.1
-  hitStopDuration: 0.08
+  hitStopDuration: 0
   knockbackForce: 1
   knockbackUpForce: 2
   knockbackDuration: 0.2
