@@ -1,6 +1,9 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 
 // 화면 기준이던 빛줄기 원점을 월드의 LightShaftSource 위치에 고정하고, 그 소스의 빛줄기 설정을 적용. 화면에서 멀어지면 서서히 끔
+// 에디트 모드에서도 실행해서 LightShaftSource 값을 바꾸면 바로 반영되고, 에디터에서 선택한 LightShaftSource는 거리와 상관없이 보여줌
+[ExecuteAlways]
 [RequireComponent(typeof(Camera))]
 public class LightShaftController : MonoBehaviour
 {
@@ -27,26 +30,73 @@ public class LightShaftController : MonoBehaviour
 
     private void Awake() => cam = GetComponent<Camera>();
 
-    private void OnEnable() => original = new Material(shaftMaterial);
-
-    // 플레이 중 바꾼 값이 머티리얼 에셋에 남지 않도록 복구
-    private void OnDisable()
+    private void OnEnable()
     {
-        shaftMaterial.CopyPropertiesFromMaterial(original);
-        Destroy(original);
+        if (shaftMaterial == null)
+            return;
+        original = new Material(shaftMaterial);
+        RenderPipelineManager.beginCameraRendering += OnBeginCameraRendering;
+#if UNITY_EDITOR
+        UnityEditor.Selection.selectionChanged += RepaintGameView;
+#endif
     }
 
-    private void LateUpdate()
+    // 플레이 중이나 에디터 미리보기에서 바꾼 값이 머티리얼 에셋에 남지 않도록 복구
+    private void OnDisable()
     {
+        if (original == null)
+            return;
+        RenderPipelineManager.beginCameraRendering -= OnBeginCameraRendering;
+#if UNITY_EDITOR
+        UnityEditor.Selection.selectionChanged -= RepaintGameView;
+#endif
+#if UNITY_EDITOR
+        bool wasDirty = UnityEditor.EditorUtility.IsDirty(shaftMaterial);
+        shaftMaterial.CopyPropertiesFromMaterial(original);
+        if (!Application.isPlaying && !wasDirty)
+            UnityEditor.EditorUtility.ClearDirty(shaftMaterial);
+#else
+        shaftMaterial.CopyPropertiesFromMaterial(original);
+#endif
+        if (Application.isPlaying)
+            Destroy(original);
+        else
+            DestroyImmediate(original);
+    }
+
+    // 카메라마다 렌더 직전에 그 카메라 기준으로 값을 넣어야 Game 뷰와 Scene 뷰 모두 빛줄기 위치가 맞음
+    private void OnBeginCameraRendering(ScriptableRenderContext context, Camera target)
+    {
+        if (target != cam && target.cameraType != CameraType.SceneView)
+            return;
+
+#if UNITY_EDITOR
+        // 에디터 미리보기로 바꾼 값이 Ctrl+S로 머티리얼 파일에 저장되지 않도록, 원래 저장할 게 없었으면 dirty 표시를 지움
+        bool wasDirty = UnityEditor.EditorUtility.IsDirty(shaftMaterial);
+        ApplyBestSource(target);
+        if (!Application.isPlaying && !wasDirty)
+            UnityEditor.EditorUtility.ClearDirty(shaftMaterial);
+#else
+        ApplyBestSource(target);
+#endif
+    }
+
+    private void ApplyBestSource(Camera target)
+    {
+        LightShaftSource selected = SelectedSource();
         LightShaftSource best = null;
         Vector3 bestPos = Vector3.zero;
         float bestIntensity = 0f;
 
         foreach (var source in LightShaftSource.All)
         {
-            Vector3 vp = cam.WorldToViewportPoint(source.transform.position);
+            if (selected != null && source != selected)
+                continue;
+
+            Vector3 vp = target.WorldToViewportPoint(source.transform.position);
             float dist = Mathf.Max(Mathf.Abs(vp.x - 0.5f), Mathf.Abs(vp.y - 0.5f));
-            float value = source.intensity * (1f - Mathf.InverseLerp(fadeStart, fadeEnd, dist));
+            float fade = source == selected ? 1f : 1f - Mathf.InverseLerp(fadeStart, fadeEnd, dist);
+            float value = source.intensity * fade;
             if (value > bestIntensity)
             {
                 best = source;
@@ -70,4 +120,20 @@ public class LightShaftController : MonoBehaviour
         shaftMaterial.SetFloat(FlickerId, best.flicker);
         shaftMaterial.SetFloat(ShadowBrightnessId, best.shadowScatter);
     }
+
+    // 하이어라키에서 LightShaftSource를 선택하면 그 빛만 거리와 상관없이 보여줌
+    private static LightShaftSource SelectedSource()
+    {
+#if UNITY_EDITOR
+        var go = UnityEditor.Selection.activeGameObject;
+        return go != null ? go.GetComponent<LightShaftSource>() : null;
+#else
+        return null;
+#endif
+    }
+
+#if UNITY_EDITOR
+    // 선택만 바뀌면 Game 뷰가 다시 그려지지 않아서 직접 갱신 요청
+    private static void RepaintGameView() => UnityEditor.EditorApplication.QueuePlayerLoopUpdate();
+#endif
 }

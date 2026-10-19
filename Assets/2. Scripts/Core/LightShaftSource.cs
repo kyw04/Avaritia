@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // 빛줄기가 뻗어 나오는 월드 위치와 그 빛줄기의 모양. LightShaftController가 화면에 가장 가까운 하나를 골라 사용
+[ExecuteAlways]
 public class LightShaftSource : MonoBehaviour
 {
     public static readonly List<LightShaftSource> All = new();
