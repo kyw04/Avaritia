@@ -16,6 +16,8 @@ public class LightShaftSource : MonoBehaviour
     [Range(0f, 2f)] public float swaySpeed = 0.38f;
     [Range(0f, 4f)] public float falloff = 0.6f;
     [Range(0f, 1f)] public float flicker = 0.361f;
+    [Tooltip("가림막에 막힌 곳에 남는 은은한 빛의 밝기 (0 = 완전히 어두움)")]
+    [Range(0f, 1f)] public float shadowScatter = 0f;
 
     private void OnEnable() => All.Add(this);
     private void OnDisable() => All.Remove(this);

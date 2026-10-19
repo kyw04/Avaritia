@@ -14,6 +14,7 @@ public class LightShaftController : MonoBehaviour
     private static readonly int RaySpeedId = Shader.PropertyToID("_RaySpeed");
     private static readonly int RayFalloffId = Shader.PropertyToID("_RayFalloff");
     private static readonly int FlickerId = Shader.PropertyToID("_Flicker");
+    private static readonly int ShadowBrightnessId = Shader.PropertyToID("_ShadowBrightness");
 
     [SerializeField] private Material shaftMaterial;
     [Tooltip("화면 중심에서 이 거리(뷰포트 단위, 0.5 = 화면 끝)부터 어두워지기 시작")]
@@ -67,5 +68,6 @@ public class LightShaftController : MonoBehaviour
         shaftMaterial.SetFloat(RaySpeedId, best.swaySpeed);
         shaftMaterial.SetFloat(RayFalloffId, best.falloff);
         shaftMaterial.SetFloat(FlickerId, best.flicker);
+        shaftMaterial.SetFloat(ShadowBrightnessId, best.shadowScatter);
     }
 }

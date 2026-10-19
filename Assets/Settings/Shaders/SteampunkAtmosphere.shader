@@ -16,7 +16,8 @@ Shader "Avaritia/SteampunkAtmosphere"
 
         [Header(Occlusion)]
         _OcclusionStrength  ("Occlusion Strength", Range(0, 1))             = 0.85
-        _OcclusionThreshold ("Occluder Luma Threshold", Range(0, 0.3))      = 0.06
+        _ShadowBrightness   ("Shadow Scatter Brightness", Range(0, 1))      = 0
+        _OccluderSurfaceLight ("Occluder Surface Light", Range(0, 4))       = 2
 
         [Header(Dust)]
         _DustDensity        ("Dust Density", Range(0, 1))                   = 0.25
@@ -67,14 +68,14 @@ Shader "Avaritia/SteampunkAtmosphere"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
 
-            #define OCCLUSION_SAMPLES 24
+            #define OCCLUSION_SAMPLES 64
             static const half3 LUMA = half3(0.2126, 0.7152, 0.0722);
 
             float4 _LightColor;
             float  _LightIntensity;
             float4 _LightPos;
             float  _RayDirection, _RaySpread, _RayDensity, _RaySharpness, _RaySpeed, _RayFalloff, _Flicker;
-            float  _OcclusionStrength, _OcclusionThreshold;
+            float  _OcclusionStrength, _ShadowBrightness, _OccluderSurfaceLight;
             float  _DustDensity, _DustCellSize, _DustSize, _DustSpeed, _DustBrightness;
             float4 _HazeColor;
             float  _HazeTop, _HazeBottom;
@@ -83,6 +84,9 @@ Shader "Avaritia/SteampunkAtmosphere"
             float4 _VignetteColor;
             float  _VignetteIntensity, _VignetteSmoothness, _Grain;
             float  _PixelSize, _LightSteps;
+
+            // LightShaftOccluderFeature가 그린 가림막 마스크 (order in layer가 기준 이하인 스프라이트는 빠져 있음)
+            TEXTURE2D(_LightShaftOccluderMask);
 
             // ---------- Noise ----------
             float Hash11(float p)
@@ -163,42 +167,45 @@ Shader "Avaritia/SteampunkAtmosphere"
                 float n2 = ValueNoise1D(a * 2.37 - t * _RaySpeed * 0.63 + 17.0);
                 float rays = pow(saturate(n1 * 0.65 + n2 * 0.35), _RaySharpness);
 
-                rays *= cone;
-                rays *= exp(-dist * _RayFalloff);
-                rays *= 1.0 - _Flicker * ValueNoise1D(t * 7.0);
+                float envelope = cone * exp(-dist * _RayFalloff) * (1.0 - _Flicker * ValueNoise1D(t * 7.0));
+                rays *= envelope;
 
-                // 빛 근원 쪽으로 레이를 쏴서 검은 실루엣 타일이 있으면 가림
+                // 마스크에 그려진 렌더러(order in layer가 기준보다 큼)는 빛줄기보다 앞에 있음
+                half selfMask = SAMPLE_TEXTURE2D_LOD(_LightShaftOccluderMask, sampler_PointClamp, uv, 0).a;
+
+                // 빛 근원 쪽으로 레이를 쏴서 빛보다 앞에 있는 렌더러(마스크)가 있으면 가림
                 if (_OcclusionStrength > 0.0)
                 {
                     // 픽셀마다 샘플 시작점을 흔들어 실루엣이 계단식으로 복제되는 밴딩 제거
                     float2 jp     = floor(uvL * _ScreenParams.xy);
                     float  jitter = frac(52.9829189 * frac(dot(jp, float2(0.06711056, 0.00583715))));
 
-                    float blocked = 0.0;
-                    float valid   = 0.0;
-                    [unroll]
+                    // 광원까지 가는 길에 가림막이 하나라도 있으면 빛이 막힘 (평균을 내면 얇은 물체 뒤로 빛이 새어 나옴)
+                    // 자기 실루엣을 벗어나기 전까지의 샘플은 무시해서 가림막 자신은 빛을 받게 함
+                    float occ    = 0.0;
+                    float inside = selfMask;
+                    [loop]
                     for (int i = 0; i < OCCLUSION_SAMPLES; i++)
                     {
                         float  s  = (i + jitter) / OCCLUSION_SAMPLES;
                         float2 sp = lerp(uvL, _LightPos.xy, s);
                         if (all(sp >= 0.0) && all(sp <= 1.0))
                         {
-                            half l = dot(SAMPLE_TEXTURE2D_X_LOD(_BlitTexture, sampler_LinearClamp, sp, 0).rgb, LUMA);
-                            blocked += step(l, _OcclusionThreshold);
-                            valid   += 1.0;
+                            half m = SAMPLE_TEXTURE2D_LOD(_LightShaftOccluderMask, sampler_PointClamp, sp, 0).a;
+                            inside *= m;
+                            occ = max(occ, m * (1.0 - inside));
                         }
                     }
-                    float occ = saturate(blocked / max(valid, 1.0) * 3.0);
-                    // 픽셀 자신이 실루엣이면 빛줄기가 그 뒤에 있는 것처럼 가림
-                    occ = max(occ, 1.0 - smoothstep(_OcclusionThreshold, _OcclusionThreshold * 2.0, luma));
-                    rays *= 1.0 - _OcclusionStrength * occ;
+                    // 막힌 곳은 줄무늬 없이 안개에 퍼진 빛만 Shadow Scatter Brightness만큼 남김
+                    rays = lerp(rays, envelope * _ShadowBrightness, _OcclusionStrength * occ);
                 }
                 // 빛 세기를 단계로 끊어서 도트 아트 톤에 맞춤
                 if (_LightSteps >= 1.0)
                     rays = floor(rays * _LightSteps + 0.5) / _LightSteps;
 
+                // 공기 중 산란은 빛줄기 앞에 있는 가림막 위엔 그리지 않고, 표면이 빛 받는 효과는 모두에게 적용
                 half3 light = _LightColor.rgb * rays * _LightIntensity;
-                col += light * 0.55 + col * light * 0.9; // 공기 중 산란 + 표면이 빛 받는 느낌
+                col += light * 0.55 * (1.0 - selfMask) + col * light * lerp(0.9, _OccluderSurfaceLight, selfMask);
 
                 // ===== 4. 빛줄기 안에서만 보이는 먼지 =====
                 float2 p = uv * _ScreenParams.xy;
@@ -215,7 +222,7 @@ Shader "Avaritia/SteampunkAtmosphere"
                 float  mote   = step(max(off.x, off.y), _DustSize * pixel); // 사각 도트
                 float  twinkle = 0.5 + 0.5 * sin(t * (1.5 + rnd.y * 2.0) + rnd.x * 6.2831);
 
-                col += _LightColor.rgb * mote * spawn * twinkle * saturate(rays * 3.0) * _DustBrightness;
+                col += _LightColor.rgb * mote * spawn * twinkle * saturate(rays * 3.0) * _DustBrightness * (1.0 - selfMask);
 
                 // ===== 5. 비네트 (그을음 색) =====
                 float2 vd   = (uv - 0.5) * float2(aspect, 1.0);
