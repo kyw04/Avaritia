@@ -54,21 +54,21 @@ Material:
     - _HazeBottom: 0.1
     - _HazeTop: 0.3
     - _Intensity: 1
-    - _LightIntensity: 0
+    - _LightIntensity: 0.35996416
     - _LightSteps: 16
     - _OccluderSurfaceLight: 2
     - _OcclusionStrength: 1
     - _OcclusionThreshold: 0.06
     - _PixelSize: 0
-    - _RayDensity: 10
-    - _RayDirection: -6
-    - _RayFalloff: 0.6
-    - _RaySharpness: 1.8
-    - _RaySpeed: 0.38
-    - _RaySpread: 70
+    - _RayDensity: 9.3
+    - _RayDirection: 25.6
+    - _RayFalloff: 1.45
+    - _RaySharpness: 3.89
+    - _RaySpeed: 0.46
+    - _RaySpread: 21
     - _Saturation: 1
     - _Sepia: 0
-    - _ShadowBrightness: 0
+    - _ShadowBrightness: 0.074
     - _SplitToneAmount: 0
     - _VignetteIntensity: 0.8
     - _VignetteSmoothness: 0.563
@@ -77,8 +77,8 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _HazeColor: {r: 0.4433962, g: 0.4099799, b: 0.26143643, a: 1}
     - _HighlightTint: {r: 1, g: 1, b: 1, a: 1}
-    - _LightColor: {r: 1, g: 1, b: 1, a: 1}
-    - _LightPos: {r: 0.4, g: 1.4, b: 0, a: 0}
+    - _LightColor: {r: 1, g: 0.86, b: 0.62, a: 1}
+    - _LightPos: {r: 1.6231045, g: 1.0013332, b: 0, a: 0}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
     - _ShadowTint: {r: 0.3207547, g: 0.3207547, b: 0.3207547, a: 1}
     - _Tint: {r: 1, g: 1, b: 1, a: 1}

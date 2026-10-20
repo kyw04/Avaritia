@@ -17305,6 +17305,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -3484194646718043545, guid: 4ce7eb9e35aa8f440ac5d1b9a79692eb, type: 3}
+      propertyPath: orthographic size
+      value: 5.625
+      objectReference: {fileID: 0}
+    - target: {fileID: -3484194646718043545, guid: 4ce7eb9e35aa8f440ac5d1b9a79692eb, type: 3}
       propertyPath: m_BackGroundColor.a
       value: 1
       objectReference: {fileID: 0}
@@ -19812,11 +19816,11 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     - target: {fileID: 1989622532717823825, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 26.66
+      value: -33.66
       objectReference: {fileID: 0}
     - target: {fileID: 1989622532717823825, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.44
+      value: 10.78
       objectReference: {fileID: 0}
     - target: {fileID: 1989622532717823825, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
       propertyPath: m_LocalPosition.z
@@ -20832,15 +20836,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LightShaftSource
   color: {r: 1, g: 0.86, b: 0.62, a: 1}
-  intensity: 1.3
-  direction: 25
-  spread: 70
-  density: 10
-  sharpness: 1.8
-  swaySpeed: 0.38
-  falloff: 0.6
+  intensity: 0.65
+  direction: 25.6
+  spread: 21
+  density: 9.3
+  sharpness: 3.89
+  swaySpeed: 0.46
+  falloff: 1.45
   flicker: 0.361
-  shadowScatter: 0
+  shadowScatter: 0.074
 --- !u!4 &1786833348
 Transform:
   m_ObjectHideFlags: 0
@@ -20850,7 +20854,7 @@ Transform:
   m_GameObject: {fileID: 1786833346}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -42.19, y: 18.1, z: 0}
+  m_LocalPosition: {x: -37.34, y: 18.14, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -21212,7 +21216,7 @@ PrefabInstance:
     - target: {fileID: 5773720602588636574, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
       propertyPath: weaponAsset
       value: 
-      objectReference: {fileID: 11400000, guid: a1935bbbb23c952438931fabaa39f5fd, type: 2}
+      objectReference: {fileID: 11400000, guid: e82aa12019120254cb29df3fe5dffb83, type: 2}
     - target: {fileID: 6021740498178327085, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
       propertyPath: m_Color.b
       value: 1
@@ -21463,11 +21467,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1706086434143464543, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 20.11
+      value: -54.18
       objectReference: {fileID: 0}
     - target: {fileID: 1706086434143464543, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.15
+      value: 10.72
       objectReference: {fileID: 0}
     - target: {fileID: 1706086434143464543, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
       propertyPath: m_LocalPosition.z
@@ -21512,7 +21516,7 @@ PrefabInstance:
     - target: {fileID: 5773720602588636574, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
       propertyPath: weaponAsset
       value: 
-      objectReference: {fileID: 11400000, guid: 67ffc428aab4ca549b6f36a3278ebb22, type: 2}
+      objectReference: {fileID: 11400000, guid: 8f90c9de59615a64cb89b59694958ffe, type: 2}
     - target: {fileID: 5773720602588636574, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
       propertyPath: abilityAsset
       value: 
@@ -21528,6 +21532,10 @@ PrefabInstance:
     - target: {fileID: 6021740498178327085, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
       propertyPath: m_Color.r
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6021740498178327085, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
+      propertyPath: m_SortingOrder
+      value: 30
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -21728,10 +21736,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4182182711176251150, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
-      propertyPath: m_SortingOrder
-      value: 20
-      objectReference: {fileID: 0}
     - target: {fileID: 4739286354209235477, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
       propertyPath: m_LocalPosition.x
       value: -59.8
@@ -21780,10 +21784,6 @@ PrefabInstance:
       propertyPath: prompt
       value: 
       objectReference: {fileID: 2105272076}
-    - target: {fileID: 8094264529646705531, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
-      propertyPath: m_SortingOrder
-      value: 21
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -22126,6 +22126,7 @@ SceneRoots:
   - {fileID: 1136570392}
   - {fileID: 832575519}
   - {fileID: 5187713481204967813}
+  - {fileID: 1956928635}
   - {fileID: 1142509043}
   - {fileID: 5737427638408916340}
   - {fileID: 7772520098845761480}
@@ -22151,4 +22152,3 @@ SceneRoots:
   - {fileID: 854493666}
   - {fileID: 3823759645196368215}
   - {fileID: 1088528312}
-  - {fileID: 1956928635}
