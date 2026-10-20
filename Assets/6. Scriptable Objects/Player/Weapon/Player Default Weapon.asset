@@ -9,18 +9,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f935b32e47f32148a0e4aac5329210c, type: 3}
-  m_Name: Test Player Weapon
-  m_EditorClassIdentifier: Assembly-CSharp::Weapon
+  m_Script: {fileID: 11500000, guid: 4af5257e256a46239381128651678778, type: 3}
+  m_Name: Player Default Weapon
+  m_EditorClassIdentifier: Assembly-CSharp::DefaultWeapon
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 88dd0a5dfd141cc48aa51ddb96005119, type: 3}
   combo: {fileID: 11400000, guid: aa917b9b7cd923244bd2a65c4488f506, type: 2}
   holdToAttack: 0
-  icon: {fileID: -4870798248371929716, guid: 68deb3f6af485bc43a8406c98c27c609, type: 3}
-  displayName: asd
+  icon: {fileID: -7409495419916585736, guid: 971afe4671ae8ea4ba0560d290047c73, type: 3}
+  displayName: 
   description: 
   passiveAbilities:
   - {fileID: 11400000, guid: a6fe7fff178b8c04280cfc5d909817be, type: 2}
-  attackParticle: {fileID: 8513416037555735887, guid: 418edffde030b3d4b88b59e7d7c0502b, type: 3}
+  attackParticle: {fileID: 2461976908696895058, guid: 59a335fab3ff41368182b36efcac9d4b, type: 3}
   swingSound: {fileID: 8300000, guid: 4c5c5677d5ff89145ab60e67a4a1e293, type: 3}
   hitSound: {fileID: 8300000, guid: 21a23957a77c3bc488f38c0c48b7cb7e, type: 3}
   shakeForce: 0.3

@@ -13,6 +13,7 @@ public class AbilityData : ScriptableObject, IInventoryItem
     [SerializeReference, SubclassSelector] public List<IAbilityCondition> conditions = new();
     [SerializeReference, SubclassSelector] public List<IAbilityEffect> effects = new();
 
+    public Entity Owner { get; }
     public string DisplayName => displayName;
     public string Details => description;
     public Sprite Icon => icon;

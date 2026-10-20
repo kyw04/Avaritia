@@ -7,6 +7,7 @@ using UnityEngine.U2D.Animation;
 public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
 {
     [SerializeField] private Weapon weapon;
+    [SerializeField] private ImageCountBar ammoCountBar;
     [SerializeField] private PlayerInteractionController interactionController;
     [SerializeField] private LayerMask platformLayer;
     [SerializeField] private float dropThroughDuration = 1f;
@@ -31,8 +32,10 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
     {
         PreserveHealthRatio(() =>
         {
-            weapon = newWeapon;
-            spriteLibrary.spriteLibraryAsset = newWeapon.spriteLibraryAsset;
+            weapon?.Unequip();
+            weapon = newWeapon.GetRuntimeInstance();
+            weapon.Equip(this, ammoCountBar);
+            spriteLibrary.spriteLibraryAsset = weapon.spriteLibraryAsset;
             RebindWeaponAbilities();
         });
 
@@ -76,6 +79,9 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
         Machine.Init();
         stateManager = StateManager.Instance;
 
+        if (weapon != null)
+            weapon = weapon.GetRuntimeInstance();
+
         stats.Set(StatType.DoubleJumpCount, 0);
         stats.Set(StatType.DashCount, 0);
 
@@ -113,6 +119,7 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
     protected override void Start()
     {
         base.Start();
+        weapon?.Equip(this, ammoCountBar);
         EventBus.Publish(new EntityDashCountChangedEvent(this, MaxDashCount, MaxDashCount));
     }
     

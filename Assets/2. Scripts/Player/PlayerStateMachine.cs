@@ -313,7 +313,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
     
     public class PlayerAttackState : StateBase<Player>, IObserver<EntityAttackBufferEvent>
     {
-        private AttackDataCombo combo;
+        private Weapon weapon;
         private RaycastHit2D[] hitResults = new RaycastHit2D[10];
 
         private bool buffer;
@@ -346,7 +346,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             }
 
             Owner.Rb.linearVelocity = Vector2.zero;
-            EventBus.Publish(new EntityAttackStartEvent(Owner, data));
+            weapon.Attack(Owner, comboIndex);
         }
 
         public override void Enter()
@@ -357,12 +357,12 @@ public class PlayerStateMachine : StateMachineBase<Player>
                 return;
             }
 
-            combo = Owner.Weapon.combo;
+            weapon = Owner.Weapon;
             comboIndex = 0;
             hasAttack = false;
             timer = 0f;
 
-            BeginAttack(combo.datas[comboIndex]);
+            BeginAttack(weapon.combo.datas[comboIndex]);
         }
 
         public override void Execute()
@@ -371,35 +371,31 @@ public class PlayerStateMachine : StateMachineBase<Player>
                 buffer = false;
 
             if (!hasAttack) // Attack Manager 만들어서 관리 하면 더 좋을 듯
-            {
                 hasAttack = true;
 
-                combo.datas[comboIndex].Attack(Owner);
-            }
-
             timer += Time.deltaTime;
-            if (timer >= combo.datas[comboIndex].duration)
+            if (timer >= weapon.combo.datas[comboIndex].duration)
             {
                 comboIndex++;
                 
-                if (!(buffer || IsHoldingAttack()) || comboIndex >= combo.datas.Count)
+                if (!(buffer || IsHoldingAttack()) || comboIndex >= weapon.combo.datas.Count)
                 {
                     comboIndex = 0;
-                    Owner.AttackReadyTime = Time.time + combo.cooldown;
+                    Owner.AttackReadyTime = Time.time + weapon.combo.cooldown;
                     Machine.ChangeState<PlayerIdleState>();
                     return;
                 }
                 
                 buffer = false;
                 hasAttack = false;
-                BeginAttack(combo.datas[comboIndex]);
+                BeginAttack(weapon.combo.datas[comboIndex]);
                 timer = 0f;
             }
         }
 
         public override void FixedExecute()
         {
-            var data = combo.datas[comboIndex];
+            var data = weapon.combo.datas[comboIndex];
             if (data.canMove && timer < data.moveDuration)
                 Owner.Move(lockedMoveDirection);
             else
