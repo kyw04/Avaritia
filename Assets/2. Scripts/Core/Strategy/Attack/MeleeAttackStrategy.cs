@@ -7,7 +7,7 @@ public class MeleeAttackStrategy : IAttackStrategy
     public Vector2 hitboxPosition;
     public Vector2 hitboxSize;
 
-    public void Offensive(IAttacker attacker, float damageMultiplier, ContactFilter2D filter, Transform target = null)
+    public void Offensive(IAttacker attacker, float damageMultiplier, ContactFilter2D filter, Transform target = null, BulletEnhancement enhancement = null)
     {
         float scale = damageMultiplier;
         bool isCritical = attacker is IStatReadable readable && Random.Range(0f, 100f) < readable.GetStat<float>(StatType.CritRate);

@@ -15,23 +15,23 @@ public class AttackData : ScriptableObject
 
     [SerializeReference, SubclassSelector] public IAttackStrategy attackStrategy;
 
-    public void Attack(IAttacker attacker, Transform target = null)
+    public void Attack(IAttacker attacker, Transform target = null, BulletEnhancement enhancement = null)
     {
         attacker.IsAttacking = true;
-        attacker.Mono.StartCoroutine(PlayAttack(attacker, target));
+        attacker.Mono.StartCoroutine(PlayAttack(attacker, target, enhancement));
     }
-    
-    private IEnumerator PlayAttack(IAttacker attacker, Transform target = null)
+
+    private IEnumerator PlayAttack(IAttacker attacker, Transform target = null, BulletEnhancement enhancement = null)
     {
         if (readyAnimClip)
             yield return new WaitForSeconds(readyAnimClip.length);
-        
-        attacker.Mono.StartCoroutine(Execute(attacker, target));
+
+        attacker.Mono.StartCoroutine(Execute(attacker, target, enhancement));
     }
-    
-    private IEnumerator Execute(IAttacker attacker, Transform target = null)
+
+    private IEnumerator Execute(IAttacker attacker, Transform target = null, BulletEnhancement enhancement = null)
     {
-        attackStrategy?.Offensive(attacker, damageMultiplier, filter, target);
+        attackStrategy?.Offensive(attacker, damageMultiplier, filter, target, enhancement);
 
         if (attackAnimClip)
             yield return new WaitForSeconds(attackAnimClip.length);

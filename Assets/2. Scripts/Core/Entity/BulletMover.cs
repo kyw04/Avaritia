@@ -15,6 +15,19 @@ public struct BulletMoveSettings
 
 public class BulletMover : MonoBehaviour, IPoolable
 {
+    private Vector3 defaultScale;
+
+    private void Awake()
+    {
+        defaultScale = transform.localScale;
+    }
+
+    // 풀에서 재사용되므로 강화 탄이 바꿔놓은 크기가 남지 않게 발사할 때마다 다시 정한다.
+    public void SetScale(float scaleMultiplier)
+    {
+        transform.localScale = defaultScale * scaleMultiplier;
+    }
+
     public void Launch(BulletMoveSettings setting, float lifeTime, float delay)
     {
         // 왼쪽으로 갈 땐 좌우 반전 후 회전시켜 스프라이트가 뒤집히지 않게 함

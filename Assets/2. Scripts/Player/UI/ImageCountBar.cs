@@ -12,7 +12,8 @@ public class ImageCountBar : MonoBehaviour
 
     private Func<int> getCurrentCount;
     private Func<int> getMaxCount;
-    
+    private Func<int, Sprite> getIcon;
+
     public bool IsActive { get; private set; }
 
     private void Awake()
@@ -34,11 +35,13 @@ public class ImageCountBar : MonoBehaviour
             img.gameObject.SetActive(false);
     }
     
-    public void Init(ImageCountPoolable prefab, Func<int> currentCountBridge, Func<int> maxCountBridge)
+    // iconBridge: 칸 인덱스별 아이콘. null을 돌려주면 기본 이미지.
+    public void Init(ImageCountPoolable prefab, Func<int> currentCountBridge, Func<int> maxCountBridge, Func<int, Sprite> iconBridge = null)
     {
         imagePrefab = prefab;
         getCurrentCount = currentCountBridge;
         getMaxCount = maxCountBridge;
+        getIcon = iconBridge;
         maxCount = getMaxCount();
         
         foreach (var img in images)
@@ -69,6 +72,7 @@ public class ImageCountBar : MonoBehaviour
             }
 
             images[i].gameObject.SetActive(i < currentCount);
+            images[i].SetIcon(getIcon?.Invoke(i));
         }
     }
 }

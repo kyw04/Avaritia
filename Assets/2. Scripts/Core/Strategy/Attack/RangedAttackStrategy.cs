@@ -14,7 +14,7 @@ public class RangedAttackStrategy : IAttackStrategy
     public float bulletMaxDelay = 0;
     public float bulletSpeed = 15f;
 
-    public void Offensive(IAttacker attacker, float damageMultiplier, ContactFilter2D filter, Transform target = null)
+    public void Offensive(IAttacker attacker, float damageMultiplier, ContactFilter2D filter, Transform target = null, BulletEnhancement enhancement = null)
     {
         if (bulletPrefab == null)
         {
@@ -33,6 +33,11 @@ public class RangedAttackStrategy : IAttackStrategy
             if (r.TryGetStat(StatType.BulletMaxDelay, out float statMaxDelay)) maxDelay = statMaxDelay;
             if (r.TryGetStat(StatType.BulletSpeed, out float statSpeed)) speed = statSpeed;
         }
+        if (enhancement != null)
+        {
+            damageMultiplier *= enhancement.damageMultiplier;
+            speed *= enhancement.speedMultiplier;
+        }
         bool useDelay = 1 < count;
         
         for (int i = 0; i < count; i++)
@@ -40,7 +45,9 @@ public class RangedAttackStrategy : IAttackStrategy
             float angle = count > 1
                 ? Mathf.Lerp(-spreadAngle / 2f, spreadAngle / 2f, (float)i / (count - 1))
                 : 0f;
-            BulletMover mover = ObjectPoolManager.Instance.Spawn(bulletPrefab, attacker.Mono.transform.position, Quaternion.identity);
+            var prefab = enhancement != null && enhancement.bulletPrefab != null ? enhancement.bulletPrefab : bulletPrefab;
+            BulletMover mover = ObjectPoolManager.Instance.Spawn(prefab, attacker.Mono.transform.position, Quaternion.identity);
+            mover.SetScale(enhancement?.scaleMultiplier ?? 1f);
             
             float dmg = attacker.Damage * damageMultiplier;
             float delay = 0;
