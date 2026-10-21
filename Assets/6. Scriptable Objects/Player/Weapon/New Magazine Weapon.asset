@@ -20,6 +20,8 @@ MonoBehaviour:
   description: "\uCD1D?"
   passiveAbilities:
   - {fileID: 11400000, guid: aac30a3539ffbe346b1f0d5a8c697d97, type: 2}
+  - {fileID: 11400000, guid: 81d7a79448fa58c4ebce981f0bd27ca9, type: 2}
+  - {fileID: 11400000, guid: 175deb90e6898e4429a5e7f9f12fe8d3, type: 2}
   attackParticle: {fileID: 0}
   swingSound: {fileID: 8300000, guid: 4c5c5677d5ff89145ab60e67a4a1e293, type: 3}
   hitSound: {fileID: 0}
