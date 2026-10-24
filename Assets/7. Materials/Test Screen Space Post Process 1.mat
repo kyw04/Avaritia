@@ -54,7 +54,7 @@ Material:
     - _HazeBottom: 0.1
     - _HazeTop: 0.3
     - _Intensity: 1
-    - _LightIntensity: 0.35996416
+    - _LightIntensity: 0.65
     - _LightSteps: 16
     - _OccluderSurfaceLight: 2
     - _OcclusionStrength: 1
@@ -78,7 +78,7 @@ Material:
     - _HazeColor: {r: 0.4433962, g: 0.4099799, b: 0.26143643, a: 1}
     - _HighlightTint: {r: 1, g: 1, b: 1, a: 1}
     - _LightColor: {r: 1, g: 0.86, b: 0.62, a: 1}
-    - _LightPos: {r: 1.6231045, g: 1.0013332, b: 0, a: 0}
+    - _LightPos: {r: 1.3493397, g: 0.90540755, b: 0, a: 0}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
     - _ShadowTint: {r: 0.3207547, g: 0.3207547, b: 0.3207547, a: 1}
     - _Tint: {r: 1, g: 1, b: 1, a: 1}
