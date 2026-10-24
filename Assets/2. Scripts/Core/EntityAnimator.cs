@@ -8,7 +8,8 @@ public class EntityAnimator : AnimatorBase,
     IObserver<EntityLandedEvent>,
     IObserver<EntityTurnEvent>,
     IObserver<EntityDashEvent>,
-    IObserver<EntityAttackStartEvent>
+    IObserver<EntityAttackStartEvent>,
+    IObserver<EntityAnimationEvent>
 {
     private static readonly int Speed = Animator.StringToHash("Speed");
     private Entity self;
@@ -29,6 +30,7 @@ public class EntityAnimator : AnimatorBase,
         EventBus.Subscribe<EntityTurnEvent>(this);
         EventBus.Subscribe<EntityDashEvent>(this);
         EventBus.Subscribe<EntityAttackStartEvent>(this);
+        EventBus.Subscribe<EntityAnimationEvent>(this);
     }
 
     public void EndAttacking()
@@ -51,6 +53,7 @@ public class EntityAnimator : AnimatorBase,
     public void OnNotify(EntityLandedEvent e) { if (e.Source == self) PlayAnimation("land"); }
     public void OnNotify(EntityTurnEvent e) { if (e.Source == self) PlayAnimation("turn"); }
     public void OnNotify(EntityDashEvent e) { if (e.Source == self) PlayAnimation("dash"); }
+    public void OnNotify(EntityAnimationEvent e) { if (e.Source == self) PlayAnimation(e.Clip.name); }
 
     public void OnNotify(EntityAttackStartEvent e)
     {
