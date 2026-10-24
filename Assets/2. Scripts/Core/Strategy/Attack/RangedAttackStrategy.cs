@@ -64,6 +64,9 @@ public class RangedAttackStrategy : IAttackStrategy
             dealer.damage = dmg;
             dealer.attacker = attacker as Entity;
             dealer.isCritical = isCritical;
+            // 풀링된 탄환은 아군/적이 같이 쓰므로 매번 프리팹 값에서 다시 정한다.
+            var prefabTargetLayer = prefab.GetComponent<DamageDealer>().targetLayer;
+            dealer.targetLayer = dealer.attacker != null ? dealer.attacker.ResolveTargetLayer(prefabTargetLayer) : prefabTargetLayer;
             
             var dir = Vector3.right * attacker.LookDirection;
             if (target != null)

@@ -22,10 +22,34 @@ public class EnemyAliveState : StateBase<Enemy>
         AddChild(new EnemyPatrolState(Owner));
         AddChild(new EnemyReturnToPatrolState(Owner));
         AddChild(new EnemyCombatState(Owner));
-        
+        AddChild(new EnemyStunState(Owner));
+
         Machine.AddTransition<EnemyAliveState, EnemyDeadState>();
+        Machine.AddTransition<EnemyAliveState, EnemyStunState>();
     }
 }
+
+#region Stun
+public class EnemyStunState : StateBase<Enemy>
+{
+    public EnemyStunState(Enemy owner) : base(owner)
+    {
+        Machine.AddTransition<EnemyStunState, EnemyPatrolState>();
+    }
+
+    public override void Execute()
+    {
+        if (!Owner.IsStunned)
+            Machine.ChangeState<EnemyPatrolState>();
+    }
+
+    public override void FixedExecute()
+    {
+        if (!Owner.IsKnockedBack)
+            Owner.Rb.linearVelocity = new Vector2(0, Owner.Rb.linearVelocityY);
+    }
+}
+#endregion
     
         
 #region Patrol

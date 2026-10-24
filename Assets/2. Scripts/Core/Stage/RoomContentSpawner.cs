@@ -4,6 +4,7 @@ using UnityEngine;
 public class RoomContentSpawner : MonoBehaviour,
     IObserver<StageNodeChangedEvent>,
     IObserver<EntityDeadEvent>,
+    IObserver<EnemyConvertedEvent>,
     IObserver<PickupCollectedEvent>,
     IObserver<StageNodeClearedEvent>,
     IObserver<PickupSpawnedEvent>,
@@ -13,6 +14,7 @@ public class RoomContentSpawner : MonoBehaviour,
 
     private GameObject currentRoom;
     private readonly List<Entity> aliveActors = new();
+    private readonly List<Entity> allies = new();
     private readonly List<WorldPickup> roomPickups = new();
     private readonly List<ItemBox> roomBoxes = new();
 
@@ -20,6 +22,7 @@ public class RoomContentSpawner : MonoBehaviour,
     {
         EventBus.Subscribe<StageNodeChangedEvent>(this);
         EventBus.Subscribe<EntityDeadEvent>(this);
+        EventBus.Subscribe<EnemyConvertedEvent>(this);
         EventBus.Subscribe<PickupCollectedEvent>(this);
         EventBus.Subscribe<StageNodeClearedEvent>(this);
         EventBus.Subscribe<PickupSpawnedEvent>(this);
@@ -42,6 +45,17 @@ public class RoomContentSpawner : MonoBehaviour,
             StageManager.Instance.NotifyRoomCleared();
     }
 
+    // 아군이 된 적은 방 클리어 대상에서 빠지지만, 방을 나갈 때는 함께 정리한다.
+    public void OnNotify(EnemyConvertedEvent e)
+    {
+        if (!aliveActors.Remove(e.Source))
+            return;
+
+        allies.Add(e.Source);
+        if (aliveActors.Count == 0)
+            StageManager.Instance.NotifyRoomCleared();
+    }
+
     public void OnNotify(PickupCollectedEvent e) => roomPickups.Remove(e.Pickup);
     public void OnNotify(StageNodeClearedEvent e) => SpawnPickups();
     public void OnNotify(PickupSpawnedEvent e) => roomPickups.Add(e.Pickup);
@@ -56,6 +70,12 @@ public class RoomContentSpawner : MonoBehaviour,
             if (actor != null)
                 ObjectPoolManager.Instance.Despawn(actor.gameObject);
         aliveActors.Clear();
+
+        // 방 안에서 죽은 아군은 이미 풀로 돌아갔으므로 활성 상태인 것만 정리한다.
+        foreach (var ally in allies)
+            if (ally != null && ally.gameObject.activeSelf)
+                ObjectPoolManager.Instance.Despawn(ally.gameObject);
+        allies.Clear();
 
         foreach (var pickup in roomPickups)
             if (pickup != null && pickup.gameObject.activeSelf)

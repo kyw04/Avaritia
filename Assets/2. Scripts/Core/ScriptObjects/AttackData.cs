@@ -31,7 +31,10 @@ public class AttackData : ScriptableObject
 
     private IEnumerator Execute(IAttacker attacker, Transform target = null, BulletEnhancement enhancement = null)
     {
-        attackStrategy?.Offensive(attacker, damageMultiplier, filter, target, enhancement);
+        var resolvedFilter = filter;
+        if (filter.useLayerMask && attacker is Entity entity)
+            resolvedFilter.SetLayerMask(entity.ResolveTargetLayer(filter.layerMask));
+        attackStrategy?.Offensive(attacker, damageMultiplier, resolvedFilter, target, enhancement);
 
         if (attackAnimClip)
             yield return new WaitForSeconds(attackAnimClip.length);

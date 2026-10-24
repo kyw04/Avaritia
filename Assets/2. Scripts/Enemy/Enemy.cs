@@ -1,5 +1,11 @@
 using UnityEngine;
 
+public enum EnemySize
+{
+    Normal,
+    Large,
+}
+
 public class Enemy : Entity, IStateOwner<Enemy>
 {
     public Enemy Owner { get; private set; }
@@ -15,6 +21,17 @@ public class Enemy : Entity, IStateOwner<Enemy>
     [SerializeField] private float viewDensity;
     [SerializeField] private float viewRadius;
     [SerializeField] private float alertRadius;
+    [SerializeField] private EnemySize size;
+
+    // 아군 전환 시 바꾼 값을 풀 재사용(OnSpawn) 때 되돌리기 위한 원래 값
+    private int hostileLayer;
+    private LayerMask hostileViewLayerMask;
+    private Transform leader;
+    private float stunUntil;
+
+    public EnemySize Size => size;
+    public bool IsAlly { get; private set; }
+    public bool IsStunned => Time.time < stunUntil;
 
     public override int LookDirection => transform.right.x >= 0 ? 1 : -1;
 
@@ -25,6 +42,8 @@ public class Enemy : Entity, IStateOwner<Enemy>
     protected override void Awake()
     {
         base.Awake();
+        hostileLayer = gameObject.layer;
+        hostileViewLayerMask = viewLayerMask;
         Owner = this;
         stateManager = StateManager.Instance;
         patrolCenter = transform.position;
@@ -38,9 +57,51 @@ public class Enemy : Entity, IStateOwner<Enemy>
         if (Machine != null) stateManager.Unregister(Machine);
         patrolCenter = transform.position;
         Target = null;
+        IsAlly = false;
+        leader = null;
+        stunUntil = 0f;
+        gameObject.layer = hostileLayer;
+        viewLayerMask = hostileViewLayerMask;
         Machine = new EnemyStateMachine(Owner);
         Machine.Init();
     }
+
+    protected override void Update()
+    {
+        base.Update();
+        // 아군은 순찰 범위가 플레이어를 따라다녀 플레이어 곁을 맴돌다 적이 보이면 싸운다.
+        if (IsAlly && leader != null)
+            patrolCenter = leader.position;
+    }
+
+    public void Stun(float duration)
+    {
+        stunUntil = Time.time + duration;
+        Machine.ChangeState<EnemyStunState>();
+    }
+
+    // 플레이어와 같은 레이어로 옮겨 적들이 플레이어처럼 노리게 하고, 원래 자기 레이어(적)를 노리게 한다.
+    // 스탯은 퍼센트 버프로 깎아 OnSpawn(ResetEntityState)에서 버프가 비워지면 원래대로 돌아간다.
+    public void ConvertToAlly(Transform newLeader, float statMultiplier)
+    {
+        IsAlly = true;
+        leader = newLeader;
+        gameObject.layer = newLeader.gameObject.layer;
+        viewLayerMask = 1 << hostileLayer;
+
+        float percent = (statMultiplier - 1f) * 100f;
+        foreach (var stat in statDataAsset.stats)
+            if (stat.statType != StatType.CurrentHealth)
+                ApplyBuff(this, stat.statType, BuffValueType.Percent, percent, 0f);
+
+        stunUntil = 0f;
+        Target = null;
+        Machine.ChangeState<EnemyPatrolState>();
+        EventBus.Publish(new EnemyConvertedEvent(this));
+    }
+
+    public override LayerMask ResolveTargetLayer(LayerMask mask) =>
+        IsAlly ? (mask & ~hostileViewLayerMask) | (1 << hostileLayer) : mask;
 
     public void Move()
     {

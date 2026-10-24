@@ -41,6 +41,19 @@ public struct EntityMovedEvent : ISubject
     public EntityMovedEvent(Entity source, float speed) { Source = source; Speed = speed; }
 }
 
+public struct EntityAnimationEvent : ISubject
+{
+    public Entity Source { get; private set; }
+    public AnimationClip Clip { get; private set; }
+    public EntityAnimationEvent(Entity source, AnimationClip clip) { Source = source; Clip = clip; }
+}
+
+public struct EnemyConvertedEvent : ISubject
+{
+    public Enemy Source { get; private set; }
+    public EnemyConvertedEvent(Enemy source) { Source = source; }
+}
+
 public struct EntityDeadEvent : ISubject
 {
     public Entity Source { get; private set; }

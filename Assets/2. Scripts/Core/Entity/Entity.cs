@@ -292,6 +292,9 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         movementStrategy?.Move(this, Rb, direction);
     }
 
+    // 공격 대상 레이어를 바꿔야 하는 엔티티(아군이 된 적)가 공격 필터/탄환 대상 레이어를 치환한다.
+    public virtual LayerMask ResolveTargetLayer(LayerMask mask) => mask;
+
     public void ApplyKnockback(Vector2 velocity, float duration)
     {
         if (knockbackResistance >= 1f) return;
