@@ -10,7 +10,8 @@ public class InputHandler : Singleton<InputHandler>
     public Player player;
     public Vector2 MoveInput { get; private set; }
     public bool AttackHeld => InputAction.Gameplay.Attack.IsPressed();
-    
+    private bool attackRequested;
+
     public PlayerInputActions InputAction { get; private set; }
     
     protected override void Awake()
@@ -49,6 +50,13 @@ public class InputHandler : Singleton<InputHandler>
     // 공격 중이거나 쿨다운 중이면 상태 머신의 전환 조건에서 걸러진다.
     private void Update()
     {
+        if (attackRequested)
+        {
+            attackRequested = false;
+            EventBus.Publish(new EntityAttackBufferEvent());
+            player.Machine.ChangeState<PlayerAttackState>();
+        }
+
         if (player != null && player.Weapon != null && player.Weapon.holdToAttack && AttackHeld)
             player.Machine.ChangeState<PlayerAttackState>();
     }
@@ -62,11 +70,10 @@ public class InputHandler : Singleton<InputHandler>
 
         player.Machine.ChangeState<PlayerJumpState>();
     }
-    private void OnAttack(InputAction.CallbackContext context)
-    {
-        EventBus.Publish(new EntityAttackBufferEvent());
-        player.Machine.ChangeState<PlayerAttackState>();
-    }
+    // 공격은 Update에서 시작한다. 같은 키 입력의 다른 액션 콜백(예: 아래+공격의 DownAttack)이
+    // 바인딩 순서상 Attack보다 늦게 오더라도, 그 프레임의 입력 콜백이 모두 끝난 뒤 공격하도록 하기 위함이다.
+    // 실행 순서가 -1000이라 플레이어 상태 머신보다 먼저 돌아 공격 타이밍은 같은 프레임 그대로다.
+    private void OnAttack(InputAction.CallbackContext context) => attackRequested = true;
 
     private void OnSkill1(InputAction.CallbackContext context) =>
         player.Abilities.TryActivate(player.Abilities.AbilityAt(0), new AbilityContext { Caster = player });
