@@ -29,9 +29,17 @@ MonoBehaviour:
   knockbackForce: 5
   knockbackUpForce: 2
   knockbackDuration: 0.2
-  inputAnimations: []
+  inputMethods:
+  - action: {fileID: 857254716216702918, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    phase: 3
+    methodName: AddKit
+  - action: {fileID: 3368605680795315267, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    phase: 2
+    methodName: SetDownAttackHeld
+  - action: {fileID: 3368605680795315267, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    phase: 4
+    methodName: SetDownAttackHeld
   kitImagePrefab: {fileID: 3377310235539022614, guid: d005ffc73f1fdbd4998b5df790d90763, type: 3}
-  kitChargeTime: 3
   maxKits: 2
   hitsToStun: 3
   stunDuration: 7

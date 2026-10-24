@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,23 +7,17 @@ using UnityEngine.InputSystem;
 [CreateAssetMenu(menuName = "Scriptable Objects/Weapon/ClockworkWorkshopWeapon")]
 public class ClockworkWorkshopWeapon : InputWeapon, IObserver<EntityDamagedEvent>, IObserver<StageNodeChangedEvent>
 {
-    [Header("정비 키트")]
     [SerializeField] private ImageCountPoolable kitImagePrefab;
-    [SerializeField, Min(0)] private float kitChargeTime = 3f;
     [SerializeField, Min(0)] private int maxKits = 2;
-
-    [Header("스턴")]
     [SerializeField, Min(1)] private int hitsToStun = 3;
     [SerializeField, Min(0)] private float stunDuration = 7f;
-
-    [Header("아군 전환 (방마다 초기화)")]
     [SerializeField, Min(0)] private int maxNormalAlliesPerRoom = 3;
     [SerializeField, Min(0)] private int maxLargeAlliesPerRoom = 2;
     [SerializeField, Range(0f, 1f)] private float allyStatMultiplier = 0.8f;
 
     private ImageCountBar kitCountBar;
     private int kitCount;
-    private Coroutine chargeCoroutine;
+    private bool downAttackHeld;
     private bool isDownAttack;
     private readonly Dictionary<Enemy, int> hitCounts = new();
     private readonly Dictionary<EnemySize, int> convertedCounts = new();
@@ -45,54 +38,30 @@ public class ClockworkWorkshopWeapon : InputWeapon, IObserver<EntityDamagedEvent
         base.Unequip();
         EventBus.UnsubscribeAll(this);
         kitCountBar?.Deactivate();
-        StopCharging();
+        downAttackHeld = false;
     }
 
     public override void Attack(IAttacker attacker, int index = 0, Transform defender = null)
     {
-        // 아래키를 누른 채 시작한 공격만 스턴된 적을 아군으로 만든다.
-        isDownAttack = InputHandler.Instance.MoveInput.y < -0.5f;
+        // 아래 공격 입력을 누른 채 시작한 공격만 스턴된 적을 아군으로 만든다.
+        isDownAttack = downAttackHeld;
         base.Attack(attacker, index, defender);
     }
 
-    protected override void OnInput(InputAction.CallbackContext context)
+    // DownAttack 액션의 Started/Canceled에 연결한다. InputHandler가 입력 콜백이 모두 끝난 뒤 Update에서 공격을 시작하므로
+    // 같은 프레임에 기록한 값이 첫 공격부터 반영된다.
+    [InputMethod]
+    private void SetDownAttackHeld(InputAction.CallbackContext context) =>
+        downAttackHeld = context.phase != InputActionPhase.Canceled;
+
+    [InputMethod]
+    private void AddKit()
     {
-        if (context.action != Gameplay.Move)
+        if (kitCount >= maxKits)
             return;
 
-        if (context.ReadValue<Vector2>().y < -0.5f)
-            StartCharging();
-        else
-            StopCharging();
-    }
-
-    private void StartCharging()
-    {
-        if (chargeCoroutine != null)
-            return;
-
-        chargeCoroutine = Owner.Mono.StartCoroutine(ChargeKits());
-    }
-
-    private void StopCharging()
-    {
-        if (chargeCoroutine == null)
-            return;
-
-        Owner.Mono.StopCoroutine(chargeCoroutine);
-        chargeCoroutine = null;
-    }
-
-    // 아래키를 누르고 있는 동안 kitChargeTime마다 정비 키트를 하나씩 만든다. 가득 차 있으면 빌 때까지 기다린다.
-    private IEnumerator ChargeKits()
-    {
-        while (true)
-        {
-            yield return new WaitUntil(() => kitCount < maxKits);
-            yield return new WaitForSeconds(kitChargeTime);
-            kitCount++;
-            kitCountBar?.Refresh();
-        }
+        kitCount++;
+        kitCountBar?.Refresh();
     }
 
     public void OnNotify(EntityDamagedEvent e)
