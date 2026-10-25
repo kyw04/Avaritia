@@ -26,12 +26,16 @@ public class Enemy : Entity, IStateOwner<Enemy>
     [SerializeField] private float viewRadius;
     [SerializeField] private float alertRadius;
     [SerializeField] private EnemySize size;
+    // 아군이 되면 적과 구분되도록 스프라이트에 입히는 색
+    [SerializeField] private Color allyColor = new(0.5f, 1f, 0.5f, 1f);
 
     // 아군 전환 시 바꾼 값을 풀 재사용(OnSpawn) 때 되돌리기 위한 원래 값
     private int hostileLayer;
     private LayerMask hostileViewLayerMask;
     private Transform leader;
     private float stunUntil;
+    private SpriteRenderer[] spriteRenderers;
+    private Color[] hostileColors;
 
     // 순찰 폭이 0이면 순찰하지 않고 순찰 중심에 서 있는다(테스트용 허수아비 등).
     public bool ShouldHoldPosition => patrolSize.x <= 0f && IsInPatrolArea();
@@ -50,6 +54,10 @@ public class Enemy : Entity, IStateOwner<Enemy>
         base.Awake();
         hostileLayer = gameObject.layer;
         hostileViewLayerMask = viewLayerMask;
+        spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+        hostileColors = new Color[spriteRenderers.Length];
+        for (int i = 0; i < spriteRenderers.Length; i++)
+            hostileColors[i] = spriteRenderers[i].color;
         Owner = this;
         stateManager = StateManager.Instance;
         patrolCenter = transform.position;
@@ -68,6 +76,8 @@ public class Enemy : Entity, IStateOwner<Enemy>
         stunUntil = 0f;
         gameObject.layer = hostileLayer;
         viewLayerMask = hostileViewLayerMask;
+        for (int i = 0; i < spriteRenderers.Length; i++)
+            spriteRenderers[i].color = hostileColors[i];
         Machine = new EnemyStateMachine(Owner);
         Machine.Init();
     }
@@ -94,6 +104,8 @@ public class Enemy : Entity, IStateOwner<Enemy>
         leader = newLeader;
         gameObject.layer = newLeader.gameObject.layer;
         viewLayerMask = 1 << hostileLayer;
+        foreach (var r in spriteRenderers)
+            r.color = allyColor;
 
         float percent = (statMultiplier - 1f) * 100f;
         foreach (var stat in statDataAsset.stats)
