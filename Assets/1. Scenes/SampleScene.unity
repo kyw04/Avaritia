@@ -1985,10 +1985,6 @@ PrefabInstance:
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
-      propertyPath: abilities.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
       propertyPath: sounds.<Hit>k__BackingField
       value: 
       objectReference: {fileID: 8300000, guid: d5f73f90be4e72443a20f791be9cce6c, type: 3}
@@ -2771,10 +2767,6 @@ PrefabInstance:
     - target: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
       propertyPath: knockbackResistance
       value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
-      propertyPath: abilities.Array.size
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
       propertyPath: sounds.<Hit>k__BackingField
@@ -20716,10 +20708,6 @@ PrefabInstance:
     - target: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
       propertyPath: knockbackResistance
       value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
-      propertyPath: abilities.Array.size
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
       propertyPath: sounds.<Hit>k__BackingField
