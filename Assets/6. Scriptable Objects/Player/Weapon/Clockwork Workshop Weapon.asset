@@ -32,13 +32,25 @@ MonoBehaviour:
   inputMethods:
   - action: {fileID: 857254716216702918, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     phase: 3
+    holdDuration: 3
+    keepHoldOnOtherInput: 0
+    holdStartClip: {fileID: 0}
     methodName: AddKit
+    clip: {fileID: 0}
   - action: {fileID: 3368605680795315267, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     phase: 2
+    holdDuration: 0
+    keepHoldOnOtherInput: 0
+    holdStartClip: {fileID: 0}
     methodName: SetDownAttackHeld
+    clip: {fileID: 0}
   - action: {fileID: 3368605680795315267, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     phase: 4
+    holdDuration: 0
+    keepHoldOnOtherInput: 0
+    holdStartClip: {fileID: 0}
     methodName: SetDownAttackHeld
+    clip: {fileID: 0}
   kitImagePrefab: {fileID: 3377310235539022614, guid: d005ffc73f1fdbd4998b5df790d90763, type: 3}
   maxKits: 2
   hitsToStun: 3
