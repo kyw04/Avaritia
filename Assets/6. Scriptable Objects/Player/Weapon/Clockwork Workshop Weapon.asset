@@ -52,6 +52,7 @@ MonoBehaviour:
     methodName: SetDownAttackHeld
     clip: {fileID: 0}
   kitImagePrefab: {fileID: 3377310235539022614, guid: d005ffc73f1fdbd4998b5df790d90763, type: 3}
+  stunKitSprite: {fileID: 21300000, guid: 51e0c86086996cb4a9b560c1845ed68b, type: 3}
   maxKits: 2
   hitsToStun: 3
   stunDuration: 7

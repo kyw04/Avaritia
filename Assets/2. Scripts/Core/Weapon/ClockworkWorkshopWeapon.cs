@@ -4,10 +4,12 @@ using UnityEngine.InputSystem;
 
 // 태엽 공방 무기: 아래키를 누르고 있으면 정비 키트를 만들고, 키트를 가진 채 적을 때리면 스턴,
 // 스턴된 적을 아래 공격으로 때리면 키트 1개를 소모해 아군으로 만든다.
+// 스턴을 걸면 맨 앞 키트 이미지가 바뀌고, 키트를 소모하면 원래대로 돌아온다.
 [CreateAssetMenu(menuName = "Scriptable Objects/Weapon/ClockworkWorkshopWeapon")]
 public class ClockworkWorkshopWeapon : InputWeapon, IObserver<EntityDamagedEvent>, IObserver<StageNodeChangedEvent>
 {
     [SerializeField] private ImageCountPoolable kitImagePrefab;
+    [SerializeField] private Sprite stunKitSprite;
     [SerializeField, Min(0)] private int maxKits = 2;
     [SerializeField, Min(1)] private int hitsToStun = 3;
     [SerializeField, Min(0)] private float stunDuration = 7f;
@@ -17,6 +19,7 @@ public class ClockworkWorkshopWeapon : InputWeapon, IObserver<EntityDamagedEvent
 
     private ImageCountBar kitCountBar;
     private int kitCount;
+    private bool kitStunned;
     private bool downAttackHeld;
     private bool isDownAttack;
     private readonly Dictionary<Enemy, int> hitCounts = new();
@@ -29,7 +32,7 @@ public class ClockworkWorkshopWeapon : InputWeapon, IObserver<EntityDamagedEvent
         EventBus.Subscribe<StageNodeChangedEvent>(this);
 
         kitCountBar = countBar;
-        kitCountBar?.Init(kitImagePrefab, () => kitCount, () => maxKits);
+        kitCountBar?.Init(kitImagePrefab, () => kitCount, () => maxKits, i => i == 0 && kitStunned ? stunKitSprite : null);
         kitCountBar?.Activate();
     }
 
@@ -87,6 +90,8 @@ public class ClockworkWorkshopWeapon : InputWeapon, IObserver<EntityDamagedEvent
 
         hitCounts.Remove(enemy);
         enemy.Stun(stunDuration);
+        kitStunned = true;
+        kitCountBar?.Refresh();
     }
 
     private void TryConvert(Enemy enemy)
@@ -98,6 +103,7 @@ public class ClockworkWorkshopWeapon : InputWeapon, IObserver<EntityDamagedEvent
 
         convertedCounts[enemy.Size] = converted + 1;
         kitCount--;
+        kitStunned = false;
         kitCountBar?.Refresh();
         enemy.ConvertToAlly(Owner.transform, allyStatMultiplier);
     }
