@@ -67,7 +67,10 @@ public class EnemyPatrolState : StateBase<Enemy>
     
     public override void FixedExecute()
     {
-        Owner.Move();
+        if (!Owner.ShouldHoldPosition)
+            Owner.Move();
+        else if (!Owner.IsKnockedBack)
+            Owner.Rb.linearVelocity = new Vector2(0, Owner.Rb.linearVelocityY);
     }
 }
     

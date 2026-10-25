@@ -16,6 +16,10 @@ public class Enemy : Entity, IStateOwner<Enemy>
 
     [SerializeField] private Vector2 patrolSize;
     private Vector2 patrolCenter;
+    // 순찰 폭이 0이어도 중심에 도착했다고 판정할 여유 거리
+    private const float PatrolArriveDistance = 0.1f;
+    // 추격 대상과 x 차이가 이 안이면 방향을 바꾸지 않고 멈춘다.
+    private const float ChaseStopDistance = 0.1f;
     [SerializeField] private LayerMask viewLayerMask;
     [SerializeField, Range(0, 360)] private int viewAngle;
     [SerializeField] private float viewDensity;
@@ -29,6 +33,8 @@ public class Enemy : Entity, IStateOwner<Enemy>
     private Transform leader;
     private float stunUntil;
 
+    // 순찰 폭이 0이면 순찰하지 않고 순찰 중심에 서 있는다(테스트용 허수아비 등).
+    public bool ShouldHoldPosition => patrolSize.x <= 0f && IsInPatrolArea();
     public EnemySize Size => size;
     public bool IsAlly { get; private set; }
     public bool IsStunned => Time.time < stunUntil;
@@ -107,7 +113,15 @@ public class Enemy : Entity, IStateOwner<Enemy>
     {
         if (HasTarget)
         {
-            var rot = Target.position.x > transform.position.x ? 0 : 180;
+            // 대상과 x가 거의 같으면(겹치거나 머리 위) 지나쳤다 돌아서기를 반복하지 않도록 멈춘다.
+            float dx = Target.position.x - transform.position.x;
+            if (Mathf.Abs(dx) <= ChaseStopDistance)
+            {
+                Rb.linearVelocity = new Vector2(0, Rb.linearVelocityY);
+                return;
+            }
+
+            var rot = dx > 0 ? 0 : 180;
             transform.rotation = Quaternion.Euler(0, rot, 0);
         }
 
@@ -116,6 +130,12 @@ public class Enemy : Entity, IStateOwner<Enemy>
 
     public void Patrol()
     {
+        if (ShouldHoldPosition)
+        {
+            FindTarget();
+            return;
+        }
+
         bool onTurn = Physics2D.CircleCast(
             transform.position,
             0.25f,
@@ -137,10 +157,8 @@ public class Enemy : Entity, IStateOwner<Enemy>
 
     public bool IsInPatrolArea()
     {
-        float x = transform.position.x;
-        float left = patrolCenter.x - patrolSize.x / 2f;
-        float right = patrolCenter.x + patrolSize.x / 2f;
-        return x >= left && x <= right;
+        float halfWidth = Mathf.Max(patrolSize.x / 2f, PatrolArriveDistance);
+        return Mathf.Abs(transform.position.x - patrolCenter.x) <= halfWidth;
     }
 
     public void FaceTowardPatrolCenter()
