@@ -3,12 +3,14 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-// 입력 함수 항목을 액션 / 단계 / 메서드 드롭다운 / 애니메이션 네 줄로 그린다.
+// 입력 함수 항목을 액션 / 홀드 시간 / 단계(홀드면 다른 키 입력 시 유지 여부) / 메서드 드롭다운 / 애니메이션 다섯 줄로 그린다.
+// 홀드 항목은 홀드 시작 애니메이션 한 줄을 더 그린다.
 // 메서드 목록은 이 에셋의 무기 타입에서 [InputMethod]가 붙은 메서드만 보여준다.
 [CustomPropertyDrawer(typeof(InputWeapon.InputMethodBinding))]
 public class InputMethodBindingDrawer : PropertyDrawer
 {
-    private const int LineCount = 4;
+    private const int LineCount = 5;
+    private const int HoldLineCount = 1;
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
@@ -20,11 +22,21 @@ public class InputMethodBindingDrawer : PropertyDrawer
 
         EditorGUI.PropertyField(rect, property.FindPropertyRelative("action"));
         rect.y += step;
-        EditorGUI.PropertyField(rect, property.FindPropertyRelative("phase"));
+        var holdDuration = property.FindPropertyRelative("holdDuration");
+        EditorGUI.PropertyField(rect, holdDuration);
+        rect.y += step;
+        // 홀드는 누름/뗌으로 진행하므로 단계 대신 다른 키 입력 시 유지 여부를 보여준다.
+        EditorGUI.PropertyField(rect, property.FindPropertyRelative(holdDuration.floatValue > 0f ? "keepHoldOnOtherInput" : "phase"));
         rect.y += step;
         DrawMethodPopup(rect, property);
         rect.y += step;
         EditorGUI.PropertyField(rect, property.FindPropertyRelative("clip"));
+
+        if (holdDuration.floatValue > 0f)
+        {
+            rect.y += step;
+            EditorGUI.PropertyField(rect, property.FindPropertyRelative("holdStartClip"));
+        }
 
         EditorGUI.EndProperty();
     }
@@ -49,7 +61,10 @@ public class InputMethodBindingDrawer : PropertyDrawer
             methodName.stringValue = selected == 0 ? string.Empty : names[selected];
     }
 
-    public override float GetPropertyHeight(SerializedProperty property, GUIContent label) =>
-        LineCount * EditorGUIUtility.singleLineHeight + (LineCount - 1) * EditorGUIUtility.standardVerticalSpacing;
+    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+    {
+        int lines = LineCount + (property.FindPropertyRelative("holdDuration").floatValue > 0f ? HoldLineCount : 0);
+        return lines * EditorGUIUtility.singleLineHeight + (lines - 1) * EditorGUIUtility.standardVerticalSpacing;
+    }
 }
 #endif
