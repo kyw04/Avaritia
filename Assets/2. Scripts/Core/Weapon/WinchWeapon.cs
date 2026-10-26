@@ -4,6 +4,7 @@ using UnityEngine;
 // 원치 무기: 기본 공격은 근접 콤보, 방향키(8방향)를 누른 채 공격하면 그 방향으로 갈고리를 날린다.
 // 가벼운 적(일반 크기 Enemy)은 맞히면 피해를 주고 플레이어 앞으로 끌어오고,
 // 무거운 적(대형 Enemy, 보스 등)은 플레이어가 그 적에게 날아가 도착하면 공격한다. 피해를 줄 때 Enemy는 스턴된다.
+// 벽/바닥에 걸리면 로프에 매달려 흔들 수 있고, 점프 입력을 넣거나 공중에서 발이 땅에 닿으면 풀린다.
 // 끌려오거나 날아가는 동안에는 넉백 상태로 만들어 상태 머신의 이동이 속도를 덮어쓰지 않게 한다.
 [CreateAssetMenu(menuName = "Scriptable Objects/Weapon/WinchWeapon")]
 public class WinchWeapon : InputWeapon
@@ -24,6 +25,11 @@ public class WinchWeapon : InputWeapon
     [SerializeField, Min(0)] private float flySpeed = 20f;
     [SerializeField, Min(0)] private float flyStopDistance = 0.6f;
     [SerializeField, Min(0)] private float stunDuration = 1.5f;
+    [SerializeField, Min(0)] private float swingForce = 15f;
+    [SerializeField, Min(1)] private float pumpMultiplier = 2f;
+    [SerializeField, Min(0)] private float maxSwingSpeed = 12f;
+    [SerializeField, Min(0)] private float reelSpeed = 4f;
+    [SerializeField, Min(0)] private float minRopeLength = 1f;
 
     private LineRenderer rope;
     private Coroutine hookRoutine;
@@ -31,6 +37,11 @@ public class WinchWeapon : InputWeapon
     private float savedGravityScale;
     private bool isFlying;
     private float hookReadyTime;
+    private DistanceJoint2D ropeJoint;
+    private RopeMovementStrategy ropeMovement;
+    // 로프 이동으로 바꿔둔 동안(줄을 놓고 착지하기 전까지 포함)만 원래 이동 전략을 들고 있다.
+    private IMovementStrategy savedMovementStrategy;
+    private Coroutine landRoutine;
 
     private Vector2 Origin => (Vector2)Owner.transform.position + new Vector2(originOffset.x * Owner.LookDirection, originOffset.y);
 
@@ -48,6 +59,8 @@ public class WinchWeapon : InputWeapon
             Owner.StopCoroutine(hookRoutine);
             EndHook();
         }
+        StopLandRoutine();
+        RestoreMovement();
         if (rope != null)
             Destroy(rope.gameObject);
         base.Unequip();
@@ -97,9 +110,8 @@ public class WinchWeapon : InputWeapon
             SetRope(tip);
         }
 
-        var target = hit && (targetLayer & (1 << hit.collider.gameObject.layer)) != 0
-            ? hit.collider.GetComponentInParent<Entity>()
-            : null;
+        int hitLayer = hit ? 1 << hit.collider.gameObject.layer : 0;
+        var target = (targetLayer & hitLayer) != 0 ? hit.collider.GetComponentInParent<Entity>() : null;
 
         // 빗나가거나 벽에 맞으면 쿨타임 없이 바로 다시 쓸 수 있다.
         if (target != null)
@@ -109,6 +121,9 @@ public class WinchWeapon : InputWeapon
             yield return Pull(target);
         else if (target != null)
             yield return Fly(target, hit.collider);
+        // 아래로 쏴서 바닥에 걸린 줄은 매달릴 수 없으니 회수한다.
+        else if ((obstacleLayer & hitLayer) != 0 && direction.y >= 0f)
+            yield return Swing(hit.point);
         else
             yield return Retract(tip);
 
@@ -161,6 +176,93 @@ public class WinchWeapon : InputWeapon
         Hold(Owner, Vector2.zero);
     }
 
+    // 걸린 지점까지의 거리를 넘지 않게 DistanceJoint2D로 묶고, 풀릴 때까지 이동 전략을 로프 이동으로 바꾼다.
+    private IEnumerator Swing(Vector2 anchor)
+    {
+        ropeJoint = Owner.gameObject.AddComponent<DistanceJoint2D>();
+        ropeJoint.autoConfigureConnectedAnchor = false;
+        ropeJoint.connectedAnchor = anchor;
+        ropeJoint.autoConfigureDistance = false;
+        ropeJoint.distance = Vector2.Distance(Owner.Rb.position, anchor);
+        ropeJoint.maxDistanceOnly = true;
+        ropeJoint.enableCollision = true;
+
+        // 줄을 놓고 착지하기 전에 다시 걸면 원래 전략은 이미 들고 있으니 그대로 둔다.
+        StopLandRoutine();
+        savedMovementStrategy ??= Owner.MovementStrategy;
+        ropeMovement = new RopeMovementStrategy(ropeJoint, savedMovementStrategy, swingForce, pumpMultiplier, maxSwingSpeed,
+            reelSpeed, minRopeLength, hookRange);
+        Owner.MovementStrategy = ropeMovement;
+
+        // 땅에서 건 줄은 걸어 다닐 수 있지만, 공중에 떴다가 발이 닿으면 끊는다.
+        bool wasGrounded = Owner.IsGrounded;
+        while (ropeJoint != null)
+        {
+            if (Owner.IsGrounded && !wasGrounded)
+            {
+                DetachRope();
+                break;
+            }
+            wasGrounded = Owner.IsGrounded;
+            SetRope(anchor);
+            yield return null;
+        }
+    }
+
+    // 로프에 매달려 있으면 점프 입력은 점프 대신 줄을 놓는 데 쓴다.
+    public override bool ConsumeJump()
+    {
+        if (ropeJoint == null)
+            return false;
+
+        DetachRope();
+        return true;
+    }
+
+    // 공중에서 놓으면 착지할 때까지 로프 이동 전략을 유지해 스윙 관성을 살린다.
+    private void DetachRope()
+    {
+        if (ropeJoint == null)
+            return;
+
+        // Destroy는 프레임 끝에 처리되므로 그 전에 물리가 돌아도 줄이 당기지 않게 바로 끈다.
+        ropeJoint.enabled = false;
+        Destroy(ropeJoint);
+        ropeJoint = null;
+        ropeMovement.Detach();
+        ropeMovement = null;
+
+        if (Owner.IsGrounded)
+            RestoreMovement();
+        else
+            landRoutine = Owner.StartCoroutine(RestoreMovementOnLand());
+    }
+
+    private IEnumerator RestoreMovementOnLand()
+    {
+        yield return new WaitUntil(() => Owner.IsGrounded);
+        landRoutine = null;
+        RestoreMovement();
+    }
+
+    private void StopLandRoutine()
+    {
+        if (landRoutine == null)
+            return;
+
+        Owner.StopCoroutine(landRoutine);
+        landRoutine = null;
+    }
+
+    private void RestoreMovement()
+    {
+        if (savedMovementStrategy == null)
+            return;
+
+        Owner.MovementStrategy = savedMovementStrategy;
+        savedMovementStrategy = null;
+    }
+
     private IEnumerator Retract(Vector2 tip)
     {
         while (tip != Origin)
@@ -201,6 +303,7 @@ public class WinchWeapon : InputWeapon
     {
         hookRoutine = null;
         rope.enabled = false;
+        DetachRope();
         if (isFlying)
         {
             Owner.Rb.gravityScale = savedGravityScale;

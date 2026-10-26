@@ -48,7 +48,7 @@ MonoBehaviour:
   hookRange: 6
   hookSpeed: 30
   maxReelTime: 0.6
-  hookCooldown: 5
+  hookCooldown: 1
   pullDamageMultiplier: 1
   pullSpeed: 18
   pullStopDistance: 1.2
@@ -56,3 +56,8 @@ MonoBehaviour:
   flySpeed: 20
   flyStopDistance: 0.6
   stunDuration: 1.5
+  swingForce: 15
+  pumpMultiplier: 2
+  maxSwingSpeed: 12
+  reelSpeed: 4
+  minRopeLength: 1

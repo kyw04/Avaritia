@@ -47,6 +47,9 @@ public abstract class Weapon : ScriptableObject, IInventoryItem
 
     public virtual void Unequip() { }
 
+    // true를 반환하면 이번 점프 입력을 무기가 쓴 것으로 보고 플레이어는 점프하지 않는다.
+    public virtual bool ConsumeJump() => false;
+
     public virtual void Attack(IAttacker attacker, int index = 0, Transform defender = null)
     {
         EventBus.Publish(new EntityAttackStartEvent(Owner, combo.datas[index]));

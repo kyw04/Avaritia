@@ -65,6 +65,9 @@ public class InputHandler : Singleton<InputHandler>
         player.Machine.ChangeState<PlayerDashState>();
     private void OnJump(InputAction.CallbackContext context)
     {
+        if (player.Weapon != null && player.Weapon.ConsumeJump())
+            return;
+
         if (MoveInput.y < -0.5f && player.TryDropThroughPlatform())
             return;
 

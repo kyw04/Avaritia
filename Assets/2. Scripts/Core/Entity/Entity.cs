@@ -46,6 +46,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     private float trackedMaxHealth;
 
     public Rigidbody2D Rb { get; protected set; }
+    // 무기 등이 이동 방식을 잠시 바꿨다가 되돌릴 수 있게 연다(예: 로프에 매달린 동안).
+    public IMovementStrategy MovementStrategy { get => movementStrategy; set => movementStrategy = value; }
     public MonoBehaviour Mono => this;
     public bool IsAttacking { get; set; }
     public AbilityManager Abilities { get; private set; }
