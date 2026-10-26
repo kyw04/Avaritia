@@ -90,3 +90,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 093b1e303729266449a863256c9a4edf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomContentSpawner
+  player: {fileID: 0}
