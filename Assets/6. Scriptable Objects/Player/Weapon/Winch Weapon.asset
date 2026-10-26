@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17c9566ed0754ab40bb4256e8fa26aac, type: 3}
+  m_Name: Winch Weapon
+  m_EditorClassIdentifier: Assembly-CSharp::WinchWeapon
+  spriteLibraryAsset: {fileID: 7108339969198208228, guid: 88dd0a5dfd141cc48aa51ddb96005119, type: 3}
+  combo: {fileID: 11400000, guid: aa917b9b7cd923244bd2a65c4488f506, type: 2}
+  holdToAttack: 0
+  icon: {fileID: -7409495419916585736, guid: 971afe4671ae8ea4ba0560d290047c73, type: 3}
+  displayName: "\uC6D0\uCE58"
+  description: 
+  passiveAbilities: []
+  attackParticle: {fileID: 2461976908696895058, guid: 59a335fab3ff41368182b36efcac9d4b, type: 3}
+  swingSound: {fileID: 8300000, guid: 4c5c5677d5ff89145ab60e67a4a1e293, type: 3}
+  hitSound: {fileID: 8300000, guid: 21a23957a77c3bc488f38c0c48b7cb7e, type: 3}
+  shakeForce: 0.3
+  hitStopTimeScale: 0.1
+  hitStopDuration: 0.08
+  knockbackForce: 5
+  knockbackUpForce: 2
+  knockbackDuration: 0.2
+  inputMethods:
+  - action: {fileID: 1120369429361536294, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    phase: 3
+    holdDuration: 0
+    keepHoldOnOtherInput: 0
+    holdStartClip: {fileID: 0}
+    methodName: FireHook
+    clip: {fileID: 0}
+  ropePrefab: {fileID: 6014836905017669613, guid: 1a75fbbd63e65ea4bad5f4ed6e89ca7d, type: 3}
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 264
+  originOffset: {x: 0, y: 0}
+  hookRadius: 0.25
+  hookRange: 6
+  hookSpeed: 30
+  maxReelTime: 0.6
+  hookCooldown: 5
+  pullDamageMultiplier: 1
+  pullSpeed: 18
+  pullStopDistance: 1.2
+  flyDamageMultiplier: 1.5
+  flySpeed: 20
+  flyStopDistance: 0.6
+  stunDuration: 1.5
