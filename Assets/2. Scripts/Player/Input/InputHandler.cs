@@ -91,10 +91,7 @@ public class InputHandler : Singleton<InputHandler>
     private void OnInteractCanceled(InputAction.CallbackContext context) =>
         player.InteractionController.OnInteractCanceled();
 
-    private void OnMove(InputAction.CallbackContext context)
-    {
-        MoveInput = context.ReadValue<Vector2>();
-    }
+    private void OnMove(InputAction.CallbackContext context) => MoveInput = context.ReadValue<Vector2>();
 
     private void OnMoveStopped(InputAction.CallbackContext context)
     {

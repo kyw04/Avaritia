@@ -24,7 +24,6 @@ public class PauseUI : Singleton<PauseUI>
     {
         selector.SetActive(true);
         pauseUI.SetActive(true);
-        Time.timeScale = 0;
         EventSystem.current.SetSelectedGameObject(firstButton);
     }
 
@@ -32,7 +31,6 @@ public class PauseUI : Singleton<PauseUI>
     {
         selector.SetActive(false);
         pauseUI.SetActive(false);
-        Time.timeScale = 1;
     }
 
     public void OnCancelButtonClick()

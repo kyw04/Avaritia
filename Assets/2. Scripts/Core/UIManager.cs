@@ -25,6 +25,7 @@ public class UIManager : Singleton<UIManager>
 
         if (wasEmpty)
         {
+            GameFreezeManager.Instance.Freeze();
             InputHandler.Instance.InputAction.Gameplay.Disable();
             InputHandler.Instance.InputAction.UI.Enable();
         }
@@ -40,6 +41,7 @@ public class UIManager : Singleton<UIManager>
 
         if (stack.Count == 0)
         {
+            GameFreezeManager.Instance.Unfreeze();
             InputHandler.Instance.InputAction.UI.Disable();
             InputHandler.Instance.InputAction.Gameplay.Enable();
         }
