@@ -262,7 +262,10 @@ public class PlayerStateMachine : StateMachineBase<Player>
             if (dashStartTime + dashTime <= Time.time)
             {
                 Owner.Rb.linearVelocity = Vector2.zero;
-                Owner.Machine.ChangeState<PlayerFallState>();
+                if (Owner.IsGrounded)
+                    Owner.Machine.ChangeState<PlayerIdleState>();
+                else
+                    Owner.Machine.ChangeState<PlayerFallState>();
             }
         }
 
