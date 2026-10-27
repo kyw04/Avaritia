@@ -49,10 +49,10 @@ public class InputMethodBindingDrawer : PropertyDrawer
 
         // 지정된 이름이 목록에 없으면(이름 변경/삭제) 그대로 보여 주어 잃어버리지 않게 한다.
         if (!string.IsNullOrEmpty(methodName.stringValue) && !names.Contains(methodName.stringValue))
-            names.Add(methodName.stringValue + " (없음)");
+            names.Add(methodName.stringValue + " (Not Found)");
         names.Insert(0, "(None)");
 
-        int current = Mathf.Max(0, names.FindIndex(n => n == methodName.stringValue || n == methodName.stringValue + " (없음)"));
+        int current = Mathf.Max(0, names.FindIndex(n => n == methodName.stringValue || n == methodName.stringValue + " (Not Found)"));
         if (string.IsNullOrEmpty(methodName.stringValue))
             current = 0;
 

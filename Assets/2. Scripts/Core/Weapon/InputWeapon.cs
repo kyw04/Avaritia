@@ -134,7 +134,7 @@ public abstract class InputWeapon : Weapon
 
         if (!methodCache.TryGetValue(binding.methodName, out var method))
         {
-            Debug.LogWarning($"{name}: [InputMethod] 메서드 '{binding.methodName}'를 찾을 수 없습니다.");
+            Debug.LogWarning($"{name}: [InputMethod] method '{binding.methodName}' do not found.");
             return;
         }
 
