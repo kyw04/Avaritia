@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -25,7 +26,8 @@ public class InputHandler : Singleton<InputHandler>
     private void OnEnable()
     {
         InputAction.Enable();
-
+        InputAction.UI.Disable();
+        
         InputAction.Gameplay.Jump.performed += OnJump;
         InputAction.Gameplay.Attack.performed += OnAttack;
         InputAction.Gameplay.Dash.performed += OnDash;
@@ -36,8 +38,9 @@ public class InputHandler : Singleton<InputHandler>
         InputAction.Gameplay.Interact.started += OnInteractStarted;
         InputAction.Gameplay.Interact.canceled += OnInteractCanceled;
         InputAction.Gameplay.Inventory.started += OnInventoryOpen;
+        InputAction.Gameplay.Pause.started += OnPauseOpen;
         
-        InputAction.UI.Cancel.started += OnInventoryClose;
+        InputAction.UI.Cancel.started += OnUICancel;
         InputAction.UI.CloseInventory.started += OnInventoryCloseAll;
     }
 
@@ -73,6 +76,7 @@ public class InputHandler : Singleton<InputHandler>
 
         player.Machine.ChangeState<PlayerJumpState>();
     }
+    
     // 공격은 Update에서 시작한다. 같은 키 입력의 다른 액션 콜백(예: 아래+공격의 DownAttack)이
     // 바인딩 순서상 Attack보다 늦게 오더라도, 그 프레임의 입력 콜백이 모두 끝난 뒤 공격하도록 하기 위함이다.
     // 실행 순서가 -1000이라 플레이어 상태 머신보다 먼저 돌아 공격 타이밍은 같은 프레임 그대로다.
@@ -98,20 +102,13 @@ public class InputHandler : Singleton<InputHandler>
         player.Move(MoveInput);
     }
 
-    private void OnInventoryOpen(InputAction.CallbackContext context) =>
-        UIManager.Instance.Push(InventoryUI.Key);
-
-    private void OnInventoryClose(InputAction.CallbackContext context)
-    {
-        if (ItemReplaceController.IsReplacing)
-            ItemReplaceController.Instance.CancelReplace();
-        UIManager.Instance.Pop();
-    }
-
+    private void OnUICancel(InputAction.CallbackContext context) => UIManager.Instance.Pop();
+    private void OnInventoryOpen(InputAction.CallbackContext context) => UIManager.Instance.Push(InventoryUI.Key);
     private void OnInventoryCloseAll(InputAction.CallbackContext context)
     {
         if (ItemReplaceController.IsReplacing)
             ItemReplaceController.Instance.CancelReplace();
         UIManager.Instance.PopUntil(InventoryUI.Key);
     }
+    private void OnPauseOpen(InputAction.CallbackContext context) => UIManager.Instance.Push(PauseUI.Key);
 }

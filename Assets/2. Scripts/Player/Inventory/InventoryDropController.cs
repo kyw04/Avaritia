@@ -21,7 +21,8 @@ public class InventoryDropController : MonoBehaviour
 
     private void OnSubmit()
     {
-        if (ConfirmationPopup.IsBlockingInput || ItemReplaceController.IsReplacing) return;
+        if (!gameObject.activeSelf || ConfirmationPopup.IsBlockingInput || ItemReplaceController.IsReplacing)
+            return;
 
         var selected = EventSystem.current.currentSelectedGameObject;
         var slot = selected != null ? selected.GetComponent<InventorySlot>() : null;
@@ -30,7 +31,9 @@ public class InventoryDropController : MonoBehaviour
 
         pendingItem = slot.Item;
         pendingPlayer = slot.Target;
-        ConfirmationPopup.Instance.Show(pendingItem.DisplayName, OnConfirmDrop);
+        ConfirmationPopup.Instance.Show(
+            $"{pendingItem.DisplayName}을(를) 버리시겠습니까?",
+            OnConfirmDrop);
     }
 
     private void OnConfirmDrop()
