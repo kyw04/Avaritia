@@ -1,6 +1,13 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(AudioSource))]
+public enum AudioType
+{
+    None,
+    Music,
+    Effect,
+}
+
 public class SoundManager : Singleton<SoundManager>,
     IObserver<EntityJumpedEvent>,
     IObserver<EntityLandedEvent>,
@@ -8,27 +15,47 @@ public class SoundManager : Singleton<SoundManager>,
     IObserver<EntityDamagedEvent>,
     IObserver<EntityAttackStartEvent>
 {
-    private AudioSource sfxSource;
+    [SerializeField, Range(0, 1)] private float volume = 1f;
+    [SerializeField, Range(0, 1)] private float musicVolume = 1f;
+    [SerializeField, Range(0, 1)] private float effectVolume = 1f;
+    
+    [SerializeField] private AudioSource musicSource;
+    [SerializeField] private AudioSource effectSource;
 
+    private readonly Dictionary<AudioType, AudioSource> sources = new();
+    
     protected override void Awake()
     {
         base.Awake();
-        sfxSource = GetComponent<AudioSource>();
+        
         EventBus.Subscribe<EntityJumpedEvent>(this);
         EventBus.Subscribe<EntityLandedEvent>(this);
         EventBus.Subscribe<EntityDashEvent>(this);
         EventBus.Subscribe<EntityDamagedEvent>(this);
         EventBus.Subscribe<EntityAttackStartEvent>(this);
+        
+        sources[AudioType.Music] = musicSource;
+        sources[AudioType.Effect] = effectSource;
     }
 
-    public void OnNotify(EntityJumpedEvent e) => PlaySfx(e.Data.sound);
-    public void OnNotify(EntityLandedEvent e) => PlaySfx(e.Source.Sounds.Land);
-    public void OnNotify(EntityDashEvent e) => PlaySfx(e.Source.Sounds.Dash);
+    public void VolumeSetting(float mul, float music, float sfx)
+    {
+        volume = mul;
+        musicVolume = music;
+        effectVolume = sfx;
+        
+        musicSource.volume = musicVolume * volume;
+        effectSource.volume = effectVolume * volume;
+    }
+
+    public void OnNotify(EntityJumpedEvent e) => PlayOneShotClip(e.Data.sound, AudioType.Effect);
+    public void OnNotify(EntityLandedEvent e) => PlayOneShotClip(e.Source.Sounds.Land, AudioType.Effect);
+    public void OnNotify(EntityDashEvent e) => PlayOneShotClip(e.Source.Sounds.Dash, AudioType.Effect);
     public void OnNotify(EntityDamagedEvent e)
     {
-        PlaySfx(e.Source.Sounds.Hit);
+        PlayOneShotClip(e.Source.Sounds.Hit, AudioType.Effect);
         if (e.Attacker is Player player && player.Weapon != null)
-            PlaySfx(player.Weapon.hitSound);
+            PlayOneShotClip(player.Weapon.hitSound, AudioType.Effect);
     }
 
     // 스킬 공격(AttackEffect)도 같은 이벤트를 쓰므로 무기 콤보 공격일 때만 스윙 소리를 낸다.
@@ -36,14 +63,23 @@ public class SoundManager : Singleton<SoundManager>,
     {
         if (e.Source is Player player && player.Weapon != null && player.Weapon.combo != null
             && player.Weapon.combo.datas.Contains(e.Data))
-            PlaySfx(player.Weapon.swingSound);
+            PlayOneShotClip(player.Weapon.swingSound, AudioType.Effect);
     }
 
-    public void PlaySfx(AudioClip clip, float volume = 1f)
+    public void PlayOneShotClip(AudioClip clip, AudioType type, float mul = 1f)
     {
-        if (clip == null)
+        if (clip == null || sources[type] == null)
             return;
 
-        sfxSource.PlayOneShot(clip, volume);
+        sources[type].PlayOneShot(clip, volume * mul);
+    }
+
+    public void PlayClip(AudioClip clip, AudioType type)
+    {
+        if (clip == null || sources[type] == null)
+            return;
+        
+        sources[type].clip = clip;
+        sources[type].Play();
     }
 }
