@@ -3,8 +3,8 @@ using UnityEngine.EventSystems;
 
 public class KeyboardSettingUI : Singleton<KeyboardSettingUI>
 {
-    public const string Key = "PauseUI";
-    [SerializeField] private GameObject pauseUI;
+    public const string Key = "KeyboardSettingUI";
+    [SerializeField] private GameObject keyboardSetting;
     [SerializeField] private GameObject firstButton;
     
     private UISelector selector;
@@ -23,14 +23,14 @@ public class KeyboardSettingUI : Singleton<KeyboardSettingUI>
     private void Open()
     {
         selector.SetActive(true);
-        pauseUI.SetActive(true);
+        keyboardSetting.SetActive(true);
         EventSystem.current.SetSelectedGameObject(firstButton);
     }
 
     private void Close()
     {
         selector.SetActive(false);
-        pauseUI.SetActive(false);
+        keyboardSetting.SetActive(false);
     }
 
 }
