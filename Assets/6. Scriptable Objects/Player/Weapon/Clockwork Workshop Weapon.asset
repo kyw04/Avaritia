@@ -15,7 +15,7 @@ MonoBehaviour:
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 88dd0a5dfd141cc48aa51ddb96005119, type: 3}
   combo: {fileID: 11400000, guid: aa917b9b7cd923244bd2a65c4488f506, type: 2}
   holdToAttack: 0
-  icon: {fileID: -7409495419916585736, guid: 971afe4671ae8ea4ba0560d290047c73, type: 3}
+  icon: {fileID: -5080846585485069264, guid: f2e95751e611abd43ba9bc091438e7fd, type: 3}
   displayName: "\uD0DC\uC5FD \uACF5\uBC29 \uBB34\uAE30"
   description: 
   passiveAbilities:
