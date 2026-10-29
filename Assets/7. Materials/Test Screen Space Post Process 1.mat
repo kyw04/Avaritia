@@ -78,7 +78,7 @@ Material:
     - _HazeColor: {r: 0.4433962, g: 0.4099799, b: 0.26143643, a: 1}
     - _HighlightTint: {r: 1, g: 1, b: 1, a: 1}
     - _LightColor: {r: 1, g: 0.86, b: 0.62, a: 1}
-    - _LightPos: {r: -0.71766806, g: -0.41107622, b: 0, a: 0}
+    - _LightPos: {r: 0.81521064, g: 0.55946857, b: 0, a: 0}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
     - _ShadowTint: {r: 0.3207547, g: 0.3207547, b: 0.3207547, a: 1}
     - _Tint: {r: 1, g: 1, b: 1, a: 1}

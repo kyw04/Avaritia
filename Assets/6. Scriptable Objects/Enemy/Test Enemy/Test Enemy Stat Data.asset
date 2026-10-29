@@ -13,77 +13,77 @@ MonoBehaviour:
   m_Name: Test Enemy Stat Data
   m_EditorClassIdentifier: Assembly-CSharp::StatData
   stats:
-  - rid: 3411489382800818267
-  - rid: 3411489382800818268
-  - rid: 3411489382800818269
-  - rid: 3411489382800818270
-  - rid: 3411489382800818271
-  - rid: 3411489382800818272
-  - rid: 3411489382800818273
-  - rid: 3411489382800818274
+  - rid: 3411489473193836633
+  - rid: 3411489473193836634
+  - rid: 3411489473193836635
+  - rid: 3411489473193836636
+  - rid: 3411489473193836637
+  - rid: 3411489473193836638
+  - rid: 3411489473193836639
+  - rid: 3411489473193836640
   references:
     version: 2
     RefIds:
-    - rid: 3411489135695757406
+    - rid: 3411489382800818275
       type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
       data:
-        value: 1e+12
-    - rid: 3411489135695757422
+        value: 2
+    - rid: 3411489473193836632
       type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
       data:
-        value: 1e+12
-    - rid: 3411489382800818267
+        value: 100
+    - rid: 3411489473193836633
       type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
       data:
         statType: 1
         value:
-          rid: 3411489135695757422
-    - rid: 3411489382800818268
+          rid: 3411489473193836632
+    - rid: 3411489473193836634
       type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
       data:
         statType: 2
         value:
-          rid: 3411489135695757406
-    - rid: 3411489382800818269
+          rid: 3411489473193836641
+    - rid: 3411489473193836635
       type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
       data:
         statType: 3
         value:
           rid: 3411489382800818275
-    - rid: 3411489382800818270
+    - rid: 3411489473193836636
       type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
       data:
         statType: 5
         value:
           rid: 4068540677251661907
-    - rid: 3411489382800818271
+    - rid: 3411489473193836637
       type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
       data:
         statType: 6
         value:
           rid: 4068541133322190926
-    - rid: 3411489382800818272
+    - rid: 3411489473193836638
       type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
       data:
         statType: 10
         value:
           rid: 5230665391898361970
-    - rid: 3411489382800818273
+    - rid: 3411489473193836639
       type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
       data:
         statType: 11
         value:
           rid: 5230665391898361980
-    - rid: 3411489382800818274
+    - rid: 3411489473193836640
       type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
       data:
         statType: 12
         value:
           rid: 5230665525031600201
-    - rid: 3411489382800818275
+    - rid: 3411489473193836641
       type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
       data:
-        value: 2
+        value: 100
     - rid: 4068540677251661907
       type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
       data:
