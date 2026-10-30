@@ -30,15 +30,21 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  maxRange: 3.4028235e+38
-  cooldown: 0
+  canTurn: 0
+  canMove: 0
+  moveDuration: 0
   attackStrategy:
-    rid: 1772930914514108497
+    rid: 6083184005721358413
   references:
     version: 2
     RefIds:
-    - rid: 1772930914514108497
-      type: {class: MeleeAttackStrategy, ns: , asm: Assembly-CSharp}
+    - rid: 6083184005721358413
+      type: {class: RangedAttackStrategy, ns: , asm: Assembly-CSharp}
       data:
-        hitboxPosition: {x: 0, y: 0}
-        hitboxSize: {x: 1, y: 1}
+        bulletPrefab: {fileID: 1333631079470740473, guid: 3a1d9605a934ff649aa89cc37ecdb8d7, type: 3}
+        spreadAngle: 0
+        lifeTime: 5
+        bulletCount: 1
+        bulletDelay: 0
+        bulletMaxDelay: 0
+        bulletSpeed: 5
