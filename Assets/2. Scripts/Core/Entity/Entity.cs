@@ -338,7 +338,11 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
             EventBus.Publish(new EntityEvadedEvent(this, attacker, hitPoint));
             return;
         }
-        if (TryConsumeHitBlock()) return;
+        if (TryConsumeHitBlock())
+        {
+            EventBus.Publish(new EntityHitBlockedEvent(this, attacker, hitPoint));
+            return;
+        }
 
         damage = AbsorbWithShields(damage);
         if (damage <= 0f) return;

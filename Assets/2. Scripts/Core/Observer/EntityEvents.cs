@@ -80,6 +80,15 @@ public struct EntityEvadedEvent : ISubject
     public EntityEvadedEvent(Entity source, Entity attacker, Vector3? hitPoint = null) { Source = source; Attacker = attacker; HitPoint = hitPoint; }
 }
 
+// Published when Source nullified an attack by consuming a hit block (no damage was applied).
+public struct EntityHitBlockedEvent : ISubject
+{
+    public Entity Source { get; private set; }
+    public Entity Attacker { get; private set; }
+    public Vector3? HitPoint { get; private set; }
+    public EntityHitBlockedEvent(Entity source, Entity attacker, Vector3? hitPoint = null) { Source = source; Attacker = attacker; HitPoint = hitPoint; }
+}
+
 // Published when Source's HP hits 0, before it dies — a listener that heals it cancels the death.
 public struct EntityLethalDamageEvent : ISubject
 {
