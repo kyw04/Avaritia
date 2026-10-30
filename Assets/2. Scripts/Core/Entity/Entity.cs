@@ -342,6 +342,9 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
             return;
         }
 
+        // Armor = 받는 피해 감소율(%). 최대 80%까지, 음수면 피해 증가 (-10 = 1.1배).
+        TryGetStat<int>(StatType.Armor, out var armor);
+        damage *= 1f - Mathf.Min(armor, 80) / 100f;
         damage = AbsorbWithShields(damage);
         if (damage <= 0f) return;
 
