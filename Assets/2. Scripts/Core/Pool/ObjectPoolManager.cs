@@ -112,4 +112,8 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     }
     
     public bool IsPooled(GameObject instance) => instance != null && instanceToPrefab.ContainsKey(instance);
+
+    // 풀에서 꺼낸 인스턴스의 원본 프리팹. 풀이 관리하지 않는 오브젝트면 null.
+    public GameObject GetPrefab(GameObject instance) =>
+        instance != null && instanceToPrefab.TryGetValue(instance, out var prefab) ? prefab : null;
 }

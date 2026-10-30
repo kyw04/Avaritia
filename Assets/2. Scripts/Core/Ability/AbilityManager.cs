@@ -172,10 +172,33 @@ public class AbilityManager
         foreach (var effect in data.effects)
             effect?.Apply(context);
 
-        float cooldown = data.cooldown * (1f - owner.GetStat<float>(StatType.CooldownReduction) / 100f);
-        binding.State.CooldownEndTime = Time.time + cooldown;
+        float cooldown = CooldownDuration(data);
+        binding.State.CooldownEndTime = IsLocking(data) ? float.MaxValue : Time.time + cooldown;
         if (publishEvents)
             EventBus.Publish(new EntitySkillCooldownEvent(owner, Array.IndexOf(abilities, data), cooldown, binding.State.CooldownEndTime));
+        return true;
+    }
+
+    // cooldown이 음수면 쿨타임이 돌지 않고 잠긴다. ReduceCooldown으로 풀어 줄 때까지 다시 쓸 수 없다(UI는 가득 찬 채로 보인다).
+    private static bool IsLocking(AbilityData data) => data.cooldown < 0f;
+
+    private float CooldownDuration(AbilityData data) => IsLocking(data)
+        ? float.MaxValue
+        : data.cooldown * (1f - owner.GetStat<float>(StatType.CooldownReduction) / 100f);
+
+    // 남은 쿨타임을 seconds만큼 줄인다(남은 시간보다 크면 바로 쓸 수 있게 된다). 잠긴 쿨타임은 바로 풀린다.
+    // 이 매니저에 바인딩된 state가 아니면 false.
+    public bool ReduceCooldown(AbilityRuntimeState state, float seconds)
+    {
+        var binding = bindings.Find(b => b.State == state);
+        if (binding == null) return false;
+
+        bool locked = state.CooldownEndTime == float.MaxValue;
+        state.CooldownEndTime = locked ? Time.time : Mathf.Max(Time.time, state.CooldownEndTime - seconds);
+        // 다 줄었으면 Duration 0으로 보내 UI를 비우고, 남았으면 원래 길이 기준으로 채움 비율을 이어 간다.
+        float duration = state.CooldownEndTime > Time.time ? CooldownDuration(binding.Data) : 0f;
+        if (publishEvents)
+            EventBus.Publish(new EntitySkillCooldownEvent(owner, Array.IndexOf(abilities, binding.Data), duration, state.CooldownEndTime));
         return true;
     }
 }

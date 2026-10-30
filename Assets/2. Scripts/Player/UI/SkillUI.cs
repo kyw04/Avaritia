@@ -47,6 +47,9 @@ public class SkillUI : MonoBehaviour, IObserver<EntitySkillCooldownEvent>, IObse
         if (slot == null) return;
         slot.EndTime = e.EndTime;
         slot.Duration = e.Duration;
+        // 쿨타임이 즉시 초기화된 경우(Duration 0) UpdateFill이 건너뛰므로 여기서 비운다.
+        if (e.Duration <= 0f && slot.fill != null)
+            slot.fill.fillAmount = 0f;
     }
 
     public void OnNotify(EntitySkillEquippedEvent e)
