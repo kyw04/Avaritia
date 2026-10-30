@@ -40,3 +40,4 @@ MonoBehaviour:
       type: {class: HitBlockEffect, ns: , asm: Assembly-CSharp}
       data:
         count: 1
+        particle: {fileID: 7522802928573159026, guid: db9d82f275b84054684805590a6f4711, type: 3}

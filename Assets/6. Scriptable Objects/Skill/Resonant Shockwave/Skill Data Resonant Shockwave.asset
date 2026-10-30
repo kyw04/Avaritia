@@ -55,3 +55,4 @@ MonoBehaviour:
           serializedVersion: 2
           m_Bits: 128
         activeWhile: []
+        particle: {fileID: 4733354101087782148, guid: a91c37d932f02fe4fb354b34ecf8d2df, type: 3}

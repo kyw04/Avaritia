@@ -24,6 +24,8 @@ public class BuffEffect : IAbilityEffect
     // 비어있으면 항상 적용. 있으면 스탯을 읽을 때마다 평가해 모두 만족할 때만 버프가 반영된다
     // (Caster = 버프 받은 쪽, Target = 공격 대상 — 대상이 없는 일반 스탯 조회에선 null).
     [SerializeReference, SubclassSelector] public List<IAbilityCondition> activeWhile = new();
+    // 버프 받은 대상을 따라다니는 파티클. duration이 양수면 버프가 끝날 때 같이 멈추고, 0이면 파티클 자체 길이만큼 재생된다.
+    public PooledParticle particle;
 
     public void Apply(AbilityContext context)
     {
@@ -36,6 +38,8 @@ public class BuffEffect : IAbilityEffect
             // of the same item collide on the same buff slot instead of stacking independently.
             foreach (var mod in modifiers)
                 buffable.ApplyBuff(context.State, mod.statType, mod.valueType, mod.amount, duration, activeWhile);
+
+            ParticleManager.Instance.SpawnFollow(particle, t, duration, context.State);
         }
     }
 }

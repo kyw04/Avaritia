@@ -212,6 +212,10 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
 
     public void GrantHitBlocks(object source, int count) => hitBlocks[source] = count;
 
+    public bool HasShield(object source) => shields.TryGetValue(source, out var amount) && amount > 0f;
+
+    public bool HasHitBlocks(object source) => hitBlocks.TryGetValue(source, out var count) && count > 0;
+
     public void SetInvincible(float duration) => invincibleUntil = Mathf.Max(invincibleUntil, Time.time + duration);
 
     public void AddBaseStat<T>(StatType type, T amount)

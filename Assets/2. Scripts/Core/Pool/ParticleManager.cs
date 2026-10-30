@@ -17,6 +17,8 @@ public class ParticleManager : Singleton<ParticleManager>,
     
     private ObjectPoolManager objectPoolManager;
     private float nextTrimTime;
+    // (부여한 쪽, 대상)별로 따라다니는 파티클. 같은 버프가 다시 걸리면 겹쳐 띄우지 않고 시간만 늘린다.
+    private readonly Dictionary<(object, Transform), PooledParticle> followParticles = new();
     
     // 도메인 리로드가 꺼져 있어 static 리스트가 Play 세션 사이에 남으므로 매 Play 시작 시 비운다
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -68,6 +70,13 @@ public class ParticleManager : Singleton<ParticleManager>,
             usedParticlesList.Remove(remove);
         foreach (var destroy in destroyBuffer)
             objectPoolManager.Remove(destroy);
+
+        var finishedFollows = new List<(object, Transform)>();
+        foreach (var pair in followParticles)
+            if (pair.Value == null || !pair.Value.IsRunning || pair.Value.FollowTarget != pair.Key.Item2)
+                finishedFollows.Add(pair.Key);
+        foreach (var key in finishedFollows)
+            followParticles.Remove(key);
     }
 
     public PooledParticle Spawn(PooledParticle particle, Transform target = null)
@@ -80,6 +89,28 @@ public class ParticleManager : Singleton<ParticleManager>,
         
         return objectPoolManager.Spawn(particle, pos, particle.rotation);
     }
+    // 대상을 따라다니는 파티클을 띄운다. key가 있으면 같은 key/대상으로 이미 따라다니는 파티클의 시간만 늘린다.
+    // keepAlive를 주면 false가 되는 순간 멈춘다(예: 실드가 깨질 때).
+    public PooledParticle SpawnFollow(PooledParticle particle, Transform target, float duration, object key = null,
+        System.Func<bool> keepAlive = null)
+    {
+        if (particle == null || target == null)
+            return null;
+
+        if (key != null && followParticles.TryGetValue((key, target), out var existing)
+            && existing != null && existing.IsRunning && existing.FollowTarget == target)
+        {
+            existing.ExtendFollow(duration);
+            return existing;
+        }
+
+        var spawned = objectPoolManager.Spawn(particle, target.position + particle.position, particle.rotation);
+        spawned.Follow(target, duration, keepAlive);
+        if (key != null)
+            followParticles[(key, target)] = spawned;
+        return spawned;
+    }
+
     public PooledParticle Spawn(PooledParticle particle, Vector3 position = default, Quaternion rotation = default)
     {
         if (particle == null)
