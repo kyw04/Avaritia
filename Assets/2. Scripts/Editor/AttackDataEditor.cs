@@ -109,10 +109,11 @@ public class AttackDataEditor : Editor
 
     private void DrawSpriteInScene(AttackData data)
     {
-        if (data.attackAnimClip == null) return;
+        var clip = data.attack.animClip;
+        if (clip == null) return;
 
-        float animTime = (float)(EditorApplication.timeSinceStartup % data.attackAnimClip.length);
-        Sprite sprite = GetSpriteFromClip(data.attackAnimClip, animTime);
+        float animTime = (float)(EditorApplication.timeSinceStartup % clip.length);
+        Sprite sprite = GetSpriteFromClip(clip, animTime);
         if (sprite == null || sprite.texture == null) return;
 
         float ppu = sprite.pixelsPerUnit;

@@ -11,9 +11,8 @@ public abstract class Weapon : ScriptableObject, IInventoryItem
     public string displayName;
     [TextArea] public string description;
     public List<AbilityData> passiveAbilities = new();
-    public PooledParticle attackParticle;
-    public AudioClip swingSound;
-    public AudioClip hitSound;
+    public ActionFeedback swing;
+    public ActionFeedback hit;
     public float shakeForce = 0.3f;
     [Range(0f, 1f)] public float hitStopTimeScale = 0.1f;
     [Min(0)] public float hitStopDuration = 0.08f;

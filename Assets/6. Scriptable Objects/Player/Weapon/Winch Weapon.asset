@@ -19,9 +19,14 @@ MonoBehaviour:
   displayName: "\uC6D0\uCE58"
   description: 
   passiveAbilities: []
-  attackParticle: {fileID: 2461976908696895058, guid: 59a335fab3ff41368182b36efcac9d4b, type: 3}
-  swingSound: {fileID: 8300000, guid: 4c5c5677d5ff89145ab60e67a4a1e293, type: 3}
-  hitSound: {fileID: 8300000, guid: 21a23957a77c3bc488f38c0c48b7cb7e, type: 3}
+  swing:
+    animClip: {fileID: 0}
+    particle: {fileID: 0}
+    sound: {fileID: 8300000, guid: 4c5c5677d5ff89145ab60e67a4a1e293, type: 3}
+  hit:
+    animClip: {fileID: 0}
+    particle: {fileID: 2461976908696895058, guid: 59a335fab3ff41368182b36efcac9d4b, type: 3}
+    sound: {fileID: 8300000, guid: 21a23957a77c3bc488f38c0c48b7cb7e, type: 3}
   shakeForce: 0.3
   hitStopTimeScale: 0.1
   hitStopDuration: 0.08

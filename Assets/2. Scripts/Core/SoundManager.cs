@@ -48,14 +48,14 @@ public class SoundManager : Singleton<SoundManager>,
         effectSource.volume = effectVolume * volume;
     }
 
-    public void OnNotify(EntityJumpedEvent e) => PlayOneShotClip(e.Data.sound, AudioType.Effect);
-    public void OnNotify(EntityLandedEvent e) => PlayOneShotClip(e.Source.Sounds.Land, AudioType.Effect);
-    public void OnNotify(EntityDashEvent e) => PlayOneShotClip(e.Source.Sounds.Dash, AudioType.Effect);
+    public void OnNotify(EntityJumpedEvent e) => PlayOneShotClip(e.Data.jump.sound, AudioType.Effect);
+    public void OnNotify(EntityLandedEvent e) => PlayOneShotClip(e.Source.Feedbacks.Land.sound, AudioType.Effect);
+    public void OnNotify(EntityDashEvent e) => PlayOneShotClip(e.Source.Feedbacks.Dash.sound, AudioType.Effect);
     public void OnNotify(EntityDamagedEvent e)
     {
-        PlayOneShotClip(e.Source.Sounds.Hit, AudioType.Effect);
+        PlayOneShotClip(e.Source.Feedbacks.Hit.sound, AudioType.Effect);
         if (e.Attacker is Player player && player.Weapon != null)
-            PlayOneShotClip(player.Weapon.hitSound, AudioType.Effect);
+            PlayOneShotClip(player.Weapon.hit.sound, AudioType.Effect);
     }
 
     // 스킬 공격(AttackEffect)도 같은 이벤트를 쓰므로 무기 콤보 공격일 때만 스윙 소리를 낸다.
@@ -63,7 +63,7 @@ public class SoundManager : Singleton<SoundManager>,
     {
         if (e.Source is Player player && player.Weapon != null && player.Weapon.combo != null
             && player.Weapon.combo.datas.Contains(e.Data))
-            PlayOneShotClip(player.Weapon.swingSound, AudioType.Effect);
+            PlayOneShotClip(player.Weapon.swing.sound, AudioType.Effect);
     }
 
     public void PlayOneShotClip(AudioClip clip, AudioType type, float mul = 1f)

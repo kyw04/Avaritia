@@ -48,7 +48,7 @@ public class EntityAnimator : AnimatorBase,
         AnimatorComponent.SetFloat(Speed, e.Speed / defaultSpeed);
         PlayAnimation("Move");
     }
-    public void OnNotify(EntityJumpedEvent e) { if (e.Source == self) PlayAnimation(e.Data.jumpClip.name); }
+    public void OnNotify(EntityJumpedEvent e) { if (e.Source == self) PlayAnimation(e.Data.jump.animClip.name); }
     public void OnNotify(EntityFallingEvent e) { if (e.Source == self) PlayAnimation("fall_loop"); }
     public void OnNotify(EntityLandedEvent e) { if (e.Source == self) PlayAnimation("land"); }
     public void OnNotify(EntityTurnEvent e) { if (e.Source == self) PlayAnimation("turn"); }
@@ -60,8 +60,8 @@ public class EntityAnimator : AnimatorBase,
         if (e.Source != self)
             return;
 
-        var attackClip = e.Data.attackAnimClip;
-        var readyClip = e.Data.readyAnimClip;
+        var attackClip = e.Data.attack.animClip;
+        var readyClip = e.Data.ready.animClip;
         if (readyClip != null)
         {
             if (animCoroutine != null)

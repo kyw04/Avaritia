@@ -7,6 +7,7 @@ public class AbilityData : ScriptableObject, IInventoryItem
     public float cooldown;
     public float maxRange = float.MaxValue;
     public Sprite icon;
+    public ActionFeedback cast;
     public string displayName;
     [TextArea] public string description;
     [SerializeReference, SubclassSelector] public IAbilityTrigger trigger;

@@ -3,7 +3,5 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Scriptable Objects/JumpData")]
 public class JumpData : ScriptableObject
 {
-    public AnimationClip jumpClip;
-    public PooledParticle particle;
-    public AudioClip sound;
+    public ActionFeedback jump;
 }

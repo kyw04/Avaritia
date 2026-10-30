@@ -190,16 +190,27 @@ MonoBehaviour:
   dropWeaponAsset: {fileID: 0}
   dropAbilityAsset: {fileID: 0}
   dropChance: 0
-  particles:
-    <Land>k__BackingField: {fileID: 0}
-    <Turn>k__BackingField: {fileID: 0}
-    <Run>k__BackingField: {fileID: 0}
-    <Dash>k__BackingField: {fileID: 0}
-    <Hit>k__BackingField: {fileID: 0}
-  sounds:
-    <Land>k__BackingField: {fileID: 0}
-    <Dash>k__BackingField: {fileID: 0}
-    <Hit>k__BackingField: {fileID: 0}
+  feedbacks:
+    <Land>k__BackingField:
+      animClip: {fileID: 0}
+      particle: {fileID: 0}
+      sound: {fileID: 0}
+    <Turn>k__BackingField:
+      animClip: {fileID: 0}
+      particle: {fileID: 0}
+      sound: {fileID: 0}
+    <Run>k__BackingField:
+      animClip: {fileID: 0}
+      particle: {fileID: 0}
+      sound: {fileID: 0}
+    <Dash>k__BackingField:
+      animClip: {fileID: 0}
+      particle: {fileID: 0}
+      sound: {fileID: 0}
+    <Hit>k__BackingField:
+      animClip: {fileID: 0}
+      particle: {fileID: 0}
+      sound: {fileID: 0}
   knockbackResistance: 0
   references:
     version: 2

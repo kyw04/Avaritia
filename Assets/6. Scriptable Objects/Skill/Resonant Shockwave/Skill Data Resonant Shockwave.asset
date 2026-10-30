@@ -15,6 +15,10 @@ MonoBehaviour:
   cooldown: 5
   maxRange: 3.4028235e+38
   icon: {fileID: -678393519, guid: 755b7ec45a2a7e44f99fe7703e18f1f9, type: 3}
+  cast:
+    animClip: {fileID: 0}
+    particle: {fileID: 1698722073882453297, guid: d97fff8acf014071a3f835d51616e215, type: 3}
+    sound: {fileID: 0}
   displayName: 
   description: 
   trigger:

@@ -166,6 +166,9 @@ public class AbilityManager
         if (data.conditions.Count > 0 && data.conditions.Exists(c => !c.IsMet(context))) return false;
 
         binding.State.ActivationCount++;
+        data.cast.Play(owner.transform.position);
+        if (data.cast.animClip != null)
+            EventBus.Publish(new EntityAnimationEvent(owner, data.cast.animClip));
         foreach (var effect in data.effects)
             effect?.Apply(context);
 

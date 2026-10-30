@@ -120,7 +120,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             Machine.AddTransition<PlayerTurnState, PlayerMoveState>();
             
             moveDir = InputHandler.Instance.MoveInput;
-            EventBus.Publish(new EntityTurnEvent(Owner, Owner.Particles.Turn));
+            EventBus.Publish(new EntityTurnEvent(Owner, Owner.Feedbacks.Turn.particle));
         }
 
         public override void Execute()
@@ -157,7 +157,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         public override void Enter()
         {
             landStartTime = Time.time;
-            EventBus.Publish(new EntityLandedEvent(Owner, Owner.Particles.Land));
+            EventBus.Publish(new EntityLandedEvent(Owner, Owner.Feedbacks.Land.particle));
         }
 
         public override void Execute()
@@ -251,7 +251,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Enter()
         {
-            EventBus.Publish(new EntityDashEvent(Owner, Owner.Particles.Dash));
+            EventBus.Publish(new EntityDashEvent(Owner, Owner.Feedbacks.Dash.particle));
             Owner.Rb.gravityScale = 0f;
             Owner.Dash();
             dashStartTime = Time.time;

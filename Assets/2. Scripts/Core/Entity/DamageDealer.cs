@@ -6,22 +6,14 @@ public class DamageDealer : MonoBehaviour
     [HideInInspector] public Entity attacker;
     [HideInInspector] public bool isCritical;
     public LayerMask targetLayer;
-    public PooledParticle hitParticle;
-    public AudioClip hitSound;
+    public ActionFeedback hit;
     
     private void OnHit(Transform target)
     {
         if ((targetLayer & (1 << target.gameObject.layer)) == 0)
             return;
         
-        if (hitParticle != null)
-        {
-            var pos = (transform.position  + target.position) / 2f;
-            ObjectPoolManager.Instance.Spawn(hitParticle, pos, Quaternion.identity);
-        }
-
-        if (hitSound != null)
-            SoundManager.Instance.PlayOneShotClip(hitSound, AudioType.Effect);
+        hit.Play((transform.position + target.position) / 2f);
         
         Attack(target);
 

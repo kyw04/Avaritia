@@ -5,8 +5,8 @@ using UnityEngine;
 public class AttackData : ScriptableObject
 {
     public float duration;
-    public AnimationClip readyAnimClip;
-    public AnimationClip attackAnimClip;
+    public ActionFeedback ready;
+    public ActionFeedback attack;
     public float damageMultiplier = 1f;
     public ContactFilter2D filter;
     public bool canTurn;
@@ -23,8 +23,9 @@ public class AttackData : ScriptableObject
 
     private IEnumerator PlayAttack(IAttacker attacker, Transform target = null, BulletEnhancement enhancement = null)
     {
-        if (readyAnimClip)
-            yield return new WaitForSeconds(readyAnimClip.length);
+        ready.Play(attacker.Mono.transform.position);
+        if (ready.animClip)
+            yield return new WaitForSeconds(ready.animClip.length);
 
         attacker.Mono.StartCoroutine(Execute(attacker, target, enhancement));
     }
@@ -34,10 +35,11 @@ public class AttackData : ScriptableObject
         var resolvedFilter = filter;
         if (filter.useLayerMask && attacker is Entity entity)
             resolvedFilter.SetLayerMask(entity.ResolveTargetLayer(filter.layerMask));
+        attack.Play(attacker.Mono.transform.position);
         attackStrategy?.Offensive(attacker, damageMultiplier, resolvedFilter, target, enhancement);
 
-        if (attackAnimClip)
-            yield return new WaitForSeconds(attackAnimClip.length);
+        if (attack.animClip)
+            yield return new WaitForSeconds(attack.animClip.length);
         yield return new WaitForSeconds(duration);
         attacker.IsAttacking = false;
     }

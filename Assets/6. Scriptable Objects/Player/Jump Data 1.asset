@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2201dafafa149a4c9b87c5f7131fae6, type: 3}
   m_Name: Jump Data 1
   m_EditorClassIdentifier: Assembly-CSharp::JumpData
-  jumpClip: {fileID: 7400000, guid: df1a54f09674adc4b8a428f3b812dd93, type: 2}
-  particle: {fileID: 0}
-  sound: {fileID: 8300000, guid: d6afbfe81b1e2ef4e811c95f3949391d, type: 3}
+  jump:
+    animClip: {fileID: 7400000, guid: df1a54f09674adc4b8a428f3b812dd93, type: 2}
+    particle: {fileID: 0}
+    sound: {fileID: 8300000, guid: d6afbfe81b1e2ef4e811c95f3949391d, type: 3}

@@ -13,8 +13,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     [SerializeField] protected Weapon dropWeaponAsset;
     [SerializeField] protected AbilityData dropAbilityAsset;
     [SerializeField, Range(0, 100)] protected float dropChance;
-    [SerializeField] protected EntityParticles particles;
-    [SerializeField] protected EntitySounds sounds;
+    [SerializeField] protected EntityFeedbacks feedbacks;
     [SerializeField, Range(0, 1)] protected float knockbackResistance;
 
     protected RuntimeStats stats;
@@ -22,8 +21,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     protected bool wasGroundCheckerChanged;
     
     public T GetDefaultStat<T>(StatType statType) => statDataAsset.TryGetValue<T>(statType);
-    public EntityParticles Particles => particles;
-    public EntitySounds Sounds => sounds;
+    public EntityFeedbacks Feedbacks => feedbacks;
 
     private class ActiveBuff
     {

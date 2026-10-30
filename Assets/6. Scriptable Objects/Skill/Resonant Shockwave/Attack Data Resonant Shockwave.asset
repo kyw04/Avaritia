@@ -13,8 +13,14 @@ MonoBehaviour:
   m_Name: Attack Data Resonant Shockwave
   m_EditorClassIdentifier: Assembly-CSharp::AttackData
   duration: 0
-  readyAnimClip: {fileID: 0}
-  attackAnimClip: {fileID: 0}
+  ready:
+    animClip: {fileID: 0}
+    particle: {fileID: 0}
+    sound: {fileID: 0}
+  attack:
+    animClip: {fileID: 0}
+    particle: {fileID: 0}
+    sound: {fileID: 0}
   damageMultiplier: 1
   filter:
     useTriggers: 0

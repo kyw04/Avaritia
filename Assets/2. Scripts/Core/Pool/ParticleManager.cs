@@ -6,7 +6,8 @@ public class ParticleManager : Singleton<ParticleManager>,
     IObserver<EntityLandedEvent>,
     IObserver<EntityTurnEvent>,
     IObserver<EntityDashEvent>,
-    IObserver<EntityDamagedEvent>
+    IObserver<EntityDamagedEvent>,
+    IObserver<EntityAttackStartEvent>
 {
     public static readonly List<PooledParticle> usedParticlesList = new();
 
@@ -28,6 +29,7 @@ public class ParticleManager : Singleton<ParticleManager>,
         EventBus.Subscribe<EntityTurnEvent>(this);
         EventBus.Subscribe<EntityDashEvent>(this);
         EventBus.Subscribe<EntityDamagedEvent>(this);
+        EventBus.Subscribe<EntityAttackStartEvent>(this);
         
         objectPoolManager = ObjectPoolManager.Instance;
         foreach (var p in prewarmParticles)
@@ -88,7 +90,7 @@ public class ParticleManager : Singleton<ParticleManager>,
         return objectPoolManager.Spawn(particle, pos, rot);
     }
     
-    public void OnNotify(EntityJumpedEvent e) => Spawn(e.Data.particle, e.Source.transform);
+    public void OnNotify(EntityJumpedEvent e) => Spawn(e.Data.jump.particle, e.Source.transform);
     public void OnNotify(EntityLandedEvent e) => Spawn(e.Particle, e.Source.transform);
     public void OnNotify(EntityTurnEvent e) => Spawn(e.Particle, e.Source.transform);
     public void OnNotify(EntityDashEvent e) => Spawn(e.Particle, e.Source.transform);
@@ -96,14 +98,22 @@ public class ParticleManager : Singleton<ParticleManager>,
     {
         if (e.Attacker == null)
         {
-            Spawn(e.Source.Particles.Hit, e.Source.transform.position);
+            Spawn(e.Source.Feedbacks.Hit.particle, e.Source.transform.position);
             return;
         }
 
         Vector3 from = e.HitPoint ?? e.Attacker.transform.position;
         Vector3 mid = (e.Source.transform.position + from) * 0.5f;
-        Spawn(e.Source.Particles.Hit, mid);
+        Spawn(e.Source.Feedbacks.Hit.particle, mid);
         if (e.Attacker is Player player && player.Weapon != null)
-            Spawn(player.Weapon.attackParticle, mid);
+            Spawn(player.Weapon.hit.particle, mid);
+    }
+
+    // SoundManager와 같은 이유로 무기 콤보 공격일 때만 스윙 파티클을 띄운다.
+    public void OnNotify(EntityAttackStartEvent e)
+    {
+        if (e.Source is Player player && player.Weapon != null && player.Weapon.combo != null
+            && player.Weapon.combo.datas.Contains(e.Data))
+            Spawn(player.Weapon.swing.particle, e.Source.transform);
     }
 }
