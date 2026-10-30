@@ -10,28 +10,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eb0df744d57e40cb9ea6b9de91702fea, type: 3}
-  m_Name: New Skill Data 2
+  m_Name: Skill Data Responsive Explosives Gear
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
-  cooldown: 1
+  cooldown: 2
   maxRange: 3.4028235e+38
-  icon: {fileID: 0}
+  icon: {fileID: -2301801369832777371, guid: 3ae9d61e910b4a8285ce516dd5aef800, type: 3}
+  displayName: 
   description: 
   trigger:
-    rid: 5230665391898361932
+    rid: 5230665391898361929
   conditions:
-  - rid: 5230665391898361933
+  - rid: 5230665391898361930
   effects:
-  - rid: 5230665391898361934
+  - rid: 5230665391898361931
   references:
     version: 2
     RefIds:
-    - rid: 5230665391898361932
+    - rid: 5230665391898361929
       type: {class: ManualTrigger, ns: , asm: Assembly-CSharp}
       data: 
-    - rid: 5230665391898361933
+    - rid: 5230665391898361930
       type: {class: CooldownCondition, ns: , asm: Assembly-CSharp}
       data: 
-    - rid: 5230665391898361934
+    - rid: 5230665391898361931
       type: {class: AttackEffect, ns: , asm: Assembly-CSharp}
       data:
         attackData: {fileID: 11400000, guid: 949e1639111b21e4b95e6de858e62615, type: 2}

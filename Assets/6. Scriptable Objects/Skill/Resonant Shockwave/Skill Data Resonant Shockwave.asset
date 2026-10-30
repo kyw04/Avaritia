@@ -10,18 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eb0df744d57e40cb9ea6b9de91702fea, type: 3}
-  m_Name: New Skill Data
+  m_Name: Skill Data Resonant Shockwave
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
   cooldown: 5
   maxRange: 3.4028235e+38
-  icon: {fileID: 21300000, guid: 1aaf5dbd4c390ba4da5e498f637ae321, type: 3}
+  icon: {fileID: -678393519, guid: 755b7ec45a2a7e44f99fe7703e18f1f9, type: 3}
+  displayName: 
   description: 
   trigger:
     rid: 5230665391898361926
   conditions:
   - rid: 5230665391898361927
   effects:
-  - rid: 5230665391898361928
+  - rid: 6083184005721358457
+  - rid: 6083184005721358467
   references:
     version: 2
     RefIds:
@@ -31,7 +33,17 @@ MonoBehaviour:
     - rid: 5230665391898361927
       type: {class: CooldownCondition, ns: , asm: Assembly-CSharp}
       data: 
-    - rid: 5230665391898361928
+    - rid: 6083184005721358457
       type: {class: AttackEffect, ns: , asm: Assembly-CSharp}
       data:
-        attackData: {fileID: 11400000, guid: 949e1639111b21e4b95e6de858e62615, type: 2}
+        attackData: {fileID: 11400000, guid: 6ecbd17a8fffbac46990f741a8df1339, type: 2}
+    - rid: 6083184005721358467
+      type: {class: BuffEffect, ns: , asm: Assembly-CSharp}
+      data:
+        modifiers:
+        - statType: 7
+          valueType: 1
+          amount: -10
+        duration: 3
+        applyTo: 0
+        activeWhile: []

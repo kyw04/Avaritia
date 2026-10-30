@@ -10,28 +10,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eb0df744d57e40cb9ea6b9de91702fea, type: 3}
-  m_Name: Responsive Explosives Gear Skill Data
+  m_Name: Skill Data Steam Shield
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
-  cooldown: 2
+  cooldown: 1
   maxRange: 3.4028235e+38
-  icon: {fileID: 21300000, guid: 61baf3aaca07add43b86a698b2e157bf, type: 3}
+  icon: {fileID: -614792169865968416, guid: 18ab63d2317f49bf9f3e9e7a6822ca06, type: 3}
+  displayName: 
   description: 
   trigger:
-    rid: 5230665391898361929
+    rid: 5230665391898361932
   conditions:
-  - rid: 5230665391898361930
+  - rid: 5230665391898361933
   effects:
-  - rid: 5230665391898361931
+  - rid: 6083184005721358464
   references:
     version: 2
     RefIds:
-    - rid: 5230665391898361929
+    - rid: 5230665391898361932
       type: {class: ManualTrigger, ns: , asm: Assembly-CSharp}
       data: 
-    - rid: 5230665391898361930
+    - rid: 5230665391898361933
       type: {class: CooldownCondition, ns: , asm: Assembly-CSharp}
       data: 
-    - rid: 5230665391898361931
-      type: {class: AttackEffect, ns: , asm: Assembly-CSharp}
+    - rid: 6083184005721358464
+      type: {class: HitBlockEffect, ns: , asm: Assembly-CSharp}
       data:
-        attackData: {fileID: 11400000, guid: 949e1639111b21e4b95e6de858e62615, type: 2}
+        count: 1
