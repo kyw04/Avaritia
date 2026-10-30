@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb0df744d57e40cb9ea6b9de91702fea, type: 3}
+  m_Name: Skill Data Recall Sawblade
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  cooldown: 5
+  maxRange: 3.4028235e+38
+  icon: {fileID: -2301801369832777371, guid: 3ae9d61e910b4a8285ce516dd5aef800, type: 3}
+  cast:
+    animClip: {fileID: 0}
+    particle: {fileID: 0}
+    sound: {fileID: 0}
+  displayName: "\uD68C\uC218 \uD1B1\uB0A0"
+  description: "\uD1B1\uB0A0\uC744 \uB358\uC838 \uACBD\uB85C\uC758 \uC801\uC744 \uACF5\uACA9\uD569\uB2C8\uB2E4.
+    \uC77C\uC815 \uAC70\uB9AC\uAE4C\uC9C0 \uB0A0\uC544\uAC00\uBA74 \uB3CC\uC544\uC624\uACE0,
+    \uBCBD\uC5D0 \uB9DE\uC73C\uBA74 \uC7A0\uC2DC \uBC15\uD600 \uC788\uB2E4\uAC00
+    \uB3CC\uC544\uC635\uB2C8\uB2E4. \uD1B1\uB0A0\uC744 \uD68C\uC218\uD558\uBA74 \uB0A8\uC740
+    \uCFE8\uD0C0\uC784\uC774 \uC904\uC5B4\uB4ED\uB2C8\uB2E4."
+  trigger:
+    rid: 6083184005721358513
+  conditions:
+  - rid: 6083184005721358514
+  effects:
+  - rid: 6083184005721358520
+  - rid: 6083184005721358521
+  references:
+    version: 2
+    RefIds:
+    - rid: 6083184005721358513
+      type: {class: ManualTrigger, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 6083184005721358514
+      type: {class: CooldownCondition, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 6083184005721358520
+      type: {class: ReduceCooldownOnRetrievedEffect, ns: , asm: Assembly-CSharp}
+      data:
+        retrievablePrefab: {fileID: 2580351028137574563, guid: 2532e1c2854ca5341a8eab3d978e9189, type: 3}
+        reduction: 2
+    - rid: 6083184005721358521
+      type: {class: AttackEffect, ns: , asm: Assembly-CSharp}
+      data:
+        attackData: {fileID: 11400000, guid: e30fed7fc61cb84408e9ab863d81f444, type: 2}

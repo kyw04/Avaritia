@@ -28,7 +28,7 @@ public class BulletMover : MonoBehaviour, IPoolable
         transform.localScale = defaultScale * scaleMultiplier;
     }
 
-    public void Launch(BulletMoveSettings setting, float lifeTime, float delay)
+    public virtual void Launch(BulletMoveSettings setting, float lifeTime, float delay)
     {
         // 왼쪽으로 갈 땐 좌우 반전 후 회전시켜 스프라이트가 뒤집히지 않게 함
         float sign = setting.dir.x < 0f ? -1f : 1f;
@@ -60,7 +60,7 @@ public class BulletMover : MonoBehaviour, IPoolable
 
     public void OnSpawn() { }
 
-    public void OnDespawn()
+    public virtual void OnDespawn()
     {
         StopAllCoroutines();
     }

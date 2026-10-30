@@ -8,9 +8,11 @@ public class DamageDealer : MonoBehaviour
     public LayerMask targetLayer;
     public ActionFeedback hit;
     
-    private void OnHit(Transform target)
+    protected bool IsTarget(Transform target) => (targetLayer & (1 << target.gameObject.layer)) != 0;
+
+    protected virtual void OnHit(Transform target)
     {
-        if ((targetLayer & (1 << target.gameObject.layer)) == 0)
+        if (!IsTarget(target))
             return;
         
         hit.Play((transform.position + target.position) / 2f);
