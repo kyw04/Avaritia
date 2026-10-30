@@ -109,6 +109,12 @@ public struct EntityAttackStartEvent : ISubject
     public EntityAttackStartEvent(Entity source, AttackData data)  { Source = source; Data = data; }
 }
 
+public struct EntityAttackCanceledEvent : ISubject
+{
+    public Entity Source { get; private set; }
+    public EntityAttackCanceledEvent(Entity source) { Source = source; }
+}
+
 public struct EntityAttackBufferEvent : ISubject { }
 
 public struct EntityAttackEndEvent : ISubject { }

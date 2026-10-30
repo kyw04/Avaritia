@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class EntityAnimator : AnimatorBase,
@@ -9,6 +10,7 @@ public class EntityAnimator : AnimatorBase,
     IObserver<EntityTurnEvent>,
     IObserver<EntityDashEvent>,
     IObserver<EntityAttackStartEvent>,
+    IObserver<EntityAttackCanceledEvent>,
     IObserver<EntityAnimationEvent>
 {
     private static readonly int Speed = Animator.StringToHash("Speed");
@@ -30,7 +32,15 @@ public class EntityAnimator : AnimatorBase,
         EventBus.Subscribe<EntityTurnEvent>(this);
         EventBus.Subscribe<EntityDashEvent>(this);
         EventBus.Subscribe<EntityAttackStartEvent>(this);
+        EventBus.Subscribe<EntityAttackCanceledEvent>(this);
         EventBus.Subscribe<EntityAnimationEvent>(this);
+    }
+
+    // 공격 둔화 중에는 공격 애니메이션도 같은 배율로 느리게 재생한다.
+    private void Update()
+    {
+        if (self != null)
+            AnimatorComponent.speed = self.IsAttacking ? self.AttackSpeedMultiplier : 1f;
     }
 
     public void EndAttacking()
@@ -69,7 +79,7 @@ public class EntityAnimator : AnimatorBase,
 
             PlayAnimation(readyClip.name);
             if (attackClip != null)
-                animCoroutine = StartCoroutine(PlayAnimationAfterDelay(attackClip.name, readyClip.length));
+                animCoroutine = StartCoroutine(PlayAttackAfterReady(attackClip.name, readyClip.length));
         }
         else if (attackClip != null)
         {
@@ -77,4 +87,21 @@ public class EntityAnimator : AnimatorBase,
         }
     }
 
+    // 준비 동작은 Animator.speed로 느려지므로 공격 애니메이션 전환도 같은 배율로 늦춘다.
+    private IEnumerator PlayAttackAfterReady(string animName, float length)
+    {
+        for (float t = 0f; t < length; t += Time.deltaTime * self.AttackSpeedMultiplier)
+            yield return null;
+        PlayAnimation(animName);
+    }
+
+    // 준비 동작 중 캔슬되면 이어질 공격 애니메이션을 재생하지 않는다.
+    public void OnNotify(EntityAttackCanceledEvent e)
+    {
+        if (e.Source != self || animCoroutine == null)
+            return;
+
+        StopCoroutine(animCoroutine);
+        animCoroutine = null;
+    }
 }

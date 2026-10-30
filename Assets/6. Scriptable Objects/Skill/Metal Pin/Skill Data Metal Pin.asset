@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb0df744d57e40cb9ea6b9de91702fea, type: 3}
+  m_Name: Skill Data Metal Pin
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  cooldown: 1.5
+  maxRange: 3.4028235e+38
+  icon: {fileID: 21300000, guid: 61baf3aaca07add43b86a698b2e157bf, type: 3}
+  cast:
+    animClip: {fileID: 0}
+    particle: {fileID: 2994426646003545302, guid: ac7a92861fb04c7a8a988d721e25087c, type: 3}
+    sound: {fileID: 0}
+  displayName: 금속 핀
+  description: "전방으로 작은 금속 핀을 발사합니다. 처음 맞은 적에게 피해를 주고, 작은 적은 공격을 취소시키며 큰 적은 공격을 느리게 합니다."
+  trigger:
+    rid: 5230665391898361929
+  conditions:
+  - rid: 5230665391898361930
+  effects:
+  - rid: 5230665391898361931
+  references:
+    version: 2
+    RefIds:
+    - rid: 5230665391898361929
+      type: {class: ManualTrigger, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 5230665391898361930
+      type: {class: CooldownCondition, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 5230665391898361931
+      type: {class: AttackEffect, ns: , asm: Assembly-CSharp}
+      data:
+        attackData: {fileID: 11400000, guid: c367cd5275848e7449959a129abdb943, type: 2}

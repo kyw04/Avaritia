@@ -42,6 +42,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     private float invincibleUntil;
     private float knockbackUntil;
     private float trackedMaxHealth;
+    private float attackSlowUntil;
+    private float attackSlowMultiplier = 1f;
 
     public Rigidbody2D Rb { get; protected set; }
     // 무기 등이 이동 방식을 잠시 바꿨다가 되돌릴 수 있게 연다(예: 로프에 매달린 동안).
@@ -51,6 +53,10 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     public AbilityManager Abilities { get; private set; }
     public bool IsGrounded { get; protected set; }
     public bool IsKnockedBack => Time.time < knockbackUntil;
+    // 공격 준비/진행 시간과 공격 애니메이션에 곱하는 배율. 1보다 작으면 공격이 느려진다.
+    public float AttackSpeedMultiplier => Time.time < attackSlowUntil ? attackSlowMultiplier : 1f;
+    // 공격이 캔슬될 때마다 올라간다. 진행 중인 공격 코루틴은 시작 때 값과 달라지면 멈춘다.
+    public int AttackCancelVersion { get; private set; }
 
     public virtual int LookDirection => transform.localScale.x >= 0 ? 1 : -1;
 
@@ -258,6 +264,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         Abilities.BindAll();
         invincibleUntil = 0f;
         knockbackUntil = 0f;
+        attackSlowUntil = 0f;
         wasGroundCheckerChanged = !IsGrounded;
     }
 
@@ -301,6 +308,22 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         Rb.linearVelocity = velocity * (1f - knockbackResistance);
         knockbackUntil = Time.time + duration;
     }
+    // 진행 중인 공격(준비 동작 포함)을 멈춘다. 이미 발사된 탄환은 그대로 날아간다.
+    public void CancelAttack()
+    {
+        if (!IsAttacking) return;
+        AttackCancelVersion++;
+        IsAttacking = false;
+        EventBus.Publish(new EntityAttackCanceledEvent(this));
+    }
+
+    // 둔화가 겹치면 더 강한 쪽 배율을 쓰고, 지속 시간은 새로 건 시점부터 다시 센다.
+    public void SlowAttack(float multiplier, float duration)
+    {
+        attackSlowMultiplier = Time.time < attackSlowUntil ? Mathf.Min(attackSlowMultiplier, multiplier) : multiplier;
+        attackSlowUntil = Time.time + duration;
+    }
+
     public void UpdateFacing(Vector2 direction) => movementStrategy?.UpdateFacing(this, direction.x);
 
     public virtual void Jump()
