@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb0df744d57e40cb9ea6b9de91702fea, type: 3}
   m_Name: Skill Data Recall Sawblade
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
-  cooldown: 5
+  cooldown: -1
   maxRange: 3.4028235e+38
-  icon: {fileID: -2301801369832777371, guid: 3ae9d61e910b4a8285ce516dd5aef800, type: 3}
+  icon: {fileID: 4740252960660547822, guid: 18ab63d2317f49bf9f3e9e7a6822ca06, type: 3}
   cast:
     animClip: {fileID: 0}
     particle: {fileID: 0}
@@ -45,7 +45,7 @@ MonoBehaviour:
       type: {class: ReduceCooldownOnRetrievedEffect, ns: , asm: Assembly-CSharp}
       data:
         retrievablePrefab: {fileID: 2580351028137574563, guid: 2532e1c2854ca5341a8eab3d978e9189, type: 3}
-        reduction: 2
+        reduction: 1
     - rid: 6083184005721358521
       type: {class: AttackEffect, ns: , asm: Assembly-CSharp}
       data:

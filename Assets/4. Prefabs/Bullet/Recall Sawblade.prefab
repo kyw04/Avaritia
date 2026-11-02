@@ -260,7 +260,7 @@ MonoBehaviour:
   wallCheckRadius: 0.3
   wallLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 264
   spinSpeed: 1080
   spinTarget: {fileID: 3668537985557832659}
   line: {fileID: 8268065596851511019}
@@ -349,7 +349,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -2301801369832777371, guid: 3ae9d61e910b4a8285ce516dd5aef800, type: 3}
+  m_Sprite: {fileID: 4740252960660547822, guid: 18ab63d2317f49bf9f3e9e7a6822ca06, type: 3}
   m_Color: {r: 0.85, g: 0.88, b: 0.92, a: 1}
   m_FlipX: 0
   m_FlipY: 0
