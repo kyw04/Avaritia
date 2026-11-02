@@ -19,8 +19,9 @@ public class SubclassSelectorDrawer : PropertyDrawer
         
         Rect typeRect = new Rect(position.x + EditorGUIUtility.labelWidth, position.y, position.width - EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight);
         
+        // managedReferenceFullTypename은 "어셈블리명 네임스페이스.타입명" 형식이라 어셈블리명만 떼고 보여 준다.
         string currentTypeName = property.managedReferenceFullTypename;
-        string displayName = string.IsNullOrEmpty(currentTypeName) ? "Null (None)" : currentTypeName.Split('.').Last();
+        string displayName = string.IsNullOrEmpty(currentTypeName) ? "Null (None)" : currentTypeName.Split(' ').Last();
 
         if (EditorGUI.DropdownButton(typeRect, new GUIContent(displayName), FocusType.Keyboard))
         {
@@ -39,8 +40,8 @@ public class SubclassSelectorDrawer : PropertyDrawer
 
             foreach (var type in types)
             {
-                string typeName = type.FullName;
-                menu.AddItem(new GUIContent(type.Name), currentTypeName == typeName, () => SetPropertyType(property, type));
+                string typeName = $"{type.Assembly.GetName().Name} {type.FullName}";
+                menu.AddItem(new GUIContent(type.FullName), currentTypeName == typeName, () => SetPropertyType(property, type));
             }
             menu.ShowAsContext();
         }
