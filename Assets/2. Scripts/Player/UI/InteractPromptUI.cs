@@ -13,8 +13,9 @@ public class InteractPromptUI : MonoBehaviour
         if (root != null) root.SetActive(false);
     }
 
-    public void Show()
+    public void Show(string keyText)
     {
+        if (keyLabel != null) keyLabel.text = keyText;
         if (root != null) root.SetActive(true);
         SetProgress(0f);
     }
