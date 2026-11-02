@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb0df744d57e40cb9ea6b9de91702fea, type: 3}
+  m_Name: Skill Data Debris Graft
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  cooldown: 5
+  maxRange: 3.4028235e+38
+  icon: {fileID: 21300000, guid: 16b4abe1fb9506a4f8593b162137f8fe, type: 3}
+  cast:
+    animClip: {fileID: 0}
+    particle: {fileID: 0}
+    sound: {fileID: 0}
+  displayName: "\uC794\uD574 \uC774\uC2DD"
+  description: "\uC801\uC744 \uCC98\uCE58\uD558\uBA74 \uD655\uB960\uC801\uC73C\uB85C
+    \uAE30\uACC4\uC7A5\uCE58 \uB354\uBBF8\uAC00 \uC0DD\uAE34\uB2E4. \uB354\uBBF8
+    \uADFC\uCC98\uC5D0\uC11C \uC0AC\uC6A9\uD558\uBA74 \uD314 \uBD80\uD488\uC744 \uAC08\uC544
+    \uB07C\uC6CC \uCCB4\uB825\uC744 \uD68C\uBCF5\uD55C\uB2E4. \uC791\uC5C5 \uC911
+    \uD53C\uACA9\uB418\uBA74 \uC911\uB2E8\uB41C\uB2E4."
+  trigger:
+    rid: 5321512088978325579
+  conditions:
+  - rid: 5321512088978325580
+  effects:
+  - rid: 5321512088978325581
+  linkedAbilities:
+  - {fileID: 11400000, guid: 709e3a9fd878abf4ab83cf2fa7aea8f1, type: 2}
+  references:
+    version: 2
+    RefIds:
+    - rid: 5321512088978325579
+      type: {class: ManualTrigger, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 5321512088978325580
+      type: {class: NearbyMarkerCondition, ns: , asm: Assembly-CSharp}
+      data:
+        markerId: Debris
+        radius: 1.5
+    - rid: 5321512088978325581
+      type: {class: ChannelEffect, ns: , asm: Assembly-CSharp}
+      data:
+        duration: 2
+        inputMode: 1
+        actionLock: 1
+        cancelOnDamaged: 1
+        startFeedback:
+          animClip: {fileID: 0}
+          particle: {fileID: 0}
+          sound: {fileID: 0}
+        completeFeedback:
+          animClip: {fileID: 0}
+          particle: {fileID: 0}
+          sound: {fileID: 0}
+        cancelFeedback:
+          animClip: {fileID: 0}
+          particle: {fileID: 0}
+          sound: {fileID: 0}
+        keepWhile:
+        - rid: 5321512088978325582
+        - rid: 5321512088978325585
+        onStart: []
+        onComplete:
+        - rid: 5321512088978325583
+        - rid: 5321512088978325584
+        cooldownOnComplete: 1
+    - rid: 5321512088978325582
+      type: {class: NearbyMarkerCondition, ns: , asm: Assembly-CSharp}
+      data:
+        markerId: Debris
+        radius: 1.5
+    - rid: 5321512088978325583
+      type: {class: ConsumeNearbyMarkerEffect, ns: , asm: Assembly-CSharp}
+      data:
+        markerId: Debris
+        radius: 1.5
+    - rid: 5321512088978325584
+      type: {class: HealthChangeEffect, ns: , asm: Assembly-CSharp}
+      data:
+        mode: 0
+        amount: 20
+        percentOfMaxHealth: 1
+        applyTo: 0
+    - rid: 5321512088978325585
+      type: {class: StandStillCondition, ns: , asm: Assembly-CSharp}
+      data:
+        deadZone: 0.2

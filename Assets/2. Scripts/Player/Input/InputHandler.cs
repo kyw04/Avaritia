@@ -9,7 +9,9 @@ using UnityEngine.InputSystem;
 public class InputHandler : Singleton<InputHandler>
 {
     public Player player;
-    public Vector2 MoveInput { get; private set; }
+    private Vector2 moveInput;
+    public Vector2 MoveInput => player != null && player.ActionLock == ActionLock.Locked ? Vector2.zero : moveInput;
+    private bool ActionsLocked => player != null && player.ActionLock != ActionLock.Free;
     public bool AttackHeld => InputAction.Gameplay.Attack.IsPressed();
     private bool attackRequested;
 
@@ -53,6 +55,12 @@ public class InputHandler : Singleton<InputHandler>
     // 공격 중이거나 쿨다운 중이면 상태 머신의 전환 조건에서 걸러진다.
     private void Update()
     {
+        if (ActionsLocked)
+        {
+            attackRequested = false;
+            return;
+        }
+
         if (attackRequested)
         {
             attackRequested = false;
@@ -64,10 +72,14 @@ public class InputHandler : Singleton<InputHandler>
             player.Machine.ChangeState<PlayerAttackState>();
     }
 
-    private void OnDash(InputAction.CallbackContext context) =>
+    private void OnDash(InputAction.CallbackContext context)
+    {
+        if (ActionsLocked) return;
         player.Machine.ChangeState<PlayerDashState>();
+    }
     private void OnJump(InputAction.CallbackContext context)
     {
+        if (ActionsLocked) return;
         if (player.Weapon != null && player.Weapon.ConsumeJump())
             return;
 
@@ -82,20 +94,28 @@ public class InputHandler : Singleton<InputHandler>
     // 실행 순서가 -1000이라 플레이어 상태 머신보다 먼저 돌아 공격 타이밍은 같은 프레임 그대로다.
     private void OnAttack(InputAction.CallbackContext context) => attackRequested = true;
 
-    private void OnSkill1(InputAction.CallbackContext context) =>
-        player.Abilities.TryActivate(player.Abilities.AbilityAt(0), new AbilityContext { Caster = player });
-    private void OnSkill2(InputAction.CallbackContext context) =>
-        player.Abilities.TryActivate(player.Abilities.AbilityAt(1), new AbilityContext { Caster = player });
+    private void OnSkill1(InputAction.CallbackContext context)
+    {
+        if (ActionsLocked) return;
+        player.Abilities.TryActivate(player.Abilities.AbilityAt(0),
+            new AbilityContext { Caster = player, IsInputHeld = () => InputAction.Gameplay.Skill1.IsPressed() });
+    }
+    private void OnSkill2(InputAction.CallbackContext context)
+    {
+        if (ActionsLocked) return;
+        player.Abilities.TryActivate(player.Abilities.AbilityAt(1),
+            new AbilityContext { Caster = player, IsInputHeld = () => InputAction.Gameplay.Skill2.IsPressed() });
+    }
     private void OnInteractStarted(InputAction.CallbackContext context) =>
         player.InteractionController.OnInteractStarted();
     private void OnInteractCanceled(InputAction.CallbackContext context) =>
         player.InteractionController.OnInteractCanceled();
 
-    private void OnMove(InputAction.CallbackContext context) => MoveInput = context.ReadValue<Vector2>();
+    private void OnMove(InputAction.CallbackContext context) => moveInput = context.ReadValue<Vector2>();
 
     private void OnMoveStopped(InputAction.CallbackContext context)
     {
-        MoveInput = Vector2.zero;
+        moveInput = Vector2.zero;
         player.Move(MoveInput);
     }
 

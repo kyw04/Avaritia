@@ -13,6 +13,7 @@ public class AbilityManager
         public AbilityData Data;
         public IAbilityTrigger Trigger;
         public AbilityRuntimeState State;
+        public List<Binding> Linked = new();
     }
 
     private readonly Entity owner;
@@ -36,10 +37,7 @@ public class AbilityManager
     public void UnbindAll()
     {
         foreach (var binding in bindings)
-        {
-            binding.Trigger.Unbind(owner);
-            owner.RemoveBuffsBySource(binding.State);
-        }
+            ReleaseBinding(binding);
         bindings.Clear();
     }
 
@@ -70,10 +68,7 @@ public class AbilityManager
         }
 
         foreach (var gone in remaining)
-        {
-            gone.Trigger.Unbind(owner);
-            owner.RemoveBuffsBySource(gone.State);
-        }
+            ReleaseBinding(gone);
 
         bindings.Clear();
         bindings.AddRange(next);
@@ -92,16 +87,30 @@ public class AbilityManager
     {
         if (data == null || data.trigger == null) return null;
         var binding = new Binding { Data = data, State = new AbilityRuntimeState(), Trigger = CloneTrigger(data.trigger) };
+        binding.State.StartCooldown = () => StartCooldown(binding);
         binding.Trigger.Bind(owner, data, ctx => TryActivate(binding, ctx));
+        foreach (var linked in data.linkedAbilities)
+        {
+            var child = CreateBinding(linked);
+            if (child != null) binding.Linked.Add(child);
+        }
         return binding;
+    }
+
+    private void ReleaseBinding(Binding binding)
+    {
+        binding.Trigger.Unbind(owner);
+        binding.State.IsChanneling = false;
+        owner.RemoveBuffsBySource(binding.State);
+        foreach (var child in binding.Linked)
+            ReleaseBinding(child);
     }
 
     private void UnbindOne(AbilityData data)
     {
         var binding = bindings.Find(b => b.Data == data);
         if (binding == null) return;
-        binding.Trigger.Unbind(owner);
-        owner.RemoveBuffsBySource(binding.State);
+        ReleaseBinding(binding);
         bindings.Remove(binding);
     }
 
@@ -153,6 +162,21 @@ public class AbilityManager
         return binding != null && Time.time < binding.State.CooldownEndTime;
     }
 
+    public bool IsChanneling(AbilityData data)
+    {
+        var binding = bindings.Find(b => b.Data == data);
+        return binding != null && binding.State.IsChanneling;
+    }
+
+    // 키를 누르고 있어야 하는 채널링이 진행 중이면 그 진행도(0~1)를 돌려준다.
+    public bool TryGetHoldChannelProgress(AbilityData data, out float progress)
+    {
+        var binding = bindings.Find(b => b.Data == data);
+        bool holding = binding != null && binding.State.IsChanneling && binding.State.IsHoldChannel;
+        progress = holding ? binding.State.ChannelProgress : 0f;
+        return holding;
+    }
+
     public bool TryActivate(AbilityData data, AbilityContext context)
     {
         var binding = bindings.Find(b => b.Data == data);
@@ -163,20 +187,30 @@ public class AbilityManager
     {
         var data = binding.Data;
         context.State = binding.State;
+        if (binding.State.IsChanneling) return false;
         if (data.conditions.Count > 0 && data.conditions.Exists(c => !c.IsMet(context))) return false;
 
         binding.State.ActivationCount++;
         data.cast.Play(owner.transform.position);
         if (data.cast.animClip != null)
             EventBus.Publish(new EntityAnimationEvent(owner, data.cast.animClip));
+        binding.State.DeferCooldown = false;
         foreach (var effect in data.effects)
             effect?.Apply(context);
 
-        float cooldown = CooldownDuration(data);
-        binding.State.CooldownEndTime = IsLocking(data) ? float.MaxValue : Time.time + cooldown;
-        if (publishEvents)
-            EventBus.Publish(new EntitySkillCooldownEvent(owner, Array.IndexOf(abilities, data), cooldown, binding.State.CooldownEndTime));
+        if (!binding.State.DeferCooldown)
+            StartCooldown(binding);
         return true;
+    }
+
+    // 연결 Ability는 슬롯(abilities)에 없어 인덱스가 -1이므로 UI용 쿨다운 이벤트를 발행하지 않는다.
+    private void StartCooldown(Binding binding)
+    {
+        float cooldown = CooldownDuration(binding.Data);
+        binding.State.CooldownEndTime = IsLocking(binding.Data) ? float.MaxValue : Time.time + cooldown;
+        int index = Array.IndexOf(abilities, binding.Data);
+        if (publishEvents && index >= 0)
+            EventBus.Publish(new EntitySkillCooldownEvent(owner, index, cooldown, binding.State.CooldownEndTime));
     }
 
     // cooldown이 음수면 쿨타임이 돌지 않고 잠긴다. ReduceCooldown으로 풀어 줄 때까지 다시 쓸 수 없다(UI는 가득 찬 채로 보인다).

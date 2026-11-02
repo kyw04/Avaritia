@@ -87,6 +87,11 @@ public class RoomContentSpawner : MonoBehaviour,
                 ObjectPoolManager.Instance.Despawn(box.gameObject);
         roomBoxes.Clear();
 
+        // 스킬로 생성된 마커 오브젝트(예: 기계장치 더미)도 다음 방으로 따라오지 않게 정리한다.
+        foreach (var marker in new List<AbilityMarker>(AbilityMarker.Active))
+            if (ObjectPoolManager.Instance.IsPooled(marker.gameObject))
+                ObjectPoolManager.Instance.Despawn(marker.gameObject);
+
         currentRoom = Instantiate(node.gameObject, Vector3.zero, Quaternion.identity);
 
         PositionPlayer();

@@ -57,6 +57,12 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     public float AttackSpeedMultiplier => Time.time < attackSlowUntil ? attackSlowMultiplier : 1f;
     // 공격이 캔슬될 때마다 올라간다. 진행 중인 공격 코루틴은 시작 때 값과 달라지면 멈춘다.
     public int AttackCancelVersion { get; private set; }
+    // 마지막으로 실제 데미지를 준 공격자/시각. 킬 판정(OnKillTrigger)과 채널링 피격 중단(ChannelEffect)에 쓴다.
+    public Entity LastAttacker { get; private set; }
+    public float LastDamagedTime { get; private set; } = float.NegativeInfinity;
+    public ActionLock ActionLock { get; set; }
+    // 마지막으로 Move에 넘어온 이동 방향(플레이어는 이동 입력). 실제 속도와 달리 감속으로 미끄러지는 동안은 0이다.
+    public Vector2 MoveDirection { get; private set; }
 
     public virtual int LookDirection => transform.localScale.x >= 0 ? 1 : -1;
 
@@ -269,6 +275,10 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         invincibleUntil = 0f;
         knockbackUntil = 0f;
         attackSlowUntil = 0f;
+        LastAttacker = null;
+        LastDamagedTime = float.NegativeInfinity;
+        ActionLock = ActionLock.Free;
+        MoveDirection = Vector2.zero;
         wasGroundCheckerChanged = !IsGrounded;
     }
 
@@ -299,6 +309,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     // 넉백 중에는 이동 전략이 속도를 덮어써 넉백을 지우지 않도록 이동을 막는다.
     public void Move(Vector2 direction)
     {
+        MoveDirection = direction;
         if (IsKnockedBack) return;
         movementStrategy?.Move(this, Rb, direction);
     }
@@ -376,6 +387,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         if (damage <= 0f) return;
 
         stats.Set(StatType.CurrentHealth, stats.Get<float>(StatType.CurrentHealth) - damage);
+        LastDamagedTime = Time.time;
+        if (attacker != null) LastAttacker = attacker;
         activeBuffs.RemoveAll(b => b.clearOnDamageTaken);
         OnHealthChanged();
         EventBus.Publish(new EntityDamagedEvent(this, attacker, damage, hitPoint, isCritical));

@@ -48,10 +48,14 @@ public class EntityAnimator : AnimatorBase,
         EventBus.Publish(new EntityAttackEndEvent());
     }
 
-    public void OnNotify(EntityIdleEvent e) { if (e.Source == self) PlayAnimation("idle"); }
+    // 행동 제한(채널링 등) 중 이동 입력이 없으면, 감속/정지로 생기는 이동 애니메이션이 작업 애니메이션을 덮어쓰지 않게 한다.
+    private bool LocomotionLocked =>
+        self != null && self.ActionLock != ActionLock.Free && Mathf.Abs(self.MoveDirection.x) <= 0.2f;
+
+    public void OnNotify(EntityIdleEvent e) { if (e.Source == self && !LocomotionLocked) PlayAnimation("idle"); }
     public void OnNotify(EntityMovedEvent e)
     {
-        if (e.Source != self)
+        if (e.Source != self || LocomotionLocked)
             return;
         
         float defaultSpeed = e.Source.GetDefaultStat<float>(StatType.MoveSpeed);
@@ -61,7 +65,7 @@ public class EntityAnimator : AnimatorBase,
     public void OnNotify(EntityJumpedEvent e) { if (e.Source == self) PlayAnimation(e.Data.jump.animClip.name); }
     public void OnNotify(EntityFallingEvent e) { if (e.Source == self) PlayAnimation("fall_loop"); }
     public void OnNotify(EntityLandedEvent e) { if (e.Source == self) PlayAnimation("land"); }
-    public void OnNotify(EntityTurnEvent e) { if (e.Source == self) PlayAnimation("turn"); }
+    public void OnNotify(EntityTurnEvent e) { if (e.Source == self && !LocomotionLocked) PlayAnimation("turn"); }
     public void OnNotify(EntityDashEvent e) { if (e.Source == self) PlayAnimation("dash"); }
     public void OnNotify(EntityAnimationEvent e) { if (e.Source == self) PlayAnimation(e.Clip.name); }
 
