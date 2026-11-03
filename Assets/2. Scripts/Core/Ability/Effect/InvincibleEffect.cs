@@ -6,6 +6,6 @@ public class InvincibleEffect : IAbilityEffect
     public void Apply(AbilityContext context)
     {
         if (context.Caster is Entity entity)
-            entity.SetInvincible(duration);
+            entity.SetInvincible(duration, context.State?.Icon);
     }
 }

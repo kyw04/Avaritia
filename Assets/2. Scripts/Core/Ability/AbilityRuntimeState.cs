@@ -1,8 +1,15 @@
 using System;
+using UnityEngine;
 
 public class AbilityRuntimeState
 {
+    // 상태 아이콘 UI용. 바인딩된 AbilityData의 아이콘(없으면 연결해 준 부모 Ability의 아이콘).
+    public Sprite Icon;
     public float CooldownEndTime;
+    // 마지막으로 시작/갱신된 쿨타임의 전체 길이. UI 채움 비율용.
+    public float CooldownDuration;
+    // StackingBuffEffect가 쌓은 현재 스택 수. UI 표시용.
+    public int StackCount;
     public int ActivationCount;
     // 채널링 Effect가 진행 중이면 true. 그동안 같은 바인딩의 재발동은 무시되고, 바인딩이 해제되면 false로 돌려 채널링을 끊는다.
     public bool IsChanneling;

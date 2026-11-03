@@ -83,15 +83,16 @@ public class AbilityManager
         if (binding != null) bindings.Add(binding);
     }
 
-    private Binding CreateBinding(AbilityData data)
+    private Binding CreateBinding(AbilityData data, Sprite parentIcon = null)
     {
         if (data == null || data.trigger == null) return null;
-        var binding = new Binding { Data = data, State = new AbilityRuntimeState(), Trigger = CloneTrigger(data.trigger) };
+        var state = new AbilityRuntimeState { Icon = data.icon != null ? data.icon : parentIcon };
+        var binding = new Binding { Data = data, State = state, Trigger = CloneTrigger(data.trigger) };
         binding.State.StartCooldown = () => StartCooldown(binding);
         binding.Trigger.Bind(owner, data, ctx => TryActivate(binding, ctx));
         foreach (var linked in data.linkedAbilities)
         {
-            var child = CreateBinding(linked);
+            var child = CreateBinding(linked, state.Icon);
             if (child != null) binding.Linked.Add(child);
         }
         return binding;
@@ -162,6 +163,30 @@ public class AbilityManager
         return binding != null && Time.time < binding.State.CooldownEndTime;
     }
 
+    // 쿨타임이 돌고 있는(또는 잠긴) 바인딩을 상태 아이콘으로 추가한다. 연결 Ability도 포함.
+    public void CollectCooldownIcons(List<StatusIconEntry> into)
+    {
+        foreach (var binding in bindings)
+            CollectCooldownIcons(binding, into);
+    }
+
+    private static void CollectCooldownIcons(Binding binding, List<StatusIconEntry> into)
+    {
+        var state = binding.State;
+        if (state.Icon != null && Time.time < state.CooldownEndTime)
+        {
+            into.Add(new StatusIconEntry
+            {
+                Key = (state, StatusIconKind.Cooldown),
+                Icon = state.Icon,
+                EndTime = state.CooldownEndTime,
+                Duration = state.CooldownDuration,
+            });
+        }
+        foreach (var child in binding.Linked)
+            CollectCooldownIcons(child, into);
+    }
+
     public bool IsChanneling(AbilityData data)
     {
         var binding = bindings.Find(b => b.Data == data);
@@ -207,6 +232,7 @@ public class AbilityManager
     private void StartCooldown(Binding binding)
     {
         float cooldown = CooldownDuration(binding.Data);
+        binding.State.CooldownDuration = cooldown;
         binding.State.CooldownEndTime = IsLocking(binding.Data) ? float.MaxValue : Time.time + cooldown;
         int index = Array.IndexOf(abilities, binding.Data);
         if (publishEvents && index >= 0)
@@ -231,6 +257,7 @@ public class AbilityManager
         state.CooldownEndTime = locked ? Time.time : Mathf.Max(Time.time, state.CooldownEndTime - seconds);
         // 다 줄었으면 Duration 0으로 보내 UI를 비우고, 남았으면 원래 길이 기준으로 채움 비율을 이어 간다.
         float duration = state.CooldownEndTime > Time.time ? CooldownDuration(binding.Data) : 0f;
+        state.CooldownDuration = duration;
         if (publishEvents)
             EventBus.Publish(new EntitySkillCooldownEvent(owner, Array.IndexOf(abilities, binding.Data), duration, state.CooldownEndTime));
         return true;

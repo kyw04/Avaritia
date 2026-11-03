@@ -30,6 +30,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         public BuffValueType valueType;
         public float amount;
         public float expireTime;
+        public float duration; // 0 = 만료 없음. 상태 아이콘의 채움 비율용.
         public List<IAbilityCondition> conditions;
         public bool clearOnDamageTaken;
     }
@@ -40,10 +41,14 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     private readonly Dictionary<object, float> shields = new();
     private readonly Dictionary<object, int> hitBlocks = new();
     private float invincibleUntil;
+    private float invincibleDuration;
+    private Sprite invincibleIcon;
     private float knockbackUntil;
     private float trackedMaxHealth;
     private float attackSlowUntil;
     private float attackSlowMultiplier = 1f;
+    private float attackSlowDuration;
+    private Sprite attackSlowIcon;
 
     public Rigidbody2D Rb { get; protected set; }
     // 무기 등이 이동 방식을 잠시 바꿨다가 되돌릴 수 있게 연다(예: 로프에 매달린 동안).
@@ -151,19 +156,20 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         float expireTime = duration > 0f ? Time.time + duration : float.MaxValue;
 
         if (type == StatType.MaxHealth)
-            PreserveHealthRatio(() => AddOrUpdateBuff(source, type, valueType, amount, expireTime, conditions, clearOnDamageTaken));
+            PreserveHealthRatio(() => AddOrUpdateBuff(source, type, valueType, amount, expireTime, duration, conditions, clearOnDamageTaken));
         else
-            AddOrUpdateBuff(source, type, valueType, amount, expireTime, conditions, clearOnDamageTaken);
+            AddOrUpdateBuff(source, type, valueType, amount, expireTime, duration, conditions, clearOnDamageTaken);
     }
 
     private void AddOrUpdateBuff(object source, StatType type, BuffValueType valueType, float amount, float expireTime,
-        List<IAbilityCondition> conditions, bool clearOnDamageTaken)
+        float duration, List<IAbilityCondition> conditions, bool clearOnDamageTaken)
     {
         var existing = activeBuffs.Find(b => b.source == source && b.type == type && b.valueType == valueType);
         if (existing != null)
         {
             existing.amount = amount;
             existing.expireTime = expireTime;
+            existing.duration = Mathf.Max(0f, duration);
             existing.conditions = conditions;
             existing.clearOnDamageTaken = clearOnDamageTaken;
         }
@@ -172,7 +178,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
             activeBuffs.Add(new ActiveBuff
             {
                 source = source, type = type, valueType = valueType, amount = amount, expireTime = expireTime,
-                conditions = conditions, clearOnDamageTaken = clearOnDamageTaken
+                duration = Mathf.Max(0f, duration), conditions = conditions, clearOnDamageTaken = clearOnDamageTaken
             });
         }
     }
@@ -222,7 +228,68 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
 
     public bool HasHitBlocks(object source) => hitBlocks.TryGetValue(source, out var count) && count > 0;
 
-    public void SetInvincible(float duration) => invincibleUntil = Mathf.Max(invincibleUntil, Time.time + duration);
+    // icon: 상태 아이콘 UI에 띄울 아이콘(null이면 표시 안 함). 더 길게 남는 쪽의 아이콘/길이를 유지한다.
+    public void SetInvincible(float duration, Sprite icon = null)
+    {
+        float until = Time.time + duration;
+        if (until <= invincibleUntil) return;
+        invincibleUntil = until;
+        invincibleDuration = duration;
+        invincibleIcon = icon;
+    }
+
+    // 상태 아이콘 UI용: 지금 걸려 있는 버프/실드/무효화/무적/공격 둔화를 into에 추가한다.
+    // 아이콘을 알 수 없는 출처(AbilityRuntimeState가 아닌 source 등)는 건너뛴다.
+    public virtual void CollectStatusIcons(List<StatusIconEntry> into)
+    {
+        foreach (var b in activeBuffs)
+        {
+            if (b.source is not AbilityRuntimeState state || state.Icon == null || !IsBuffActive(b, null)) continue;
+
+            var key = (b.source, StatusIconKind.Buff);
+            int index = into.FindIndex(e => e.Key.Equals(key));
+            // 한 출처가 여러 스탯을 바꿔도 아이콘은 하나. 가장 늦게 끝나는 버프 기준으로 표시한다.
+            if (index >= 0 && into[index].EndTime >= b.expireTime) continue;
+
+            var entry = new StatusIconEntry
+            {
+                Key = key, Icon = state.Icon, EndTime = b.expireTime, Duration = b.duration,
+                Count = state.StackCount > 1 ? state.StackCount : 0,
+            };
+            if (index >= 0) into[index] = entry;
+            else into.Add(entry);
+        }
+
+        foreach (var pair in shields)
+            if (pair.Value > 0f && pair.Key is AbilityRuntimeState state && state.Icon != null)
+                into.Add(new StatusIconEntry
+                {
+                    Key = (pair.Key, StatusIconKind.Shield), Icon = state.Icon, EndTime = float.MaxValue,
+                    Count = Mathf.CeilToInt(pair.Value),
+                });
+
+        foreach (var pair in hitBlocks)
+            if (pair.Value > 0 && pair.Key is AbilityRuntimeState state && state.Icon != null)
+                into.Add(new StatusIconEntry
+                {
+                    Key = (pair.Key, StatusIconKind.HitBlock), Icon = state.Icon, EndTime = float.MaxValue,
+                    Count = pair.Value,
+                });
+
+        if (invincibleIcon != null && Time.time < invincibleUntil)
+            into.Add(new StatusIconEntry
+            {
+                Key = (this, StatusIconKind.Invincible), Icon = invincibleIcon,
+                EndTime = invincibleUntil, Duration = invincibleDuration,
+            });
+
+        if (attackSlowIcon != null && Time.time < attackSlowUntil)
+            into.Add(new StatusIconEntry
+            {
+                Key = (this, StatusIconKind.AttackSlow), Icon = attackSlowIcon,
+                EndTime = attackSlowUntil, Duration = attackSlowDuration,
+            });
+    }
 
     public void AddBaseStat<T>(StatType type, T amount)
     {
@@ -273,8 +340,10 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         Abilities = new AbilityManager(this, abilities);
         Abilities.BindAll();
         invincibleUntil = 0f;
+        invincibleIcon = null;
         knockbackUntil = 0f;
         attackSlowUntil = 0f;
+        attackSlowIcon = null;
         LastAttacker = null;
         LastDamagedTime = float.NegativeInfinity;
         ActionLock = ActionLock.Free;
@@ -333,10 +402,13 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     }
 
     // 둔화가 겹치면 더 강한 쪽 배율을 쓰고, 지속 시간은 새로 건 시점부터 다시 센다.
-    public void SlowAttack(float multiplier, float duration)
+    // icon: 상태 아이콘 UI에 띄울 아이콘(null이면 표시 안 함).
+    public void SlowAttack(float multiplier, float duration, Sprite icon = null)
     {
         attackSlowMultiplier = Time.time < attackSlowUntil ? Mathf.Min(attackSlowMultiplier, multiplier) : multiplier;
         attackSlowUntil = Time.time + duration;
+        attackSlowDuration = duration;
+        attackSlowIcon = icon;
     }
 
     public void UpdateFacing(Vector2 direction) => movementStrategy?.UpdateFacing(this, direction.x);

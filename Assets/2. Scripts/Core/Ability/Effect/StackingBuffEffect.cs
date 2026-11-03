@@ -17,5 +17,7 @@ public class StackingBuffEffect : IAbilityEffect
         float max = modifier.amount * maxStacks;
         float next = Mathf.Abs(current + modifier.amount) > Mathf.Abs(max) ? max : current + modifier.amount;
         buffable.ApplyBuff(context.State, modifier.statType, modifier.valueType, next, 0f, null, resetOnDamageTaken);
+        if (context.State != null && !Mathf.Approximately(modifier.amount, 0f))
+            context.State.StackCount = Mathf.RoundToInt(next / modifier.amount);
     }
 }
