@@ -52,6 +52,16 @@ public class EntityAnimator : AnimatorBase,
     private bool LocomotionLocked =>
         self != null && self.ActionLock != ActionLock.Free && Mathf.Abs(self.MoveDirection.x) <= 0.2f;
 
+    // 이동 애니메이션의 발 닿는 프레임에서 호출된다(애니메이션 이벤트).
+    // 블렌드 트리에서 섞이는 클립들의 이벤트가 모두 오므로 우세한 클립의 이벤트만 재생한다.
+    public void OnFootstep(AnimationEvent evt)
+    {
+        if (self == null || evt.animatorClipInfo.weight < 0.5f)
+            return;
+
+        self.Feedbacks.Run.Play(self.transform.position);
+    }
+
     public void OnNotify(EntityIdleEvent e) { if (e.Source == self && !LocomotionLocked) PlayAnimation("idle"); }
     public void OnNotify(EntityMovedEvent e)
     {

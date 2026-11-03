@@ -462,7 +462,7 @@ MonoBehaviour:
     <Run>k__BackingField:
       animClip: {fileID: 0}
       particle: {fileID: -3003488898790290654, guid: 760a10bcbb84467291be42163fabaecf, type: 3}
-      sound: {fileID: 0}
+      sound: {fileID: 8300000, guid: 603a5b0ffc209f1459f051df430183ab, type: 3}
     <Dash>k__BackingField:
       animClip: {fileID: 0}
       particle: {fileID: 2072696025078154306, guid: 5baab97e3efb4f179a93e126293db3fa, type: 3}
