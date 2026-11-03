@@ -48,6 +48,10 @@ public class PhysicsMovementStrategy : IMovementStrategy
 
         UpdateFacing(player, inputX);
 
+        // 공중에서 벽 쪽으로 계속 밀면 벽과의 마찰로 떨어지지 않고 붙어 버리므로, 그 방향 입력은 속도에 반영하지 않는다.
+        if (!grounded && IsTouchingWall(rb, inputX))
+            return;
+
         float targetVelX = snapToFullSpeed
             ? Mathf.Sign(inputX) * player.MoveSpeed
             : inputX * player.MoveSpeed;
@@ -68,6 +72,20 @@ public class PhysicsMovementStrategy : IMovementStrategy
         float rate = isTurning ? accel + decel : accel;
         float newVelX = Mathf.MoveTowards(currentVelX, targetVelX, rate * Time.fixedDeltaTime);
         rb.linearVelocity = new Vector2(newVelX, rb.linearVelocity.y);
+    }
+
+    private static readonly ContactPoint2D[] contacts = new ContactPoint2D[8];
+
+    // 입력 방향(inputX 부호) 쪽에 거의 수직인 벽 접촉이 있는지. 벽 법선은 플레이어 쪽을 향하므로 입력과 부호가 반대다.
+    private static bool IsTouchingWall(Rigidbody2D rb, float inputX)
+    {
+        int count = rb.GetContacts(contacts);
+        for (int i = 0; i < count; i++)
+        {
+            if (contacts[i].normal.x * Mathf.Sign(inputX) < -0.7f)
+                return true;
+        }
+        return false;
     }
 
     public void UpdateFacing(Entity mover, float inputX)
