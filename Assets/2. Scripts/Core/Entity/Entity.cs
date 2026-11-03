@@ -16,6 +16,10 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     [SerializeField] protected EntityFeedbacks feedbacks;
     [SerializeField, Range(0, 1)] protected float knockbackResistance;
 
+    // 타일맵(Composite) 바닥 위에서는 접촉 해결 오차로 세로 속도가 +0.00001 정도로 남을 수 있다.
+    // 착지/낙하 판정에서 "올라가는 중이 아님"을 vy <= 0으로 엄격하게 보면 착지를 놓치므로 이만큼은 허용한다.
+    public const float GroundedVelocityTolerance = 0.01f;
+
     protected RuntimeStats stats;
     protected bool isDead;
     protected bool wasGroundCheckerChanged;
@@ -365,7 +369,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
 
         var groundHit = Physics2D.OverlapCircle(groundCheck.position, groundRadius, groundLayer);
         IsGrounded = groundHit != null; // && groundCheck.position.y >= groundHit.bounds.max.y - groundRadius;
-        if (wasGroundCheckerChanged != IsGrounded && Rb.linearVelocityY <= 0)
+        if (wasGroundCheckerChanged != IsGrounded && Rb.linearVelocityY <= GroundedVelocityTolerance)
         {
             wasGroundCheckerChanged = IsGrounded;
             OnGroundedChanged(IsGrounded);

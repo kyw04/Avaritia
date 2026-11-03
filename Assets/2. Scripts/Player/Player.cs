@@ -140,7 +140,7 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
     {
         base.OnGroundedChanged(grounded);
 
-        bool landed = grounded && Rb.linearVelocityY <= 0;
+        bool landed = grounded && Rb.linearVelocityY <= GroundedVelocityTolerance;
 
         if (landed)
         {
@@ -156,7 +156,7 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
                 Machine.ChangeState<PlayerIdleState>();
             }
         }
-        else if (!grounded && Rb.linearVelocityY <= 0)
+        else if (!grounded && Rb.linearVelocityY <= GroundedVelocityTolerance)
         {
             Machine.ChangeState<PlayerFallState>();
         }
