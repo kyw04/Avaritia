@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1169152943608894268}
   - component: {fileID: 6004236584031618058}
   - component: {fileID: 6857738527873965297}
+  - component: {fileID: 7474168969272143790}
   m_Layer: 5
   m_Name: Quit Button
   m_TagString: Untagged
@@ -133,6 +134,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7474168969272143790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 643093040182935627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bd2068ab5b4269409844742a661b9c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PointerSelect
 --- !u!1 &1118300032344580764
 GameObject:
   m_ObjectHideFlags: 0
@@ -673,6 +686,7 @@ GameObject:
   - component: {fileID: 8868996454616395428}
   - component: {fileID: 8178698368131532580}
   - component: {fileID: 2179839618070244151}
+  - component: {fileID: 1822818261023009376}
   m_Layer: 5
   m_Name: Game Restart Button
   m_TagString: Untagged
@@ -794,6 +808,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1822818261023009376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3621246489045920397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bd2068ab5b4269409844742a661b9c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PointerSelect
 --- !u!1 &4413631636912906592
 GameObject:
   m_ObjectHideFlags: 0
@@ -1080,6 +1106,7 @@ GameObject:
   - component: {fileID: 1799790968815915523}
   - component: {fileID: 7286707348109176857}
   - component: {fileID: 3699597023832423687}
+  - component: {fileID: 2047833798776542887}
   m_Layer: 5
   m_Name: Cancel Button
   m_TagString: Untagged
@@ -1201,6 +1228,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &2047833798776542887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6089976564059089822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bd2068ab5b4269409844742a661b9c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PointerSelect
 --- !u!1 &6311392991111328696
 GameObject:
   m_ObjectHideFlags: 0
@@ -1213,6 +1252,7 @@ GameObject:
   - component: {fileID: 3495789768700491422}
   - component: {fileID: 2535536425140522863}
   - component: {fileID: 8317558600886131983}
+  - component: {fileID: 4331623242552362281}
   m_Layer: 5
   m_Name: Setting Button
   m_TagString: Untagged
@@ -1334,6 +1374,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &4331623242552362281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6311392991111328696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bd2068ab5b4269409844742a661b9c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PointerSelect
 --- !u!1 &6543737104137960596
 GameObject:
   m_ObjectHideFlags: 0
