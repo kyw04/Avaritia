@@ -54,12 +54,14 @@ public class EntityAnimator : AnimatorBase,
 
     // 이동 애니메이션의 발 닿는 프레임에서 호출된다(애니메이션 이벤트).
     // 블렌드 트리에서 섞이는 클립들의 이벤트가 모두 오므로 우세한 클립의 이벤트만 재생한다.
+    // 이벤트 문자열 파라미터가 "walk"면 걷기 피드백, 아니면 달리기 피드백을 쓴다.
     public void OnFootstep(AnimationEvent evt)
     {
         if (self == null || evt.animatorClipInfo.weight < 0.5f)
             return;
 
-        self.Feedbacks.Run.Play(self.transform.position);
+        var feedback = evt.stringParameter == "walk" ? self.Feedbacks.Walk : self.Feedbacks.Run;
+        feedback.Play(self.FootPosition);
     }
 
     public void OnNotify(EntityIdleEvent e) { if (e.Source == self && !LocomotionLocked) PlayAnimation("idle"); }

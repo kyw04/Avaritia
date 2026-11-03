@@ -458,11 +458,15 @@ MonoBehaviour:
     <Turn>k__BackingField:
       animClip: {fileID: 0}
       particle: {fileID: 0}
-      sound: {fileID: 0}
+      sound: {fileID: 8300000, guid: 83a72e6e6cb5d80448677d26546c2e95, type: 3}
     <Run>k__BackingField:
       animClip: {fileID: 0}
       particle: {fileID: -3003488898790290654, guid: 760a10bcbb84467291be42163fabaecf, type: 3}
       sound: {fileID: 8300000, guid: 603a5b0ffc209f1459f051df430183ab, type: 3}
+    <Walk>k__BackingField:
+      animClip: {fileID: 0}
+      particle: {fileID: -3003488898790290654, guid: 760a10bcbb84467291be42163fabaecf, type: 3}
+      sound: {fileID: 8300000, guid: 2435ff7e420a13e45b3a43b3a2c33965, type: 3}
     <Dash>k__BackingField:
       animClip: {fileID: 0}
       particle: {fileID: 2072696025078154306, guid: 5baab97e3efb4f179a93e126293db3fa, type: 3}
@@ -470,7 +474,7 @@ MonoBehaviour:
     <Hit>k__BackingField:
       animClip: {fileID: 0}
       particle: {fileID: 0}
-      sound: {fileID: 0}
+      sound: {fileID: 8300000, guid: 43d8fba6bb96ad749bd5692c861e953a, type: 3}
   knockbackResistance: 0
   weapon: {fileID: 11400000, guid: e82aa12019120254cb29df3fe5dffb83, type: 2}
   ammoCountBar: {fileID: 3843919711502366064}

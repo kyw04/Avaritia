@@ -53,6 +53,7 @@ public class ItemReplaceController : Singleton<ItemReplaceController>
         pendingPlayer.Inventory.Remove(oldItem);
         WorldInteractionManager.Instance.Spawn(new ItemPickup(oldItem), pendingPlayer.transform.position);
         pendingPlayer.Inventory.TryAdd(pendingItem);
+        EventBus.Publish(new PlayerEquippedEvent(pendingPlayer));
         IsReplacing = false;
         pendingItem = null;
         pendingPlayer = null;

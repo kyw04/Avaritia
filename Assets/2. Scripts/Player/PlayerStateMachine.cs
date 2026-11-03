@@ -142,6 +142,11 @@ public class PlayerStateMachine : StateMachineBase<Player>
         {
             Owner.Move(moveDir);
         }
+
+        public override void Exit()
+        {
+            EventBus.Publish(new EntityTurnEndedEvent(Owner));
+        }
     }
 
     public class PlayerLandState : StateBase<Player>

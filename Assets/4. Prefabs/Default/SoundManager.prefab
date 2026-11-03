@@ -359,3 +359,10 @@ MonoBehaviour:
   effectVolume: 1
   musicSource: {fileID: 6484758162364358121}
   effectSource: {fileID: 2287638247351129437}
+  equipSound: {fileID: 8300000, guid: 3c9c27ae7a5fcb84abf12efec52594c1, type: 3}
+  dropSound: {fileID: 8300000, guid: 4f5102d38e505334896fd3c1e49cd7b7, type: 3}
+  uiOpenSound: {fileID: 8300000, guid: 301ceb8f3fae7764380e34f691ac3859, type: 3}
+  uiCloseSound: {fileID: 8300000, guid: ad5f49d493b0f664393db6cb765b9de9, type: 3}
+  uiHoverSound: {fileID: 8300000, guid: cc3c6ba57fb3794429c5562d8b57e2c8, type: 3}
+  uiSelectSound: {fileID: 8300000, guid: ffe2bc02548fb95499718d47bd80dd8d, type: 3}
+  uiCancelSound: {fileID: 8300000, guid: c9596c59e8e576548a8b2ab3e3754b89, type: 3}

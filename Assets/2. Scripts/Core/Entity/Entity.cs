@@ -22,6 +22,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     
     public T GetDefaultStat<T>(StatType statType) => statDataAsset.TryGetValue<T>(statType);
     public EntityFeedbacks Feedbacks => feedbacks;
+    // 발밑 위치. 발소리 먼지 등 발에서 나와야 하는 연출용(없으면 중심).
+    public Vector3 FootPosition => groundCheck != null ? groundCheck.position : transform.position;
 
     private class ActiveBuff
     {

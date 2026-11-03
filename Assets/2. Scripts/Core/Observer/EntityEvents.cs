@@ -22,6 +22,12 @@ public struct EntityTurnEvent : ISubject
     public PooledParticle Particle { get; private set; }
     public EntityTurnEvent(Entity source, PooledParticle particle) { Source = source; Particle = particle; }
 }
+// 턴 상태가 끝났을 때(미끄러지는 소리 루프를 멈추는 용도).
+public struct EntityTurnEndedEvent : ISubject
+{
+    public Entity Source { get; private set; }
+    public EntityTurnEndedEvent(Entity source) { Source = source; }
+}
 public struct EntityDashEvent : ISubject
 {
     public Entity Source { get; private set; }
@@ -156,4 +162,11 @@ public struct EntitySkillEquippedEvent : ISubject
     {
         Source = source; SlotIndex = slotIndex; Skill = skill;
     }
+}
+
+// 플레이어가 픽업으로 무기/스킬/아이템을 실제로 장착했을 때(아이템 교체는 확인 시점).
+public struct PlayerEquippedEvent : ISubject
+{
+    public Player Player { get; private set; }
+    public PlayerEquippedEvent(Player player) { Player = player; }
 }

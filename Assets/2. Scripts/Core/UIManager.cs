@@ -1,6 +1,18 @@
 using System;
 using System.Collections.Generic;
 
+public struct UIPanelOpenedEvent : ISubject
+{
+    public string Key { get; private set; }
+    public UIPanelOpenedEvent(string key) { Key = key; }
+}
+
+public struct UIPanelClosedEvent : ISubject
+{
+    public string Key { get; private set; }
+    public UIPanelClosedEvent(string key) { Key = key; }
+}
+
 public class UIManager : Singleton<UIManager>
 {
     private class Panel
@@ -22,6 +34,7 @@ public class UIManager : Singleton<UIManager>
         bool wasEmpty = stack.Count == 0;
         stack.Add(key);
         panel.Open();
+        EventBus.Publish(new UIPanelOpenedEvent(key));
 
         if (wasEmpty)
         {
@@ -38,6 +51,7 @@ public class UIManager : Singleton<UIManager>
         var key = stack[^1];
         stack.RemoveAt(stack.Count - 1);
         panels[key].Close();
+        EventBus.Publish(new UIPanelClosedEvent(key));
 
         if (stack.Count == 0)
         {

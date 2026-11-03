@@ -16,6 +16,7 @@ public class WeaponPickup : IInteractable
     {
         var previous = player.Weapon;
         player.EquipWeapon(weapon);
+        EventBus.Publish(new PlayerEquippedEvent(player));
         if (previous != null)
             WorldInteractionManager.Instance.Spawn(new WeaponPickup(previous), player.transform.position);
     }
