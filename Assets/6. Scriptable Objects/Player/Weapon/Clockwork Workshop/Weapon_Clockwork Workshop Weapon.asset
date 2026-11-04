@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2110f45add3d9484e968af7dec947330, type: 3}
-  m_Name: Clockwork Workshop Weapon
+  m_Name: Weapon_Clockwork Workshop Weapon
   m_EditorClassIdentifier: Assembly-CSharp::ClockworkWorkshopWeapon
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 88dd0a5dfd141cc48aa51ddb96005119, type: 3}
   combo: {fileID: 11400000, guid: aa917b9b7cd923244bd2a65c4488f506, type: 2}
