@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5978699813736590334}
   - component: {fileID: 3377310235539022614}
   m_Layer: 5
-  m_Name: Ammo Image
+  m_Name: Default Ammo Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

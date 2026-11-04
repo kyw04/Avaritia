@@ -53,4 +53,4 @@ MonoBehaviour:
         decayDelay: 2.5
         decayInterval: 0.1
         overflowSelfDamage: 2
-        overflowParticle: {fileID: 8715735454965646798, guid: 9cd1c22730a64de4cb6ca39546c09a76, type: 3}
+        overflowParticle: {fileID: 0}
