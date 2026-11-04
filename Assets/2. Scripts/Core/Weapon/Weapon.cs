@@ -115,11 +115,12 @@ public class Weapon : ScriptableObject, IInventoryItem
 
         foreach (var module in modules)
         {
+            if (module == null) continue;
             module.Bind(this);
             module.Equip(countBar);
         }
 
-        if (modules.Count > 0 && !modules.Any(m => m.UsesCountBar))
+        if (modules.Count > 0 && !modules.Any(m => m != null && m.UsesCountBar))
             countBar?.Deactivate();
 
         if (inputMethods.Count > 0)
@@ -144,7 +145,10 @@ public class Weapon : ScriptableObject, IInventoryItem
         }
 
         foreach (var module in modules)
+        {
+            if (module == null) continue;
             module.Unequip();
+        }
     }
 
     // true를 반환하면 이번 점프 입력을 무기가 쓴 것으로 보고 플레이어는 점프하지 않는다.
@@ -152,6 +156,7 @@ public class Weapon : ScriptableObject, IInventoryItem
     {
         foreach (var module in modules)
         {
+            if (module == null) continue;
             if (module.ConsumeJump())
                 return true;
         }
@@ -164,6 +169,7 @@ public class Weapon : ScriptableObject, IInventoryItem
 
         foreach (var module in modules)
         {
+            if (module == null) continue;
             if (!module.BeforeAttack(attack))
                 return;
         }
@@ -175,7 +181,10 @@ public class Weapon : ScriptableObject, IInventoryItem
         attack.Data.Attack(attacker, defender, attack.Enhancement);
 
         foreach (var module in modules)
+        {
+            if (module == null) continue;
             module.AfterAttack(attack);
+        }
     }
 
     // 에셋의 액션(InputActionReference)과 생성된 PlayerInputActions의 액션은 인스턴스가 달라 id로 비교한다.
