@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Scriptable Objects/Weapon/MagazineWeapon")]
-public class MagazineWeapon : Weapon
+public class MagazineWeapon : Weapon, IAmmoWeapon
 {
     [SerializeField] private ImageCountPoolable ammoImagePrefab;
     [SerializeField] private int maxAmmo;
@@ -15,6 +16,21 @@ public class MagazineWeapon : Weapon
 
     // 지금 쏘는 총알이 탄창의 몇 번째인지 (재장전 직후 첫 발 = 1)
     public int CurrentBulletNumber => maxAmmo - currentAmmo;
+
+    public int CurrentAmmo => currentAmmo;
+    public int MaxAmmo => maxAmmo;
+    public event Action<int, int> AmmoChanged;
+
+    private void SetAmmo(int value)
+    {
+        if (value == currentAmmo)
+            return;
+
+        int prev = currentAmmo;
+        currentAmmo = value;
+        ammoCountBar?.Refresh();
+        AmmoChanged?.Invoke(prev, value);
+    }
 
     public void EnhanceCurrentBullet(BulletEnhancement enhancement) => pendingEnhancement = enhancement;
 
@@ -31,8 +47,7 @@ public class MagazineWeapon : Weapon
         Debug.Log("Reloading...");
         yield return new WaitForSeconds(reloadTime);
         Debug.Log("Ready!");
-        currentAmmo = maxAmmo;
-        ammoCountBar?.Refresh();
+        SetAmmo(maxAmmo);
         coroutine = null;
     }
 
@@ -65,8 +80,7 @@ public class MagazineWeapon : Weapon
             return;
         }
 
-        currentAmmo--;
-        ammoCountBar?.Refresh();
+        SetAmmo(currentAmmo - 1);
 
         // 공격 시작 이벤트 동안 MagazineBulletCondition + EnhanceBulletEffect 어빌리티가 이번 총알을 강화할 수 있다.
         pendingEnhancement = null;
