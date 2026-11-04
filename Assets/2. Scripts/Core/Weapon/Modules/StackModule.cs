@@ -57,6 +57,9 @@ public class StackModule : WeaponModule, IAmmoModule, IObserver<EntityDamagedEve
         stackCountBar?.Activate();
         if (Owner is Player player)
             player.Inventory.Changed += OnInventoryChanged;
+        // 바닥에 있는 동안은 구독이 없어 최대 스택 변화를 놓쳤을 수 있다.
+        if (stack > MaxAmmo)
+            SetStack(MaxAmmo);
         // 해제된 동안 멈췄던 감소를 다시 시작한다.
         if (stack > 0)
             RestartDecay();
