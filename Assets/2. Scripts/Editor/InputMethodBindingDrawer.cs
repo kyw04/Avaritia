@@ -4,14 +4,13 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-// 입력 함수 항목을 액션 / 홀드 시간 / 단계(홀드면 다른 키 입력 시 유지 여부) / 메서드 드롭다운 / 애니메이션 다섯 줄로 그린다.
-// 홀드 항목은 홀드 시작 애니메이션 한 줄을 더 그린다.
+// 입력 함수 항목을 액션 / 홀드 시간 / 단계(홀드면 다른 키 입력 시 유지 여부) / 메서드 드롭다운 / 연출(ActionFeedback)로 그린다.
+// 홀드 항목은 홀드 시작 연출을 더 그린다.
 // 메서드 목록은 무기의 모듈에서 [InputMethod]가 붙은 메서드를 "타입명.메서드명"으로 보여준다.
 [CustomPropertyDrawer(typeof(Weapon.InputMethodBinding))]
 public class InputMethodBindingDrawer : PropertyDrawer
 {
-    private const int LineCount = 5;
-    private const int HoldLineCount = 1;
+    private const int LineCount = 4;
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
@@ -31,12 +30,16 @@ public class InputMethodBindingDrawer : PropertyDrawer
         rect.y += step;
         DrawMethodPopup(rect, property);
         rect.y += step;
-        EditorGUI.PropertyField(rect, property.FindPropertyRelative("clip"));
+        var feedback = property.FindPropertyRelative("feedback");
+        rect.height = EditorGUI.GetPropertyHeight(feedback, true);
+        EditorGUI.PropertyField(rect, feedback, true);
 
         if (holdDuration.floatValue > 0f)
         {
-            rect.y += step;
-            EditorGUI.PropertyField(rect, property.FindPropertyRelative("holdStartClip"));
+            rect.y += rect.height + EditorGUIUtility.standardVerticalSpacing;
+            var holdStart = property.FindPropertyRelative("holdStartFeedback");
+            rect.height = EditorGUI.GetPropertyHeight(holdStart, true);
+            EditorGUI.PropertyField(rect, holdStart, true);
         }
 
         EditorGUI.EndProperty();
@@ -66,8 +69,12 @@ public class InputMethodBindingDrawer : PropertyDrawer
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-        int lines = LineCount + (property.FindPropertyRelative("holdDuration").floatValue > 0f ? HoldLineCount : 0);
-        return lines * EditorGUIUtility.singleLineHeight + (lines - 1) * EditorGUIUtility.standardVerticalSpacing;
+        float spacing = EditorGUIUtility.standardVerticalSpacing;
+        float height = LineCount * EditorGUIUtility.singleLineHeight + LineCount * spacing
+            + EditorGUI.GetPropertyHeight(property.FindPropertyRelative("feedback"), true);
+        if (property.FindPropertyRelative("holdDuration").floatValue > 0f)
+            height += spacing + EditorGUI.GetPropertyHeight(property.FindPropertyRelative("holdStartFeedback"), true);
+        return height;
     }
 }
 #endif

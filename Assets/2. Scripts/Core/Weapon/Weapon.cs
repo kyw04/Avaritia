@@ -22,9 +22,9 @@ public class Weapon : ScriptableObject, IInventoryItem
         public InputActionPhase phase = InputActionPhase.Performed;
         [Min(0)] public float holdDuration;
         public bool keepHoldOnOtherInput;
-        public AnimationClip holdStartClip;
+        public ActionFeedback holdStartFeedback;
         public string methodName;
-        public AnimationClip clip;
+        public ActionFeedback feedback;
     }
 
     public SpriteLibraryAsset spriteLibraryAsset;
@@ -197,13 +197,13 @@ public class Weapon : ScriptableObject, IInventoryItem
     }
 
     // 누르기 시작하면 홀드를 시작하고, 시간이 다 되기 전에 떼면 취소한다.
-    // 시작할 때 holdStartClip, 완료하면 clip을 재생한다.
+    // 시작할 때 holdStartFeedback, 완료하면 feedback을 재생한다.
     private void HandleHold(InputMethodBinding binding, InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Started)
         {
             StopHold(binding);
-            PlayClip(binding.holdStartClip);
+            PlayFeedback(binding.holdStartFeedback);
             holds[binding] = (Owner.StartCoroutine(HoldRoutine(binding, context)), context.action);
         }
         else if (context.phase == InputActionPhase.Canceled)
@@ -244,7 +244,7 @@ public class Weapon : ScriptableObject, IInventoryItem
     // methodName은 "모듈타입명.메서드명" 형식이며, 타입명이 같은 첫 모듈에서 호출한다.
     private void Execute(InputMethodBinding binding, InputAction.CallbackContext context)
     {
-        PlayClip(binding.clip);
+        PlayFeedback(binding.feedback);
 
         if (string.IsNullOrEmpty(binding.methodName))
             return;
@@ -266,9 +266,10 @@ public class Weapon : ScriptableObject, IInventoryItem
         method.Invoke(module, method.GetParameters().Length == 0 ? null : new object[] { context });
     }
 
-    private void PlayClip(AnimationClip clip)
+    private void PlayFeedback(ActionFeedback feedback)
     {
-        if (clip != null)
-            EventBus.Publish(new EntityAnimationEvent(Owner, clip));
+        feedback.Play(Owner.transform.position);
+        if (feedback.animClip != null)
+            EventBus.Publish(new EntityAnimationEvent(Owner, feedback.animClip));
     }
 }
