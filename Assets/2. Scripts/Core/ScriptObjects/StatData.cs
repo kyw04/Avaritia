@@ -22,6 +22,7 @@ public enum StatType
     BulletDelay, // 여러개의 총알이 생성 될 때 생성 될 딜레이 (총알이 하나라면 무시함.)
     BulletMaxDelay, // 여러개의 총알이 생성 될 때 생성 될 최대 딜레이
     BulletSpeed,
+    MaxStackPercent, // 스택 무기 최대 스택 증가율(%). 아이템은 Flat 버프로 더한다(무기마다 기본 최대치가 달라 Percent 버프로는 표현할 수 없음).
 }
 
 public static class StatParameter
@@ -45,6 +46,7 @@ public static class StatParameter
         { StatType.BulletDelay, typeof(float) },
         { StatType.BulletMaxDelay, typeof(float) },
         { StatType.BulletSpeed, typeof(float) },
+        { StatType.MaxStackPercent, typeof(float) },
     };
 
     public static Type GetStatParameter(StatType type)

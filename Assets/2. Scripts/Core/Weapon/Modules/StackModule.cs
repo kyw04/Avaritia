@@ -13,6 +13,7 @@ public class StackModule : WeaponModule, IAmmoModule, IObserver<EntityDamagedEve
     [SerializeField, Min(1)] private int maxStack = 10;
     [SerializeField] private StackGainMode gainMode;
     [SerializeField] private List<Enemy> targetEnemyPrefabs = new();
+    // 0이면 스택이 시간에 따라 줄지 않는다.
     [SerializeField, Min(0)] private float decayDelay = 1f;
     [SerializeField, Min(0)] private float decayInterval = 0.3f;
     [SerializeField, Min(0)] private float overflowSelfDamage = 0f;
@@ -28,7 +29,10 @@ public class StackModule : WeaponModule, IAmmoModule, IObserver<EntityDamagedEve
     private Coroutine sameEnemyResolveRoutine;
 
     public int CurrentAmmo => stack;
-    public int MaxAmmo => maxStack;
+    // 주인의 MaxStackPercent(%)만큼 늘린 최대 스택. .5는 올림 (5 × 1.5 = 7.5 → 8).
+    public int MaxAmmo => Mathf.Max(1, Mathf.FloorToInt(maxStack * (1f + MaxStackPercent / 100f) + 0.5f));
+    private float MaxStackPercent =>
+        Owner != null && Owner.TryGetStat<float>(StatType.MaxStackPercent, out var percent) ? percent : 0f;
     public event Action<int, int> AmmoChanged;
     public bool GainPaused { get; set; }
 
@@ -43,13 +47,26 @@ public class StackModule : WeaponModule, IAmmoModule, IObserver<EntityDamagedEve
         EventBus.Subscribe<EntityDamagedEvent>(this);
 
         stackCountBar = countBar;
-        stackCountBar?.Init(stackImagePrefab, () => stack, () => maxStack);
+        stackCountBar?.Init(stackImagePrefab, () => stack, () => MaxAmmo);
         stackCountBar?.Activate();
+        if (Owner is Player player)
+            player.Inventory.Changed += OnInventoryChanged;
+    }
+
+    // 아이템을 줍거나 버리면 최대 스택이 바뀔 수 있으므로 넘친 스택을 깎고 바를 다시 그린다.
+    // Player가 Awake에서 먼저 구독한 아이템 버프 재바인딩이 끝난 뒤에 호출된다.
+    private void OnInventoryChanged()
+    {
+        if (stack > MaxAmmo)
+            SetStack(MaxAmmo);
+        stackCountBar?.Refresh();
     }
 
     public override void Unequip()
     {
         EventBus.UnsubscribeAll(this);
+        if (Owner is Player player)
+            player.Inventory.Changed -= OnInventoryChanged;
         if (decayRoutine != null)
         {
             Owner.Mono.StopCoroutine(decayRoutine);
@@ -124,7 +141,7 @@ public class StackModule : WeaponModule, IAmmoModule, IObserver<EntityDamagedEve
 
     private void TryGain()
     {
-        if (stack < maxStack)
+        if (stack < MaxAmmo)
         {
             SetStack(stack + 1);
             // 히트 계열 모드는 스택이 0일 때 감소 코루틴이 이미 끝나 있으므로 다시 시작한다.
@@ -142,7 +159,7 @@ public class StackModule : WeaponModule, IAmmoModule, IObserver<EntityDamagedEve
 
     private void SetStack(int value)
     {
-        value = Mathf.Clamp(value, 0, maxStack);
+        value = Mathf.Clamp(value, 0, MaxAmmo);
         if (value != stack)
         {
             int prev = stack;
@@ -172,7 +189,7 @@ public class StackModule : WeaponModule, IAmmoModule, IObserver<EntityDamagedEve
     {
         if (decayRoutine != null)
             Owner.Mono.StopCoroutine(decayRoutine);
-        decayRoutine = Owner.Mono.StartCoroutine(Decay());
+        decayRoutine = decayDelay > 0f ? Owner.Mono.StartCoroutine(Decay()) : null;
     }
 
     private IEnumerator Decay()

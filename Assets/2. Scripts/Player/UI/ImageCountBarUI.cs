@@ -67,6 +67,15 @@ public class ImageCountBar : MonoBehaviour
     
     public void Refresh()
     {
+        // 아이템 등으로 최대 개수가 늘었으면 모자란 칸을 만든다.
+        maxCount = getMaxCount();
+        for (int i = images.Count; i < maxCount; i++)
+        {
+            var newImage = ObjectPoolManager.Instance.Spawn(imagePrefab, Vector3.zero, Quaternion.identity);
+            newImage.transform.SetParent(transform);
+            images.Add(newImage);
+        }
+
         currentCount = getCurrentCount();
         currentCount = currentCount < 0 ? maxCount : Mathf.Clamp(currentCount, 0, maxCount);
         for (int i = 0; i < images.Count; i++)
