@@ -49,7 +49,9 @@ public class StackWeapon : Weapon, IAmmoWeapon, IObserver<EntityDamagedEvent>
             Owner.Mono.StopCoroutine(decayRoutine);
             decayRoutine = null;
         }
-        SetStack(0);
+        // 의도적으로 SetStack을 거치지 않는다: AmmoChanged가 발생하면 해제 중인 이전 무기의 총알 도달 트리거가 발동한다.
+        stack = 0;
+        sameEnemyTarget = null;
         stackCountBar?.Deactivate();
     }
 
