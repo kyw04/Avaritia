@@ -6,7 +6,7 @@ public class AbilityPickup : IInteractable
     public AbilityPickup(AbilityData ability) => this.ability = ability;
 
     public AbilityData Ability => ability;
-    public string DisplayName => ability.name;
+    public string DisplayName => string.IsNullOrEmpty(ability.DisplayName) ? ability.name : ability.DisplayName;
     public Sprite Icon => ability.icon;
     // Payload-only: never registered directly, always wrapped by WorldPickup.
     public Transform Transform => null;

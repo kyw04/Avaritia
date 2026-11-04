@@ -6,7 +6,7 @@ public class WeaponPickup : IInteractable
     public WeaponPickup(Weapon weapon) => this.weapon = weapon;
 
     public Weapon Weapon => weapon;
-    public string DisplayName => weapon.name;
+    public string DisplayName => string.IsNullOrEmpty(weapon.DisplayName) ? weapon.name : weapon.DisplayName;
     public Sprite Icon => weapon.icon;
     // Payload-only: never registered directly, always wrapped by WorldPickup.
     public Transform Transform => null;
