@@ -13,7 +13,10 @@ public class ImageCountPoolable : MonoBehaviour, IPoolable
     // 켜면 칸 위치 대신 채워진 비율(현재 개수 / 최대)로 모든 칸을 같은 색으로 칠한다.
     [SerializeField] private bool gradientByFill;
     [SerializeField] private Gradient gradient = new();
+    // 이 아이콘으로 채운 바의 칸 사이 간격.
+    [SerializeField] private float spacing = 0.02f;
     public Sprite Icon { get; private set; }
+    public float Spacing => spacing;
 
     private void Awake()
     {

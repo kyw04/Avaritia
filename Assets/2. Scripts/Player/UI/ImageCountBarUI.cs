@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ImageCountBar : MonoBehaviour
 {
@@ -13,11 +14,13 @@ public class ImageCountBar : MonoBehaviour
     private Func<int> getCurrentCount;
     private Func<int> getMaxCount;
     private Func<int, Sprite> getIcon;
+    private HorizontalOrVerticalLayoutGroup layout;
 
     public bool IsActive { get; private set; }
 
     private void Awake()
     {
+        layout = GetComponent<HorizontalOrVerticalLayoutGroup>();
         Init(imagePrefab, () => currentCount, () => maxCount);
         Refresh();
     }
@@ -43,6 +46,8 @@ public class ImageCountBar : MonoBehaviour
         getMaxCount = maxCountBridge;
         getIcon = iconBridge;
         maxCount = getMaxCount();
+        if (layout != null)
+            layout.spacing = prefab.Spacing;
         
         foreach (var img in images)
         {
