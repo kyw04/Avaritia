@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17c9566ed0754ab40bb4256e8fa26aac, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f935b32e47f32148a0e4aac5329210c, type: 3}
   m_Name: Weapon_Winch Arm
-  m_EditorClassIdentifier: Assembly-CSharp::WinchWeapon
+  m_EditorClassIdentifier: Assembly-CSharp::Weapon
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 88dd0a5dfd141cc48aa51ddb96005119, type: 3}
   combo: {fileID: 11400000, guid: aa917b9b7cd923244bd2a65c4488f506, type: 2}
   holdToAttack: 0
@@ -33,36 +33,44 @@ MonoBehaviour:
   knockbackForce: 5
   knockbackUpForce: 2
   knockbackDuration: 0.2
+  modules:
+  - rid: 5321512127343886422
   inputMethods:
   - action: {fileID: 1120369429361536294, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     phase: 3
     holdDuration: 0
     keepHoldOnOtherInput: 0
     holdStartClip: {fileID: 0}
-    methodName: FireHook
+    methodName: WinchModule.FireHook
     clip: {fileID: 0}
-  ropePrefab: {fileID: 6014836905017669613, guid: 1a75fbbd63e65ea4bad5f4ed6e89ca7d, type: 3}
-  targetLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 264
-  originOffset: {x: 0, y: 0}
-  hookRadius: 0.25
-  hookRange: 6
-  hookSpeed: 30
-  maxReelTime: 0.6
-  hookCooldown: 1
-  pullDamageMultiplier: 1
-  pullSpeed: 18
-  pullStopDistance: 1.2
-  flyDamageMultiplier: 1.5
-  flySpeed: 20
-  flyStopDistance: 0.6
-  stunDuration: 1.5
-  swingForce: 15
-  pumpMultiplier: 2
-  maxSwingSpeed: 12
-  reelSpeed: 4
-  minRopeLength: 1
+  references:
+    version: 2
+    RefIds:
+    - rid: 5321512127343886422
+      type: {class: WinchModule, ns: , asm: Assembly-CSharp}
+      data:
+        ropePrefab: {fileID: 6014836905017669613, guid: 1a75fbbd63e65ea4bad5f4ed6e89ca7d, type: 3}
+        targetLayer:
+          serializedVersion: 2
+          m_Bits: 128
+        obstacleLayer:
+          serializedVersion: 2
+          m_Bits: 264
+        originOffset: {x: 0, y: 0}
+        hookRadius: 0.25
+        hookRange: 6
+        hookSpeed: 30
+        maxReelTime: 0.6
+        hookCooldown: 1
+        pullDamageMultiplier: 1
+        pullSpeed: 18
+        pullStopDistance: 1.2
+        flyDamageMultiplier: 1.5
+        flySpeed: 20
+        flyStopDistance: 0.6
+        stunDuration: 1.5
+        swingForce: 15
+        pumpMultiplier: 2
+        maxSwingSpeed: 12
+        reelSpeed: 4
+        minRopeLength: 1

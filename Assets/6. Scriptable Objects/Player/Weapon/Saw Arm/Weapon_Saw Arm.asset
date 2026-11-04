@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07814e77fc41bd5459a00eab55ac9d74, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f935b32e47f32148a0e4aac5329210c, type: 3}
   m_Name: Weapon_Saw Arm
-  m_EditorClassIdentifier: Assembly-CSharp::StackWeapon
+  m_EditorClassIdentifier: Assembly-CSharp::Weapon
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 801ce89494f74eb47be585198362eac3, type: 3}
   combo: {fileID: 11400000, guid: cfc1dc743dc402a41b45dc7453e77995, type: 2}
   holdToAttack: 1
@@ -37,11 +37,20 @@ MonoBehaviour:
   knockbackForce: 5
   knockbackUpForce: 2
   knockbackDuration: 0.2
-  stackImagePrefab: {fileID: 8454299728072855319, guid: 4f78fa078deb3ea458c64501f7393505, type: 3}
-  maxStack: 50
-  gainMode: 0
-  targetEnemyPrefabs: []
-  decayDelay: 2.5
-  decayInterval: 0.1
-  overflowSelfDamage: 2
-  overflowParticle: {fileID: 8715735454965646798, guid: 9cd1c22730a64de4cb6ca39546c09a76, type: 3}
+  modules:
+  - rid: 5321512127343886421
+  inputMethods: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 5321512127343886421
+      type: {class: StackModule, ns: , asm: Assembly-CSharp}
+      data:
+        stackImagePrefab: {fileID: 8454299728072855319, guid: 4f78fa078deb3ea458c64501f7393505, type: 3}
+        maxStack: 50
+        gainMode: 0
+        targetEnemyPrefabs: []
+        decayDelay: 2.5
+        decayInterval: 0.1
+        overflowSelfDamage: 2
+        overflowParticle: {fileID: 8715735454965646798, guid: 9cd1c22730a64de4cb6ca39546c09a76, type: 3}

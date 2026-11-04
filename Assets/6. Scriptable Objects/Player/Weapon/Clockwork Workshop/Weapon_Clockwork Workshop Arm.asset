@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2110f45add3d9484e968af7dec947330, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f935b32e47f32148a0e4aac5329210c, type: 3}
   m_Name: Weapon_Clockwork Workshop Arm
-  m_EditorClassIdentifier: Assembly-CSharp::ClockworkWorkshopWeapon
+  m_EditorClassIdentifier: Assembly-CSharp::Weapon
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 88dd0a5dfd141cc48aa51ddb96005119, type: 3}
   combo: {fileID: 11400000, guid: aa917b9b7cd923244bd2a65c4488f506, type: 2}
   holdToAttack: 0
@@ -34,33 +34,41 @@ MonoBehaviour:
   knockbackForce: 5
   knockbackUpForce: 2
   knockbackDuration: 0.2
+  modules:
+  - rid: 5321512127343886418
   inputMethods:
   - action: {fileID: 857254716216702918, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     phase: 3
     holdDuration: 3
     keepHoldOnOtherInput: 0
     holdStartClip: {fileID: 0}
-    methodName: AddKit
+    methodName: ClockworkWorkshopModule.AddKit
     clip: {fileID: 0}
   - action: {fileID: 3368605680795315267, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     phase: 2
     holdDuration: 0
     keepHoldOnOtherInput: 0
     holdStartClip: {fileID: 0}
-    methodName: SetDownAttackHeld
+    methodName: ClockworkWorkshopModule.SetDownAttackHeld
     clip: {fileID: 0}
   - action: {fileID: 3368605680795315267, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     phase: 4
     holdDuration: 0
     keepHoldOnOtherInput: 0
     holdStartClip: {fileID: 0}
-    methodName: SetDownAttackHeld
+    methodName: ClockworkWorkshopModule.SetDownAttackHeld
     clip: {fileID: 0}
-  kitImagePrefab: {fileID: 3377310235539022614, guid: d005ffc73f1fdbd4998b5df790d90763, type: 3}
-  stunKitSprite: {fileID: 21300000, guid: 51e0c86086996cb4a9b560c1845ed68b, type: 3}
-  maxKits: 2
-  hitsToStun: 3
-  stunDuration: 7
-  maxNormalAlliesPerRoom: 3
-  maxLargeAlliesPerRoom: 2
-  allyStatMultiplier: 0.8
+  references:
+    version: 2
+    RefIds:
+    - rid: 5321512127343886418
+      type: {class: ClockworkWorkshopModule, ns: , asm: Assembly-CSharp}
+      data:
+        kitImagePrefab: {fileID: 3377310235539022614, guid: d005ffc73f1fdbd4998b5df790d90763, type: 3}
+        stunKitSprite: {fileID: 21300000, guid: 51e0c86086996cb4a9b560c1845ed68b, type: 3}
+        maxKits: 2
+        hitsToStun: 3
+        stunDuration: 7
+        maxNormalAlliesPerRoom: 3
+        maxLargeAlliesPerRoom: 2
+        allyStatMultiplier: 0.8
