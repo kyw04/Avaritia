@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eb0df744d57e40cb9ea6b9de91702fea, type: 3}
-  m_Name: Stats_Magazine
+  m_Name: Stats_Default Arm
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
   cooldown: 0
   maxRange: 3.4028235e+38
@@ -34,19 +34,10 @@ MonoBehaviour:
         modifiers:
         - statType: 1
           valueType: 0
-          amount: 50
+          amount: 25
         - statType: 6
           valueType: 0
-          amount: 3
-        - statType: 15
-          valueType: 0
-          amount: 0.1
-        - statType: 16
-          valueType: 0
-          amount: 0.2
-        - statType: 17
-          valueType: 0
-          amount: 10
+          amount: 5
         duration: 0
         applyTo: 0
         activeWhile: []
