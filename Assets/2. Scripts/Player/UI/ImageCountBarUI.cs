@@ -46,7 +46,8 @@ public class ImageCountBar : MonoBehaviour
         getMaxCount = maxCountBridge;
         getIcon = iconBridge;
         maxCount = getMaxCount();
-        if (layout != null)
+        // 플레이어 탄약 바처럼 무기가 장착될 때 프리팹을 넣어 주는 바는 Awake 시점엔 프리팹이 없다.
+        if (layout != null && prefab != null)
             layout.spacing = prefab.Spacing;
         
         foreach (var img in images)
