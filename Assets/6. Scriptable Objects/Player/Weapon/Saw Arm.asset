@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07814e77fc41bd5459a00eab55ac9d74, type: 3}
+  m_Name: Saw Arm
+  m_EditorClassIdentifier: Assembly-CSharp::StackWeapon
+  spriteLibraryAsset: {fileID: 7108339969198208228, guid: 801ce89494f74eb47be585198362eac3, type: 3}
+  combo: {fileID: 11400000, guid: aa917b9b7cd923244bd2a65c4488f506, type: 2}
+  holdToAttack: 1
+  icon: {fileID: -7409495419916585736, guid: 971afe4671ae8ea4ba0560d290047c73, type: 3}
+  displayName: "\uD1B1\uB0A0 \uD314"
+  description: "\uACF5\uACA9\uD560\uC218\uB85D \uC5F4\uC774 \uC313\uC778\uB2E4. \uCD5C\uB300\uCE58\uC5D0\uC11C
+    \uACC4\uC18D \uACF5\uACA9\uD558\uBA74 \uACFC\uC5F4\uB85C \uC790\uC2E0\uC774 \uD53C\uD574\uB97C
+    \uC785\uB294\uB2E4."
+  passiveAbilities:
+  - {fileID: 11400000, guid: b188cfa9bcd81aa4baec84847be699d9, type: 2}
+  - {fileID: 11400000, guid: e65ec9621c50f63489349e04df8a9e9c, type: 2}
+  swing:
+    animClip: {fileID: 0}
+    particle: {fileID: 0}
+    sound: {fileID: 8300000, guid: 4c5c5677d5ff89145ab60e67a4a1e293, type: 3}
+  hit:
+    animClip: {fileID: 0}
+    particle: {fileID: 2461976908696895058, guid: 59a335fab3ff41368182b36efcac9d4b, type: 3}
+    sound: {fileID: 8300000, guid: 21a23957a77c3bc488f38c0c48b7cb7e, type: 3}
+  shakeForce: 0.3
+  hitStopTimeScale: 0.1
+  hitStopDuration: 0.08
+  knockbackForce: 5
+  knockbackUpForce: 2
+  knockbackDuration: 0.2
+  stackImagePrefab: {fileID: 3377310235539022614, guid: d005ffc73f1fdbd4998b5df790d90763, type: 3}
+  maxStack: 10
+  gainMode: 0
+  targetEnemyPrefabs: []
+  decayDelay: 1
+  decayInterval: 0.3
+  overflowSelfDamage: 2
+  overflowParticle: {fileID: 8715735454965646798, guid: 9cd1c22730a64de4cb6ca39546c09a76, type: 3}

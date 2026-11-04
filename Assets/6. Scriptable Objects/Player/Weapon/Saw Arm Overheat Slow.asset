@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb0df744d57e40cb9ea6b9de91702fea, type: 3}
+  m_Name: Saw Arm Overheat Slow
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  cooldown: 0
+  maxRange: 3.4028235e+38
+  icon: {fileID: 0}
+  cast:
+    animClip: {fileID: 0}
+    particle: {fileID: 0}
+    sound: {fileID: 0}
+  displayName: "\uACFC\uC5F4"
+  description: "\uC5F4\uC774 \uCD5C\uB300\uCE58\uC5D0 \uB3C4\uB2EC\uD558\uBA74 \uC7A0\uC2DC
+    \uC774\uB3D9\uC18D\uB3C4\uAC00 \uAC10\uC18C\uD55C\uB2E4."
+  trigger:
+    rid: 5321512127343886411
+  conditions: []
+  effects:
+  - rid: 5321512127343886412
+  linkedAbilities: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 5321512127343886411
+      type: {class: OnAmmoReachedTrigger, ns: , asm: Assembly-CSharp}
+      data:
+        target: 1
+        value: 0
+    - rid: 5321512127343886412
+      type: {class: BuffEffect, ns: , asm: Assembly-CSharp}
+      data:
+        modifiers:
+        - statType: 3
+          valueType: 1
+          amount: -30
+        duration: 2
+        applyTo: 0
+        radius: 5
+        targetLayer:
+          serializedVersion: 2
+          m_Bits: 0
+        activeWhile: []
+        particle: {fileID: 0}
