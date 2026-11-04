@@ -42,6 +42,6 @@ MonoBehaviour:
   gainMode: 2
   targetEnemyPrefabs: []
   decayDelay: 2
-  decayInterval: 0.3
+  decayInterval: 0.5
   overflowSelfDamage: 0
   overflowParticle: {fileID: 0}
