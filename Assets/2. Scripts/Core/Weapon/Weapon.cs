@@ -122,6 +122,10 @@ public class Weapon : ScriptableObject, IInventoryItem
             methodCache = GetInputMethods(modules)
                 .GroupBy(x => x.moduleType.Name + "." + x.method.Name)
                 .ToDictionary(g => g.Key, g => g.First().method);
+
+            // 전환 기간 한정: 접두사 없는 이름용으로 무기 자신의 메서드도 캐시한다.
+            foreach (var m in InputWeapon.GetInputMethods(GetType()).GroupBy(m => m.Name))
+                methodCache.TryAdd(m.Key, m.First());
             InputHandler.Instance.InputAction.Gameplay.Get().actionTriggered += HandleInput;
             inputSubscribed = true;
         }
@@ -247,6 +251,14 @@ public class Weapon : ScriptableObject, IInventoryItem
         if (!methodCache.TryGetValue(binding.methodName, out var method))
         {
             Debug.LogWarning($"{name}: [InputMethod] method '{binding.methodName}' do not found.");
+            return;
+        }
+
+        // 전환 기간 한정: 접두사 없는 이름은 무기 자신의 메서드를 호출한다.
+        // Task 5의 에셋 마이그레이션에서 이름에 접두사가 붙으면 이 분기는 제거한다.
+        if (!binding.methodName.Contains('.'))
+        {
+            method.Invoke(this, method.GetParameters().Length == 0 ? null : new object[] { context });
             return;
         }
 
