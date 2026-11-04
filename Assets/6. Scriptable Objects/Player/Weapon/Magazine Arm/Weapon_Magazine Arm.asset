@@ -47,4 +47,5 @@ MonoBehaviour:
       data:
         ammoStyle: {fileID: 11400000, guid: 9128da47c932a2749883d7fb046d0c86, type: 2}
         maxAmmo: 10
-        reloadTime: 1
+        reloadTime: 2
+        idleReloadDelay: 1
