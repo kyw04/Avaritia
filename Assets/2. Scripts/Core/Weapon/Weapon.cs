@@ -7,6 +7,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.U2D.Animation;
 
+// 인스펙터의 입력 함수 목록에서 고를 수 있는 모듈 메서드에 붙인다.
+// 매개변수는 없거나 InputAction.CallbackContext 하나만 받을 수 있다.
+[AttributeUsage(AttributeTargets.Method)]
+public class InputMethodAttribute : Attribute { }
+
 [CreateAssetMenu(menuName = "Scriptable Objects/Weapon/Weapon")]
 public class Weapon : ScriptableObject, IInventoryItem
 {
@@ -104,7 +109,7 @@ public class Weapon : ScriptableObject, IInventoryItem
                (parameters.Length == 1 && parameters[0].ParameterType == typeof(InputAction.CallbackContext));
     }
 
-    public virtual void Equip(Entity owner, ImageCountBar countBar = null)
+    public void Equip(Entity owner, ImageCountBar countBar = null)
     {
         Owner = owner;
 
@@ -122,16 +127,12 @@ public class Weapon : ScriptableObject, IInventoryItem
             methodCache = GetInputMethods(modules)
                 .GroupBy(x => x.moduleType.Name + "." + x.method.Name)
                 .ToDictionary(g => g.Key, g => g.First().method);
-
-            // 전환 기간 한정: 접두사 없는 이름용으로 무기 자신의 메서드도 캐시한다.
-            foreach (var m in InputWeapon.GetInputMethods(GetType()).GroupBy(m => m.Name))
-                methodCache.TryAdd(m.Key, m.First());
             InputHandler.Instance.InputAction.Gameplay.Get().actionTriggered += HandleInput;
             inputSubscribed = true;
         }
     }
 
-    public virtual void Unequip()
+    public void Unequip()
     {
         foreach (var binding in holds.Keys.ToList())
             StopHold(binding);
@@ -147,7 +148,7 @@ public class Weapon : ScriptableObject, IInventoryItem
     }
 
     // true를 반환하면 이번 점프 입력을 무기가 쓴 것으로 보고 플레이어는 점프하지 않는다.
-    public virtual bool ConsumeJump()
+    public bool ConsumeJump()
     {
         foreach (var module in modules)
         {
@@ -157,7 +158,7 @@ public class Weapon : ScriptableObject, IInventoryItem
         return false;
     }
 
-    public virtual void Attack(IAttacker attacker, int index = 0, Transform defender = null)
+    public void Attack(IAttacker attacker, int index = 0, Transform defender = null)
     {
         var attack = new WeaponAttack { Attacker = attacker, Index = index, Defender = defender, Data = combo.datas[index] };
 
@@ -251,14 +252,6 @@ public class Weapon : ScriptableObject, IInventoryItem
         if (!methodCache.TryGetValue(binding.methodName, out var method))
         {
             Debug.LogWarning($"{name}: [InputMethod] method '{binding.methodName}' do not found.");
-            return;
-        }
-
-        // 전환 기간 한정: 접두사 없는 이름은 무기 자신의 메서드를 호출한다.
-        // Task 5의 에셋 마이그레이션에서 이름에 접두사가 붙으면 이 분기는 제거한다.
-        if (!binding.methodName.Contains('.'))
-        {
-            method.Invoke(this, method.GetParameters().Length == 0 ? null : new object[] { context });
             return;
         }
 

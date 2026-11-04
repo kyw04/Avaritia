@@ -8,7 +8,7 @@ public enum AmmoComparison { Equal, LessOrEqual, GreaterOrEqual, LessThan, Great
 
 public static class AmmoTargetExtensions
 {
-    public static int Resolve(this AmmoTarget t, IAmmoWeapon w, int value) => t switch
+    public static int Resolve(this AmmoTarget t, IAmmoModule w, int value) => t switch
     {
         AmmoTarget.Min => 0,
         AmmoTarget.Max => w.MaxAmmo,
@@ -27,7 +27,7 @@ public class AmmoCondition : IAbilityCondition
 
     public bool IsMet(AbilityContext context)
     {
-        if (context.Caster is not Player { Weapon: IAmmoWeapon w }) return false;
+        if (context.Caster is not Player { Weapon: { } weapon } || !weapon.TryGetModule<IAmmoModule>(out var w)) return false;
         int current = w.CurrentAmmo;
         int t = target.Resolve(w, value);
         return comparison switch

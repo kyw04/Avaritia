@@ -91,18 +91,11 @@ public class MagazineModule : WeaponModule, IAmmoModule
         foreach (var ability in Weapon.passiveAbilities)
         {
             if (ability == null || !ability.conditions.Exists(c =>
-                    c is AmmoCondition a && a.comparison == AmmoComparison.Equal && TargetValue(a) == index))
+                    c is AmmoCondition a && a.comparison == AmmoComparison.Equal && a.target.Resolve(this, a.value) == index))
                 continue;
             if (ability.effects.Find(e => e is EnhanceBulletEffect) is EnhanceBulletEffect effect)
                 return effect.enhancement.ammoIcon;
         }
         return null;
     }
-
-    private int TargetValue(AmmoCondition a) => a.target switch
-    {
-        AmmoTarget.Min => 0,
-        AmmoTarget.Max => maxAmmo,
-        _ => a.value,
-    };
 }

@@ -6,7 +6,7 @@ public class EnhanceBulletEffect : IAbilityEffect
 
     public void Apply(AbilityContext context)
     {
-        if (context.Caster is Player { Weapon: MagazineWeapon weapon })
-            weapon.EnhanceCurrentBullet(enhancement);
+        if (context.Caster is Player { Weapon: { } weapon })
+            weapon.EnhanceCurrentAttack(enhancement);
     }
 }

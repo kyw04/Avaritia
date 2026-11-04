@@ -7,7 +7,6 @@ using UnityEngine;
 // 입력 함수 항목을 액션 / 홀드 시간 / 단계(홀드면 다른 키 입력 시 유지 여부) / 메서드 드롭다운 / 애니메이션 다섯 줄로 그린다.
 // 홀드 항목은 홀드 시작 애니메이션 한 줄을 더 그린다.
 // 메서드 목록은 무기의 모듈에서 [InputMethod]가 붙은 메서드를 "타입명.메서드명"으로 보여준다.
-// 모듈이 없는 옛 서브클래스 무기는 무기 타입의 메서드를 보여준다.
 [CustomPropertyDrawer(typeof(Weapon.InputMethodBinding))]
 public class InputMethodBindingDrawer : PropertyDrawer
 {
@@ -47,9 +46,9 @@ public class InputMethodBindingDrawer : PropertyDrawer
     {
         var methodName = property.FindPropertyRelative("methodName");
         var target = property.serializedObject.targetObject;
-        List<string> names = target is Weapon weapon && weapon.modules != null && weapon.modules.Any(m => m != null)
-            ? Weapon.GetInputMethods(weapon.modules.Where(m => m != null)).Select(m => $"{m.moduleType.Name}.{m.method.Name}").Distinct().ToList()
-            : InputWeapon.GetInputMethods(target.GetType()).Select(m => m.Name).Distinct().ToList();
+        List<string> names = target is Weapon { modules: { } modules }
+            ? Weapon.GetInputMethods(modules.Where(m => m != null)).Select(m => $"{m.moduleType.Name}.{m.method.Name}").Distinct().ToList()
+            : new List<string>();
 
         // 지정된 이름이 목록에 없으면(이름 변경/삭제) 그대로 보여 주어 잃어버리지 않게 한다.
         if (!string.IsNullOrEmpty(methodName.stringValue) && !names.Contains(methodName.stringValue))

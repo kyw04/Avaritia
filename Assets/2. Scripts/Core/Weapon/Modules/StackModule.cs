@@ -188,3 +188,12 @@ public class StackModule : WeaponModule, IAmmoModule, IObserver<EntityDamagedEve
         decayRoutine = null;
     }
 }
+
+public enum StackGainMode
+{
+    OnSwing,
+    OnHit,
+    OnSameEnemyHit,
+    OnSpecificEnemyHit,
+    // 직렬화 값이므로 새 항목은 맨 뒤에만 추가한다.
+}
