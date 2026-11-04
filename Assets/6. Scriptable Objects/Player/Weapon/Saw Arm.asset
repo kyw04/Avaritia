@@ -37,7 +37,7 @@ MonoBehaviour:
   knockbackForce: 5
   knockbackUpForce: 2
   knockbackDuration: 0.2
-  stackImagePrefab: {fileID: 3377310235539022614, guid: d005ffc73f1fdbd4998b5df790d90763, type: 3}
+  stackImagePrefab: {fileID: 8454299728072855319, guid: 4f78fa078deb3ea458c64501f7393505, type: 3}
   maxStack: 10
   gainMode: 0
   targetEnemyPrefabs: []

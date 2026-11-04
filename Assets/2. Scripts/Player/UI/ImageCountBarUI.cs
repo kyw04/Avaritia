@@ -73,6 +73,7 @@ public class ImageCountBar : MonoBehaviour
 
             images[i].gameObject.SetActive(i < currentCount);
             images[i].SetIcon(getIcon?.Invoke(i));
+            images[i].ApplyGradient(maxCount > 1 ? (float)i / (maxCount - 1) : 1f);
         }
     }
 }
