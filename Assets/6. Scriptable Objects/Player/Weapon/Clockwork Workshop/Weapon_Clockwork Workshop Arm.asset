@@ -41,23 +41,41 @@ MonoBehaviour:
     phase: 3
     holdDuration: 3
     keepHoldOnOtherInput: 0
-    holdStartClip: {fileID: 0}
+    holdStartFeedback:
+      animClip: {fileID: 0}
+      particle: {fileID: 0}
+      sound: {fileID: 0}
     methodName: ClockworkWorkshopModule.AddKit
-    clip: {fileID: 0}
+    feedback:
+      animClip: {fileID: 0}
+      particle: {fileID: 0}
+      sound: {fileID: 0}
   - action: {fileID: 3368605680795315267, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     phase: 2
     holdDuration: 0
     keepHoldOnOtherInput: 0
-    holdStartClip: {fileID: 0}
+    holdStartFeedback:
+      animClip: {fileID: 0}
+      particle: {fileID: 0}
+      sound: {fileID: 0}
     methodName: ClockworkWorkshopModule.SetDownAttackHeld
-    clip: {fileID: 0}
+    feedback:
+      animClip: {fileID: 0}
+      particle: {fileID: 0}
+      sound: {fileID: 0}
   - action: {fileID: 3368605680795315267, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     phase: 4
     holdDuration: 0
     keepHoldOnOtherInput: 0
-    holdStartClip: {fileID: 0}
+    holdStartFeedback:
+      animClip: {fileID: 0}
+      particle: {fileID: 0}
+      sound: {fileID: 0}
     methodName: ClockworkWorkshopModule.SetDownAttackHeld
-    clip: {fileID: 0}
+    feedback:
+      animClip: {fileID: 0}
+      particle: {fileID: 0}
+      sound: {fileID: 0}
   references:
     version: 2
     RefIds:
