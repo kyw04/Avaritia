@@ -46,7 +46,8 @@ public class ChainLightningModule : WeaponModule, IObserver<EntityDamagedEvent>
 
     public override bool BeforeAttack(WeaponAttack attack)
     {
-        isDownAttack = downAttackHeld;
+        // 스택 모듈과의 처리 순서에 좌우되지 않도록, 공격 시작 시점에 이미 가득 찬 경우에만 연쇄를 장전한다.
+        isDownAttack = downAttackHeld && Weapon.TryGetModule<IAmmoModule>(out var ammo) && ammo.CurrentAmmo >= ammo.MaxAmmo;
         return true;
     }
 
