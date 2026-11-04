@@ -70,11 +70,11 @@ MonoBehaviour:
     - rid: 5321512127343886423
       type: {class: StackModule, ns: , asm: Assembly-CSharp}
       data:
-        stackImagePrefab: {fileID: 3377310235539022614, guid: d005ffc73f1fdbd4998b5df790d90763, type: 3}
-        maxStack: 8
+        stackImagePrefab: {fileID: 8532567533131655367, guid: 19d550b3a3cb1394b90b50cbacda956d, type: 3}
+        maxStack: 5
         gainMode: 1
         targetEnemyPrefabs: []
-        decayDelay: 2
+        decayDelay: 0
         decayInterval: 0.3
         overflowSelfDamage: 0
         overflowParticle: {fileID: 0}
@@ -89,5 +89,5 @@ MonoBehaviour:
         enemyLayer:
           serializedVersion: 2
           m_Bits: 128
-        arcPrefab: {fileID: 0}
+        arcPrefab: {fileID: 7662182318314127949, guid: 42cbfcaf98375194090fdea09afc7c65, type: 3}
         arcDuration: 0.15
