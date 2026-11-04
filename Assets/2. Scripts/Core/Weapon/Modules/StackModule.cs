@@ -1,0 +1,190 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+// 스택 모듈: 공격하면 스택이 쌓이고(탄약 바의 총알 수로 표시), 공격을 멈추면 천천히 줄어든다.
+// 최대 스택에서 또 쌓으려 하면 과열되어 자신이 피해를 입는다.
+// 스택 단계별 버프는 passiveAbilities에 AmmoCondition / OnAmmoReachedTrigger로 붙인다.
+[Serializable]
+public class StackModule : WeaponModule, IAmmoModule, IObserver<EntityDamagedEvent>
+{
+    [SerializeField] private ImageCountPoolable stackImagePrefab;
+    [SerializeField, Min(1)] private int maxStack = 10;
+    [SerializeField] private StackGainMode gainMode;
+    [SerializeField] private List<Enemy> targetEnemyPrefabs = new();
+    [SerializeField, Min(0)] private float decayDelay = 1f;
+    [SerializeField, Min(0)] private float decayInterval = 0.3f;
+    [SerializeField, Min(0)] private float overflowSelfDamage = 0f;
+    [SerializeField] private PooledParticle overflowParticle;
+
+    private ImageCountBar stackCountBar;
+    private int stack;
+    private float lastAttackTime;
+    private Enemy sameEnemyTarget;
+    private Coroutine decayRoutine;
+    // OnSameEnemyHit: 한 번 휘두를 때 맞은 적들은 같은 프레임에 순서 없이 들어오므로 모았다가 다음 프레임에 한 번에 판정한다.
+    private readonly List<Enemy> pendingSameEnemyHits = new();
+    private Coroutine sameEnemyResolveRoutine;
+
+    public int CurrentAmmo => stack;
+    public int MaxAmmo => maxStack;
+    public event Action<int, int> AmmoChanged;
+    public bool GainPaused { get; set; }
+
+    public override bool UsesCountBar => true;
+
+    public void Consume() => SetStack(0);
+
+    public override void Equip(ImageCountBar countBar)
+    {
+        stack = 0;
+        sameEnemyTarget = null;
+        EventBus.Subscribe<EntityDamagedEvent>(this);
+
+        stackCountBar = countBar;
+        stackCountBar?.Init(stackImagePrefab, () => stack, () => maxStack);
+        stackCountBar?.Activate();
+    }
+
+    public override void Unequip()
+    {
+        EventBus.UnsubscribeAll(this);
+        if (decayRoutine != null)
+        {
+            Owner.Mono.StopCoroutine(decayRoutine);
+            decayRoutine = null;
+        }
+        if (sameEnemyResolveRoutine != null)
+        {
+            Owner.Mono.StopCoroutine(sameEnemyResolveRoutine);
+            sameEnemyResolveRoutine = null;
+        }
+        pendingSameEnemyHits.Clear();
+        // 의도적으로 SetStack을 거치지 않는다: AmmoChanged가 발생하면 해제 중인 이전 무기의 총알 도달 트리거가 발동한다.
+        stack = 0;
+        sameEnemyTarget = null;
+        stackCountBar?.Deactivate();
+    }
+
+    public override bool BeforeAttack(WeaponAttack attack)
+    {
+        lastAttackTime = Time.time;
+        if (gainMode == StackGainMode.OnSwing)
+            TryGain();
+        RestartDecay();
+        return true;
+    }
+
+    public void OnNotify(EntityDamagedEvent e)
+    {
+        if (GainPaused)
+            return;
+        if (e.Attacker != Owner || e.Source is not Enemy enemy)
+            return;
+
+        switch (gainMode)
+        {
+            case StackGainMode.OnHit:
+                TryGain();
+                break;
+            case StackGainMode.OnSameEnemyHit:
+                if (!pendingSameEnemyHits.Contains(enemy))
+                    pendingSameEnemyHits.Add(enemy);
+                sameEnemyResolveRoutine ??= Owner.Mono.StartCoroutine(ResolveSameEnemyHits());
+                break;
+            case StackGainMode.OnSpecificEnemyHit:
+                if (IsTargetEnemy(enemy))
+                    TryGain();
+                break;
+        }
+    }
+
+    // 기준 적이 함께 맞았으면 다른 적은 무시하고 +1, 다른 적만 맞았으면 0으로 되돌리고 그 적을 새 기준으로 삼는다.
+    private IEnumerator ResolveSameEnemyHits()
+    {
+        yield return null;
+
+        if (sameEnemyTarget != null && !pendingSameEnemyHits.Contains(sameEnemyTarget))
+        {
+            // SetStack(0)이 기준 적을 비우므로 그 뒤에 새 기준 적을 대입한다.
+            SetStack(0);
+            sameEnemyTarget = pendingSameEnemyHits[0];
+        }
+        else
+        {
+            if (sameEnemyTarget == null)
+                sameEnemyTarget = pendingSameEnemyHits[0];
+            TryGain();
+        }
+
+        pendingSameEnemyHits.Clear();
+        sameEnemyResolveRoutine = null;
+    }
+
+    private void TryGain()
+    {
+        if (stack < maxStack)
+        {
+            SetStack(stack + 1);
+            // 히트 계열 모드는 스택이 0일 때 감소 코루틴이 이미 끝나 있으므로 다시 시작한다.
+            RestartDecay();
+            return;
+        }
+
+        if (overflowSelfDamage <= 0f)
+            return;
+
+        Owner.TakeDamage(overflowSelfDamage);
+        if (overflowParticle != null)
+            ParticleManager.Instance.Spawn(overflowParticle, Owner.transform);
+    }
+
+    private void SetStack(int value)
+    {
+        value = Mathf.Clamp(value, 0, maxStack);
+        if (value != stack)
+        {
+            int prev = stack;
+            stack = value;
+            stackCountBar?.Refresh();
+            AmmoChanged?.Invoke(prev, stack);
+        }
+
+        if (stack == 0)
+            sameEnemyTarget = null;
+    }
+
+    private bool IsTargetEnemy(Enemy enemy)
+    {
+        var prefab = ObjectPoolManager.Instance.GetPrefab(enemy.gameObject);
+        foreach (var p in targetEnemyPrefabs)
+        {
+            if (p == null)
+                continue;
+            if (prefab != null ? p.gameObject == prefab : enemy.name.StartsWith(p.name))
+                return true;
+        }
+        return false;
+    }
+
+    private void RestartDecay()
+    {
+        if (decayRoutine != null)
+            Owner.Mono.StopCoroutine(decayRoutine);
+        decayRoutine = Owner.Mono.StartCoroutine(Decay());
+    }
+
+    private IEnumerator Decay()
+    {
+        while (stack > 0)
+        {
+            yield return new WaitUntil(() => Time.time >= lastAttackTime + decayDelay);
+            yield return new WaitForSeconds(decayInterval);
+            // 대기 중 다시 공격했다면 이번 감소는 건너뛴다.
+            if (Time.time >= lastAttackTime + decayDelay)
+                SetStack(stack - 1);
+        }
+        decayRoutine = null;
+    }
+}
