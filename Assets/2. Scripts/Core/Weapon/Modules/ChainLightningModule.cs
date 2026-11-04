@@ -21,6 +21,8 @@ public class ChainLightningModule : WeaponModule, IObserver<EntityDamagedEvent>
     private bool downAttackHeld;
     private bool isDownAttack;
     private Coroutine chainRoutine;
+    // 연쇄가 첫 yield 전에 끝나면 StartCoroutine이 이미 끝난 코루틴을 반환하므로 chainRoutine 대신 이 플래그로 재진입을 막는다.
+    private bool isChaining;
     private IAmmoModule pausedAmmo;
 
     public override void Equip(ImageCountBar countBar)
@@ -36,6 +38,7 @@ public class ChainLightningModule : WeaponModule, IObserver<EntityDamagedEvent>
             Owner.Mono.StopCoroutine(chainRoutine);
             chainRoutine = null;
         }
+        isChaining = false;
         ReleaseAmmo();
         downAttackHeld = false;
         isDownAttack = false;
@@ -55,7 +58,7 @@ public class ChainLightningModule : WeaponModule, IObserver<EntityDamagedEvent>
     {
         if (e.Attacker != Owner || e.Source is not Enemy enemy || enemy.IsAlly || enemy.CurrentHealth <= 0)
             return;
-        if (!isDownAttack || chainRoutine != null)
+        if (!isDownAttack || isChaining)
             return;
         if (!Weapon.TryGetModule<IAmmoModule>(out var ammo) || ammo.CurrentAmmo < ammo.MaxAmmo)
             return;
@@ -65,6 +68,7 @@ public class ChainLightningModule : WeaponModule, IObserver<EntityDamagedEvent>
         ammo.Consume();
         ammo.GainPaused = true;
         pausedAmmo = ammo;
+        isChaining = true;
         chainRoutine = Owner.Mono.StartCoroutine(Chain(enemy));
     }
 
@@ -98,6 +102,7 @@ public class ChainLightningModule : WeaponModule, IObserver<EntityDamagedEvent>
         }
 
         chainRoutine = null;
+        isChaining = false;
         ReleaseAmmo();
     }
 
