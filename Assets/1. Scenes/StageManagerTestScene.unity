@@ -5710,7 +5710,7 @@ PrefabInstance:
     - target: {fileID: 6021740498178327085, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -3163919504955696172, guid: e6014f154b8de834280b85d526887a15, type: 3}
+      objectReference: {fileID: -678393519, guid: 755b7ec45a2a7e44f99fe7703e18f1f9, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10330,7 +10330,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1706086434143464543, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.32
+      value: 3.17
       objectReference: {fileID: 0}
     - target: {fileID: 1706086434143464543, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
       propertyPath: m_LocalPosition.y
@@ -10375,7 +10375,7 @@ PrefabInstance:
     - target: {fileID: 5773720602588636574, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
       propertyPath: weaponAsset
       value: 
-      objectReference: {fileID: 11400000, guid: 8f90c9de59615a64cb89b59694958ffe, type: 2}
+      objectReference: {fileID: 11400000, guid: e1868bca426c5094881a652f1c309a39, type: 2}
     - target: {fileID: 5773720602588636574, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
       propertyPath: abilityAsset
       value: 
@@ -10383,7 +10383,7 @@ PrefabInstance:
     - target: {fileID: 6021740498178327085, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -3163919504955696172, guid: e6014f154b8de834280b85d526887a15, type: 3}
+      objectReference: {fileID: 3144217909300601275, guid: d1e5d310bcf5fcd4c9b3bed819f393df, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
