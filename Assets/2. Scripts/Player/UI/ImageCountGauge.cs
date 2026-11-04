@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // ImageCountBar를 고리 스프라이트 세 장(배경, 바닥, 게이지)으로 그린다. 모두 SegmentedArcGauge 머티리얼로 원호만 남긴다.
-// 배경은 바닥보다 두껍고 양 끝도 borderDegrees만큼 길어서 테두리가 된다. 바닥은 게이지가 채워지는 자리를 어둡게 깔고,
+// 배경은 바닥보다 두껍고 양 끝도 borderDegrees만큼 길어서 테두리가 된다. 바닥은 게이지가 채워지는 자리를 칸별로 어둡게 깔고,
 // 게이지는 칸 사이를 뚫고 채워진 칸만 보인다.
 // 특별한 칸(강화 총알 등)은 칸 모양 그대로 다른 색·무늬로 칠한다.
 public class ImageCountGauge : MonoBehaviour
@@ -68,9 +68,9 @@ public class ImageCountGauge : MonoBehaviour
     // getSlotLook: 칸 인덱스별 특별 모양. 채워진 칸 중 use가 켜진 칸만 그 색·무늬로 칠한다(최대 4칸).
     public void Set(int current, int max, Color color, float gapDegrees, Func<int, GaugeSlotLook> getSlotLook = null)
     {
-        // 배경과 바닥은 틈 0으로 칸 구분 없는 원호 하나.
+        // 배경은 틈 0으로 칸 구분 없는 원호 하나, 바닥은 게이지와 같은 칸으로 나눈다.
         Apply(backgroundMaterial, max, max, 0f, arcAngle + borderDegrees * 2f);
-        Apply(trackMaterial, max, max, 0f, arcAngle);
+        Apply(trackMaterial, max, max, gapDegrees, arcAngle);
         Apply(fillMaterial, max, current, gapDegrees, arcAngle);
         fill.color = color;
 
