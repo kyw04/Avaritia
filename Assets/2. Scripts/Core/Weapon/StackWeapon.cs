@@ -23,6 +23,9 @@ public class StackWeapon : Weapon, IAmmoWeapon, IObserver<EntityDamagedEvent>
     private float lastAttackTime;
     private Enemy sameEnemyTarget;
     private Coroutine decayRoutine;
+    // OnSameEnemyHit: 한 번 휘두를 때 맞은 적들은 같은 프레임에 순서 없이 들어오므로 모았다가 다음 프레임에 한 번에 판정한다.
+    private readonly List<Enemy> pendingSameEnemyHits = new();
+    private Coroutine sameEnemyResolveRoutine;
 
     public int CurrentAmmo => stack;
     public int MaxAmmo => maxStack;
@@ -49,6 +52,12 @@ public class StackWeapon : Weapon, IAmmoWeapon, IObserver<EntityDamagedEvent>
             Owner.Mono.StopCoroutine(decayRoutine);
             decayRoutine = null;
         }
+        if (sameEnemyResolveRoutine != null)
+        {
+            Owner.Mono.StopCoroutine(sameEnemyResolveRoutine);
+            sameEnemyResolveRoutine = null;
+        }
+        pendingSameEnemyHits.Clear();
         // 의도적으로 SetStack을 거치지 않는다: AmmoChanged가 발생하면 해제 중인 이전 무기의 총알 도달 트리거가 발동한다.
         stack = 0;
         sameEnemyTarget = null;
@@ -75,23 +84,37 @@ public class StackWeapon : Weapon, IAmmoWeapon, IObserver<EntityDamagedEvent>
                 TryGain();
                 break;
             case StackGainMode.OnSameEnemyHit:
-                if (sameEnemyTarget == null || sameEnemyTarget == enemy)
-                {
-                    sameEnemyTarget = enemy;
-                    TryGain();
-                }
-                else
-                {
-                    // SetStack(0)이 기준 적을 비우므로 그 뒤에 새 기준 적을 대입한다.
-                    SetStack(0);
-                    sameEnemyTarget = enemy;
-                }
+                if (!pendingSameEnemyHits.Contains(enemy))
+                    pendingSameEnemyHits.Add(enemy);
+                sameEnemyResolveRoutine ??= Owner.Mono.StartCoroutine(ResolveSameEnemyHits());
                 break;
             case StackGainMode.OnSpecificEnemyHit:
                 if (IsTargetEnemy(enemy))
                     TryGain();
                 break;
         }
+    }
+
+    // 기준 적이 함께 맞았으면 다른 적은 무시하고 +1, 다른 적만 맞았으면 0으로 되돌리고 그 적을 새 기준으로 삼는다.
+    private IEnumerator ResolveSameEnemyHits()
+    {
+        yield return null;
+
+        if (sameEnemyTarget != null && !pendingSameEnemyHits.Contains(sameEnemyTarget))
+        {
+            // SetStack(0)이 기준 적을 비우므로 그 뒤에 새 기준 적을 대입한다.
+            SetStack(0);
+            sameEnemyTarget = pendingSameEnemyHits[0];
+        }
+        else
+        {
+            if (sameEnemyTarget == null)
+                sameEnemyTarget = pendingSameEnemyHits[0];
+            TryGain();
+        }
+
+        pendingSameEnemyHits.Clear();
+        sameEnemyResolveRoutine = null;
     }
 
     private void TryGain()

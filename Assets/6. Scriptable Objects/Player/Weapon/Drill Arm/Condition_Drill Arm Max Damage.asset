@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb0df744d57e40cb9ea6b9de91702fea, type: 3}
+  m_Name: Condition_Drill Arm Max Damage
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  cooldown: 0
+  maxRange: 3.4028235e+38
+  icon: {fileID: 0}
+  cast:
+    animClip: {fileID: 0}
+    particle: {fileID: 0}
+    sound: {fileID: 0}
+  displayName: "\uB4DC\uB9B4 \uAD00\uD1B5"
+  description: "\uAC19\uC740 \uC801\uC744 \uCD5C\uB300 \uC2A4\uD0DD\uAE4C\uC9C0 \uACF5\uACA9\uD558\uBA74
+    \uACF5\uACA9\uB825\uC774 50% \uC99D\uAC00\uD55C\uB2E4."
+  trigger:
+    rid: 5321512127343886413
+  conditions: []
+  effects:
+  - rid: 5321512127343886414
+  linkedAbilities: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 5321512127343886413
+      type: {class: OnEquippedTrigger, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 5321512127343886414
+      type: {class: BuffEffect, ns: , asm: Assembly-CSharp}
+      data:
+        modifiers:
+        - statType: 6
+          valueType: 1
+          amount: 50
+        duration: 0
+        applyTo: 0
+        radius: 5
+        targetLayer:
+          serializedVersion: 2
+          m_Bits: 0
+        activeWhile:
+        - rid: 5321512127343886415
+        particle: {fileID: 0}
+    - rid: 5321512127343886415
+      type: {class: AmmoCondition, ns: , asm: Assembly-CSharp}
+      data:
+        target: 1
+        comparison: 0
+        value: 0
