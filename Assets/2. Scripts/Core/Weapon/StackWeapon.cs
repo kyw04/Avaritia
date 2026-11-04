@@ -97,6 +97,8 @@ public class StackWeapon : Weapon, IAmmoWeapon, IObserver<EntityDamagedEvent>
         if (stack < maxStack)
         {
             SetStack(stack + 1);
+            // 히트 계열 모드는 스택이 0일 때 감소 코루틴이 이미 끝나 있으므로 다시 시작한다.
+            RestartDecay();
             return;
         }
 
