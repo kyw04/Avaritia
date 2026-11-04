@@ -86,7 +86,14 @@ public class InventoryUI : MonoBehaviour,
         var selectedGO = EventSystem.current.currentSelectedGameObject;
         selectImage.enabled = selectedGO != null;
         if (selectedGO != null)
-            selectImage.rectTransform.position = selectedGO.GetComponent<RectTransform>().position;
+        {
+            // 선택 테두리는 아이콘이 아니라 아이콘을 감싼 슬롯(부모)에 위치와 크기를 맞춘다.
+            var background = (RectTransform)selectedGO.transform.parent;
+            var select = selectImage.rectTransform;
+            select.position = background.TransformPoint(background.rect.center);
+            float scale = background.lossyScale.x / select.lossyScale.x;
+            select.sizeDelta = background.rect.size * scale;
+        }
     }
 
     public void OnNotify(InventoryUIOnEvent e)
