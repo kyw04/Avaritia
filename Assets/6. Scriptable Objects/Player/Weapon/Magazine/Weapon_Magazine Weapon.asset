@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1118472291c74e16b5923744c4551d5b, type: 3}
-  m_Name: Weapon_New Magazine Weapon
+  m_Name: Weapon_Magazine Weapon
   m_EditorClassIdentifier: Assembly-CSharp::MagazineWeapon
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 851276b8d2cf6c1408ba4592fb6df21d, type: 3}
   combo: {fileID: 11400000, guid: b0cf0df8d9747d64985aa45fd8dd8088, type: 2}
