@@ -5,7 +5,7 @@ using UnityEngine;
 [Serializable]
 public class MagazineModule : WeaponModule, IAmmoModule
 {
-    [SerializeField] private ImageCountPoolable ammoImagePrefab;
+    [SerializeField] private ImageCountStyle ammoStyle;
     [SerializeField] private int maxAmmo;
     [SerializeField] private float reloadTime;
 
@@ -64,7 +64,7 @@ public class MagazineModule : WeaponModule, IAmmoModule
         }
 
         ammoCountBar = countBar;
-        ammoCountBar?.Init(ammoImagePrefab, () => currentAmmo, () => maxAmmo, AmmoIconAt);
+        ammoCountBar?.Init(ammoStyle, () => currentAmmo, () => maxAmmo, AmmoLookAt);
         ammoCountBar?.Activate();
     }
 
@@ -92,7 +92,7 @@ public class MagazineModule : WeaponModule, IAmmoModule
     }
 
     // 탄약 UI는 마지막 칸부터 사라지므로 i번째 칸의 총알을 쏜 직후 남은 탄은 i발이다.
-    private Sprite AmmoIconAt(int index)
+    private GaugeSlotLook AmmoLookAt(int index)
     {
         foreach (var ability in Weapon.Data.passiveAbilities)
         {
@@ -100,7 +100,7 @@ public class MagazineModule : WeaponModule, IAmmoModule
                     c is AmmoCondition a && a.comparison == AmmoComparison.Equal && a.target.Resolve(this, a.value) == index))
                 continue;
             if (ability.effects.Find(e => e is EnhanceBulletEffect) is EnhanceBulletEffect effect)
-                return effect.enhancement.ammoIcon;
+                return effect.enhancement.ammoLook;
         }
         return null;
     }

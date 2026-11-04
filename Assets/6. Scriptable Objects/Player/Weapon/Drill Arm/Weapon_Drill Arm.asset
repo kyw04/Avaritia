@@ -46,7 +46,7 @@ MonoBehaviour:
     - rid: 5321512127343886419
       type: {class: StackModule, ns: , asm: Assembly-CSharp}
       data:
-        stackImagePrefab: {fileID: 3377310235539022614, guid: d005ffc73f1fdbd4998b5df790d90763, type: 3}
+        stackStyle: {fileID: 11400000, guid: 9128da47c932a2749883d7fb046d0c86, type: 2}
         maxStack: 5
         gainMode: 2
         targetEnemyPrefabs: []

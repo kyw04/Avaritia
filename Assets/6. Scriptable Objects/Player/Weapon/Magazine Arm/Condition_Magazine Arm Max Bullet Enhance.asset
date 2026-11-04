@@ -46,7 +46,10 @@ MonoBehaviour:
           speedMultiplier: 1.5
           scaleMultiplier: 1.5
           bulletPrefab: {fileID: 1601285360948021515, guid: 6e9992e566fa14b46886d23c98b2f950, type: 3}
-          ammoIcon: {fileID: 21300000, guid: 1eb7e389a22b9084ba4d6ef3affd0bbc, type: 3}
+          ammoLook:
+            use: 1
+            color: {r: 1, g: 0.8, b: 0.2, a: 1}
+            pattern: {fileID: 0}
     - rid: 5321512127343886416
       type: {class: AmmoCondition, ns: , asm: Assembly-CSharp}
       data:

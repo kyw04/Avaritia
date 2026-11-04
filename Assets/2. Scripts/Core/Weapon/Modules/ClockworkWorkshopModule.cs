@@ -9,8 +9,8 @@ using UnityEngine.InputSystem;
 [Serializable]
 public class ClockworkWorkshopModule : WeaponModule, IObserver<EntityDamagedEvent>, IObserver<StageNodeChangedEvent>
 {
-    [SerializeField] private ImageCountPoolable kitImagePrefab;
-    [SerializeField] private Sprite stunKitSprite;
+    [SerializeField] private ImageCountStyle kitStyle;
+    [SerializeField] private GaugeSlotLook stunKitLook = new();
     [SerializeField, Min(0)] private int maxKits = 2;
     [SerializeField, Min(1)] private int hitsToStun = 3;
     [SerializeField, Min(0)] private float stunDuration = 7f;
@@ -42,7 +42,7 @@ public class ClockworkWorkshopModule : WeaponModule, IObserver<EntityDamagedEven
         EventBus.Subscribe<StageNodeChangedEvent>(this);
 
         kitCountBar = countBar;
-        kitCountBar?.Init(kitImagePrefab, () => kitCount, () => maxKits, i => i == 0 && kitStunned ? stunKitSprite : null);
+        kitCountBar?.Init(kitStyle, () => kitCount, () => maxKits, i => i == 0 && kitStunned ? stunKitLook : null);
         kitCountBar?.Activate();
     }
 

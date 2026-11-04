@@ -9,7 +9,7 @@ using UnityEngine;
 [Serializable]
 public class StackModule : WeaponModule, IAmmoModule, IObserver<EntityDamagedEvent>
 {
-    [SerializeField] private ImageCountPoolable stackImagePrefab;
+    [SerializeField] private ImageCountStyle stackStyle;
     [SerializeField, Min(1)] private int maxStack = 10;
     [SerializeField] private StackGainMode gainMode;
     [SerializeField] private List<Enemy> targetEnemyPrefabs = new();
@@ -53,7 +53,7 @@ public class StackModule : WeaponModule, IAmmoModule, IObserver<EntityDamagedEve
         EventBus.Subscribe<EntityDamagedEvent>(this);
 
         stackCountBar = countBar;
-        stackCountBar?.Init(stackImagePrefab, () => stack, () => MaxAmmo);
+        stackCountBar?.Init(stackStyle, () => stack, () => MaxAmmo);
         stackCountBar?.Activate();
         if (Owner is Player player)
             player.Inventory.Changed += OnInventoryChanged;

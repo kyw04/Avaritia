@@ -1,28 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
-using UnityEngine.UI;
 
+// 개수(탄, 스택, 키트)를 게이지로 보여 준다.
 public class ImageCountBar : MonoBehaviour
 {
-    [SerializeField] private ImageCountPoolable imagePrefab;
+    [SerializeField] private ImageCountStyle style;
     [SerializeField] private int currentCount;
     [SerializeField] private int maxCount;
 
-    private List<ImageCountPoolable> images = new();
-
     private Func<int> getCurrentCount;
     private Func<int> getMaxCount;
-    private Func<int, Sprite> getIcon;
-    private HorizontalOrVerticalLayoutGroup layout;
+    private Func<int, GaugeSlotLook> getSlotLook;
+    private ImageCountGauge gauge;
 
     public bool IsActive { get; private set; }
 
     private void Awake()
     {
-        layout = GetComponent<HorizontalOrVerticalLayoutGroup>();
-        Init(imagePrefab, () => currentCount, () => maxCount);
-        Refresh();
+        gauge = GetComponentInChildren<ImageCountGauge>(true);
+        Init(style, () => currentCount, () => maxCount);
     }
 
     public void Activate()
@@ -33,62 +29,31 @@ public class ImageCountBar : MonoBehaviour
     public void Deactivate()
     {
         IsActive = false;
-
-        foreach (var img in images)
-            img.gameObject.SetActive(false);
+        if (gauge != null)
+            gauge.Show(false);
     }
-    
-    // iconBridge: 칸 인덱스별 아이콘. null을 돌려주면 기본 이미지.
-    public void Init(ImageCountPoolable prefab, Func<int> currentCountBridge, Func<int> maxCountBridge, Func<int, Sprite> iconBridge = null)
+
+    // slotLookBridge: 칸 인덱스별 특별 모양(강화 총알 등). null이거나 use가 꺼져 있으면 기본 칸.
+    public void Init(ImageCountStyle newStyle, Func<int> currentCountBridge, Func<int> maxCountBridge, Func<int, GaugeSlotLook> slotLookBridge = null)
     {
-        imagePrefab = prefab;
+        style = newStyle;
         getCurrentCount = currentCountBridge;
         getMaxCount = maxCountBridge;
-        getIcon = iconBridge;
-        maxCount = getMaxCount();
-        // 플레이어 탄약 바처럼 무기가 장착될 때 프리팹을 넣어 주는 바는 Awake 시점엔 프리팹이 없다.
-        if (layout != null && prefab != null)
-            layout.spacing = prefab.Spacing;
-        
-        foreach (var img in images)
-        {
-            img.Set(prefab);
-            img.transform.SetParent(transform);
-        }
-        for (int i = images.Count; i < maxCount; i++)
-        {
-            var newImage = ObjectPoolManager.Instance.Spawn(imagePrefab, Vector3.zero, Quaternion.identity);
-            newImage.transform.SetParent(transform);
-        }
-        images.Clear();
-        transform.GetComponentsInChildren(true, images);
+        getSlotLook = slotLookBridge;
         Refresh();
     }
-    
+
     public void Refresh()
     {
-        // 아이템 등으로 최대 개수가 늘었으면 모자란 칸을 만든다.
         maxCount = getMaxCount();
-        for (int i = images.Count; i < maxCount; i++)
-        {
-            var newImage = ObjectPoolManager.Instance.Spawn(imagePrefab, Vector3.zero, Quaternion.identity);
-            newImage.transform.SetParent(transform);
-            images.Add(newImage);
-        }
-
         currentCount = getCurrentCount();
         currentCount = currentCount < 0 ? maxCount : Mathf.Clamp(currentCount, 0, maxCount);
-        for (int i = 0; i < images.Count; i++)
-        {
-            if (i >= maxCount)
-            {
-                images[i].gameObject.SetActive(false);
-                continue;
-            }
 
-            images[i].gameObject.SetActive(i < currentCount);
-            images[i].SetIcon(getIcon?.Invoke(i));
-            images[i].ApplyGradient(i, currentCount, maxCount);
-        }
+        if (gauge == null)
+            return;
+        gauge.Show(style != null);
+        if (style == null)
+            return;
+        gauge.Set(currentCount, maxCount, style.EvaluateFillColor(currentCount, maxCount), style.Gap, getSlotLook);
     }
 }

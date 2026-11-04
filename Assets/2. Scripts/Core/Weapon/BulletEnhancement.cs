@@ -8,5 +8,5 @@ public class BulletEnhancement
     public float speedMultiplier = 1f;
     public float scaleMultiplier = 1f;
     public BulletMover bulletPrefab; // 대신 발사할 총알. 비우면 공격의 기본 총알
-    public Sprite ammoIcon;     // 탄약 UI 칸 아이콘. 비우면 기본 아이콘
+    public GaugeSlotLook ammoLook = new(); // 탄약 게이지에서 이 총알 칸의 색·무늬. use를 끄면 기본 칸
 }
