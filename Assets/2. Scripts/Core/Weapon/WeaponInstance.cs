@@ -1,72 +1,30 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.U2D.Animation;
 
-// 인스펙터의 입력 함수 목록에서 고를 수 있는 모듈 메서드에 붙인다.
-// 매개변수는 없거나 InputAction.CallbackContext 하나만 받을 수 있다.
-[AttributeUsage(AttributeTargets.Method)]
-public class InputMethodAttribute : Attribute { }
-
-[CreateAssetMenu(menuName = "Scriptable Objects/Weapon/Weapon")]
-public class Weapon : ScriptableObject, IInventoryItem
+// 플레이 중의 무기 하나. 모듈 상태(탄, 스택, 키트)를 가지므로 버렸다 다시 주워도 상태가 유지된다.
+public class WeaponInstance : IInventoryItem
 {
-    [Serializable]
-    public class InputMethodBinding
-    {
-        public InputActionReference action;
-        public InputActionPhase phase = InputActionPhase.Performed;
-        [Min(0)] public float holdDuration;
-        public bool keepHoldOnOtherInput;
-        public ActionFeedback holdStartFeedback;
-        public string methodName;
-        public ActionFeedback feedback;
-    }
-
-    public SpriteLibraryAsset spriteLibraryAsset;
-    public AttackDataCombo combo;
-    public bool holdToAttack;
-    public Sprite icon;
-    public string displayName;
-    [TextArea] public string description;
-    public List<AbilityData> passiveAbilities = new();
-    public ActionFeedback swing;
-    public ActionFeedback hit;
-    public float shakeForce = 0.3f;
-    [Range(0f, 1f)] public float hitStopTimeScale = 0.1f;
-    [Min(0)] public float hitStopDuration = 0.08f;
-    public float knockbackForce = 5f;
-    public float knockbackUpForce = 2f;
-    [Min(0)] public float knockbackDuration = 0.2f;
-    [SerializeReference, SubclassSelector] public List<WeaponModule> modules = new();
-    [SerializeField] private List<InputMethodBinding> inputMethods = new();
-
+    private readonly List<WeaponModule> modules;
     private WeaponAttack currentAttack;
     private bool inputSubscribed;
     private Dictionary<string, MethodInfo> methodCache;
-    private readonly Dictionary<InputMethodBinding, (Coroutine routine, InputAction action)> holds = new();
+    private readonly Dictionary<WeaponData.InputMethodBinding, (Coroutine routine, InputAction action)> holds = new();
 
+    public WeaponData Data { get; }
     public Entity Owner { get; private set; }
-    public bool IsRuntimeInstance { get; private set; }
-    public string DisplayName => displayName;
-    public string Details => description;
-    public Sprite Icon => icon;
+    public IReadOnlyList<WeaponModule> Modules => modules;
+    public string DisplayName => string.IsNullOrEmpty(Data.displayName) ? Data.name : Data.displayName;
+    public string Details => Data.description;
+    public Sprite Icon => Data.icon;
 
-    // 런타임 상태(Owner, 탄약)를 에셋에 직접 쓰지 않도록 에셋일 때만 복제한다.
-    // 이미 복제본이면(떨어뜨렸다 다시 주운 무기) 그대로 반환해 복제본이 쌓이지 않게 한다.
-    public Weapon GetRuntimeInstance()
+    public WeaponInstance(WeaponData data)
     {
-        if (IsRuntimeInstance)
-            return this;
-
-        var runtime = Instantiate(this);
-        runtime.name = name;
-        runtime.IsRuntimeInstance = true;
-        return runtime;
+        Data = data;
+        modules = data.modules.Where(m => m != null).Select(m => m.CreateRuntimeCopy()).ToList();
     }
 
     public bool TryGetModule<T>(out T module)
@@ -90,42 +48,22 @@ public class Weapon : ScriptableObject, IInventoryItem
             currentAttack.Enhancement = enhancement;
     }
 
-    // 에디터 드롭다운과 런타임 호출이 같은 기준으로 메서드를 찾는다.
-    public static IEnumerable<(Type moduleType, MethodInfo method)> GetInputMethods(IEnumerable<WeaponModule> modules)
-    {
-        foreach (var type in modules.Where(m => m != null).Select(m => m.GetType()).Distinct())
-        {
-            var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                .Where(m => m.IsDefined(typeof(InputMethodAttribute), true) && HasValidParameters(m));
-            foreach (var method in methods)
-                yield return (type, method);
-        }
-    }
-
-    private static bool HasValidParameters(MethodInfo method)
-    {
-        var parameters = method.GetParameters();
-        return parameters.Length == 0 ||
-               (parameters.Length == 1 && parameters[0].ParameterType == typeof(InputAction.CallbackContext));
-    }
-
     public void Equip(Entity owner, ImageCountBar countBar = null)
     {
         Owner = owner;
 
         foreach (var module in modules)
         {
-            if (module == null) continue;
             module.Bind(this);
             module.Equip(countBar);
         }
 
-        if (modules.Count > 0 && !modules.Any(m => m != null && m.UsesCountBar))
+        if (modules.Count > 0 && !modules.Any(m => m.UsesCountBar))
             countBar?.Deactivate();
 
-        if (inputMethods.Count > 0)
+        if (Data.InputMethods.Count > 0)
         {
-            methodCache = GetInputMethods(modules)
+            methodCache = WeaponData.GetInputMethods(modules)
                 .GroupBy(x => x.moduleType.Name + "." + x.method.Name)
                 .ToDictionary(g => g.Key, g => g.First().method);
             InputHandler.Instance.InputAction.Gameplay.Get().actionTriggered += HandleInput;
@@ -133,6 +71,7 @@ public class Weapon : ScriptableObject, IInventoryItem
         }
     }
 
+    // Owner는 비우지 않는다: 모듈 Unequip이 Owner.Mono로 코루틴을 멈추며, 다음 Equip이 덮어쓴다.
     public void Unequip()
     {
         foreach (var binding in holds.Keys.ToList())
@@ -145,10 +84,7 @@ public class Weapon : ScriptableObject, IInventoryItem
         }
 
         foreach (var module in modules)
-        {
-            if (module == null) continue;
             module.Unequip();
-        }
     }
 
     // true를 반환하면 이번 점프 입력을 무기가 쓴 것으로 보고 플레이어는 점프하지 않는다.
@@ -156,7 +92,6 @@ public class Weapon : ScriptableObject, IInventoryItem
     {
         foreach (var module in modules)
         {
-            if (module == null) continue;
             if (module.ConsumeJump())
                 return true;
         }
@@ -165,11 +100,10 @@ public class Weapon : ScriptableObject, IInventoryItem
 
     public void Attack(IAttacker attacker, int index = 0, Transform defender = null)
     {
-        var attack = new WeaponAttack { Attacker = attacker, Index = index, Defender = defender, Data = combo.datas[index] };
+        var attack = new WeaponAttack { Attacker = attacker, Index = index, Defender = defender, Data = Data.combo.datas[index] };
 
         foreach (var module in modules)
         {
-            if (module == null) continue;
             if (!module.BeforeAttack(attack))
                 return;
         }
@@ -181,10 +115,7 @@ public class Weapon : ScriptableObject, IInventoryItem
         attack.Data.Attack(attacker, defender, attack.Enhancement);
 
         foreach (var module in modules)
-        {
-            if (module == null) continue;
             module.AfterAttack(attack);
-        }
     }
 
     // 에셋의 액션(InputActionReference)과 생성된 PlayerInputActions의 액션은 인스턴스가 달라 id로 비교한다.
@@ -193,7 +124,7 @@ public class Weapon : ScriptableObject, IInventoryItem
     {
         CancelHoldsByOtherInput(context);
 
-        foreach (var binding in inputMethods)
+        foreach (var binding in Data.InputMethods)
         {
             if (binding.action == null || binding.action.action.id != context.action.id)
                 continue;
@@ -207,7 +138,7 @@ public class Weapon : ScriptableObject, IInventoryItem
 
     // 누르기 시작하면 홀드를 시작하고, 시간이 다 되기 전에 떼면 취소한다.
     // 시작할 때 holdStartFeedback, 완료하면 feedback을 재생한다.
-    private void HandleHold(InputMethodBinding binding, InputAction.CallbackContext context)
+    private void HandleHold(WeaponData.InputMethodBinding binding, InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Started)
         {
@@ -221,14 +152,14 @@ public class Weapon : ScriptableObject, IInventoryItem
         }
     }
 
-    private IEnumerator HoldRoutine(InputMethodBinding binding, InputAction.CallbackContext context)
+    private IEnumerator HoldRoutine(WeaponData.InputMethodBinding binding, InputAction.CallbackContext context)
     {
         yield return new WaitForSeconds(binding.holdDuration);
         holds.Remove(binding);
         Execute(binding, context);
     }
 
-    private void StopHold(InputMethodBinding binding)
+    private void StopHold(WeaponData.InputMethodBinding binding)
     {
         if (!holds.Remove(binding, out var hold))
             return;
@@ -251,7 +182,7 @@ public class Weapon : ScriptableObject, IInventoryItem
     }
 
     // methodName은 "모듈타입명.메서드명" 형식이며, 타입명이 같은 첫 모듈에서 호출한다.
-    private void Execute(InputMethodBinding binding, InputAction.CallbackContext context)
+    private void Execute(WeaponData.InputMethodBinding binding, InputAction.CallbackContext context)
     {
         PlayFeedback(binding.feedback);
 
@@ -260,15 +191,15 @@ public class Weapon : ScriptableObject, IInventoryItem
 
         if (!methodCache.TryGetValue(binding.methodName, out var method))
         {
-            Debug.LogWarning($"{name}: [InputMethod] method '{binding.methodName}' do not found.");
+            Debug.LogWarning($"{Data.name}: [InputMethod] method '{binding.methodName}' do not found.");
             return;
         }
 
         var typeName = binding.methodName.Split('.')[0];
-        var module = modules.FirstOrDefault(m => m != null && m.GetType().Name == typeName);
+        var module = modules.FirstOrDefault(m => m.GetType().Name == typeName);
         if (module == null)
         {
-            Debug.LogWarning($"{name}: module '{typeName}' do not found.");
+            Debug.LogWarning($"{Data.name}: module '{typeName}' do not found.");
             return;
         }
 

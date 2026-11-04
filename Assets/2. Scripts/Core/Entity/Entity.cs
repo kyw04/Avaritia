@@ -10,7 +10,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     [SerializeField] protected Transform groundCheck;
     [SerializeField] protected float groundRadius;
     [SerializeField] protected LayerMask groundLayer;
-    [SerializeField] protected Weapon dropWeaponAsset;
+    [SerializeField] protected WeaponData dropWeaponAsset;
     [SerializeField] protected AbilityData dropAbilityAsset;
     [SerializeField, Range(0, 100)] protected float dropChance;
     [SerializeField] protected EntityFeedbacks feedbacks;

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
 {
-    [SerializeField] private Weapon weaponAsset;
+    [SerializeField] private WeaponData weaponAsset;
     [SerializeField] private AbilityData abilityAsset;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Rigidbody2D rb;
@@ -49,7 +49,7 @@ public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
     public void Init(IInteractable payload)
     {
         this.payload = payload;
-        weaponAsset = (payload as WeaponPickup)?.Weapon;
+        weaponAsset = (payload as WeaponPickup)?.Weapon.Data;
         abilityAsset = (payload as AbilityPickup)?.Ability;
         abilityAsset = (payload as ItemPickup)?.Item;
         ApplyIcon();

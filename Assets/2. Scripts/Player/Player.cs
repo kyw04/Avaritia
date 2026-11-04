@@ -2,11 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.U2D.Animation;
 
 public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
 {
-    [SerializeField] private Weapon weapon;
+    [SerializeField, FormerlySerializedAs("weapon")] private WeaponData defaultWeapon;
     [SerializeField] private ImageCountBar ammoCountBar;
     [SerializeField] private PlayerInteractionController interactionController;
     [SerializeField] private LayerMask platformLayer;
@@ -14,6 +15,7 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
     private Collider2D col;
     private float lastFallVelocityY;
     private SpriteLibrary spriteLibrary;
+    private WeaponInstance weapon;
 
     public Player Owner { get; private set; }
     public Inventory Inventory { get; private set; }
@@ -22,20 +24,20 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
     public AbilityManager WeaponAbilities { get; private set; }
     public AbilityManager ItemAbilities { get; private set; }
     private StateManager stateManager;
-    public Weapon Weapon => weapon;
+    public WeaponInstance Weapon => weapon;
     public PlayerInteractionController InteractionController => interactionController;
     public float AttackReadyTime { get; set; }
 
-    public bool CanAttack() => Weapon != null && Weapon.combo != null && Weapon.combo.Count > 0 && Time.time >= AttackReadyTime;
+    public bool CanAttack() => Weapon != null && Weapon.Data.combo != null && Weapon.Data.combo.Count > 0 && Time.time >= AttackReadyTime;
 
-    public void EquipWeapon(Weapon newWeapon)
+    public void EquipWeapon(WeaponInstance newWeapon)
     {
         PreserveHealthRatio(() =>
         {
             weapon?.Unequip();
-            weapon = newWeapon.GetRuntimeInstance();
+            weapon = newWeapon;
             weapon.Equip(this, ammoCountBar);
-            spriteLibrary.spriteLibraryAsset = weapon.spriteLibraryAsset;
+            spriteLibrary.spriteLibraryAsset = weapon.Data.spriteLibraryAsset;
             RebindWeaponAbilities();
         });
 
@@ -53,7 +55,7 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
     private void RebindWeaponAbilities()
     {
         WeaponAbilities?.UnbindAll();
-        WeaponAbilities = new AbilityManager(this, weapon != null ? weapon.passiveAbilities.ToArray() : Array.Empty<AbilityData>(), publishEvents: false);
+        WeaponAbilities = new AbilityManager(this, weapon != null ? weapon.Data.passiveAbilities.ToArray() : Array.Empty<AbilityData>(), publishEvents: false);
         WeaponAbilities.BindAll();
     }
 
@@ -86,8 +88,8 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
         Machine.Init();
         stateManager = StateManager.Instance;
 
-        if (weapon != null)
-            weapon = weapon.GetRuntimeInstance();
+        if (defaultWeapon != null)
+            weapon = new WeaponInstance(defaultWeapon);
 
         stats.Set(StatType.DoubleJumpCount, 0);
         stats.Set(StatType.DashCount, 0);
@@ -179,7 +181,7 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
     public void OnNotify(EntityDamagedEvent e)
     {
         if (e.Attacker != this || weapon == null || e.Source == this) return;
-        e.Source.ApplyKnockback(new Vector2(LookDirection * weapon.knockbackForce, weapon.knockbackUpForce), weapon.knockbackDuration);
+        e.Source.ApplyKnockback(new Vector2(LookDirection * weapon.Data.knockbackForce, weapon.Data.knockbackUpForce), weapon.Data.knockbackDuration);
     }
 
     private void OnDestroy()

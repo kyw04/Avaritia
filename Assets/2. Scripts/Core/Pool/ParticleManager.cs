@@ -137,14 +137,14 @@ public class ParticleManager : Singleton<ParticleManager>,
         Vector3 mid = (e.Source.transform.position + from) * 0.5f;
         Spawn(e.Source.Feedbacks.Hit.particle, mid);
         if (e.Attacker is Player player && player.Weapon != null)
-            Spawn(player.Weapon.hit.particle, mid);
+            Spawn(player.Weapon.Data.hit.particle, mid);
     }
 
     // SoundManager와 같은 이유로 무기 콤보 공격일 때만 스윙 파티클을 띄운다.
     public void OnNotify(EntityAttackStartEvent e)
     {
-        if (e.Source is Player player && player.Weapon != null && player.Weapon.combo != null
-            && player.Weapon.combo.datas.Contains(e.Data))
-            Spawn(player.Weapon.swing.particle, e.Source.transform);
+        if (e.Source is Player player && player.Weapon != null && player.Weapon.Data.combo != null
+            && player.Weapon.Data.combo.datas.Contains(e.Data))
+            Spawn(player.Weapon.Data.swing.particle, e.Source.transform);
     }
 }

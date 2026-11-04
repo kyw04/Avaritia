@@ -36,8 +36,8 @@ public class CameraManager : MonoBehaviour, IObserver<EntityDamagedEvent>
         }
         else if (e.Attacker is Player player && player.Weapon != null)
         {
-            Shake(player.Weapon.shakeForce);
-            SlowMotion(player.Weapon.hitStopTimeScale, player.Weapon.hitStopDuration);
+            Shake(player.Weapon.Data.shakeForce);
+            SlowMotion(player.Weapon.Data.hitStopTimeScale, player.Weapon.Data.hitStopDuration);
         }
     }
 

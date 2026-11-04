@@ -23,10 +23,18 @@ public class ClockworkWorkshopModule : WeaponModule, IObserver<EntityDamagedEven
     private bool kitStunned;
     private bool downAttackHeld;
     private bool isDownAttack;
-    private readonly Dictionary<Enemy, int> hitCounts = new();
-    private readonly Dictionary<EnemySize, int> convertedCounts = new();
+    private Dictionary<Enemy, int> hitCounts = new();
+    private Dictionary<EnemySize, int> convertedCounts = new();
 
     public override bool UsesCountBar => true;
+
+    public override WeaponModule CreateRuntimeCopy()
+    {
+        var copy = (ClockworkWorkshopModule)base.CreateRuntimeCopy();
+        copy.hitCounts = new Dictionary<Enemy, int>();
+        copy.convertedCounts = new Dictionary<EnemySize, int>();
+        return copy;
+    }
 
     public override void Equip(ImageCountBar countBar)
     {

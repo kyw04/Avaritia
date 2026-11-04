@@ -47,7 +47,7 @@ public class InventoryDropController : MonoBehaviour
     {
         switch (inventoryItem)
         {
-            case Weapon:
+            case WeaponInstance:
                 return; 
                 
             case Item item:

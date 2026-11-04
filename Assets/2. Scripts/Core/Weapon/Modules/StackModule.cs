@@ -25,7 +25,7 @@ public class StackModule : WeaponModule, IAmmoModule, IObserver<EntityDamagedEve
     private Enemy sameEnemyTarget;
     private Coroutine decayRoutine;
     // OnSameEnemyHit: 한 번 휘두를 때 맞은 적들은 같은 프레임에 순서 없이 들어오므로 모았다가 다음 프레임에 한 번에 판정한다.
-    private readonly List<Enemy> pendingSameEnemyHits = new();
+    private List<Enemy> pendingSameEnemyHits = new();
     private Coroutine sameEnemyResolveRoutine;
 
     public int CurrentAmmo => stack;
@@ -40,10 +40,16 @@ public class StackModule : WeaponModule, IAmmoModule, IObserver<EntityDamagedEve
 
     public void Consume() => SetStack(0);
 
+    public override WeaponModule CreateRuntimeCopy()
+    {
+        var copy = (StackModule)base.CreateRuntimeCopy();
+        copy.pendingSameEnemyHits = new List<Enemy>();
+        return copy;
+    }
+
+    // 스택과 기준 적은 해제해도 유지하므로 여기서 초기화하지 않는다.
     public override void Equip(ImageCountBar countBar)
     {
-        stack = 0;
-        sameEnemyTarget = null;
         EventBus.Subscribe<EntityDamagedEvent>(this);
 
         stackCountBar = countBar;
@@ -51,6 +57,9 @@ public class StackModule : WeaponModule, IAmmoModule, IObserver<EntityDamagedEve
         stackCountBar?.Activate();
         if (Owner is Player player)
             player.Inventory.Changed += OnInventoryChanged;
+        // 해제된 동안 멈췄던 감소를 다시 시작한다.
+        if (stack > 0)
+            RestartDecay();
     }
 
     // 아이템을 줍거나 버리면 최대 스택이 바뀔 수 있으므로 넘친 스택을 깎고 바를 다시 그린다.
@@ -78,9 +87,6 @@ public class StackModule : WeaponModule, IAmmoModule, IObserver<EntityDamagedEve
             sameEnemyResolveRoutine = null;
         }
         pendingSameEnemyHits.Clear();
-        // 의도적으로 SetStack을 거치지 않는다: AmmoChanged가 발생하면 해제 중인 이전 무기의 총알 도달 트리거가 발동한다.
-        stack = 0;
-        sameEnemyTarget = null;
         stackCountBar?.Deactivate();
     }
 

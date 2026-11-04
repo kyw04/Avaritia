@@ -12,6 +12,7 @@ public class MagazineModule : WeaponModule, IAmmoModule
     private ImageCountBar ammoCountBar;
     private int currentAmmo;
     private Coroutine coroutine;
+    private bool initialized;
 
     // 지금 쏘는 총알이 탄창의 몇 번째인지 (재장전 직후 첫 발 = 1)
     public int CurrentBulletNumber => maxAmmo - currentAmmo;
@@ -55,7 +56,12 @@ public class MagazineModule : WeaponModule, IAmmoModule
 
     public override void Equip(ImageCountBar countBar)
     {
-        currentAmmo = maxAmmo;
+        // 처음 장착할 때만 채운다. 버렸다 다시 주운 무기는 남은 탄을 유지한다.
+        if (!initialized)
+        {
+            currentAmmo = maxAmmo;
+            initialized = true;
+        }
 
         ammoCountBar = countBar;
         ammoCountBar?.Init(ammoImagePrefab, () => currentAmmo, () => maxAmmo, AmmoIconAt);
@@ -88,7 +94,7 @@ public class MagazineModule : WeaponModule, IAmmoModule
     // 탄약 UI는 마지막 칸부터 사라지므로 i번째 칸의 총알을 쏜 직후 남은 탄은 i발이다.
     private Sprite AmmoIconAt(int index)
     {
-        foreach (var ability in Weapon.passiveAbilities)
+        foreach (var ability in Weapon.Data.passiveAbilities)
         {
             if (ability == null || !ability.conditions.Exists(c =>
                     c is AmmoCondition a && a.comparison == AmmoComparison.Equal && a.target.Resolve(this, a.value) == index))

@@ -18,7 +18,7 @@ public class WorldPickupEditor : Editor
 
     private void ApplyIcon()
     {
-        var weapon = serializedObject.FindProperty("weaponAsset").objectReferenceValue as Weapon;
+        var weapon = serializedObject.FindProperty("weaponAsset").objectReferenceValue as WeaponData;
         var ability = serializedObject.FindProperty("abilityAsset").objectReferenceValue as AbilityData;
         var spriteRenderer = serializedObject.FindProperty("spriteRenderer").objectReferenceValue as SpriteRenderer;
         if (spriteRenderer == null) return;

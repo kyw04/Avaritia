@@ -2,12 +2,13 @@ using UnityEngine;
 
 public class WeaponPickup : IInteractable
 {
-    private readonly Weapon weapon;
-    public WeaponPickup(Weapon weapon) => this.weapon = weapon;
+    private readonly WeaponInstance weapon;
+    public WeaponPickup(WeaponInstance weapon) => this.weapon = weapon;
+    public WeaponPickup(WeaponData data) : this(new WeaponInstance(data)) { }
 
-    public Weapon Weapon => weapon;
-    public string DisplayName => string.IsNullOrEmpty(weapon.DisplayName) ? weapon.name : weapon.DisplayName;
-    public Sprite Icon => weapon.icon;
+    public WeaponInstance Weapon => weapon;
+    public string DisplayName => weapon.DisplayName;
+    public Sprite Icon => weapon.Icon;
     // Payload-only: never registered directly, always wrapped by WorldPickup.
     public Transform Transform => null;
     public bool NeedsChoice(Player player) => false;

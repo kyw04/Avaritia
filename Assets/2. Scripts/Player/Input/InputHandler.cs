@@ -68,7 +68,7 @@ public class InputHandler : Singleton<InputHandler>
             player.Machine.ChangeState<PlayerAttackState>();
         }
 
-        if (player != null && player.Weapon != null && player.Weapon.holdToAttack && AttackHeld)
+        if (player != null && player.Weapon != null && player.Weapon.Data.holdToAttack && AttackHeld)
             player.Machine.ChangeState<PlayerAttackState>();
     }
 

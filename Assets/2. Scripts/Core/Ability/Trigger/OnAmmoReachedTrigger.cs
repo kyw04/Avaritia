@@ -15,7 +15,7 @@ public class OnAmmoReachedTrigger : IAbilityTrigger
     {
         this.owner = owner;
         this.fire = fire;
-        // 무기 어빌리티는 Player.EquipWeapon에서 weapon.Equip 이후에 바인딩되므로 이때의 Player.Weapon이 런타임 복제본이다.
+        // 무기 어빌리티는 Player.EquipWeapon에서 weapon.Equip 이후에 바인딩되므로 이때의 Player.Weapon이 장착된 인스턴스다.
         if (owner is Player { Weapon: { } pw } && pw.TryGetModule<IAmmoModule>(out var w))
         {
             weapon = w;
