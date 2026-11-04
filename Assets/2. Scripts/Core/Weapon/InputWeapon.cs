@@ -17,7 +17,7 @@ public class InputMethodAttribute : Attribute { }
 public abstract class InputWeapon : Weapon
 {
     [Serializable]
-    public class InputMethodBinding
+    public new class InputMethodBinding
     {
         public InputActionReference action;
         public InputActionPhase phase = InputActionPhase.Performed;
