@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Item
   cooldown: 0
   maxRange: 3.4028235e+38
-  icon: {fileID: 0}
+  icon: {fileID: -7907704360618250805, guid: 4821ada1b8f44b9e9301283de2b93917, type: 3}
   cast:
     animClip: {fileID: 0}
     particle: {fileID: 0}
