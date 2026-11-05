@@ -24,6 +24,8 @@ public class WinchModule : WeaponModule
     [SerializeField, Min(0)] private float flyDamageMultiplier = 1.5f;
     [SerializeField, Min(0)] private float flySpeed = 20f;
     [SerializeField, Min(0)] private float flyStopDistance = 0.6f;
+    // 기절 디버프 에셋(Debuff_Stun). 지속 시간은 아래 값에 건 쪽의 DebuffDuration 보너스가 더해진다.
+    [SerializeField] private DebuffData stunDebuff;
     [SerializeField, Min(0)] private float stunDuration = 1.5f;
     [SerializeField, Min(0)] private float swingForce = 15f;
     [SerializeField, Min(1)] private float pumpMultiplier = 2f;
@@ -275,9 +277,9 @@ public class WinchModule : WeaponModule
     {
         DealDamage(target, multiplier);
 
-        // 스턴 상태는 넉백 중에는 속도를 건드리지 않아 끌려오는 동안에도 걸 수 있다.
+        // 기절은 이동 입력만 막고 넉백은 그대로 받아 끌려오는 동안에도 걸 수 있다.
         if (target is Enemy enemy && IsAlive(enemy))
-            enemy.Stun(stunDuration);
+            enemy.Debuffs.Apply(stunDebuff, stunDuration, Owner);
     }
 
     private void SetRope(Vector2 end)

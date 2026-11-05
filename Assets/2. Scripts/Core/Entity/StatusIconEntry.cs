@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public enum StatusIconKind { Buff, Shield, HitBlock, Invincible, AttackSlow, Cooldown }
+public enum StatusIconKind { Buff, Shield, HitBlock, Invincible, Cooldown, Debuff }
 
 // 상태 아이콘 UI(StatusIconUI)에 띄울 한 칸. Entity/AbilityManager가 매 프레임 채워 준다.
 public struct StatusIconEntry

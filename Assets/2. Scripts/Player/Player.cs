@@ -28,7 +28,7 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
     public PlayerInteractionController InteractionController => interactionController;
     public float AttackReadyTime { get; set; }
 
-    public bool CanAttack() => Weapon != null && Weapon.Data.combo != null && Weapon.Data.combo.Count > 0 && Time.time >= AttackReadyTime;
+    public bool CanAttack() => Restrictions.Can(ActionBlock.Attack) && Weapon != null &&Weapon.Data.combo != null && Weapon.Data.combo.Count > 0 && Time.time >= AttackReadyTime;
 
     public void EquipWeapon(WeaponInstance newWeapon)
     {
@@ -51,6 +51,13 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
         base.CollectStatusIcons(into);
         ItemAbilities?.CollectCooldownIcons(into);
         weapon?.CollectStatusIcons(into);
+    }
+
+    public override void CancelChannels()
+    {
+        base.CancelChannels();
+        WeaponAbilities?.CancelChannels();
+        ItemAbilities?.CancelChannels();
     }
 
     private void RebindWeaponAbilities()
@@ -181,7 +188,7 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
     // 내 공격에 맞은 대상을 플레이어가 바라보는 방향으로 무기 넉백 값만큼 밀어낸다(근접/탄환 공통).
     public void OnNotify(EntityDamagedEvent e)
     {
-        if (e.Attacker != this || weapon == null || e.Source == this) return;
+        if (e.Attacker != this || weapon == null || e.Source == this || e.Info.Has(DamageFlags.NoKnockback)) return;
         e.Source.ApplyKnockback(new Vector2(LookDirection * weapon.Data.knockbackForce, weapon.Data.knockbackUpForce), weapon.Data.knockbackDuration);
     }
 

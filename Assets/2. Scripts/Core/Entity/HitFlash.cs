@@ -34,7 +34,7 @@ public class HitFlash : MonoBehaviour, IObserver<EntityDamagedEvent>
 
     public void OnNotify(EntityDamagedEvent e)
     {
-        if (e.Source != entity || flashMaterial == null) return;
+        if (e.Source != entity || flashMaterial == null || e.Info.Has(DamageFlags.NoHitReaction)) return;
         if (flashRoutine != null) StopCoroutine(flashRoutine);
         flashRoutine = StartCoroutine(FlashRoutine());
     }

@@ -182,6 +182,7 @@ public class SoundManager : Singleton<SoundManager>,
     }
     public void OnNotify(EntityDamagedEvent e)
     {
+        if (e.Info.Has(DamageFlags.NoHitReaction)) return;
         PlayOneShotClip(e.Source.Feedbacks.Hit.sound, AudioType.Effect);
         if (e.Attacker is Player player && player.Weapon != null)
             PlayOneShotClip(player.Weapon.Data.hit.sound, AudioType.Effect);

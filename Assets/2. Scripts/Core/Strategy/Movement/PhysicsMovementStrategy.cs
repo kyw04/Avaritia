@@ -90,7 +90,7 @@ public class PhysicsMovementStrategy : IMovementStrategy
 
     public void UpdateFacing(Entity mover, float inputX)
     {
-        if (inputX == 0f || mover is not Player player)
+        if (inputX == 0f || mover is not Player player || !player.Restrictions.Can(ActionBlock.Turn))
             return;
 
         int flip = inputX > 0f ? 1 : -1;

@@ -74,6 +74,7 @@ MonoBehaviour:
         flyDamageMultiplier: 1.5
         flySpeed: 20
         flyStopDistance: 0.6
+        stunDebuff: {fileID: 11400000, guid: 0087ce02425f2ef459ee0ba99fadf8b4, type: 2}
         stunDuration: 1.5
         swingForce: 15
         pumpMultiplier: 2

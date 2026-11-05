@@ -30,6 +30,7 @@ public class CameraManager : MonoBehaviour, IObserver<EntityDamagedEvent>
 
     public void OnNotify(EntityDamagedEvent e)
     {
+        if (e.Info.Has(DamageFlags.NoHitReaction)) return;
         if (e.Source is Player)
         {
             Shake(hitShakeForce);

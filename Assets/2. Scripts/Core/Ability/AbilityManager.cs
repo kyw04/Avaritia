@@ -193,6 +193,20 @@ public class AbilityManager
         return binding != null && binding.State.IsChanneling;
     }
 
+    // ChannelEffect는 IsChanneling이 꺼지면 다음 프레임에 중단(완료 효과 없음)으로 끝난다.
+    public void CancelChannels()
+    {
+        foreach (var binding in bindings)
+            CancelChannel(binding);
+    }
+
+    private static void CancelChannel(Binding binding)
+    {
+        binding.State.IsChanneling = false;
+        foreach (var child in binding.Linked)
+            CancelChannel(child);
+    }
+
     // 키를 누르고 있어야 하는 채널링이 진행 중이면 그 진행도(0~1)를 돌려준다.
     public bool TryGetHoldChannelProgress(AbilityData data, out float progress)
     {

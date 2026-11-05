@@ -37,6 +37,8 @@ public class MagnetModule : WeaponModule
     [SerializeField, Min(0)] private float pullStopDistance = 1.2f;
     [SerializeField, Min(0)] private float maxPullDuration = 3f;
     [SerializeField, Min(0)] private float pullReleaseStunDuration = 1f;
+    // 기절 디버프 에셋(Debuff_Stun). 지속 시간은 각 시간에 건 쪽의 DebuffDuration 보너스가 더해진다.
+    [SerializeField] private DebuffData stunDebuff;
     [SerializeField] private ActionFeedback pushFeedback;
     [SerializeField] private ActionFeedback pullFeedback;
     [SerializeField] private ActionFeedback slamFeedback;
@@ -177,7 +179,7 @@ public class MagnetModule : WeaponModule
         foreach (var enemy in pulledEnemies)
         {
             if (IsAlive(enemy))
-                enemy.Stun(pullReleaseStunDuration);
+                enemy.Debuffs.Apply(stunDebuff, pullReleaseStunDuration, Owner);
         }
         pulledEnemies.Clear();
         Weapon.StartInputCooldown(pullInputMethod);
@@ -226,8 +228,8 @@ public class MagnetModule : WeaponModule
                 continue;
 
             enemy.ApplyKnockback(PushVelocity(direction), Time.fixedDeltaTime * 2f);
-            // 스턴 상태는 넉백 중에는 속도를 건드리지 않아 날아가는 속도를 유지한다.
-            enemy.Stun(pushDuration);
+            // 기절은 이동 입력만 막고 넉백은 그대로 받아 날아가는 속도를 유지한다.
+            enemy.Debuffs.Apply(stunDebuff, pushDuration, Owner);
             if (slamRoutines.Remove(enemy, out var previous) && previous != null)
                 enemy.StopCoroutine(previous);
             // 적에서 돌려 무기를 바꾸거나 버려도 날아가는 적은 그대로 벽에 박힐 수 있다.
@@ -264,7 +266,7 @@ public class MagnetModule : WeaponModule
         // 피해를 받으면 Player가 무기 넉백을 걸므로 바로 끊는다.
         enemy.ApplyKnockback(Vector2.zero, 0f);
         if (IsAlive(enemy))
-            enemy.Stun(slamStunDuration);
+            enemy.Debuffs.Apply(stunDebuff, slamStunDuration, Owner);
         slamFeedback.Play(enemy.transform.position);
     }
 

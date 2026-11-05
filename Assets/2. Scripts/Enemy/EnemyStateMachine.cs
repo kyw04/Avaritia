@@ -22,34 +22,12 @@ public class EnemyAliveState : StateBase<Enemy>
         AddChild(new EnemyPatrolState(Owner));
         AddChild(new EnemyReturnToPatrolState(Owner));
         AddChild(new EnemyCombatState(Owner));
-        AddChild(new EnemyStunState(Owner));
 
         Machine.AddTransition<EnemyAliveState, EnemyDeadState>();
-        Machine.AddTransition<EnemyAliveState, EnemyStunState>();
     }
 }
 
-#region Stun
-public class EnemyStunState : StateBase<Enemy>
-{
-    public EnemyStunState(Enemy owner) : base(owner)
-    {
-        Machine.AddTransition<EnemyStunState, EnemyPatrolState>();
-    }
-
-    public override void Execute()
-    {
-        if (!Owner.IsStunned)
-            Machine.ChangeState<EnemyPatrolState>();
-    }
-
-    public override void FixedExecute()
-    {
-        if (!Owner.IsKnockedBack)
-            Owner.Rb.linearVelocity = new Vector2(0, Owner.Rb.linearVelocityY);
-    }
-}
-#endregion
+// 기절은 상태가 아니라 디버프(RestrictModule)다. 이동/공격/방향 전환이 막히면 각 상태가 그 행동만 못 한다.
     
         
 #region Patrol

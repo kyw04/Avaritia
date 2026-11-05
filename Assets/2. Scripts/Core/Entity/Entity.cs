@@ -51,10 +51,6 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     private Sprite invincibleIcon;
     private float knockbackUntil;
     private float trackedMaxHealth;
-    private float attackSlowUntil;
-    private float attackSlowMultiplier = 1f;
-    private float attackSlowDuration;
-    private Sprite attackSlowIcon;
 
     public Rigidbody2D Rb { get; protected set; }
     // 무기 등이 이동 방식을 잠시 바꿨다가 되돌릴 수 있게 연다(예: 로프에 매달린 동안).
@@ -62,16 +58,19 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     public MonoBehaviour Mono => this;
     public bool IsAttacking { get; set; }
     public AbilityManager Abilities { get; private set; }
+    public DebuffController Debuffs { get; private set; }
+    public bool IsDead => isDead;
     public bool IsGrounded { get; protected set; }
     public bool IsKnockedBack => Time.time < knockbackUntil;
-    // 공격 준비/진행 시간과 공격 애니메이션에 곱하는 배율. 1보다 작으면 공격이 느려진다.
-    public float AttackSpeedMultiplier => Time.time < attackSlowUntil ? attackSlowMultiplier : 1f;
+    // 공격 준비/진행 시간과 공격 애니메이션에 곱하는 배율. 1보다 작으면 공격이 느려진다(AttackSlowModule 디버프).
+    public float AttackSpeedMultiplier => Debuffs.AttackSpeedMultiplier;
     // 공격이 캔슬될 때마다 올라간다. 진행 중인 공격 코루틴은 시작 때 값과 달라지면 멈춘다.
     public int AttackCancelVersion { get; private set; }
     // 마지막으로 실제 데미지를 준 공격자/시각. 킬 판정(OnKillTrigger)과 채널링 피격 중단(ChannelEffect)에 쓴다.
     public Entity LastAttacker { get; private set; }
     public float LastDamagedTime { get; private set; } = float.NegativeInfinity;
-    public ActionLock ActionLock { get; set; }
+    // 채널링, 디버프 등이 출처별로 막은 행동. 행동을 시작하는 쪽은 Restrictions.Can으로 확인한다.
+    public ActionRestrictions Restrictions { get; } = new();
     // 마지막으로 Move에 넘어온 이동 방향(플레이어는 이동 입력). 실제 속도와 달리 감속으로 미끄러지는 동안은 0이다.
     public Vector2 MoveDirection { get; private set; }
 
@@ -88,6 +87,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     public int DashCount => stats.Get<int>(StatType.DashCount);
     public float DashCooldown => GetStat<float>(StatType.DashCooldown);
     public float DashForce => GetStat<float>(StatType.DashForce);
+    // 내가 거는 디버프의 지속 시간에 더하는 초.
+    public float DebuffDurationBonus => TryGetStat<float>(StatType.DebuffDuration, out var bonus) ? Mathf.Max(0f, bonus) : 0f;
 
     // 기본 스탯에 없는 항목(예: 탄환 스탯)도 활성 버프(무기 패시브 등)가 있으면 기본값 0에서 버프를 더해 반환한다.
     public bool TryGetStat<T>(StatType type, out T stat)
@@ -244,7 +245,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         invincibleIcon = icon;
     }
 
-    // 상태 아이콘 UI용: 지금 걸려 있는 버프/실드/무효화/무적/공격 둔화를 into에 추가한다.
+    // 상태 아이콘 UI용: 지금 걸려 있는 버프/실드/무효화/무적/디버프를 into에 추가한다.
     // 아이콘을 알 수 없는 출처(AbilityRuntimeState가 아닌 source 등)는 건너뛴다.
     public virtual void CollectStatusIcons(List<StatusIconEntry> into)
     {
@@ -289,12 +290,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
                 EndTime = invincibleUntil, Duration = invincibleDuration,
             });
 
-        if (attackSlowIcon != null && Time.time < attackSlowUntil)
-            into.Add(new StatusIconEntry
-            {
-                Key = (this, StatusIconKind.AttackSlow), Icon = attackSlowIcon,
-                EndTime = attackSlowUntil, Duration = attackSlowDuration,
-            });
+        Debuffs.CollectStatusIcons(into);
     }
 
     public void AddBaseStat<T>(StatType type, T amount)
@@ -340,6 +336,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         trackedMaxHealth = stats.Get<float>(StatType.MaxHealth);
         Abilities?.UnbindAll();
         // 장착 즉시 발동하는 어빌리티(OnEquippedTrigger)의 버프가 지워지지 않도록 바인딩 전에 비운다.
+        Debuffs?.ClearAll();
+        Debuffs = new DebuffController(this);
         activeBuffs.Clear();
         shields.Clear();
         hitBlocks.Clear();
@@ -348,11 +346,9 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         invincibleUntil = 0f;
         invincibleIcon = null;
         knockbackUntil = 0f;
-        attackSlowUntil = 0f;
-        attackSlowIcon = null;
         LastAttacker = null;
         LastDamagedTime = float.NegativeInfinity;
-        ActionLock = ActionLock.Free;
+        Restrictions.Clear();
         MoveDirection = Vector2.zero;
         wasGroundCheckerChanged = !IsGrounded;
     }
@@ -364,6 +360,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     protected virtual void Update()
     {
         SyncHealthRatio();
+        Debuffs.Tick();
 
         if (groundCheck == null) return;
 
@@ -382,8 +379,11 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     }
 
     // 넉백 중에는 이동 전략이 속도를 덮어써 넉백을 지우지 않도록 이동을 막는다.
+    // 이동이 막혀 있으면(기절 등) 멈추는 쪽으로 이동시킨다. 넉백과 중력은 그대로 받는다.
     public void Move(Vector2 direction)
     {
+        if (!Restrictions.Can(ActionBlock.Move))
+            direction = Vector2.zero;
         MoveDirection = direction;
         if (IsKnockedBack) return;
         movementStrategy?.Move(this, Rb, direction);
@@ -407,15 +407,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         EventBus.Publish(new EntityAttackCanceledEvent(this));
     }
 
-    // 둔화가 겹치면 더 강한 쪽 배율을 쓰고, 지속 시간은 새로 건 시점부터 다시 센다.
-    // icon: 상태 아이콘 UI에 띄울 아이콘(null이면 표시 안 함).
-    public void SlowAttack(float multiplier, float duration, Sprite icon = null)
-    {
-        attackSlowMultiplier = Time.time < attackSlowUntil ? Mathf.Min(attackSlowMultiplier, multiplier) : multiplier;
-        attackSlowUntil = Time.time + duration;
-        attackSlowDuration = duration;
-        attackSlowIcon = icon;
-    }
+    // 진행 중인 채널링을 모두 중단한다(완료 효과는 적용되지 않는다).
+    public virtual void CancelChannels() => Abilities?.CancelChannels();
 
     public void UpdateFacing(Vector2 direction) => movementStrategy?.UpdateFacing(this, direction.x);
 
@@ -444,10 +437,12 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         OnDashCountChanged();
     }
 
-    public void TakeDamage(float damage, Entity attacker = null, Vector3? hitPoint = null, bool isCritical = false)
+    public void TakeDamage(DamageInfo info)
     {
+        var attacker = info.Attacker;
+        var hitPoint = info.HitPoint;
         if (Time.time < invincibleUntil) return;
-        if (Random.Range(0f, 100f) < GetStat<float>(StatType.Evasion))
+        if (!info.Has(DamageFlags.IgnoreEvasion) && Random.Range(0f, 100f) < GetStat<float>(StatType.Evasion))
         {
             EventBus.Publish(new EntityEvadedEvent(this, attacker, hitPoint));
             return;
@@ -458,18 +453,27 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
             return;
         }
 
+        float damage = info.Amount;
         // Armor = 받는 피해 감소율(%). 최대 80%까지, 음수면 피해 증가 (-10 = 1.1배).
-        TryGetStat<int>(StatType.Armor, out var armor);
-        damage *= 1f - Mathf.Min(armor, 80) / 100f;
+        if (!info.Has(DamageFlags.IgnoreArmor))
+        {
+            TryGetStat<int>(StatType.Armor, out var armor);
+            damage *= 1f - Mathf.Min(armor, 80) / 100f;
+        }
         damage = AbsorbWithShields(damage);
         if (damage <= 0f) return;
 
         stats.Set(StatType.CurrentHealth, stats.Get<float>(StatType.CurrentHealth) - damage);
-        LastDamagedTime = Time.time;
         if (attacker != null) LastAttacker = attacker;
-        activeBuffs.RemoveAll(b => b.clearOnDamageTaken);
+        // 채널링 피격 중단(LastDamagedTime 폴링)과 피격 시 사라지는 버프는 NoInterrupt 피해(지속 피해 등)를 무시한다.
+        if (!info.Has(DamageFlags.NoInterrupt))
+        {
+            LastDamagedTime = Time.time;
+            activeBuffs.RemoveAll(b => b.clearOnDamageTaken);
+        }
         OnHealthChanged();
-        EventBus.Publish(new EntityDamagedEvent(this, attacker, damage, hitPoint, isCritical));
+        info.Amount = damage;
+        EventBus.Publish(new EntityDamagedEvent(this, info));
 
         if (CurrentHealth > 0) return;
         // Listeners (e.g. a revive item) may heal in response; only die if nothing did.
@@ -504,6 +508,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     {
         if (isDead) return false;
         isDead = true;
+        Debuffs.ClearAll();
         EventBus.Publish(new EntityDeadEvent(this));
         TryDropPickup();
         return true;

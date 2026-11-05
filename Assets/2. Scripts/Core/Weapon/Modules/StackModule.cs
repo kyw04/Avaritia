@@ -106,7 +106,7 @@ public class StackModule : WeaponModule, IAmmoModule, IObserver<EntityDamagedEve
     {
         if (GainPaused)
             return;
-        if (e.Attacker != Owner || e.Source is not Enemy enemy)
+        if (e.Attacker != Owner || e.Source is not Enemy enemy || e.Info.Has(DamageFlags.NoOnHitEffects))
             return;
 
         switch (gainMode)

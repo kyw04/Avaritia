@@ -149,7 +149,7 @@ MonoBehaviour:
     animClip: {fileID: 0}
     particle: {fileID: 0}
     sound: {fileID: 0}
-  attackSlowMultiplier: 0.5
+  attackSlowDebuff: {fileID: 11400000, guid: 5edfc7618994d9c41b5b470a9e8d4ebf, type: 2}
   attackSlowDuration: 3
 --- !u!114 &1333631079470740473
 MonoBehaviour:

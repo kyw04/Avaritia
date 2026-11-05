@@ -50,7 +50,7 @@ public class EntityAnimator : AnimatorBase,
 
     // 행동 제한(채널링 등) 중 이동 입력이 없으면, 감속/정지로 생기는 이동 애니메이션이 작업 애니메이션을 덮어쓰지 않게 한다.
     private bool LocomotionLocked =>
-        self != null && self.ActionLock != ActionLock.Free && Mathf.Abs(self.MoveDirection.x) <= 0.2f;
+        self != null && self.Restrictions.Blocked != ActionBlock.None && Mathf.Abs(self.MoveDirection.x) <= 0.2f;
 
     // 이동 애니메이션의 발 닿는 프레임에서 호출된다(애니메이션 이벤트).
     // 블렌드 트리에서 섞이는 클립들의 이벤트가 모두 오므로 우세한 클립의 이벤트만 재생한다.

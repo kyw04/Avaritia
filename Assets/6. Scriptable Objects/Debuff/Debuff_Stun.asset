@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 664a9fb7cf935614f9c0a93a9e1ef727, type: 3}
+  m_Name: Debuff_Stun
+  m_EditorClassIdentifier: Assembly-CSharp::DebuffData
+  displayName: "\uAE30\uC808"
+  icon: {fileID: 0}
+  tags: 1
+  stackRule: 0
+  maxStacks: 1
+  maxDuration: 0
+  modules:
+  - rid: 5321512157137862739
+  - rid: 5321512157137862740
+  references:
+    version: 2
+    RefIds:
+    - rid: 5321512157137862739
+      type: {class: RestrictModule, ns: , asm: Assembly-CSharp}
+      data:
+        immuneSizes: 
+        blocks: 63
+    - rid: 5321512157137862740
+      type: {class: InterruptModule, ns: , asm: Assembly-CSharp}
+      data:
+        immuneSizes: 
+        cancelAttack: 1
+        cancelChannel: 1

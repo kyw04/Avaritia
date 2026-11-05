@@ -67,14 +67,16 @@ public struct EntityDeadEvent : ISubject
 }
 
 // Source = the entity that took the damage. Attacker is null when unknown (effects).
+// Amount는 방어력/실드를 거친 실제 피해량. 반응하는 쪽은 Info.Has(DamageFlags.X)로 무시할지 정한다.
 public struct EntityDamagedEvent : ISubject
 {
     public Entity Source { get; private set; }
-    public Entity Attacker { get; private set; }
-    public float Amount { get; private set; }
-    public Vector3? HitPoint { get; private set; }
-    public bool IsCritical { get; private set; }
-    public EntityDamagedEvent(Entity source, Entity attacker, float amount, Vector3? hitPoint = null, bool isCritical = false) { Source = source; Attacker = attacker; Amount = amount; HitPoint = hitPoint; IsCritical = isCritical; }
+    public DamageInfo Info { get; private set; }
+    public Entity Attacker => Info.Attacker;
+    public float Amount => Info.Amount;
+    public Vector3? HitPoint => Info.HitPoint;
+    public bool IsCritical => Info.IsCritical;
+    public EntityDamagedEvent(Entity source, DamageInfo info) { Source = source; Info = info; }
 }
 
 // Published when Source dodged an attack via the Evasion stat (no damage was applied).

@@ -127,6 +127,7 @@ public class ParticleManager : Singleton<ParticleManager>,
     public void OnNotify(EntityDashEvent e) => Spawn(e.Particle, e.Source.transform);
     public void OnNotify(EntityDamagedEvent e)
     {
+        if (e.Info.Has(DamageFlags.NoHitReaction)) return;
         if (e.Attacker == null)
         {
             Spawn(e.Source.Feedbacks.Hit.particle, e.Source.transform.position);

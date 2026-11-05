@@ -80,7 +80,7 @@ public class PlayerInteractionController : MonoBehaviour
 
             holding = player.Abilities.TryGetHoldChannelProgress(data, out progress);
             // 행동 제한 중(채널링, 끝 애니메이션 등)이거나 쿨다운 중이면 스킬 입력이 막혀 있으므로 띄우지 않는다.
-            if (!holding && (player.ActionLock != ActionLock.Free || player.Abilities.IsOnCooldown(data) || player.Abilities.IsChanneling(data))) continue;
+            if (!holding && (!player.Restrictions.Can(ActionBlock.Skill) || player.Abilities.IsOnCooldown(data) || player.Abilities.IsChanneling(data))) continue;
 
             foreach (var condition in data.conditions)
             {

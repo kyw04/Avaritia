@@ -13,6 +13,8 @@ public class ClockworkWorkshopModule : WeaponModule, IObserver<EntityDamagedEven
     [SerializeField] private GaugeSlotLook stunKitLook = new();
     [SerializeField, Min(0)] private int maxKits = 2;
     [SerializeField, Min(1)] private int hitsToStun = 3;
+    // 기절 디버프 에셋(Debuff_Stun). 지속 시간은 아래 값에 건 쪽의 DebuffDuration 보너스가 더해진다.
+    [SerializeField] private DebuffData stunDebuff;
     [SerializeField, Min(0)] private float stunDuration = 7f;
     [SerializeField, Min(0)] private int maxNormalAlliesPerRoom = 3;
     [SerializeField, Min(0)] private int maxLargeAlliesPerRoom = 2;
@@ -78,12 +80,12 @@ public class ClockworkWorkshopModule : WeaponModule, IObserver<EntityDamagedEven
 
     public void OnNotify(EntityDamagedEvent e)
     {
-        if (e.Attacker != Owner || e.Source is not Enemy enemy || enemy.IsAlly || enemy.CurrentHealth <= 0)
+        if (e.Attacker != Owner || e.Source is not Enemy enemy || enemy.IsAlly || enemy.CurrentHealth <= 0 || e.Info.Has(DamageFlags.NoOnHitEffects))
             return;
         if (kitCount <= 0)
             return;
 
-        if (enemy.IsStunned)
+        if (enemy.Debuffs.Has(stunDebuff))
         {
             if (isDownAttack)
                 TryConvert(enemy);
@@ -98,7 +100,7 @@ public class ClockworkWorkshopModule : WeaponModule, IObserver<EntityDamagedEven
         }
 
         hitCounts.Remove(enemy);
-        enemy.Stun(stunDuration);
+        enemy.Debuffs.Apply(stunDebuff, stunDuration, Owner);
         kitStunned = true;
         kitCountBar?.Refresh();
     }

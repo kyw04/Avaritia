@@ -19,7 +19,7 @@ public class OnAttackedTrigger : IAbilityTrigger, IObserver<EntityDamagedEvent>
 
     public void OnNotify(EntityDamagedEvent e)
     {
-        if (e.Source != owner || e.Attacker == null) return;
+        if (e.Source != owner || e.Attacker == null || e.Info.Has(DamageFlags.NoOnHitEffects)) return;
         fire(new AbilityContext { Caster = owner, Target = e.Attacker.transform, EventSource = e.Attacker, Value = e.Amount });
     }
 }

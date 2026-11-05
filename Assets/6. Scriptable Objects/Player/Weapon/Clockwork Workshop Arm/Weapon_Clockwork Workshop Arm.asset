@@ -89,6 +89,7 @@ MonoBehaviour:
           pattern: {fileID: 0}
         maxKits: 2
         hitsToStun: 3
+        stunDebuff: {fileID: 11400000, guid: 0087ce02425f2ef459ee0ba99fadf8b4, type: 2}
         stunDuration: 7
         maxNormalAlliesPerRoom: 3
         maxLargeAlliesPerRoom: 2

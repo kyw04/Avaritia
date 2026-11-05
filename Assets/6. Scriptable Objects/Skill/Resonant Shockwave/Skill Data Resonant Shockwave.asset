@@ -27,7 +27,8 @@ MonoBehaviour:
   - rid: 5230665391898361927
   effects:
   - rid: 6083184005721358457
-  - rid: 6083184005721358467
+  - rid: 5321512157137862738
+  linkedAbilities: []
   references:
     version: 2
     RefIds:
@@ -37,22 +38,17 @@ MonoBehaviour:
     - rid: 5230665391898361927
       type: {class: CooldownCondition, ns: , asm: Assembly-CSharp}
       data: 
-    - rid: 6083184005721358457
-      type: {class: AttackEffect, ns: , asm: Assembly-CSharp}
+    - rid: 5321512157137862738
+      type: {class: DebuffEffect, ns: , asm: Assembly-CSharp}
       data:
-        attackData: {fileID: 11400000, guid: 6ecbd17a8fffbac46990f741a8df1339, type: 2}
-    - rid: 6083184005721358467
-      type: {class: BuffEffect, ns: , asm: Assembly-CSharp}
-      data:
-        modifiers:
-        - statType: 7
-          valueType: 0
-          amount: -10
+        debuff: {fileID: 11400000, guid: 7fe998616abfd634c954f8b1d81465b4, type: 2}
         duration: 3
         applyTo: 3
         radius: 5
         targetLayer:
           serializedVersion: 2
           m_Bits: 128
-        activeWhile: []
-        particle: {fileID: 4733354101087782148, guid: a91c37d932f02fe4fb354b34ecf8d2df, type: 3}
+    - rid: 6083184005721358457
+      type: {class: AttackEffect, ns: , asm: Assembly-CSharp}
+      data:
+        attackData: {fileID: 11400000, guid: 6ecbd17a8fffbac46990f741a8df1339, type: 2}

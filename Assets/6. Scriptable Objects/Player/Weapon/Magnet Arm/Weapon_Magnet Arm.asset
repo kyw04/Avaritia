@@ -93,6 +93,7 @@ MonoBehaviour:
         pullStopDistance: 1.2
         maxPullDuration: 2
         pullReleaseStunDuration: 1
+        stunDebuff: {fileID: 11400000, guid: 0087ce02425f2ef459ee0ba99fadf8b4, type: 2}
         pushFeedback:
           animClip: {fileID: 0}
           particle: {fileID: 0}

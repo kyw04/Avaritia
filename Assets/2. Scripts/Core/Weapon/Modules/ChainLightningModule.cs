@@ -12,6 +12,8 @@ public class ChainLightningModule : WeaponModule, IObserver<EntityDamagedEvent>
     [SerializeField, Min(0)] private int jumps = 5;
     [SerializeField, Min(0)] private float radius = 5f;
     [SerializeField, Min(0)] private float damageMultiplier = 0.7f;
+    // 기절 디버프 에셋(Debuff_Stun). 지속 시간은 아래 값에 건 쪽의 DebuffDuration 보너스가 더해진다.
+    [SerializeField] private DebuffData stunDebuff;
     [SerializeField, Min(0)] private float stunDuration = 0.7f;
     [SerializeField, Min(0)] private float jumpInterval = 0.08f;
     [SerializeField] private LayerMask enemyLayer;
@@ -57,7 +59,7 @@ public class ChainLightningModule : WeaponModule, IObserver<EntityDamagedEvent>
 
     public void OnNotify(EntityDamagedEvent e)
     {
-        if (e.Attacker != Owner || e.Source is not Enemy enemy || enemy.IsAlly || enemy.CurrentHealth <= 0)
+        if (e.Attacker != Owner || e.Source is not Enemy enemy || enemy.IsAlly || enemy.CurrentHealth <= 0 || e.Info.Has(DamageFlags.NoOnHitEffects))
             return;
         if (!isDownAttack || isChaining)
             return;
@@ -84,7 +86,7 @@ public class ChainLightningModule : WeaponModule, IObserver<EntityDamagedEvent>
                 break;
 
             current.TakeDamage(Owner.GetDamageAgainst(current.transform) * damageMultiplier, Owner);
-            current.Stun(stunDuration);
+            current.Debuffs.Apply(stunDebuff, stunDuration, Owner);
 
             if (i == jumps)
                 break;

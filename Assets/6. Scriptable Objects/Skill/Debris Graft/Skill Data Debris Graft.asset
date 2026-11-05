@@ -49,7 +49,7 @@ MonoBehaviour:
       data:
         duration: 2
         inputMode: 1
-        actionLock: 1
+        blockedActions: 30
         cancelOnDamaged: 1
         startFeedback:
           animClip: {fileID: 0}

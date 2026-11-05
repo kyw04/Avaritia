@@ -13,7 +13,8 @@ public class ChannelEffect : IAbilityEffect
 {
     public float duration = 2f;
     public ChannelInputMode inputMode = ChannelInputMode.Press;
-    public ActionLock actionLock = ActionLock.Locked;
+    // 채널링 동안 막을 행동. 기본은 제자리 고정(이동/공격/스킬/점프/대시 불가).
+    public ActionBlock blockedActions = ActionBlock.Move | ActionBlock.Attack | ActionBlock.Skill | ActionBlock.Jump | ActionBlock.Dash;
     public bool cancelOnDamaged = true;
     // 시작/완료/중단 시 재생할 애니메이션·파티클·소리. 완료/중단 애니메이션이 있으면 그 길이만큼 행동 제한을 유지한 뒤 풀린다.
     public ActionFeedback startFeedback;
@@ -36,7 +37,7 @@ public class ChannelEffect : IAbilityEffect
         context.State.IsChanneling = true;
         context.State.IsHoldChannel = inputMode == ChannelInputMode.Hold;
         context.State.ChannelProgress = 0f;
-        caster.ActionLock = actionLock;
+        caster.Restrictions.Set(context.State, blockedActions);
         PlayFeedback(caster, startFeedback);
         caster.StartCoroutine(Run(caster, context));
     }
@@ -77,8 +78,8 @@ public class ChannelEffect : IAbilityEffect
         if (endFeedback.animClip != null)
             yield return new WaitForSeconds(endFeedback.animClip.length);
 
-        caster.ActionLock = ActionLock.Free;
-        if (actionLock != ActionLock.Free || startFeedback.animClip != null || endFeedback.animClip != null)
+        caster.Restrictions.Remove(context.State);
+        if (blockedActions != ActionBlock.None || startFeedback.animClip != null || endFeedback.animClip != null)
             RestoreLocomotionAnimation(caster);
     }
 

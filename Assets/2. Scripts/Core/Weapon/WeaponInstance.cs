@@ -203,9 +203,12 @@ public class WeaponInstance : IInventoryItem
     }
 
     // methodName은 "모듈타입명.메서드명" 형식이며, 타입명이 같은 첫 모듈에서 호출한다.
-    // 모듈이 막으면(쿨타임 등) 피드백도 재생하지 않는다.
+    // 모듈이 막거나(쿨타임 등) 공격이 막혀 있으면(기절, 채널링 등) 피드백도 재생하지 않는다.
+    // 뗌(Canceled)은 막지 않는다. 누르는 동안 이어지는 동작(자석 흡인 등)이 끝나지 않게 되기 때문이다.
     private void Execute(WeaponData.InputMethodBinding binding, InputAction.CallbackContext context)
     {
+        if (binding.phase != InputActionPhase.Canceled && !Owner.Restrictions.Can(ActionBlock.Attack))
+            return;
         if (modules.Any(m => !m.CanExecute(binding)))
             return;
         foreach (var m in modules)

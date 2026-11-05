@@ -10,8 +10,8 @@ public class InputHandler : Singleton<InputHandler>
 {
     public Player player;
     private Vector2 moveInput;
-    public Vector2 MoveInput => player != null && player.ActionLock == ActionLock.Locked ? Vector2.zero : moveInput;
-    private bool ActionsLocked => player != null && player.ActionLock != ActionLock.Free;
+    public Vector2 MoveInput => Can(ActionBlock.Move) ? moveInput : Vector2.zero;
+    private bool Can(ActionBlock action) => player == null || player.Restrictions.Can(action);
     public bool AttackHeld => InputAction.Gameplay.Attack.IsPressed();
     private bool attackRequested;
 
@@ -55,7 +55,7 @@ public class InputHandler : Singleton<InputHandler>
     // 공격 중이거나 쿨다운 중이면 상태 머신의 전환 조건에서 걸러진다.
     private void Update()
     {
-        if (ActionsLocked)
+        if (!Can(ActionBlock.Attack))
         {
             attackRequested = false;
             return;
@@ -74,12 +74,12 @@ public class InputHandler : Singleton<InputHandler>
 
     private void OnDash(InputAction.CallbackContext context)
     {
-        if (ActionsLocked) return;
+        if (!Can(ActionBlock.Dash)) return;
         player.Machine.ChangeState<PlayerDashState>();
     }
     private void OnJump(InputAction.CallbackContext context)
     {
-        if (ActionsLocked) return;
+        if (!Can(ActionBlock.Jump)) return;
         if (player.Weapon != null && player.Weapon.ConsumeJump())
             return;
 
@@ -96,18 +96,21 @@ public class InputHandler : Singleton<InputHandler>
 
     private void OnSkill1(InputAction.CallbackContext context)
     {
-        if (ActionsLocked) return;
+        if (!Can(ActionBlock.Skill)) return;
         player.Abilities.TryActivate(player.Abilities.AbilityAt(0),
             new AbilityContext { Caster = player, IsInputHeld = () => InputAction.Gameplay.Skill1.IsPressed() });
     }
     private void OnSkill2(InputAction.CallbackContext context)
     {
-        if (ActionsLocked) return;
+        if (!Can(ActionBlock.Skill)) return;
         player.Abilities.TryActivate(player.Abilities.AbilityAt(1),
             new AbilityContext { Caster = player, IsInputHeld = () => InputAction.Gameplay.Skill2.IsPressed() });
     }
-    private void OnInteractStarted(InputAction.CallbackContext context) =>
+    private void OnInteractStarted(InputAction.CallbackContext context)
+    {
+        if (!Can(ActionBlock.Interact)) return;
         player.InteractionController.OnInteractStarted();
+    }
     private void OnInteractCanceled(InputAction.CallbackContext context) =>
         player.InteractionController.OnInteractCanceled();
 

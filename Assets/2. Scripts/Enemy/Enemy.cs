@@ -33,7 +33,6 @@ public class Enemy : Entity, IStateOwner<Enemy>
     private int hostileLayer;
     private LayerMask hostileViewLayerMask;
     private Transform leader;
-    private float stunUntil;
     private SpriteRenderer[] spriteRenderers;
     private Color[] hostileColors;
 
@@ -41,7 +40,6 @@ public class Enemy : Entity, IStateOwner<Enemy>
     public bool ShouldHoldPosition => patrolSize.x <= 0f && IsInPatrolArea();
     public EnemySize Size => size;
     public bool IsAlly { get; private set; }
-    public bool IsStunned => Time.time < stunUntil;
 
     public override int LookDirection => transform.right.x >= 0 ? 1 : -1;
 
@@ -73,7 +71,6 @@ public class Enemy : Entity, IStateOwner<Enemy>
         Target = null;
         IsAlly = false;
         leader = null;
-        stunUntil = 0f;
         gameObject.layer = hostileLayer;
         viewLayerMask = hostileViewLayerMask;
         for (int i = 0; i < spriteRenderers.Length; i++)
@@ -88,12 +85,6 @@ public class Enemy : Entity, IStateOwner<Enemy>
         // 아군은 순찰 범위가 플레이어를 따라다녀 플레이어 곁을 맴돌다 적이 보이면 싸운다.
         if (IsAlly && leader != null)
             patrolCenter = leader.position;
-    }
-
-    public void Stun(float duration)
-    {
-        stunUntil = Time.time + duration;
-        Machine.ChangeState<EnemyStunState>();
     }
 
     // 플레이어와 같은 레이어로 옮겨 적들이 플레이어처럼 노리게 하고, 원래 자기 레이어(적)를 노리게 한다.
@@ -112,7 +103,8 @@ public class Enemy : Entity, IStateOwner<Enemy>
             if (stat.statType != StatType.CurrentHealth)
                 ApplyBuff(this, stat.statType, BuffValueType.Percent, percent, 0f);
 
-        stunUntil = 0f;
+        // 적일 때 걸린 기절 등은 아군이 되면서 풀어 준다.
+        Debuffs.ClearAll();
         Target = null;
         Machine.ChangeState<EnemyPatrolState>();
         EventBus.Publish(new EnemyConvertedEvent(this));
@@ -133,8 +125,7 @@ public class Enemy : Entity, IStateOwner<Enemy>
                 return;
             }
 
-            var rot = dx > 0 ? 0 : 180;
-            transform.rotation = Quaternion.Euler(0, rot, 0);
+            Face(dx > 0 ? 1 : -1);
         }
 
         Move((Vector2)transform.right);
@@ -157,7 +148,7 @@ public class Enemy : Entity, IStateOwner<Enemy>
 
         if (onTurn)
         {
-            transform.Rotate(0, 180, 0);
+            Face(-LookDirection);
         }
         else if (!IsInPatrolArea())
         {
@@ -173,10 +164,14 @@ public class Enemy : Entity, IStateOwner<Enemy>
         return Mathf.Abs(transform.position.x - patrolCenter.x) <= halfWidth;
     }
 
-    public void FaceTowardPatrolCenter()
+    public void FaceTowardPatrolCenter() => Face(patrolCenter.x > transform.position.x ? 1 : -1);
+
+    // 바라보는 방향을 바꾸는 곳은 모두 여기를 거친다. 방향 전환이 막혀 있으면(기절 등) 그대로 둔다.
+    private void Face(int direction)
     {
-        float rot = patrolCenter.x > transform.position.x ? 0 : 180;
-        transform.rotation = Quaternion.Euler(0, rot, 0);
+        if (!Restrictions.Can(ActionBlock.Turn))
+            return;
+        transform.rotation = Quaternion.Euler(0, direction > 0 ? 0 : 180, 0);
     }
 
     public bool IsInAttackRange()
@@ -189,7 +184,7 @@ public class Enemy : Entity, IStateOwner<Enemy>
     public bool CanAttack()
     {
         var first = Abilities.AbilityAt(0);
-        return first != null && !Abilities.IsOnCooldown(first);
+        return first != null && Restrictions.Can(ActionBlock.Attack) && !Abilities.IsOnCooldown(first);
     }
 
     public void Attack() => Abilities.TryActivate(Abilities.AbilityAt(0), new AbilityContext { Caster = this, Target = Target });
@@ -197,8 +192,7 @@ public class Enemy : Entity, IStateOwner<Enemy>
     public void FaceTarget()
     {
         if (!HasTarget) return;
-        var rot = Target.position.x > transform.position.x ? 0 : 180;
-        transform.rotation = Quaternion.Euler(0, rot, 0);
+        Face(Target.position.x > transform.position.x ? 1 : -1);
     }
 
     public void ClearTarget() => Target = null;

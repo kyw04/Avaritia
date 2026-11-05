@@ -2,9 +2,14 @@
 
 public interface IDamageable
 {
-    // attacker: who dealt it, if known (null for effects) — used by on-hit/reflect abilities.
-    // hitPoint: where it actually hit (e.g. the bullet), if known.
-    // isCritical: the attacker rolled a crit — only used for feedback (e.g. damage popup color).
-    void TakeDamage(float damage, Entity attacker = null, Vector3? hitPoint = null, bool isCritical = false);
+    void TakeDamage(DamageInfo info);
     void Heal(float amount);
+}
+
+public static class DamageableExtensions
+{
+    // 일반 타격용 축약형. attacker: 준 쪽(모르면 null), hitPoint: 맞은 위치, isCritical: 연출용.
+    public static void TakeDamage(this IDamageable target, float damage, Entity attacker = null,
+        Vector3? hitPoint = null, bool isCritical = false) =>
+        target.TakeDamage(new DamageInfo(damage, attacker, hitPoint, isCritical));
 }
