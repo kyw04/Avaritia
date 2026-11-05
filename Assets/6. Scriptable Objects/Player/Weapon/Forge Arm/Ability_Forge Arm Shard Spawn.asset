@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb0df744d57e40cb9ea6b9de91702fea, type: 3}
+  m_Name: Ability_Forge Arm Shard Spawn
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  cooldown: 0
+  maxRange: 3.4028235e+38
+  icon: {fileID: 0}
+  cast:
+    animClip: {fileID: 0}
+    particle: {fileID: 0}
+    sound: {fileID: 0}
+  displayName: "\uC2A4\uD0EF \uC870\uAC01 \uC0DD\uC131"
+  description: 
+  trigger:
+    rid: 5321512088978325576
+  conditions:
+  - rid: 5321512088978325577
+  effects:
+  - rid: 5321512088978325578
+  linkedAbilities: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 5321512088978325576
+      type: {class: OnKillTrigger, ns: , asm: Assembly-CSharp}
+      data:
+        requireOwnerKill: 1
+    - rid: 5321512088978325577
+      type: {class: ChanceCondition, ns: , asm: Assembly-CSharp}
+      data:
+        percent: 30
+    - rid: 5321512088978325578
+      type: {class: SpawnPrefabEffect, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 4205960662805334105, guid: 83ccb19a27edef049964b646368cfeda, type: 3}
+        spawnAt: 1
+        offset: {x: 0, y: 0}

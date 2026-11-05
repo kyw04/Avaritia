@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f935b32e47f32148a0e4aac5329210c, type: 3}
+  m_Name: Weapon_Forge Arm
+  m_EditorClassIdentifier: Assembly-CSharp::Weapon
+  spriteLibraryAsset: {fileID: 7108339969198208228, guid: 88dd0a5dfd141cc48aa51ddb96005119, type: 3}
+  combo: {fileID: 11400000, guid: aa917b9b7cd923244bd2a65c4488f506, type: 2}
+  holdToAttack: 0
+  icon: {fileID: 9063967517890105263, guid: a657d6d40f6335b478bf8290e0f0b0af, type: 3}
+  displayName: "\uB300\uC7A5\uC7A5\uC774 \uD314"
+  description: "\uC801\uC744 \uCC98\uCE58\uD558\uBA74 \uC77C\uC815 \uD655\uB960\uB85C
+    \uC2A4\uD0EF \uC870\uAC01\uC774 \uB5A8\uC5B4\uC9C4\uB2E4. \uBA39\uC73C\uBA74
+    \uC774 \uD314\uC744 \uB4E4\uACE0 \uC788\uB294 \uB3D9\uC548 \uC2A4\uD0EF\uC774
+    \uC624\uB978\uB2E4."
+  passiveAbilities:
+  - {fileID: 11400000, guid: a6fe7fff178b8c04280cfc5d909817be, type: 2}
+  - {fileID: 11400000, guid: e74ede27d05391d44b466f8af54b2105, type: 2}
+  swing:
+    animClip: {fileID: 0}
+    particle: {fileID: 0}
+    sound: {fileID: 8300000, guid: 4c5c5677d5ff89145ab60e67a4a1e293, type: 3}
+  hit:
+    animClip: {fileID: 0}
+    particle: {fileID: 2461976908696895058, guid: 59a335fab3ff41368182b36efcac9d4b, type: 3}
+    sound: {fileID: 8300000, guid: 21a23957a77c3bc488f38c0c48b7cb7e, type: 3}
+  shakeForce: 0.3
+  hitStopTimeScale: 0.1
+  hitStopDuration: 0.08
+  knockbackForce: 5
+  knockbackUpForce: 2
+  knockbackDuration: 0.2
+  modules:
+  - rid: 5321512157137862734
+  inputMethods: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 5321512157137862734
+      type: {class: ForgeModule, ns: , asm: Assembly-CSharp}
+      data:
+        rewards:
+        - statType: 6
+          valueType: 0
+          amount: 1
+          icon: {fileID: 21300000, guid: 51e0c86086996cb4a9b560c1845ed68b, type: 3}
+        - statType: 1
+          valueType: 0
+          amount: 5
+          icon: {fileID: 21300000, guid: 490d8432eae7e1748aaed96595e55da0, type: 3}
+        - statType: 3
+          valueType: 0
+          amount: 0.2
+          icon: {fileID: 21300000, guid: e33e96a06a95b5749a7b43a14c9cad91, type: 3}
