@@ -63,5 +63,6 @@ MonoBehaviour:
     - {fileID: 11400000, guid: f96aee135647fcc4aa842fa46e92bde2, type: 2}
     - {fileID: 11400000, guid: 600be0640448a90438535266ec19a171, type: 2}
     - {fileID: 11400000, guid: 4c771dd8e33b1af4488fcba8eddc6f30, type: 2}
+    - {fileID: 11400000, guid: 6e99ede22c3983744aedcd76635bcd40, type: 2}
     itemCount: 3
   nextStage: {fileID: 0}

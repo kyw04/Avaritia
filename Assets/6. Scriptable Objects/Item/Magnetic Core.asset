@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
+  m_Name: Magnetic Core
+  m_EditorClassIdentifier: Assembly-CSharp::Item
+  cooldown: 0
+  maxRange: 3.4028235e+38
+  icon: {fileID: 21300000, guid: ab99142181f77a54b916c0ae4f8039bc, type: 3}
+  cast:
+    animClip: {fileID: 0}
+    particle: {fileID: 0}
+    sound: {fileID: 0}
+  displayName: "\uC790\uC11D \uCF54\uC5B4"
+  description: "\uAC15\uD558\uAC8C \uC790\uD654\uB41C \uAE08\uC18D \uC2EC. \uC774\uAC83\uC5D0
+    \uBD99\uC7A1\uD78C \uAC83\uC740 \uC880\uCC98\uB7FC \uD480\uB824\uB098\uC9C0 \uBABB\uD55C\uB2E4."
+  trigger:
+    rid: 5230665391898361953
+  conditions: []
+  effects:
+  - rid: 5230665391898361960
+  linkedAbilities: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 5230665391898361953
+      type: {class: OnEquippedTrigger, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 5230665391898361960
+      type: {class: BuffEffect, ns: , asm: Assembly-CSharp}
+      data:
+        modifiers:
+        - statType: 19
+          valueType: 0
+          amount: 1
+        duration: 0
+        applyTo: 0
+        radius: 5
+        targetLayer:
+          serializedVersion: 2
+          m_Bits: 0
+        activeWhile: []
+        particle: {fileID: 0}
