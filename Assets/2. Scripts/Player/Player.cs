@@ -45,11 +45,12 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
         OnDashCountChanged();
     }
 
-    // 아이템 쿨타임도 상태 아이콘으로 띄운다(스킬 슬롯 쿨타임은 SkillUI가 따로 보여 준다).
+    // 아이템·무기 쿨타임도 상태 아이콘으로 띄운다(스킬 슬롯 쿨타임은 SkillUI가 따로 보여 준다).
     public override void CollectStatusIcons(List<StatusIconEntry> into)
     {
         base.CollectStatusIcons(into);
         ItemAbilities?.CollectCooldownIcons(into);
+        weapon?.CollectStatusIcons(into);
     }
 
     private void RebindWeaponAbilities()

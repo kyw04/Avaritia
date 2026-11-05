@@ -18,7 +18,6 @@ public class WinchModule : WeaponModule
     [SerializeField, Min(0)] private float hookRange = 6f;
     [SerializeField, Min(0)] private float hookSpeed = 30f;
     [SerializeField, Min(0)] private float maxReelTime = 0.6f;
-    [SerializeField, Min(0)] private float hookCooldown = 1f;
     [SerializeField, Min(0)] private float pullDamageMultiplier = 1f;
     [SerializeField, Min(0)] private float pullSpeed = 18f;
     [SerializeField, Min(0)] private float pullStopDistance = 1.2f;
@@ -37,7 +36,6 @@ public class WinchModule : WeaponModule
     private float savedAttackReadyTime;
     private float savedGravityScale;
     private bool isFlying;
-    private float hookReadyTime;
     private DistanceJoint2D ropeJoint;
     private RopeMovementStrategy ropeMovement;
     // 로프 이동으로 바꿔둔 동안(줄을 놓고 착지하기 전까지 포함)만 원래 이동 전략을 들고 있다.
@@ -66,11 +64,12 @@ public class WinchModule : WeaponModule
     }
 
     // Attack 액션의 Performed에 연결한다. 방향키를 누르지 않았거나 쿨타임 중이면 근접 공격이 그대로 나간다.
+    // 쿨타임은 같은 입력에 건 InputCooldownModule(startOnInput 끔)이 맡는다.
     // 갈고리를 쓰는 동안에는 공격 입력이 들어와도 근접 공격이 나가지 않는다.
     [InputMethod]
     private void FireHook()
     {
-        if (hookRoutine != null || Owner is not Player player || Owner.IsAttacking || Time.time < hookReadyTime)
+        if (hookRoutine != null || Owner is not Player player || Owner.IsAttacking)
             return;
         if (!TryGetHookDirection(InputHandler.Instance.MoveInput, out var direction))
             return;
@@ -114,7 +113,7 @@ public class WinchModule : WeaponModule
 
         // 빗나가거나 벽에 맞으면 쿨타임 없이 바로 다시 쓸 수 있다.
         if (target != null)
-            hookReadyTime = Time.time + hookCooldown;
+            Weapon.StartInputCooldown(nameof(WinchModule) + "." + nameof(FireHook));
 
         if (target is Enemy { Size: EnemySize.Normal })
             yield return Pull(target);
@@ -272,25 +271,14 @@ public class WinchModule : WeaponModule
         }
     }
 
-    // 다음 물리 프레임까지 넉백 상태로 두어 이동(상태 머신, 적 AI)이 이 속도를 덮어쓰지 못하게 한다.
-    private static void Hold(Entity entity, Vector2 velocity)
-    {
-        entity.ApplyKnockback(Vector2.zero, Time.fixedDeltaTime * 2f);
-        entity.Rb.linearVelocity = velocity;
-    }
-
     private void Hit(Entity target, float multiplier)
     {
-        bool isCritical = UnityEngine.Random.Range(0f, 100f) < Owner.GetStat<float>(StatType.CritRate);
-        float damage = Owner.GetDamageAgainst(target.transform) * multiplier * (isCritical ? CritConfig.Multiplier : 1f);
-        target.TakeDamage(damage, Owner, target.transform.position, isCritical);
+        DealDamage(target, multiplier);
 
         // 스턴 상태는 넉백 중에는 속도를 건드리지 않아 끌려오는 동안에도 걸 수 있다.
         if (target is Enemy enemy && IsAlive(enemy))
             enemy.Stun(stunDuration);
     }
-
-    private static bool IsAlive(Entity entity) => entity != null && entity.isActiveAndEnabled && entity.CurrentHealth > 0;
 
     private void SetRope(Vector2 end)
     {

@@ -181,9 +181,36 @@ public class WeaponInstance : IInventoryItem
         }
     }
 
+    // methodName("모듈타입명.메서드명")을 호출하는 바인딩에 걸린 입력 쿨타임을 시작한다.
+    public void StartInputCooldown(string methodName)
+    {
+        foreach (var binding in Data.InputMethods)
+        {
+            if (binding.methodName != methodName)
+                continue;
+            foreach (var module in modules)
+            {
+                if (module is InputCooldownModule cooldown && cooldown.Matches(binding))
+                    cooldown.StartCooldown();
+            }
+        }
+    }
+
+    public void CollectStatusIcons(List<StatusIconEntry> into)
+    {
+        foreach (var module in modules)
+            module.CollectStatusIcons(into);
+    }
+
     // methodName은 "모듈타입명.메서드명" 형식이며, 타입명이 같은 첫 모듈에서 호출한다.
+    // 모듈이 막으면(쿨타임 등) 피드백도 재생하지 않는다.
     private void Execute(WeaponData.InputMethodBinding binding, InputAction.CallbackContext context)
     {
+        if (modules.Any(m => !m.CanExecute(binding)))
+            return;
+        foreach (var m in modules)
+            m.OnExecuted(binding);
+
         PlayFeedback(binding.feedback);
 
         if (string.IsNullOrEmpty(binding.methodName))
