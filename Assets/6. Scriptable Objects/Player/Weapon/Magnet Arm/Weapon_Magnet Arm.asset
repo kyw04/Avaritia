@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f935b32e47f32148a0e4aac5329210c, type: 3}
+  m_Name: Weapon_Magnet Arm
+  m_EditorClassIdentifier: Assembly-CSharp::Weapon
+  spriteLibraryAsset: {fileID: 7108339969198208228, guid: 88dd0a5dfd141cc48aa51ddb96005119, type: 3}
+  combo: {fileID: 11400000, guid: aa917b9b7cd923244bd2a65c4488f506, type: 2}
+  holdToAttack: 0
+  icon: {fileID: 9063967517890105263, guid: a657d6d40f6335b478bf8290e0f0b0af, type: 3}
+  displayName: "\uC790\uC11D \uD314"
+  description: "\uC544\uB798 \uACF5\uACA9\uC73C\uB85C \uC55E\uC758 \uC801\uC744 \uBC00\uCCD0\uB0B4\uACE0,
+    \uAFB9 \uB204\uB974\uBA74 \uBE68\uC544\uB4E4\uC778\uB2E4. \uBC00\uB824\uB09C
+    \uC801\uC774 \uBCBD\uC5D0 \uBC15\uD788\uBA74 \uCD94\uAC00 \uD53C\uD574\uC640
+    \uC2A4\uD134."
+  passiveAbilities:
+  - {fileID: 11400000, guid: a6fe7fff178b8c04280cfc5d909817be, type: 2}
+  swing:
+    animClip: {fileID: 0}
+    particle: {fileID: 0}
+    sound: {fileID: 8300000, guid: 4c5c5677d5ff89145ab60e67a4a1e293, type: 3}
+  hit:
+    animClip: {fileID: 0}
+    particle: {fileID: 2461976908696895058, guid: 59a335fab3ff41368182b36efcac9d4b, type: 3}
+    sound: {fileID: 8300000, guid: 21a23957a77c3bc488f38c0c48b7cb7e, type: 3}
+  shakeForce: 0.3
+  hitStopTimeScale: 0.1
+  hitStopDuration: 0.08
+  knockbackForce: 5
+  knockbackUpForce: 2
+  knockbackDuration: 0.2
+  modules:
+  - rid: 5321512157137862733
+  - rid: 5321512157137862728
+  inputMethods:
+  - action: {fileID: 3368605680795315267, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    phase: 2
+    holdDuration: 0
+    keepHoldOnOtherInput: 0
+    holdStartFeedback:
+      animClip: {fileID: 0}
+      particle: {fileID: 0}
+      sound: {fileID: 0}
+    methodName: MagnetModule.OnDownAttack
+    feedback:
+      animClip: {fileID: 0}
+      particle: {fileID: 0}
+      sound: {fileID: 0}
+  - action: {fileID: 3368605680795315267, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    phase: 4
+    holdDuration: 0
+    keepHoldOnOtherInput: 0
+    holdStartFeedback:
+      animClip: {fileID: 0}
+      particle: {fileID: 0}
+      sound: {fileID: 0}
+    methodName: MagnetModule.OnDownAttack
+    feedback:
+      animClip: {fileID: 0}
+      particle: {fileID: 0}
+      sound: {fileID: 0}
+  references:
+    version: 2
+    RefIds:
+    - rid: 5321512157137862728
+      type: {class: MagnetModule, ns: , asm: Assembly-CSharp}
+      data:
+        enemyLayer:
+          serializedVersion: 2
+          m_Bits: 128
+        slamLayer:
+          serializedVersion: 2
+          m_Bits: 392
+        areaOffset: {x: 2, y: 0}
+        areaSize: {x: 4, y: 2}
+        pullDelay: 0.25
+        pushVelocity: {x: 18, y: 3}
+        pushDuration: 0.8
+        pushDamageMultiplier: 0
+        slamWindowDuration: 0.7
+        slamGraceDuration: 0.1
+        slamDamageMultiplier: 1.5
+        slamStunDuration: 1.5
+        pullSpeed: 10
+        pullStopDistance: 1.2
+        maxPullDuration: 2
+        pullReleaseStunDuration: 1
+        pushFeedback:
+          animClip: {fileID: 0}
+          particle: {fileID: 0}
+          sound: {fileID: 0}
+        pullFeedback:
+          animClip: {fileID: 0}
+          particle: {fileID: 0}
+          sound: {fileID: 0}
+        slamFeedback:
+          animClip: {fileID: 0}
+          particle: {fileID: 0}
+          sound: {fileID: 0}
+    - rid: 5321512157137862733
+      type: {class: InputCooldownModule, ns: , asm: Assembly-CSharp}
+      data:
+        action: {fileID: 3368605680795315267, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+        phase: 2
+        cooldown: 3
+        icon: {fileID: 21300000, guid: 6ac4487ab1d3b8d4aa3b669b5dbc8a79, type: 3}
+        startOnInput: 0

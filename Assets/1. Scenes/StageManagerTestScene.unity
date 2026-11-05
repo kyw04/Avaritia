@@ -21412,15 +21412,15 @@ PrefabInstance:
     - target: {fileID: 5773720602588636574, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
       propertyPath: weaponAsset
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 11400000, guid: 9a829eefb9d32174790d66339a2db833, type: 2}
     - target: {fileID: 5773720602588636574, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
       propertyPath: abilityAsset
       value: 
-      objectReference: {fileID: 11400000, guid: 61df77652e682dd4f903bc40f22cdd0a, type: 2}
+      objectReference: {fileID: 0}
     - target: {fileID: 6021740498178327085, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 16b4abe1fb9506a4f8593b162137f8fe, type: 3}
+      objectReference: {fileID: 9063967517890105263, guid: a657d6d40f6335b478bf8290e0f0b0af, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
