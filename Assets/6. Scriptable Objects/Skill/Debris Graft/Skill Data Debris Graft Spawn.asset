@@ -45,3 +45,6 @@ MonoBehaviour:
         prefab: {fileID: 191226098346669954, guid: 6a1dddbc6114f1646931a5852d463410, type: 3}
         spawnAt: 1
         offset: {x: 0, y: 0}
+        throwOnSpawn: 0
+        throwVelocity: {x: 3, y: 7}
+        throwRandomness: 0.3
