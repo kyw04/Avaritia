@@ -13,6 +13,9 @@ public class WeaponInstance : IInventoryItem
     private bool inputSubscribed;
     private Dictionary<string, MethodInfo> methodCache;
     private readonly Dictionary<WeaponData.InputMethodBinding, (Coroutine routine, InputAction action)> holds = new();
+    // 누를 때 애니메이션을 튼 액션. 그 키를 떼면 애니메이션을 되돌린다.
+    private readonly HashSet<System.Guid> animatedActions = new();
+    private Animator ownerAnimator;
 
     public WeaponData Data { get; }
     public Entity Owner { get; private set; }
@@ -51,6 +54,7 @@ public class WeaponInstance : IInventoryItem
     public void Equip(Entity owner, ImageCountBar countBar = null)
     {
         Owner = owner;
+        ownerAnimator = owner.GetComponentInChildren<EntityAnimator>()?.AnimatorComponent;
 
         foreach (var module in modules)
         {
@@ -76,6 +80,7 @@ public class WeaponInstance : IInventoryItem
     {
         foreach (var binding in holds.Keys.ToList())
             StopHold(binding);
+        animatedActions.Clear();
 
         if (inputSubscribed)
         {
@@ -123,6 +128,8 @@ public class WeaponInstance : IInventoryItem
     private void HandleInput(InputAction.CallbackContext context)
     {
         CancelHoldsByOtherInput(context);
+        if (context.phase == InputActionPhase.Canceled)
+            HandleRelease(context.action);
 
         foreach (var binding in Data.InputMethods)
         {
@@ -143,7 +150,7 @@ public class WeaponInstance : IInventoryItem
         if (context.phase == InputActionPhase.Started)
         {
             StopHold(binding);
-            PlayFeedback(binding.holdStartFeedback);
+            PlayFeedback(binding.holdStartFeedback, binding);
             holds[binding] = (Owner.StartCoroutine(HoldRoutine(binding, context)), context.action);
         }
         else if (context.phase == InputActionPhase.Canceled)
@@ -152,9 +159,63 @@ public class WeaponInstance : IInventoryItem
         }
     }
 
+    // 키를 떼면 누를 때 튼 애니메이션을 되돌리고, 그 키를 누르는 바인딩의 모듈들에 알린다.
+    private void HandleRelease(InputAction action)
+    {
+        if (animatedActions.Remove(action.id))
+            RestoreAnimation();
+
+        foreach (var binding in Data.InputMethods)
+        {
+            if (binding.action == null || binding.action.action.id != action.id || binding.phase == InputActionPhase.Canceled)
+                continue;
+            foreach (var module in modules)
+                module.OnReleased(binding);
+        }
+    }
+
+    // 현재 이동 상태의 애니메이션으로 되돌린다. 움직이는 중이면 이동 상태가 매 프레임 덮어쓰고,
+    // 공격 중이면 공격 애니메이션을 끊지 않도록 건드리지 않는다.
+    private bool IsStandingStill() =>
+        Owner.IsGrounded && Mathf.Abs(Owner.Rb.linearVelocityX) < 0.01f && !Owner.IsAttacking;
+
+    private void RestoreAnimation()
+    {
+        if (Owner.IsAttacking)
+            return;
+        if (!Owner.IsGrounded)
+            EventBus.Publish(new EntityFallingEvent(Owner));
+        else if (Mathf.Abs(Owner.Rb.linearVelocityX) < 0.01f)
+            EventBus.Publish(new EntityIdleEvent(Owner));
+    }
+
+    // 홀드 애니메이션이 있으면 그 애니메이션이 실제로 재생 중인 동안만 시간을 센다.
+    // 다른 애니메이션(이동, 대기 등)에 덮이면 처음부터 다시 세고, 멈춰 서면 홀드 애니메이션을 다시 튼다.
+    // 그래서 홀드 애니메이션 상태는 누르는 동안 유지돼야 한다(반복 재생).
     private IEnumerator HoldRoutine(WeaponData.InputMethodBinding binding, InputAction.CallbackContext context)
     {
-        yield return new WaitForSeconds(binding.holdDuration);
+        var clip = binding.holdStartFeedback.animClip;
+        if (clip == null || ownerAnimator == null)
+        {
+            yield return new WaitForSeconds(binding.holdDuration);
+        }
+        else
+        {
+            float elapsed = 0f;
+            while (elapsed < binding.holdDuration)
+            {
+                yield return null;
+                if (ownerAnimator.GetCurrentAnimatorStateInfo(0).IsName(clip.name))
+                {
+                    elapsed += Time.deltaTime;
+                    continue;
+                }
+
+                elapsed = 0f;
+                if (IsStandingStill())
+                    EventBus.Publish(new EntityAnimationEvent(Owner, clip));
+            }
+        }
         holds.Remove(binding);
         Execute(binding, context);
     }
@@ -214,7 +275,7 @@ public class WeaponInstance : IInventoryItem
         foreach (var m in modules)
             m.OnExecuted(binding);
 
-        PlayFeedback(binding.feedback);
+        PlayFeedback(binding.feedback, binding);
 
         if (string.IsNullOrEmpty(binding.methodName))
             return;
@@ -236,10 +297,14 @@ public class WeaponInstance : IInventoryItem
         method.Invoke(module, method.GetParameters().Length == 0 ? null : new object[] { context });
     }
 
-    private void PlayFeedback(ActionFeedback feedback)
+    private void PlayFeedback(ActionFeedback feedback, WeaponData.InputMethodBinding binding)
     {
         feedback.Play(Owner.transform.position);
-        if (feedback.animClip != null)
-            EventBus.Publish(new EntityAnimationEvent(Owner, feedback.animClip));
+        if (feedback.animClip == null)
+            return;
+
+        EventBus.Publish(new EntityAnimationEvent(Owner, feedback.animClip));
+        if (binding.phase != InputActionPhase.Canceled)
+            animatedActions.Add(binding.action.action.id);
     }
 }

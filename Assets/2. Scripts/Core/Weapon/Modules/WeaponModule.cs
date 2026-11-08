@@ -28,6 +28,8 @@ public abstract class WeaponModule
     // 입력 바인딩의 메서드를 실행하기 전에 묻는다. 하나라도 false면 실행하지 않는다(쿨타임 등).
     public virtual bool CanExecute(WeaponData.InputMethodBinding binding) => true;
     public virtual void OnExecuted(WeaponData.InputMethodBinding binding) { }
+    // 바인딩(뗌 바인딩 제외)의 키를 뗐을 때 불린다. 누르는 동안만 유지하는 상태를 풀 때 쓴다.
+    public virtual void OnReleased(WeaponData.InputMethodBinding binding) { }
 
     // 장착 중일 때 상태 아이콘 UI에 띄울 아이콘을 추가한다.
     public virtual void CollectStatusIcons(List<StatusIconEntry> into) { }
