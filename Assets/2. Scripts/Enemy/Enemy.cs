@@ -26,6 +26,8 @@ public class Enemy : Entity, IStateOwner<Enemy>
     [SerializeField] private float viewRadius;
     [SerializeField] private float alertRadius;
     [SerializeField] private EnemySize size;
+    // 켜면 걷지 않고 제자리에서 대상만 바라본다(포탑 등). 아군이 돼도 플레이어를 따라가지 않는다.
+    [SerializeField] private bool stationary;
     // 아군이 되면 적과 구분되도록 스프라이트에 입히는 색
     [SerializeField] private Color allyColor = new(0.5f, 1f, 0.5f, 1f);
 
@@ -83,7 +85,7 @@ public class Enemy : Entity, IStateOwner<Enemy>
     {
         base.Update();
         // 아군은 순찰 범위가 플레이어를 따라다녀 플레이어 곁을 맴돌다 적이 보이면 싸운다.
-        if (IsAlly && leader != null)
+        if (IsAlly && leader != null && !stationary)
             patrolCenter = leader.position;
     }
 
@@ -115,6 +117,14 @@ public class Enemy : Entity, IStateOwner<Enemy>
 
     public void Move()
     {
+        if (stationary)
+        {
+            FaceTarget();
+            if (!IsKnockedBack)
+                Rb.linearVelocity = new Vector2(0, Rb.linearVelocityY);
+            return;
+        }
+
         if (HasTarget)
         {
             // 대상과 x가 거의 같으면(겹치거나 머리 위) 지나쳤다 돌아서기를 반복하지 않도록 멈춘다.

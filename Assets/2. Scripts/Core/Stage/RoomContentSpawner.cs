@@ -46,13 +46,11 @@ public class RoomContentSpawner : MonoBehaviour,
     }
 
     // 아군이 된 적은 방 클리어 대상에서 빠지지만, 방을 나갈 때는 함께 정리한다.
+    // 방에서 스폰되지 않은 아군(포탑 등)도 방을 나갈 때 정리한다.
     public void OnNotify(EnemyConvertedEvent e)
     {
-        if (!aliveActors.Remove(e.Source))
-            return;
-
         allies.Add(e.Source);
-        if (aliveActors.Count == 0)
+        if (aliveActors.Remove(e.Source) && aliveActors.Count == 0)
             StageManager.Instance.NotifyRoomCleared();
     }
 
