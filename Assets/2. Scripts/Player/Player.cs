@@ -11,7 +11,6 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
     [SerializeField] private PlayerInteractionController interactionController;
     [SerializeField] private LayerMask platformLayer;
     [SerializeField] private float dropThroughDuration = 1f;
-    [SerializeField] private AnimationClip hurtClip; // 피격 모션. 길이만큼 경직된다.
     private Collider2D col;
     private float lastFallVelocityY;
     private SpriteLibrary spriteLibrary;
@@ -27,7 +26,6 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
     public WeaponInstance Weapon => weapon;
     public PlayerInteractionController InteractionController => interactionController;
     public float AttackReadyTime { get; set; }
-    public AnimationClip HurtClip => hurtClip;
 
     public bool CanAttack() => Restrictions.Can(ActionBlock.Attack) && Weapon != null &&Weapon.Data.combo != null && Weapon.Data.combo.Count > 0 && Time.time >= AttackReadyTime;
 
@@ -191,7 +189,7 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
     public void OnNotify(EntityDamagedEvent e)
     {
         if (e.Source == this && !e.Info.Has(DamageFlags.NoInterrupt) && CurrentHealth > 0)
-            Machine.ChangeState<PlayerHurtState>();
+            Machine.ChangeState<PlayerHitState>();
 
         if (e.Attacker != this || weapon == null || e.Source == this || e.Info.Has(DamageFlags.NoKnockback)) return;
         e.Source.ApplyKnockback(new Vector2(LookDirection * weapon.Data.knockbackForce, weapon.Data.knockbackUpForce), weapon.Data.knockbackDuration);

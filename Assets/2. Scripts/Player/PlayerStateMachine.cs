@@ -22,38 +22,39 @@ public class PlayerStateMachine : StateMachineBase<Player>
             AddChild(new PlayerGrounded(owner));
             AddChild(new PlayerAirborne(owner));
             AddChild(new PlayerAction(owner));
-            AddChild(new PlayerHurtState(owner));
+            AddChild(new PlayerHitState(owner));
         }
     }
 
-    // 피격 경직. 준비 중이던 공격·채널링·무기 홀드를 취소하고, 피격 모션이 끝날 때까지 모든 행동을 막는다.
+    // 피격 경직. 준비 중이던 공격·채널링·무기 홀드를 취소하고, 피격 모션(Feedbacks.Hit)이 끝날 때까지 모든 행동을 막는다.
     // 어느 상태에서든 들어올 수 있고(다시 맞으면 처음부터), 나가는 전환은 경직이 끝났을 때만 허용한다.
-    public class PlayerHurtState : StateBase<Player>
+    public class PlayerHitState : StateBase<Player>
     {
         private const ActionBlock AllActions = ActionBlock.Move | ActionBlock.Attack | ActionBlock.Skill | ActionBlock.Jump
                                              | ActionBlock.Dash | ActionBlock.Turn | ActionBlock.Interact;
         private float endTime;
         private bool finished;
 
-        public PlayerHurtState(Player owner) : base(owner)
+        public PlayerHitState(Player owner) : base(owner)
         {
-            Machine.AddTransition<PlayerAliveState, PlayerHurtState>();
-            Machine.AddTransition<PlayerHurtState, PlayerIdleState>(() => finished);
-            Machine.AddTransition<PlayerHurtState, PlayerFallState>(() => finished);
+            Machine.AddTransition<PlayerAliveState, PlayerHitState>();
+            Machine.AddTransition<PlayerHitState, PlayerIdleState>(() => finished);
+            Machine.AddTransition<PlayerHitState, PlayerFallState>(() => finished);
         }
 
         public override void Enter()
         {
+            var clip = Owner.Feedbacks.Hit.animClip;
             finished = false;
-            endTime = Time.time + (Owner.HurtClip != null ? Owner.HurtClip.length : 0f);
+            endTime = Time.time + (clip != null ? clip.length : 0f);
 
             Owner.CancelAttack();
             Owner.CancelChannels();
             Owner.Weapon?.CancelHolds();
             Owner.Restrictions.Set(this, AllActions);
 
-            if (Owner.HurtClip != null)
-                EventBus.Publish(new EntityAnimationEvent(Owner, Owner.HurtClip));
+            if (clip != null)
+                EventBus.Publish(new EntityAnimationEvent(Owner, clip));
         }
 
         public override void Execute()
