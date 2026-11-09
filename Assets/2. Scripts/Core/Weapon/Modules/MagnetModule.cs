@@ -146,7 +146,13 @@ public class MagnetModule : WeaponModule
     {
         pullInputMethod = inputMethod;
         pulledEnemies.Clear();
-        pullFeedback.Play(Owner.transform.position);
+        // 흡인 파티클은 반복 재생 파티클이어야 하며, 흡인이 끝날 때까지 주인을 따라다닌다.
+        var particle = pullFeedback.Play(Owner.transform.position, FacingRotation);
+        if (particle != null)
+            particle.Follow(Owner.transform, 0f, () => IsPulling);
+        // 흡인 애니메이션은 반복 재생 클립이어야 하며, 흡인이 끝나면 EndPull에서 되돌린다.
+        if (pullFeedback.animClip != null)
+            EventBus.Publish(new EntityAnimationEvent(Owner, pullFeedback.animClip));
         pullRoutine = Owner.StartCoroutine(PullRoutine());
     }
 
@@ -182,6 +188,8 @@ public class MagnetModule : WeaponModule
                 enemy.Debuffs.Apply(stunDebuff, pullReleaseStunDuration, Owner);
         }
         pulledEnemies.Clear();
+        if (pullFeedback.animClip != null)
+            Weapon.RestoreAnimation();
         Weapon.StartInputCooldown(pullInputMethod);
         if (!pressing)
             UnblockMelee();
@@ -217,7 +225,7 @@ public class MagnetModule : WeaponModule
     // 피해를 먼저 줘서 무기 넉백이 걸려도 밀치기 속도로 덮어쓴다.
     private void DoPush()
     {
-        pushFeedback.Play(Owner.transform.position);
+        pushFeedback.Play(Owner.transform.position, FacingRotation);
         float direction = Owner.LookDirection;
 
         foreach (var enemy in FindTargets())
@@ -257,6 +265,9 @@ public class MagnetModule : WeaponModule
         }
         slamRoutines.Remove(enemy);
     }
+
+    // 파티클은 +x를 앞쪽으로 만들고, 왼쪽을 보면 y축으로 뒤집는다.
+    private Quaternion FacingRotation => Owner.LookDirection < 0f ? Quaternion.Euler(0f, 180f, 0f) : Quaternion.identity;
 
     private Vector2 PushVelocity(float direction) => new(pushVelocity.x * direction, pushVelocity.y);
 

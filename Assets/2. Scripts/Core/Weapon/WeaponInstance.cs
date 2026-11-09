@@ -178,7 +178,7 @@ public class WeaponInstance : IInventoryItem
     private bool IsStandingStill() =>
         Owner.IsGrounded && Mathf.Abs(Owner.Rb.linearVelocityX) < 0.01f && !Owner.IsAttacking;
 
-    private void RestoreAnimation()
+    public void RestoreAnimation()
     {
         if (Owner.IsAttacking)
             return;

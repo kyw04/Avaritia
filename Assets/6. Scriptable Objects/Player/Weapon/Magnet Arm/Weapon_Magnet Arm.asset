@@ -95,12 +95,12 @@ MonoBehaviour:
         pullReleaseStunDuration: 1
         stunDebuff: {fileID: 11400000, guid: 0087ce02425f2ef459ee0ba99fadf8b4, type: 2}
         pushFeedback:
-          animClip: {fileID: 0}
-          particle: {fileID: 0}
+          animClip: {fileID: 7400000, guid: 75b9d8126447d804f94478829c5a8627, type: 2}
+          particle: {fileID: 2699268776756465713, guid: 86cbdd447aac3924ba326d92a2c631cd, type: 3}
           sound: {fileID: 0}
         pullFeedback:
-          animClip: {fileID: 0}
-          particle: {fileID: 0}
+          animClip: {fileID: 7400000, guid: 75b9d8126447d804f94478829c5a8627, type: 2}
+          particle: {fileID: 2320103504229866331, guid: 338f0bcb0740c524eb3e881fe465ea12, type: 3}
           sound: {fileID: 0}
         slamFeedback:
           animClip: {fileID: 0}

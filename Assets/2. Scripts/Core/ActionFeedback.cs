@@ -10,11 +10,16 @@ public struct ActionFeedback
     public PooledParticle particle;
     public AudioClip sound;
 
-    public void Play(Vector3 position)
+    public void Play(Vector3 position) => Play(position, Quaternion.identity);
+
+    // 방향이 있는 파티클은 rotation으로 돌려 띄운다. 띄운 파티클을 돌려줘 따라다니게 할 수 있다(없으면 null).
+    public PooledParticle Play(Vector3 position, Quaternion rotation)
     {
+        PooledParticle spawned = null;
         if (particle != null)
-            ObjectPoolManager.Instance.Spawn(particle, position, Quaternion.identity);
+            spawned = ObjectPoolManager.Instance.Spawn(particle, position, rotation);
         if (sound != null)
             SoundManager.Instance.PlayOneShotClip(sound, AudioType.Effect);
+        return spawned;
     }
 }
