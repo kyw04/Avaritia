@@ -1,20 +1,18 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class HealthUI : MonoBehaviour, IObserver<EntityHealthChangedEvent>
 {
+    [SerializeField] private Entity target;
     [SerializeField] private Image backgroundImage;
     [SerializeField] private Image healthBarImage;
     [SerializeField] private TextMeshProUGUI maxHealthText;
     [SerializeField] private TextMeshProUGUI currentHealthText;
     [SerializeField] private UIPunch changedPunch;
-    private Entity target;
 
     private void Awake()
     {
-        target = FindAnyObjectByType<Player>();
         EventBus.Subscribe<EntityHealthChangedEvent>(this);
         
         changedPunch.SetColor(backgroundImage, backgroundImage.color);
