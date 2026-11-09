@@ -486,7 +486,7 @@ MonoBehaviour:
   dropChance: 0
   feedbacks:
     <Land>k__BackingField:
-      animClip: {fileID: 0}
+      animClip: {fileID: 7400000, guid: b0f87aa16caf28a4d9e4667bb045952f, type: 2}
       particle: {fileID: 3997078153917561944, guid: 121960c962a84982a420a44a2f68e135, type: 3}
       sound: {fileID: 8300000, guid: 0c182e5639d11644b9bafcc858640069, type: 3}
     <Turn>k__BackingField:

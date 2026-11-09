@@ -207,11 +207,12 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
     public class PlayerLandState : StateBase<Player>
     {
-        private float landTime = 0.2f;
+        private float landTime;
         private float landStartTime;
 
         public PlayerLandState(Player owner) : base(owner)
         {
+            landTime = owner.Feedbacks.Land.animClip.length - 0.05f;
             Machine.AddTransition<PlayerLandState, PlayerIdleState>();
         }
 
@@ -229,7 +230,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void FixedExecute()
         {
-            Owner.Move(InputHandler.Instance.MoveInput);
+            // Owner.Move(InputHandler.Instance.MoveInput);
         }
     }
     
