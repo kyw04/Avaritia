@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 0542ff2471c68594d8fb3532afbf2eb1
+guid: c306ef1082a4457b932c6c38fbb1b577
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -34,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 256
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: attack combo_0
+      name: 01_steam_bore_combo_3_0
       rect:
         serializedVersion: 2
-        x: 209
-        y: 632
-        width: 162
-        height: 107
+        x: 0
+        y: 0
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -125,42 +125,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a1d2c9778e5d87b428d63166c885032b
-      internalID: 1264902588
+      spriteID: e03396ea37336fd45983b72a8ef02fb7
+      internalID: 1007838444
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: attack combo_1
+      name: 01_steam_bore_combo_3_1
       rect:
         serializedVersion: 2
-        x: 547
-        y: 631
-        width: 399
-        height: 220
-      alignment: 9
-      pivot: {x: 0.5000002, y: 0.16883378}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e2b8980bfb271ec4995d800d9589bfd5
-      internalID: -803660795
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: attack combo_3
-      rect:
-        serializedVersion: 2
-        x: 1105
-        y: 631
-        width: 329
-        height: 107
+        x: 128
+        y: 0
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -169,42 +147,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d633d98c51ddcc147b510f5b9611326c
-      internalID: 1812546038
+      spriteID: ced9eefc9f3899d489c97a7d7e0872cf
+      internalID: -1009602846
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: attack combo_8
+      name: 01_steam_bore_combo_3_2
       rect:
         serializedVersion: 2
-        x: 626
-        y: 232
-        width: 290
-        height: 200
-      alignment: 9
-      pivot: {x: 0.4958132, y: 0.16000259}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b4b1802fbc4a63b4d8feb475d8878c27
-      internalID: 1036470504
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: attack combo_10
-      rect:
-        serializedVersion: 2
-        x: 1150
-        y: 230
-        width: 258
-        height: 180
+        x: 256
+        y: 0
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -213,20 +169,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 03ed3cb4d02c05c4aa4ce37ecdce3ca5
-      internalID: 662075787
+      spriteID: 70b3aa23ace043449b60120ad2888461
+      internalID: -1897516871
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: attack combo_12
+      name: 01_steam_bore_combo_3_3
       rect:
         serializedVersion: 2
-        x: 232
-        y: 223
-        width: 169
-        height: 103
+        x: 384
+        y: 0
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -235,8 +191,52 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a3145e30abb4e1a4d9a1afb4e479a8f4
-      internalID: -461513857
+      spriteID: 894d127ed1f5f7a4eab2d1990bcd9604
+      internalID: 1308127795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 01_steam_bore_combo_3_4
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: beaf93e98ea08cb4286ddae727b78d56
+      internalID: 607227127
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 01_steam_bore_combo_3_5
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1e479cb423df1ea459d2f6aec7f998e1
+      internalID: 522985714
       vertices: []
       indices: 
       edges: []
@@ -245,7 +245,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 37c80abfbd0cc384c9a1cc284c43821b
+    spriteID: 2c356a4a10c560b4ba2b2936f51eacd3
     internalID: 0
     vertices: []
     indices: 
@@ -255,24 +255,14 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":128.0,"y":128.0},"gridSpriteOffset":{"x":50.0,"y":50.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":128.0,"y":128.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      attack combo_0: 1264902588
-      attack combo_1: -803660795
-      attack combo_10: 662075787
-      attack combo_11: 1078714907
-      attack combo_12: -461513857
-      attack combo_13: -1792028367
-      attack combo_14: 1959228004
-      attack combo_15: -700318200
-      attack combo_2: 744670738
-      attack combo_3: 1812546038
-      attack combo_4: -344026722
-      attack combo_5: -1626791642
-      attack combo_6: -1527058542
-      attack combo_7: 1873106114
-      attack combo_8: 1036470504
-      attack combo_9: 1216209369
+      01_steam_bore_combo_3_0: 1007838444
+      01_steam_bore_combo_3_1: -1009602846
+      01_steam_bore_combo_3_2: -1897516871
+      01_steam_bore_combo_3_3: 1308127795
+      01_steam_bore_combo_3_4: 607227127
+      01_steam_bore_combo_3_5: 522985714
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
