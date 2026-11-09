@@ -139,7 +139,7 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
     {
         base.Start();
         weapon?.Equip(this, ammoCountBar);
-        EventBus.Publish(new EntityDashCountChangedEvent(this, MaxDashCount, MaxDashCount));
+        EventBus.Publish(new EntityDashCountChangedEvent(this, MaxDashCount, MaxDashCount, Time.time));
     }
     
     private void FixedUpdate()

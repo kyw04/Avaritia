@@ -140,7 +140,14 @@ public struct EntityDashCountChangedEvent : ISubject
     public Entity Source { get; private set; }
     public int Current { get; private set; }
     public int Max { get; private set; }
-    public EntityDashCountChangedEvent(Entity source, int current, int max) { Source = source; Current = current; Max = max; }
+    public float StartTime { get; private set; }
+    public EntityDashCountChangedEvent(Entity source, int current, int max, float startTime) 
+    {
+        Source = source;
+        Current = current;
+        Max = max;
+        StartTime = startTime;
+    }
 }
 
 public struct EntitySkillCooldownEvent : ISubject

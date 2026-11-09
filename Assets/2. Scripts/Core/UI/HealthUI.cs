@@ -4,28 +4,18 @@ using UnityEngine.UI;
 
 public class HealthUI : MonoBehaviour, IObserver<EntityHealthChangedEvent>
 {
-    private Image healthBarImage;
-    private TextMeshProUGUI maxHealthText;
-    private TextMeshProUGUI currentHealthText;
-    [SerializeField] private Entity target;
+    [SerializeField] private Image healthBarImage;
+    [SerializeField] private TextMeshProUGUI maxHealthText;
+    [SerializeField] private TextMeshProUGUI currentHealthText;
+    private Entity target;
 
     private void Awake()
     {
-        healthBarImage = GetComponent<Image>();
-        var comp = GetComponentsInChildren<TextMeshProUGUI>();
-        if (comp.Length >= 2)
-        {
-            maxHealthText = GetComponentsInChildren<TextMeshProUGUI>()[0];
-            currentHealthText = GetComponentsInChildren<TextMeshProUGUI>()[1];
-        }
-        
+        target = FindAnyObjectByType<Player>();
         EventBus.Subscribe<EntityHealthChangedEvent>(this);
     }
-
-    private void OnDestroy()
-    {
-        EventBus.Unsubscribe<EntityHealthChangedEvent>(this);
-    }
+    
+    private void OnDestroy() => EventBus.Unsubscribe<EntityHealthChangedEvent>(this);
 
     public void OnNotify(EntityHealthChangedEvent e)
     {
@@ -35,9 +25,9 @@ public class HealthUI : MonoBehaviour, IObserver<EntityHealthChangedEvent>
         float max = e.Max;
         float current = e.Current;
         if (maxHealthText != null)
-            maxHealthText.text = max.ToString("#");
+            maxHealthText.text = max.ToString("0");
         if (currentHealthText != null)
-            currentHealthText.text = current.ToString("#");
+            currentHealthText.text = current.ToString("0");
         
         healthBarImage.fillAmount = current / max;
     }
