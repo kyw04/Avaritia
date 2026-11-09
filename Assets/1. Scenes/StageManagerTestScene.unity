@@ -21990,6 +21990,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1917102005}
   - component: {fileID: 1917102006}
+  - component: {fileID: 1917102007}
   m_Layer: 5
   m_Name: Dash UI
   m_TagString: Untagged
@@ -22035,6 +22036,25 @@ MonoBehaviour:
   currentImage: {fileID: 1224522474}
   currentText: {fileID: 38489554}
   colorGradient: {fileID: 11400000, guid: a3e8dcb56a9d960489aa874f6cf522c8, type: 2}
+  chargedPunch: {fileID: 1917102007}
+--- !u!114 &1917102007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1917102004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c46239ea9abab040a0a420e37c0a430, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIPunch
+  scale: 1.2
+  duration: 0.2
+  flashColor: {r: 1, g: 1, b: 1, a: 1}
+  targets:
+  - {fileID: 631742211}
+  - {fileID: 1224522474}
 --- !u!1 &1926099522
 GameObject:
   m_ObjectHideFlags: 0

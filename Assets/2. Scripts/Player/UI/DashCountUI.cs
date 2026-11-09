@@ -10,16 +10,9 @@ public class DashCountUI : MonoBehaviour, IObserver<EntityDashCountChangedEvent>
     [SerializeField] private Image currentImage;
     [SerializeField] private TextMeshProUGUI currentText;
     [SerializeField] private ImageCountStyle colorGradient;
-
-    [Header("Charged Punch")]
-    [SerializeField] private float punchScale = 1.2f;
-    [SerializeField, Min(0.01f)] private float punchDuration = 0.2f;
+    [SerializeField] private UIPunch chargedPunch;
 
     private Player target;
-    private Vector3 baseScale;
-    private Color backgroundColor;
-    private Color currentColor;
-    private Coroutine punchCoroutine;
     private int currentCount = -1;
     private readonly Queue<float> starts = new(); // 대쉬마다 시작 시각
     private float segmentStart;
@@ -28,7 +21,6 @@ public class DashCountUI : MonoBehaviour, IObserver<EntityDashCountChangedEvent>
     private void Awake()
     {
         target = FindAnyObjectByType<Player>();
-        baseScale = transform.localScale;
         EventBus.Subscribe<EntityDashCountChangedEvent>(this);
     }
 
@@ -41,10 +33,6 @@ public class DashCountUI : MonoBehaviour, IObserver<EntityDashCountChangedEvent>
         if (dashImageCoroutine != null)
             StopCoroutine(dashImageCoroutine);
         dashImageCoroutine = null;
-
-        if (punchCoroutine != null)
-            StopCoroutine(punchCoroutine);
-        EndPunch();
     }
 
     private void StartFill()
@@ -67,39 +55,11 @@ public class DashCountUI : MonoBehaviour, IObserver<EntityDashCountChangedEvent>
             }
             starts.Dequeue();
             segmentStart = Time.time;
-            Punch();
+            chargedPunch.Play();
         }
 
         currentImage.fillAmount = 1f;
         dashImageCoroutine = null;
-    }
-
-    private void Punch()
-    {
-        if (punchCoroutine != null)
-            StopCoroutine(punchCoroutine);
-        punchCoroutine = StartCoroutine(PunchCoroutine());
-    }
-
-    private IEnumerator PunchCoroutine()
-    {
-        for (float t = 0f; t < punchDuration; t += Time.deltaTime)
-        {
-            float k = t / punchDuration;
-            transform.localScale = baseScale * Mathf.Lerp(punchScale, 1f, k);
-            backgroundImage.color = Color.Lerp(Color.white, backgroundColor, k);
-            currentImage.color = Color.Lerp(Color.white, currentColor, k);
-            yield return null;
-        }
-        EndPunch();
-    }
-
-    private void EndPunch()
-    {
-        punchCoroutine = null;
-        transform.localScale = baseScale;
-        backgroundImage.color = backgroundColor;
-        currentImage.color = currentColor;
     }
 
     public void OnNotify(EntityDashCountChangedEvent e)
@@ -107,13 +67,8 @@ public class DashCountUI : MonoBehaviour, IObserver<EntityDashCountChangedEvent>
         if (e.Source != target)
             return;
 
-        backgroundColor = colorGradient.EvaluateFillColor(e.Current, e.Max);
-        currentColor = colorGradient.EvaluateFillColor(e.Current + 1, e.Max);
-        if (punchCoroutine == null)
-        {
-            backgroundImage.color = backgroundColor;
-            currentImage.color = currentColor;
-        }
+        chargedPunch.SetColor(backgroundImage, colorGradient.EvaluateFillColor(e.Current, e.Max));
+        chargedPunch.SetColor(currentImage, colorGradient.EvaluateFillColor(e.Current + 1, e.Max));
         currentText.text = e.Current.ToString();
         
         if (currentCount > e.Current)
