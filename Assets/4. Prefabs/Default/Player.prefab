@@ -517,6 +517,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   dropThroughDuration: 1
+  hurtClip: {fileID: 7400000, guid: 398d1145e5033494baf13f44ff6e7627, type: 2}
   references:
     version: 2
     RefIds:

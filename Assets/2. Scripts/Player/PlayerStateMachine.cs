@@ -22,6 +22,61 @@ public class PlayerStateMachine : StateMachineBase<Player>
             AddChild(new PlayerGrounded(owner));
             AddChild(new PlayerAirborne(owner));
             AddChild(new PlayerAction(owner));
+            AddChild(new PlayerHurtState(owner));
+        }
+    }
+
+    // 피격 경직. 준비 중이던 공격·채널링·무기 홀드를 취소하고, 피격 모션이 끝날 때까지 모든 행동을 막는다.
+    // 어느 상태에서든 들어올 수 있고(다시 맞으면 처음부터), 나가는 전환은 경직이 끝났을 때만 허용한다.
+    public class PlayerHurtState : StateBase<Player>
+    {
+        private const ActionBlock AllActions = ActionBlock.Move | ActionBlock.Attack | ActionBlock.Skill | ActionBlock.Jump
+                                             | ActionBlock.Dash | ActionBlock.Turn | ActionBlock.Interact;
+        private float endTime;
+        private bool finished;
+
+        public PlayerHurtState(Player owner) : base(owner)
+        {
+            Machine.AddTransition<PlayerAliveState, PlayerHurtState>();
+            Machine.AddTransition<PlayerHurtState, PlayerIdleState>(() => finished);
+            Machine.AddTransition<PlayerHurtState, PlayerFallState>(() => finished);
+        }
+
+        public override void Enter()
+        {
+            finished = false;
+            endTime = Time.time + (Owner.HurtClip != null ? Owner.HurtClip.length : 0f);
+
+            Owner.CancelAttack();
+            Owner.CancelChannels();
+            Owner.Weapon?.CancelHolds();
+            Owner.Restrictions.Set(this, AllActions);
+
+            if (Owner.HurtClip != null)
+                EventBus.Publish(new EntityAnimationEvent(Owner, Owner.HurtClip));
+        }
+
+        public override void Execute()
+        {
+            if (Time.time < endTime)
+                return;
+
+            finished = true;
+            if (Owner.IsGrounded)
+                Machine.ChangeState<PlayerIdleState>();
+            else
+                Machine.ChangeState<PlayerFallState>();
+        }
+
+        // 이동이 막혀 있어 멈추는 쪽으로 감속한다. 넉백 중이면 넉백 속도를 그대로 둔다.
+        public override void FixedExecute()
+        {
+            Owner.Move(Vector2.zero);
+        }
+
+        public override void Exit()
+        {
+            Owner.Restrictions.Remove(this);
         }
     }
 

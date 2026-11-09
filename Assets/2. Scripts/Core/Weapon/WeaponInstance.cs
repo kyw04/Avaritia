@@ -78,8 +78,7 @@ public class WeaponInstance : IInventoryItem
     // Owner는 비우지 않는다: 모듈 Unequip이 Owner.Mono로 코루틴을 멈추며, 다음 Equip이 덮어쓴다.
     public void Unequip()
     {
-        foreach (var binding in holds.Keys.ToList())
-            StopHold(binding);
+        CancelHolds();
         animatedActions.Clear();
 
         if (inputSubscribed)
@@ -218,6 +217,13 @@ public class WeaponInstance : IInventoryItem
         }
         holds.Remove(binding);
         Execute(binding, context);
+    }
+
+    // 진행 중인 홀드를 모두 취소한다(피격 등). 다시 하려면 키를 다시 눌러야 한다.
+    public void CancelHolds()
+    {
+        foreach (var binding in holds.Keys.ToList())
+            StopHold(binding);
     }
 
     private void StopHold(WeaponData.InputMethodBinding binding)
