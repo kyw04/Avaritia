@@ -2,12 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.U2D.Animation;
 
 public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
 {
-    [SerializeField, FormerlySerializedAs("weapon")] private WeaponData defaultWeapon;
+    [SerializeField] private WeaponData defaultWeapon;
     [SerializeField] private ImageCountBar ammoCountBar;
     [SerializeField] private PlayerInteractionController interactionController;
     [SerializeField] private LayerMask platformLayer;
