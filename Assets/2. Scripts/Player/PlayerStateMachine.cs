@@ -92,6 +92,14 @@ public class PlayerStateMachine : StateMachineBase<Player>
             AddChild(new PlayerMoveState(owner));
             AddChild(new PlayerTurnState(owner));
             AddChild(new PlayerLandState(owner));
+            Machine.AddTransition<PlayerGrounded, PlayerFallState>();
+        }
+
+        // 땅 위 상태(Idle/Move/Turn/Land) 공통: 발밑이 비면 낙하로 간다.
+        public override void Execute()
+        {
+            if (!Owner.IsGrounded && Owner.Rb.linearVelocityY <= Entity.GroundedVelocityTolerance)
+                Machine.ChangeState<PlayerFallState>();
         }
     }
     
@@ -339,6 +347,9 @@ public class PlayerStateMachine : StateMachineBase<Player>
     
     public class PlayerFallState : StateBase<Player>
     {
+        private const float HardLandingVelocityY = -10f;
+        private float lastFallVelocityY;
+
         public PlayerFallState(Player owner) : base(owner)
         {
             Machine.AddTransition<PlayerFallState, PlayerIdleState>();
@@ -349,19 +360,27 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Enter()
         {
+            lastFallVelocityY = 0f;
             EventBus.Publish(new EntityFallingEvent(Owner));
         }
 
+        // 착지하면 직전 낙하 속도로 세게 떨어졌는지 판단해 착지 경직(Land) 또는 바로 Idle로 간다.
         public override void Execute()
         {
             if (Owner.IsGrounded && Owner.Rb.linearVelocityY <= Entity.GroundedVelocityTolerance)
             {
-                Owner.Machine.ChangeState<PlayerIdleState>();
+                if (lastFallVelocityY <= HardLandingVelocityY)
+                    Machine.ChangeState<PlayerLandState>();
+                else
+                    Machine.ChangeState<PlayerIdleState>();
             }
         }
 
         public override void FixedExecute()
         {
+            if (Owner.Rb.linearVelocityY < 0)
+                lastFallVelocityY = Owner.Rb.linearVelocityY;
+
             Owner.Move(InputHandler.Instance.MoveInput);
         }
     }

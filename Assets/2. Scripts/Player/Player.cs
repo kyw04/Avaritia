@@ -12,7 +12,6 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
     [SerializeField] private LayerMask platformLayer;
     [SerializeField] private float dropThroughDuration = 1f;
     private Collider2D col;
-    private float lastFallVelocityY;
     private SpriteLibrary spriteLibrary;
     private WeaponInstance weapon;
 
@@ -139,38 +138,6 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
         EventBus.Publish(new EntityDashCountChangedEvent(this, MaxDashCount, MaxDashCount, Time.time));
     }
     
-    private void FixedUpdate()
-    {
-        if (Rb.linearVelocityY < 0)
-            lastFallVelocityY = Rb.linearVelocityY;
-    }
-
-    protected override void OnGroundedChanged(bool grounded)
-    {
-        base.OnGroundedChanged(grounded);
-
-        bool landed = grounded && Rb.linearVelocityY <= GroundedVelocityTolerance;
-
-        if (landed)
-        {
-            bool hardLanding = lastFallVelocityY <= -7;
-            lastFallVelocityY = 0f;
-
-            if (hardLanding)
-            {
-                Machine.ChangeState<PlayerLandState>();
-            }
-            else
-            {
-                Machine.ChangeState<PlayerIdleState>();
-            }
-        }
-        else if (!grounded && Rb.linearVelocityY <= GroundedVelocityTolerance)
-        {
-            Machine.ChangeState<PlayerFallState>();
-        }
-    }
-
     public override void Die()
     {
         if (!TryMarkDead()) return;

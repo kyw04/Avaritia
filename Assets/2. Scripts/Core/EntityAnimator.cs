@@ -76,12 +76,7 @@ public class EntityAnimator : AnimatorBase,
     }
     public void OnNotify(EntityJumpedEvent e) { if (e.Source == self) PlayAnimation(e.Data.jump.animClip.name); }
     public void OnNotify(EntityFallingEvent e) { if (e.Source == self) PlayAnimation("fall_loop"); }
-    public void OnNotify(EntityLandedEvent e) {
-        if (e.Source == self)
-        {
-            Debug.Log("Land Start");
-            PlayAnimation("land");
-        }}
+    public void OnNotify(EntityLandedEvent e) { if (e.Source == self) PlayAnimation("land"); }
     public void OnNotify(EntityTurnEvent e) { if (e.Source == self && !LocomotionLocked) PlayAnimation("turn"); }
     public void OnNotify(EntityDashEvent e) { if (e.Source == self) PlayAnimation("dash"); }
     public void OnNotify(EntityAnimationEvent e) { if (e.Source == self) PlayAnimation(e.Clip.name); }
