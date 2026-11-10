@@ -26,4 +26,12 @@ public class Inventory
     }
 
     public void Select(IInventoryItem item) => SelectedItem = item;
+
+    public void Clear()
+    {
+        if (items.Count == 0) return;
+        items.Clear();
+        SelectedItem = null;
+        Changed?.Invoke();
+    }
 }

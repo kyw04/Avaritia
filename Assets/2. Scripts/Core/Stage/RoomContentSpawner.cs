@@ -64,8 +64,9 @@ public class RoomContentSpawner : MonoBehaviour,
         if (currentRoom != null)
             Destroy(currentRoom);
 
+        // 런 초기화로 이미 풀에 돌아간 적은 건너뛴다.
         foreach (var actor in aliveActors)
-            if (actor != null)
+            if (actor != null && actor.gameObject.activeSelf)
                 ObjectPoolManager.Instance.Despawn(actor.gameObject);
         aliveActors.Clear();
 

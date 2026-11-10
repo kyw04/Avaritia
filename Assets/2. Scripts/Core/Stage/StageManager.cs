@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StageManager : Singleton<StageManager>
+public class StageManager : Singleton<StageManager>, IObserver<RunResetEvent>
 {
     [SerializeField] private StageData currentStageData;
+    private StageData initialStageData;
     private StageNode currentNode;
     private bool isCurrentNodeCleared;
     private int battleClearCount;
@@ -14,6 +15,24 @@ public class StageManager : Singleton<StageManager>
     public bool IsCurrentRoomCleared => currentNode != null && isCurrentNodeCleared;
     public bool HasPendingSpecialNode => pendingSpecialNode != null;
     public BattleRoomType CurrentBattleRoomType { get; private set; }
+
+    protected override void Awake()
+    {
+        base.Awake();
+        initialStageData = currentStageData;
+        EventBus.Subscribe<RunResetEvent>(this);
+    }
+
+    private void OnDestroy() => EventBus.UnsubscribeAll(this);
+
+    // 다시 시작: 남은 풀 오브젝트를 먼저 걷어낸 뒤 첫 스테이지 시작 방부터 다시 만든다.
+    // 회수를 방 생성보다 먼저 해야 새로 스폰한 적까지 걷어내지 않는다.
+    public void OnNotify(RunResetEvent e)
+    {
+        ObjectPoolManager.Instance.DespawnAll();
+        currentStageData = initialStageData;
+        BeginStage();
+    }
 
     private void Start()
     {

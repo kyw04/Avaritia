@@ -111,6 +111,14 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         Destroy(instance);
     }
     
+    // 런 초기화용. 풀에서 꺼내 쓰는 중인 인스턴스(탄환, 파티클, 적 등)를 전부 반납한다.
+    public void DespawnAll()
+    {
+        foreach (var instance in new List<GameObject>(instanceToPrefab.Keys))
+            if (instance != null && instance.activeSelf)
+                Despawn(instance);
+    }
+
     public bool IsPooled(GameObject instance) => instance != null && instanceToPrefab.ContainsKey(instance);
 
     // 풀에서 꺼낸 인스턴스의 원본 프리팹. 풀이 관리하지 않는 오브젝트면 null.

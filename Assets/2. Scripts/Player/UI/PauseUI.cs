@@ -45,7 +45,12 @@ public class PauseUI : Singleton<PauseUI>
     
     public void OnGameRestartButtonClick()
     {
-        Debug.Log("OnGameRestartButtonClick");
+        if (ConfirmationPopup.IsBlockingInput) return;
+        ConfirmationPopup.Instance.Show("처음부터 다시 시작하시겠습니까?", () =>
+        {
+            UIManager.Instance.PopUntil(Key);
+            EventBus.Publish(new RunResetEvent());
+        });
     }
 
     public void OnQuitButtonClick()
