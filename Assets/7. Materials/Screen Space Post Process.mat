@@ -42,7 +42,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _ChromaticAberration: 0.005
-    - _Contrast: 1.15
+    - _Contrast: 1
     - _DustBrightness: 0.82
     - _DustCellSize: 24
     - _DustDensity: 0
@@ -50,12 +50,13 @@ Material:
     - _DustSpeed: 6
     - _EnableExternalAlpha: 0
     - _Flicker: 0.361
-    - _Grain: 0.01
-    - _HazeBottom: 0
-    - _HazeTop: 0.18
+    - _Grain: 0
+    - _HazeBottom: 0.014
+    - _HazeTop: 0.027
     - _Intensity: 1
-    - _LightIntensity: 1.3
+    - _LightIntensity: 0
     - _LightSteps: 16
+    - _OccluderSurfaceLight: 2
     - _OcclusionStrength: 1
     - _OcclusionThreshold: 0.06
     - _PixelSize: 0
@@ -65,20 +66,21 @@ Material:
     - _RaySharpness: 1.8
     - _RaySpeed: 0.38
     - _RaySpread: 70
-    - _Saturation: 0.8
-    - _Sepia: 0.55
-    - _SplitToneAmount: 0.8
-    - _VignetteIntensity: 0.8
-    - _VignetteSmoothness: 0.7
+    - _Saturation: 1
+    - _Sepia: 0
+    - _ShadowBrightness: 0
+    - _SplitToneAmount: 1
+    - _VignetteIntensity: 0.229
+    - _VignetteSmoothness: 0.429
     - _ZWrite: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _HazeColor: {r: 0.7, g: 0.62, b: 0.4, a: 1}
-    - _HighlightTint: {r: 1, g: 0.82, b: 0.5, a: 1}
+    - _HazeColor: {r: 0.8773585, g: 0.8479535, b: 0.76561946, a: 1}
+    - _HighlightTint: {r: 1, g: 1, b: 1, a: 1}
     - _LightColor: {r: 1, g: 0.86, b: 0.62, a: 1}
     - _LightPos: {r: 0.4, g: 1.4, b: 0, a: 0}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
-    - _ShadowTint: {r: 0.22, g: 0.2, b: 0.1, a: 1}
+    - _ShadowTint: {r: 1, g: 1, b: 1, a: 1}
     - _Tint: {r: 1, g: 1, b: 1, a: 1}
     - _VignetteColor: {r: 0.02, g: 0.015, b: 0.01, a: 1}
   m_BuildTextureStacks: []
