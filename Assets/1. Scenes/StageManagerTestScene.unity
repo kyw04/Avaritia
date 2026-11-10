@@ -22171,11 +22171,12 @@ MonoBehaviour:
   - {fileID: 1730322917}
   - {fileID: 95573247}
   hitStopDuration: 0.08
-  shakeForce: 3
-  slowTimeScale: 0.3
-  slowDuration: 0.8
+  shakeForce: 0.2
+  slowTimeScale: 0.1
+  slowDuration: 1.5
   zoomSizeRatio: 0.6
-  fadeDuration: 0.3
+  zoomDuration: 0.4
+  fadeDuration: 2
   fadeColor: {r: 0.08627451, g: 0.06666667, b: 0.05490196, a: 0.8784314}
 --- !u!4 &1710282978
 Transform:
@@ -77365,12 +77366,12 @@ SceneRoots:
   - {fileID: 3838224028727319766}
   - {fileID: 1462880725}
   - {fileID: 4161215713493147537}
+  - {fileID: 1844167308}
   - {fileID: 405841766}
   - {fileID: 319121152}
   - {fileID: 1446240246}
+  - {fileID: 1710282978}
+  - {fileID: 501067475}
   - {fileID: 379046102}
   - {fileID: 5254479845705826867}
   - {fileID: 1340583675}
-  - {fileID: 501067475}
-  - {fileID: 1844167308}
-  - {fileID: 1710282978}
