@@ -100,6 +100,10 @@ public class PlayerStateMachine : StateMachineBase<Player>
             Owner.Restrictions.Set(this, PlayerHitState.AllActions);
             Owner.Rb.linearVelocity = new Vector2(0f, Owner.Rb.linearVelocity.y);
 
+            // 런 초기화가 살아 있는 플레이어를 이 상태로 거쳐 갈 때는 사망 모션을 틀지 않는다.
+            if (!Owner.IsDead)
+                return;
+
             // 취소가 보내는 대기/낙하 애니메이션보다 뒤에 틀어야 사망 모션이 남는다.
             var feedback = Owner.Feedbacks.Death;
             feedback.Play(Owner.FootPosition);

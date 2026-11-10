@@ -166,7 +166,9 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
     public void OnNotify(RunResetEvent e)
     {
         // 살아 있는 채로(일시정지 메뉴) 초기화해도 어느 상태에서든 Idle로 갈 수 있게 사망 상태를 거친다.
-        Machine.ChangeState<PlayerDeadState>();
+        // 이미 죽어 있으면 다시 들어가지 않는다(같은 프레임에 사망 모션이 다시 재생되면 Idle 모션을 덮는다).
+        if (!IsDead)
+            Machine.ChangeState<PlayerDeadState>();
         // 대시 쿨다운 등 이전 런의 코루틴이 초기화된 스탯을 건드리지 않게 멈춘다.
         StopAllCoroutines();
         Inventory.Clear();
