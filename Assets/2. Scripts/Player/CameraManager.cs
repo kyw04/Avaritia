@@ -54,6 +54,16 @@ public class CameraManager : MonoBehaviour, IObserver<EntityDamagedEvent>
         slowMotionRoutine = StartCoroutine(SlowMotionRoutine(timeScale, duration));
     }
 
+    // 진행 중인 슬로모션이 끝나면서 timeScale을 1로 되돌리지 않게 멈춘다. timeScale은 건드리지 않는다.
+    public void StopSlowMotion()
+    {
+        if (slowMotionRoutine == null)
+            return;
+
+        StopCoroutine(slowMotionRoutine);
+        slowMotionRoutine = null;
+    }
+
     private IEnumerator SlowMotionRoutine(float timeScale, float duration)
     {
         Time.timeScale = timeScale;
