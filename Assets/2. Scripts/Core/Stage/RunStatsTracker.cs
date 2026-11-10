@@ -58,12 +58,14 @@ public class RunStatsTracker : MonoBehaviour,
             Kills++;
     }
 
+    // 남은 체력을 넘는 초과 피해(즉사기 등)는 빼고 실제로 깎인 체력만 센다.
     public void OnNotify(EntityDamagedEvent e)
     {
+        float amount = Mathf.Max(0f, e.Amount + Mathf.Min(0f, e.Source.CurrentHealth));
         if (e.Attacker == player && e.Source != player)
-            DamageDealt += e.Amount;
+            DamageDealt += amount;
         if (e.Source == player)
-            DamageTaken += e.Amount;
+            DamageTaken += amount;
     }
 
     public void OnNotify(PlayerDiedEvent e)
