@@ -10,4 +10,5 @@ public struct EntityFeedbacks
     [field: SerializeField] public ActionFeedback Walk { get; private set; }
     [field: SerializeField] public ActionFeedback Dash { get; private set; }
     [field: SerializeField] public ActionFeedback Hit { get; private set; }
+    [field: SerializeField] public ActionFeedback Death { get; private set; }
 }

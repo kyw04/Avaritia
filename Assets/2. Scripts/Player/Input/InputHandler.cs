@@ -122,13 +122,26 @@ public class InputHandler : Singleton<InputHandler>
         player.Move(MoveInput);
     }
 
-    private void OnUICancel(InputAction.CallbackContext context) => UIManager.Instance.Pop();
-    private void OnInventoryOpen(InputAction.CallbackContext context) => UIManager.Instance.Push(InventoryUI.Key);
+    // 사망 중에는 결과 화면을 Cancel로 닫거나 인벤토리·일시정지를 열 수 없다.
+    private void OnUICancel(InputAction.CallbackContext context)
+    {
+        if (player.IsDead) return;
+        UIManager.Instance.Pop();
+    }
+    private void OnInventoryOpen(InputAction.CallbackContext context)
+    {
+        if (player.IsDead) return;
+        UIManager.Instance.Push(InventoryUI.Key);
+    }
     private void OnInventoryCloseAll(InputAction.CallbackContext context)
     {
         if (ItemReplaceController.IsReplacing)
             ItemReplaceController.Instance.CancelReplace();
         UIManager.Instance.PopUntil(InventoryUI.Key);
     }
-    private void OnPauseOpen(InputAction.CallbackContext context) => UIManager.Instance.Push(PauseUI.Key);
+    private void OnPauseOpen(InputAction.CallbackContext context)
+    {
+        if (player.IsDead) return;
+        UIManager.Instance.Push(PauseUI.Key);
+    }
 }

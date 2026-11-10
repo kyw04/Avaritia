@@ -574,7 +574,12 @@ MonoBehaviour:
       animClip: {fileID: 7400000, guid: 398d1145e5033494baf13f44ff6e7627, type: 2}
       particle: {fileID: 0}
       sound: {fileID: 8300000, guid: 43d8fba6bb96ad749bd5692c861e953a, type: 3}
+    <Death>k__BackingField:
+      animClip: {fileID: 7400000, guid: 3aeebed6f05d48e47b969ad3f67cf918, type: 2}
+      particle: {fileID: 0}
+      sound: {fileID: 0}
   knockbackResistance: 0
+  displayName: 
   defaultWeapon: {fileID: 11400000, guid: e82aa12019120254cb29df3fe5dffb83, type: 2}
   ammoCountBar: {fileID: 3843919711502366064}
   interactionController: {fileID: 6477522951164393474}

@@ -141,11 +141,8 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
     public override void Die()
     {
         if (!TryMarkDead()) return;
-        stateManager.Unregister(Machine);
-        Abilities?.UnbindAll();
-        WeaponAbilities?.UnbindAll();
-        ItemAbilities?.UnbindAll();
-        Debug.Log("Player: 사망");
+        Machine.ChangeState<PlayerDeadState>();
+        EventBus.Publish(new PlayerDiedEvent(this));
     }
 
     private void OnEnable() => EventBus.Subscribe<EntityDamagedEvent>(this);

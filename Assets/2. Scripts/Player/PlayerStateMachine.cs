@@ -23,6 +23,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             AddChild(new PlayerAirborne(owner));
             AddChild(new PlayerAction(owner));
             AddChild(new PlayerHitState(owner));
+            AddChild(new PlayerDeadState(owner));
         }
     }
 
@@ -30,14 +31,14 @@ public class PlayerStateMachine : StateMachineBase<Player>
     // 어느 상태에서든 들어올 수 있고(다시 맞으면 처음부터), 나가는 전환은 경직이 끝났을 때만 허용한다.
     public class PlayerHitState : StateBase<Player>
     {
-        private const ActionBlock AllActions = ActionBlock.Move | ActionBlock.Attack | ActionBlock.Skill | ActionBlock.Jump
+        public const ActionBlock AllActions = ActionBlock.Move | ActionBlock.Attack | ActionBlock.Skill | ActionBlock.Jump
                                              | ActionBlock.Dash | ActionBlock.Turn | ActionBlock.Interact;
         private float endTime;
         private bool finished;
 
         public PlayerHitState(Player owner) : base(owner)
         {
-            Machine.AddTransition<PlayerAliveState, PlayerHitState>();
+            Machine.AddTransition<PlayerAliveState, PlayerHitState>(() => !owner.IsDead);
             Machine.AddTransition<PlayerHitState, PlayerIdleState>(() => finished);
             Machine.AddTransition<PlayerHitState, PlayerFallState>(() => finished);
         }
@@ -70,6 +71,43 @@ public class PlayerStateMachine : StateMachineBase<Player>
         }
 
         // 이동이 막혀 있어 멈추는 쪽으로 감속한다. 넉백 중이면 넉백 속도를 그대로 둔다.
+        public override void FixedExecute()
+        {
+            Owner.Move(Vector2.zero);
+        }
+
+        public override void Exit()
+        {
+            Owner.Restrictions.Remove(this);
+        }
+    }
+
+    // 사망. 준비 중이던 공격·채널링·무기 홀드를 취소하고 모든 행동을 막은 채 사망 모션(Feedbacks.Death)을 튼다.
+    // 런 초기화로 IsDead가 풀리기 전까지는 어떤 상태로도 나가지 않는다.
+    public class PlayerDeadState : StateBase<Player>
+    {
+        public PlayerDeadState(Player owner) : base(owner)
+        {
+            Machine.AddTransition<PlayerAliveState, PlayerDeadState>();
+            Machine.AddTransition<PlayerDeadState, PlayerIdleState>(() => !Owner.IsDead);
+        }
+
+        public override void Enter()
+        {
+            Owner.CancelAttack();
+            Owner.CancelChannels();
+            Owner.Weapon?.CancelHolds();
+            Owner.Restrictions.Set(this, PlayerHitState.AllActions);
+            Owner.Rb.linearVelocity = new Vector2(0f, Owner.Rb.linearVelocity.y);
+
+            // 취소가 보내는 대기/낙하 애니메이션보다 뒤에 틀어야 사망 모션이 남는다.
+            var feedback = Owner.Feedbacks.Death;
+            feedback.Play(Owner.FootPosition);
+            if (feedback.animClip != null)
+                EventBus.Publish(new EntityAnimationEvent(Owner, feedback.animClip));
+        }
+
+        // 공중에서 죽어도 중력으로 떨어지되 옆으로는 미끄러지지 않게 한다.
         public override void FixedExecute()
         {
             Owner.Move(Vector2.zero);

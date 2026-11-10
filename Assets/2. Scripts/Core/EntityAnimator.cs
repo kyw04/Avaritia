@@ -75,7 +75,8 @@ public class EntityAnimator : AnimatorBase,
         PlayAnimation("Move");
     }
     public void OnNotify(EntityJumpedEvent e) { if (e.Source == self) PlayAnimation(e.Data.jump.animClip.name); }
-    public void OnNotify(EntityFallingEvent e) { if (e.Source == self) PlayAnimation("fall_loop"); }
+    // 사망 중에는 행동 취소(RestoreAnimation 등)가 보내는 낙하 애니메이션이 사망 모션을 덮지 않게 한다.
+    public void OnNotify(EntityFallingEvent e) { if (e.Source == self && !self.IsDead) PlayAnimation("fall_loop"); }
     public void OnNotify(EntityLandedEvent e) { if (e.Source == self) PlayAnimation("land"); }
     public void OnNotify(EntityTurnEvent e) { if (e.Source == self && !LocomotionLocked) PlayAnimation("turn"); }
     public void OnNotify(EntityDashEvent e) { if (e.Source == self) PlayAnimation("dash"); }

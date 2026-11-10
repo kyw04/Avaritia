@@ -60,6 +60,13 @@ public struct EnemyConvertedEvent : ISubject
     public EnemyConvertedEvent(Enemy source) { Source = source; }
 }
 
+// 플레이어 사망. 사망 연출과 런 통계가 받는다.
+public struct PlayerDiedEvent : ISubject
+{
+    public Player Player { get; private set; }
+    public PlayerDiedEvent(Player player) { Player = player; }
+}
+
 public struct EntityDeadEvent : ISubject
 {
     public Entity Source { get; private set; }
