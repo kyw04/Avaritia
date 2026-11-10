@@ -16,3 +16,6 @@ public struct StageCompletedEvent : ISubject
     public StageNode Stage { get; private set; }
     public StageCompletedEvent(StageNode stage) { Stage = stage; }
 }
+
+// 다시 시작. 런 상태를 가진 시스템(플레이어, 스테이지, 풀, 통계, UI)이 각자 초기화한다.
+public struct RunResetEvent : ISubject { }
