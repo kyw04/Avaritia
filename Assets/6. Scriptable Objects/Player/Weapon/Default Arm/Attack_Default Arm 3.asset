@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AttackData
   duration: 0.5
   ready:
-    animClip: {fileID: 0}
+    animClip: {fileID: 7400000, guid: 7da3ec21d97b71c4fb88e01ea0f6c230, type: 2}
     particle: {fileID: 0}
     sound: {fileID: 0}
   attack:
