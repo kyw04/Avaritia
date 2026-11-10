@@ -1351,6 +1351,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 92063905}
   m_CullTransparentMesh: 1
+--- !u!223 &95573247 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 5153929003463623296, guid: d3fec21282ed17247b94d7fa2b17c8e6, type: 3}
+  m_PrefabInstance: {fileID: 3838224028727319766}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &102575283 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8484257898521333871, guid: af512a10ed3ba834582fecbee2b47a8f, type: 3}
@@ -10776,6 +10781,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2131e0be83644aea556bc977cb340ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraManager
+--- !u!114 &763758996 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7112246994866901118, guid: 3b1815dce988a1349b5f5864f95274d8, type: 3}
+  m_PrefabInstance: {fileID: 1243832560}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a8a05de0ac134f4f9d01bef6b9da077, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachinePixelPerfect
 --- !u!114 &763758998 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7562008208287547359, guid: 3b1815dce988a1349b5f5864f95274d8, type: 3}
@@ -19949,6 +19965,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1478907408}
   m_CullTransparentMesh: 1
+--- !u!114 &1481237238 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2830546041736923737, guid: 4ce7eb9e35aa8f440ac5d1b9a79692eb, type: 3}
+  m_PrefabInstance: {fileID: 1161945052}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c88f5cead0c0b2a4eb05b5900433f8d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.2D.Runtime::UnityEngine.Rendering.Universal.PixelPerfectCamera
 --- !u!1 &1492488154
 GameObject:
   m_ObjectHideFlags: 0
@@ -21837,6 +21864,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1662494078}
   m_CullTransparentMesh: 1
+--- !u!223 &1680190860 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 4488615901236039159, guid: b88cbd999809e4240885239b6cf6a6a3, type: 3}
+  m_PrefabInstance: {fileID: 30928937}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1693711705 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6436185231945518701, guid: 1b2fef01d4a34cd4fbbaf702d5d924ec, type: 3}
@@ -22132,11 +22164,17 @@ MonoBehaviour:
   virtualCamera: {fileID: 763758998}
   cameraManager: {fileID: 763758994}
   fadeImage: {fileID: 1294829402}
+  pixelPerfectCamera: {fileID: 1481237238}
+  cinemachinePixelPerfect: {fileID: 763758996}
+  hideOnDeath:
+  - {fileID: 1680190860}
+  - {fileID: 1730322917}
+  - {fileID: 95573247}
   hitStopDuration: 0.08
   shakeForce: 3
   slowTimeScale: 0.3
   slowDuration: 0.8
-  zoomSizeRatio: 0.75
+  zoomSizeRatio: 0.6
   fadeDuration: 0.3
   fadeColor: {r: 0.08627451, g: 0.06666667, b: 0.05490196, a: 0.8784314}
 --- !u!4 &1710282978
@@ -22231,6 +22269,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1721712248}
   m_CullTransparentMesh: 1
+--- !u!223 &1730322917 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 5636605486627374740, guid: 1a8aafe84641b34468469facb5a67bbb, type: 3}
+  m_PrefabInstance: {fileID: 1446240246}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1734266196
 GameObject:
   m_ObjectHideFlags: 0
