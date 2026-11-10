@@ -22,6 +22,8 @@ public class PlayerDeathSequence : MonoBehaviour, IObserver<PlayerDiedEvent>, IO
     [SerializeField] private float slowTimeScale = 0.3f;
     [SerializeField] private float slowDuration = 0.8f;
     [SerializeField, Range(0.1f, 1f)] private float zoomSizeRatio = 0.6f;
+    // 줌인에 걸리는 실제 시간(초). 작을수록 빠르게 당긴다.
+    [SerializeField, Min(0.01f)] private float zoomDuration = 0.8f;
     [SerializeField] private float fadeDuration = 0.3f;
     // 결과 화면 오버레이와 같은 색으로 맞춰 화면이 끊김 없이 넘어가게 한다.
     [SerializeField] private Color fadeColor = new Color32(0x16, 0x11, 0x0e, 224);
@@ -91,16 +93,20 @@ public class PlayerDeathSequence : MonoBehaviour, IObserver<PlayerDiedEvent>, IO
         SetPixelPerfect(false);
         SetOrthoSize(startSize);
 
+        // 줌은 슬로모션 길이와 따로 진행한다. 먼저 끝나면 그 배율로 멈추고, 늦게 끝나면 페이드 동안에도 이어진다.
         float targetSize = startSize * zoomSizeRatio;
+        float zoomElapsed = 0f;
         for (float t = 0f; t < slowDuration; t += Time.unscaledDeltaTime)
         {
-            SetOrthoSize(Mathf.Lerp(startSize, targetSize, Mathf.SmoothStep(0f, 1f, t / slowDuration)));
+            zoomElapsed += Time.unscaledDeltaTime;
+            UpdateZoom(startSize, targetSize, zoomElapsed);
             yield return null;
         }
-        SetOrthoSize(targetSize);
 
         for (float t = 0f; t < fadeDuration; t += Time.unscaledDeltaTime)
         {
+            zoomElapsed += Time.unscaledDeltaTime;
+            UpdateZoom(startSize, targetSize, zoomElapsed);
             SetFade(t / fadeDuration);
             yield return null;
         }
@@ -110,6 +116,12 @@ public class PlayerDeathSequence : MonoBehaviour, IObserver<PlayerDiedEvent>, IO
         UIManager.Instance.Push(GameOverUI.Key);
         SetFade(0f);
         routine = null;
+    }
+
+    private void UpdateZoom(float startSize, float targetSize, float elapsed)
+    {
+        float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / zoomDuration));
+        SetOrthoSize(Mathf.Lerp(startSize, targetSize, t));
     }
 
     private void SetOrthoSize(float size)
