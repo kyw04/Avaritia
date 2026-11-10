@@ -174,6 +174,9 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
         Inventory.Clear();
         ResetEntityState();
         InitPlayerStats();
+        // 스킬 UI는 장착 이벤트로만 갱신되므로 되돌린 슬롯을 알린다.
+        for (int i = 0; i < abilities.Length; i++)
+            EventBus.Publish(new EntitySkillEquippedEvent(this, i, abilities[i]));
         if (defaultWeapon != null)
             EquipWeapon(new WeaponInstance(defaultWeapon));
         Rb.linearVelocity = Vector2.zero;

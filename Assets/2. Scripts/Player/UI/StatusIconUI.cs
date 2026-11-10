@@ -29,6 +29,13 @@ public class StatusIconUI : MonoBehaviour
         // 기존 칸은 같은 Key의 항목으로 갱신하고, 사라진 항목의 칸은 반납한다.
         for (int i = slots.Count - 1; i >= 0; i--)
         {
+            // 런 초기화(ObjectPoolManager.DespawnAll)로 이미 풀에 돌아간 칸은 목록에서만 뺀다.
+            if (!slots[i].gameObject.activeSelf)
+            {
+                slots.RemoveAt(i);
+                continue;
+            }
+
             int index = entries.FindIndex(e => e.Key.Equals(slots[i].Key));
             if (index < 0)
             {

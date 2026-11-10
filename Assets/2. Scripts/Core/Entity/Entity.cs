@@ -24,6 +24,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
 
     protected RuntimeStats stats;
     protected bool isDead;
+    // 스폰 시점의 스킬 구성. 런 중 SetAbility로 바뀐 슬롯을 리셋 때 되돌린다.
+    private AbilityData[] initialAbilities;
     protected bool wasGroundCheckerChanged;
     
     public T GetDefaultStat<T>(StatType statType) => statDataAsset.TryGetValue<T>(statType);
@@ -344,6 +346,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         activeBuffs.Clear();
         shields.Clear();
         hitBlocks.Clear();
+        initialAbilities ??= abilities != null ? (AbilityData[])abilities.Clone() : null;
+        abilities = initialAbilities != null ? (AbilityData[])initialAbilities.Clone() : null;
         Abilities = new AbilityManager(this, abilities);
         Abilities.BindAll();
         invincibleUntil = 0f;
