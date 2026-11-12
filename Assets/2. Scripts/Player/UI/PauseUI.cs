@@ -40,7 +40,8 @@ public class PauseUI : Singleton<PauseUI>
 
     public void OnSettingButtonClick()
     {
-        Debug.Log("OnSettingButtonClick");
+        if (ConfirmationPopup.IsBlockingInput) return;
+        ConfirmationPopup.Instance.Show("준비중입니다.", () => { });
     }
     
     public void OnGameRestartButtonClick()
