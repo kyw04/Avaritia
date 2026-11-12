@@ -9,6 +9,8 @@ public class PlayerInteractionController : MonoBehaviour
     [SerializeField] private float tapThreshold = 0.15f;
     [SerializeField] private float fillStartDelay = 0.5f;
     [SerializeField] private float holdDuration = 0.6f;
+    // 대상에 InteractPromptAnchor가 없을 때 키 표시를 띄울 위치(대상 기준)
+    [SerializeField] private Vector2 defaultPromptOffset = new(0f, 1f);
 
     private IInteractable current;
     private Transform promptAnchor;
@@ -54,7 +56,9 @@ public class PlayerInteractionController : MonoBehaviour
                 prompt.Hide();
                 return;
             }
-            prompt.transform.position = anchor.position + Vector3.up;
+            prompt.transform.position = anchor.TryGetComponent(out InteractPromptAnchor promptAnchorPoint)
+                ? promptAnchorPoint.PromptPosition
+                : anchor.position + (Vector3)defaultPromptOffset;
             // "Hold F | Hold Triangle" 대신 키보드 키 이름만 보여 준다.
             prompt.Show(action.GetBindingDisplayString(InputBinding.DisplayStringOptions.DontIncludeInteractions, "Keyboard&Mouse"));
         }
