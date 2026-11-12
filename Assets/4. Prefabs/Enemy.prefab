@@ -74,23 +74,39 @@ MonoBehaviour:
       animClip: {fileID: 0}
       particle: {fileID: 0}
       sound: {fileID: 0}
+    <Walk>k__BackingField:
+      animClip: {fileID: 7400000, guid: 9709ebf8e3c604c4c87822783dea619a, type: 2}
+      particle: {fileID: 0}
+      sound: {fileID: 0}
     <Dash>k__BackingField:
       animClip: {fileID: 0}
       particle: {fileID: 0}
       sound: {fileID: 0}
     <Hit>k__BackingField:
-      animClip: {fileID: 0}
+      animClip: {fileID: 7400000, guid: 9411df275d0195f4f9d72f106c33f44d, type: 2}
+      particle: {fileID: 0}
+      sound: {fileID: 0}
+    <Death>k__BackingField:
+      animClip: {fileID: 7400000, guid: 4d72df96a77f3c4428eafc0b9568afac, type: 2}
       particle: {fileID: 0}
       sound: {fileID: 0}
   knockbackResistance: 0
+  displayName: "\uC9D1\uAC8C\uAFBC"
   patrolSize: {x: 5.275786, y: 8.160981}
+  maxDropHeight: 1
+  chaseGiveUpTime: 2
+  giveUpSearchCooldown: 1
+  wallCheckOffset: {x: 0.4, y: 0.1}
   viewLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  viewAngle: 30
-  viewDensity: 25
-  viewRadius: 15
-  alertRadius: 3
+  viewAngle: 20
+  viewDensity: 15
+  viewRadius: 4
+  alertRadius: 2
+  size: 0
+  stationary: 0
+  allyColor: {r: 0.5, g: 1, b: 0.5, a: 1}
   references:
     version: 2
     RefIds:
@@ -131,7 +147,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.35, y: 0.1}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -141,7 +157,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.25, y: 0.8}
   m_EdgeRadius: 0
 --- !u!50 &7411222152702535793
 Rigidbody2D:
@@ -195,6 +211,7 @@ GameObject:
   - component: {fileID: 5337004422514762925}
   - component: {fileID: 451785785379693136}
   - component: {fileID: 8661922656610536548}
+  - component: {fileID: 7846044142876548077}
   m_Layer: 7
   m_Name: Sprite
   m_TagString: Untagged
@@ -211,7 +228,7 @@ Transform:
   m_GameObject: {fileID: 5450962051100456378}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -264,9 +281,9 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 15
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 2747690628134850419, guid: a9716c16a44a94eed9b5c90fbf4d9bdd, type: 3}
+  m_Sprite: {fileID: -2018500586, guid: 04d3ea950f209f4448176560b07c1a47, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -286,7 +303,7 @@ Animator:
   m_GameObject: {fileID: 5450962051100456378}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c3cecf5463ac5e245a6e89678e19c21d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -298,3 +315,15 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7846044142876548077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5450962051100456378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 009b459ea2d0f2645ab6124936fb3102, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EntityAnimator

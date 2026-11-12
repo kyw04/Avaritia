@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AttackData
   duration: 0.5
   ready:
-    animClip: {fileID: 0}
+    animClip: {fileID: 7400000, guid: bf20b5c4a650523499cfa9f988600402, type: 2}
     particle: {fileID: 0}
     sound: {fileID: 0}
   attack:
-    animClip: {fileID: 7400000, guid: b1e46fcbfcee5a948a5e3df314b32f13, type: 2}
+    animClip: {fileID: 7400000, guid: 4d87eb963d69d8344ae73e0f57c3ba22, type: 2}
     particle: {fileID: 0}
     sound: {fileID: 0}
   damageMultiplier: 1
@@ -36,8 +36,9 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  maxRange: 0.5
-  cooldown: 1
+  canTurn: 0
+  canMove: 0
+  moveDuration: 0
   attackStrategy:
     rid: 1772930754192081019
   references:
@@ -46,5 +47,5 @@ MonoBehaviour:
     - rid: 1772930754192081019
       type: {class: MeleeAttackStrategy, ns: , asm: Assembly-CSharp}
       data:
-        hitboxPosition: {x: 0, y: 0}
+        hitboxPosition: {x: 0.5, y: 0}
         hitboxSize: {x: 1, y: 1}
