@@ -16,8 +16,8 @@ MonoBehaviour:
   combo: {fileID: 11400000, guid: aa917b9b7cd923244bd2a65c4488f506, type: 2}
   holdToAttack: 0
   icon: {fileID: 9063967517890105263, guid: a657d6d40f6335b478bf8290e0f0b0af, type: 3}
-  displayName: 
-  description: 
+  displayName: "\uAE30\uBCF8 \uD314"
+  description: "\uC880 \uD22C\uBC15\uD558\uC9C0\uB9CC \uC4F8\uBAA8 \uC788\uC5B4 \uBCF4\uC778\uB2E4."
   passiveAbilities:
   - {fileID: 11400000, guid: a6fe7fff178b8c04280cfc5d909817be, type: 2}
   swing:
@@ -32,7 +32,7 @@ MonoBehaviour:
   hitStopTimeScale: 0.1
   hitStopDuration: 0.08
   knockbackForce: 5
-  knockbackUpForce: 2
+  knockbackUpForce: 0
   knockbackDuration: 0.2
   modules: []
   inputMethods: []
