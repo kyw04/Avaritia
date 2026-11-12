@@ -136,8 +136,12 @@ public class StageManager : Singleton<StageManager>, IObserver<RunResetEvent>
         BattleRoomTypeFilter.Skill => BattleRoomType.Skill,
         BattleRoomTypeFilter.Weapon => BattleRoomType.Weapon,
         BattleRoomTypeFilter.Item => BattleRoomType.Item,
-        _ => (BattleRoomType)Random.Range(0, 4),
+        _ => RandomRewardRoomTypes[Random.Range(0, RandomRewardRoomTypes.Length)],
     };
+
+    // 문 필터가 Any일 때 고르는 방 종류. 보상이 없는 Normal은 무작위로 나오지 않는다.
+    private static readonly BattleRoomType[] RandomRewardRoomTypes =
+        { BattleRoomType.Skill, BattleRoomType.Weapon, BattleRoomType.Item };
 
     public void AdvanceStage(StageData nextStage)
     {
