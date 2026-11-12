@@ -105,8 +105,9 @@ public class ItemBox : MonoBehaviour, IInteractable, IPoolable
     private IInteractable BuildPayload(ScriptableObject asset)
     {
         if (asset is WeaponData data) return new WeaponPickup(data);
-        if (asset is AbilityData ability) return new AbilityPickup(ability);
+        // Item은 AbilityData를 상속하므로 먼저 검사해야 스킬 픽업으로 잘못 만들어지지 않는다.
         if (asset is Item item) return new ItemPickup(item);
+        if (asset is AbilityData ability) return new AbilityPickup(ability);
         return null;
     }
 }
