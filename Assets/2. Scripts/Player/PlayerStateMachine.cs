@@ -157,13 +157,39 @@ public class PlayerStateMachine : StateMachineBase<Player>
                 () => owner.DashCount < owner.MaxDashCount);
         }
 
+        // 공격 상태가 끝나도 공격 애니메이션(총 쏘기 등)이 아직 한 번도 끝까지 재생되지 않았으면 끊지 않고,
+        // 다 재생된 뒤에 대기 애니메이션을 튼다. 공격 클립은 반복 재생이라 한 바퀴(normalizedTime 1)까지만 기다린다.
+        private bool idlePending;
+        private Animator animator;
+
+        private bool AttackAnimationPlaying()
+        {
+            // 누르고 있으면 계속 공격하는 무기(톱날 등)는 곧 다음 공격이 이어지므로 대기 애니메이션으로 끊지 않는다.
+            if (Owner.Weapon != null && Owner.Weapon.Data.holdToAttack && InputHandler.Instance.AttackHeld)
+                return true;
+            animator ??= Owner.GetComponentInChildren<Animator>();
+            if (!Owner.IsAttacking || animator == null)
+                return false;
+            // 다음 프레임에 한 바퀴를 넘기면 반복 재생의 첫 프레임이 잠깐 보이므로 그 전에 끝난 것으로 본다.
+            var info = animator.GetCurrentAnimatorStateInfo(0);
+            return info.normalizedTime + Time.deltaTime / Mathf.Max(info.length, 0.0001f) < 1f;
+        }
+
         public override void Enter()
         {
-            EventBus.Publish(new EntityIdleEvent(Owner));
+            idlePending = AttackAnimationPlaying();
+            if (!idlePending)
+                EventBus.Publish(new EntityIdleEvent(Owner));
         }
 
         public override void Execute()
         {
+            if (idlePending && !AttackAnimationPlaying())
+            {
+                idlePending = false;
+                EventBus.Publish(new EntityIdleEvent(Owner));
+            }
+
             if (Mathf.Abs(InputHandler.Instance.MoveInput.x) > 0)
                 Machine.ChangeState<PlayerMoveState>();
         }

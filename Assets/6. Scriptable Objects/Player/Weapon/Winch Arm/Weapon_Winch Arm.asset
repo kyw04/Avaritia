@@ -12,12 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f935b32e47f32148a0e4aac5329210c, type: 3}
   m_Name: Weapon_Winch Arm
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
-  spriteLibraryAsset: {fileID: 7108339969198208228, guid: 88dd0a5dfd141cc48aa51ddb96005119, type: 3}
+  spriteLibraryAsset: {fileID: 7108339969198208228, guid: ecc38dd349438d74a9dbd0884d9a9b4f, type: 3}
   combo: {fileID: 11400000, guid: aa917b9b7cd923244bd2a65c4488f506, type: 2}
   holdToAttack: 0
   icon: {fileID: -1290398415471946305, guid: 094159b969585474ba13f54f52b14c5c, type: 3}
-  displayName: "\uC6D0\uCE58"
-  description: 
+  displayName: "\uC6D0\uCE58 \uD314"
+  description: "\uAE30\uBCF8 \uACF5\uACA9\uC740 \uADFC\uC811 \uCF64\uBCF4. \uBC29\uD5A5\uD0A4\uB97C
+    \uB204\uB978 \uCC44 \uACF5\uACA9\uD558\uBA74 \uADF8 \uBC29\uD5A5\uC73C\uB85C
+    \uAC08\uACE0\uB9AC\uB97C \uB0A0\uB9B0\uB2E4. \uAC00\uBCBC\uC6B4 \uC801\uC740
+    \uB04C\uC5B4\uC624\uACE0 \uBB34\uAC70\uC6B4 \uC801\uC5D0\uAC8C\uB294 \uB0A0\uC544\uAC00
+    \uACF5\uACA9\uD558\uBA70, \uB9DE\uC740 \uC801\uC740 \uC2A4\uD134\uB41C\uB2E4.
+    \uBCBD\uC774\uB098 \uBC14\uB2E5\uC5D0 \uAC78\uBA74 \uB85C\uD504\uC5D0 \uB9E4\uB2EC\uB824
+    \uD754\uB4E4 \uC218 \uC788\uB2E4."
   passiveAbilities: []
   swing:
     animClip: {fileID: 0}

@@ -100,8 +100,18 @@ public class EntityAnimator : AnimatorBase,
         }
         else if (attackClip != null)
         {
-            PlayAnimation(attackClip.name);
+            PlayAttackClip(attackClip.name);
         }
+    }
+
+    // 같은 공격을 연달아 할 때: 반복 클립(누르고 있는 연속 공격)은 끊지 않고 이어서 재생하고,
+    // 한 번만 재생하는 클립(총 쏘기 등)은 매번 처음부터 다시 튼다. Animator.Play는 같은 상태면 처음으로 돌리지 않는다.
+    private void PlayAttackClip(string animName)
+    {
+        var info = AnimatorComponent.GetCurrentAnimatorStateInfo(0);
+        PlayAnimation(animName);
+        if (info.IsName(animName) && !info.loop)
+            AnimatorComponent.Play(animName, 0, 0f);
     }
 
     // 준비 동작은 Animator.speed로 느려지므로 공격 애니메이션 전환도 같은 배율로 늦춘다.

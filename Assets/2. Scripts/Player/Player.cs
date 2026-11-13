@@ -140,6 +140,9 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
     {
         base.Start();
         weapon?.Equip(this, ammoCountBar);
+        // 시작 무기의 팔 모양도 적용한다(EquipWeapon을 거치지 않으므로 여기서 직접 바꾼다).
+        if (weapon != null)
+            spriteLibrary.spriteLibraryAsset = weapon.Data.spriteLibraryAsset;
         EventBus.Publish(new EntityDashCountChangedEvent(this, MaxDashCount, MaxDashCount, Time.time));
     }
     

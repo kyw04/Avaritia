@@ -12,12 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f935b32e47f32148a0e4aac5329210c, type: 3}
   m_Name: Weapon_Magazine Arm
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
-  spriteLibraryAsset: {fileID: 7108339969198208228, guid: 851276b8d2cf6c1408ba4592fb6df21d, type: 3}
+  spriteLibraryAsset: {fileID: 7108339969198208228, guid: 5c431dcf496307f4fb1e4568275b5433, type: 3}
   combo: {fileID: 11400000, guid: b0cf0df8d9747d64985aa45fd8dd8088, type: 2}
   holdToAttack: 1
   icon: {fileID: -3163919504955696172, guid: e6014f154b8de834280b85d526887a15, type: 3}
-  displayName: 
-  description: "\uCD1D?"
+  displayName: "\uD0C4\uCC3D \uD314"
+  description: "\uCD1D\uC54C\uC744 \uC3DC\uB2E4. \uD0C4\uCC3D\uC740 10\uBC1C\uC774\uACE0,
+    \uB2E4 \uC4F0\uAC70\uB098 1\uCD08 \uB3D9\uC548 \uC3D8\uC9C0 \uC54A\uC73C\uBA74
+    2\uCD08\uC5D0 \uAC78\uCCD0 \uC7AC\uC7A5\uC804\uD55C\uB2E4. \uB2E4\uC12F \uBC88\uC9F8
+    \uCD1D\uC54C\uACFC \uB9C8\uC9C0\uB9C9 \uCD1D\uC54C\uC740 \uAC15\uD654\uB41C\uB2E4."
   passiveAbilities:
   - {fileID: 11400000, guid: aac30a3539ffbe346b1f0d5a8c697d97, type: 2}
   - {fileID: 11400000, guid: 81d7a79448fa58c4ebce981f0bd27ca9, type: 2}

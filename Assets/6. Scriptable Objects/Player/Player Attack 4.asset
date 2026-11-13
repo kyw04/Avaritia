@@ -18,7 +18,7 @@ MonoBehaviour:
     particle: {fileID: 0}
     sound: {fileID: 0}
   attack:
-    animClip: {fileID: 7400000, guid: b075438dbfab78a419918467d753e74c, type: 2}
+    animClip: {fileID: 7400000, guid: 077238c6e507877498e9c8d0a25e2d1b, type: 2}
     particle: {fileID: 0}
     sound: {fileID: 0}
   damageMultiplier: 1
