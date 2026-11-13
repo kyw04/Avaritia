@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum EnemySize
 {
@@ -15,8 +16,9 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
     public bool HasTarget => Target != null;
     private StateManager stateManager;
 
+    private const float ChangeFaceDelay = 0.5f;
+    private float changeFaceTime;
     [SerializeField] private Vector2 patrolSize;
-    private Vector2 patrolCenter;
     // 순찰 폭이 0이어도 중심에 도착했다고 판정할 여유 거리
     private const float PatrolArriveDistance = 0.1f;
     // 추격 대상과 x 차이가 이 안이면 방향을 바꾸지 않고 멈춘다.
@@ -30,7 +32,7 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
     // 추격 중 낭떠러지나 벽에 막혀 이 시간 동안 못 가면 추격을 포기하고 순찰 구역으로 돌아간다.
     [SerializeField] private float chaseGiveUpTime = 2f;
     // 추격을 포기한 뒤 이 시간 동안은 대상을 찾지 않는다(근접 감지 포함). 포기 직후 다시 쫓는 반복을 막는다.
-    [SerializeField] private float giveUpSearchCooldown = 3f;
+    [SerializeField] private float giveUpSearchCooldown = 1f;
     // 벽 감지 위치. 몸 중심 기준이며 x는 바라보는 방향 쪽(왼쪽을 보면 뒤집힌다). 몸 앞쪽 끝보다 조금 앞에 둔다.
     [SerializeField] private Vector2 wallCheckOffset = new(1.1f, 0.1f);
     private const float WallCheckRadius = 0.15f;
@@ -56,12 +58,14 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
     private int wallMask;
     private float blockedTime;
     private float searchBlockedUntil;
+    private bool canChangeFace;
 
     // 순찰 폭이 0이면 순찰하지 않고 순찰 중심에 서 있는다(테스트용 허수아비 등).
-    public bool ShouldHoldPosition => patrolSize.x <= 0f && IsInPatrolArea();
+    public bool ShouldHoldPosition => patrolSize.x <= 0f && IsInPatrolArea(transform.position);
     public EnemySize Size => size;
     public bool IsAlly { get; private set; }
-
+    public Vector2 PatrolCenter { get; private set; }
+    
     public override int LookDirection => transform.right.x >= 0 ? 1 : -1;
 
     // Machine is built here too (not just OnSpawn) so a directly scene-placed
@@ -82,7 +86,7 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
             hostileColors[i] = spriteRenderers[i].color;
         Owner = this;
         stateManager = StateManager.Instance;
-        patrolCenter = transform.position;
+        PatrolCenter = transform.position;
         Machine = new EnemyStateMachine(Owner);
         Machine.Init();
     }
@@ -91,7 +95,7 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
     {
         base.OnSpawn();
         if (Machine != null) stateManager.Unregister(Machine);
-        patrolCenter = transform.position;
+        PatrolCenter = transform.position;
         Target = null;
         blockedTime = 0f;
         searchBlockedUntil = 0f;
@@ -100,6 +104,7 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
         gameObject.layer = hostileLayer;
         viewLayerMask = hostileViewLayerMask;
         Rb.simulated = true;
+        canChangeFace = true;
         for (int i = 0; i < spriteRenderers.Length; i++)
             spriteRenderers[i].color = hostileColors[i];
         Machine = new EnemyStateMachine(Owner);
@@ -111,7 +116,11 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
         base.Update();
         // 아군은 순찰 범위가 플레이어를 따라다녀 플레이어 곁을 맴돌다 적이 보이면 싸운다.
         if (IsAlly && leader != null && !stationary)
-            patrolCenter = leader.position;
+            PatrolCenter = leader.position;
+
+        if (changeFaceTime <= Time.time)
+            canChangeFace = true;
+        
         PublishLocomotionAnimation();
     }
 
@@ -190,7 +199,8 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
         }
 
         // 앞이 낭떠러지나 벽이면 걷지 않는다. 추격 중이면 그 자리에서 대상을 바라보며 기다린다.
-        if (IsLedgeAhead() || IsWallAhead())
+        // 추격 중에는 순찰 구역 경계도 벽처럼 보고 밖으로 나가지 않는다.
+        if (IsLedgeAhead() || IsWallAhead() || (HasTarget && IsPatrolEdgeAhead()))
         {
             if (!IsKnockedBack)
                 Rb.linearVelocity = new Vector2(0, Rb.linearVelocityY);
@@ -230,7 +240,7 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
         searchBlockedUntil = Time.time + giveUpSearchCooldown;
         Machine.ChangeState<EnemyReturnToPatrolState>();
     }
-
+    
     public void Patrol()
     {
         if (ShouldHoldPosition)
@@ -241,9 +251,11 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
 
         if (IsWallAhead() || IsLedgeAhead())
         {
-            Face(-LookDirection);
+            Machine.ChangeState<EnemyTurnState>();
+            return;
         }
-        else if (!IsInPatrolArea())
+        
+        if (!IsInPatrolArea(transform.position))
         {
             FaceTowardPatrolCenter();
         }
@@ -251,22 +263,35 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
         FindTarget();
     }
 
-    public bool IsInPatrolArea()
+    public bool IsInPatrolArea(Vector2 targetPosition)
     {
-        float halfWidth = Mathf.Max(patrolSize.x / 2f, PatrolArriveDistance);
-        return Mathf.Abs(transform.position.x - patrolCenter.x) <= halfWidth;
+        Vector2 half = Vector2.Max(patrolSize / 2f, Vector2.one * PatrolArriveDistance);
+        return Mathf.Abs(targetPosition.x - PatrolCenter.x) <= half.x && 
+               Mathf.Abs(targetPosition.y - PatrolCenter.y) <= half.y;
     }
 
-    public void FaceTowardPatrolCenter() => Face(patrolCenter.x > transform.position.x ? 1 : -1);
+    // 순찰 구역 가로 경계에 닿았고(또는 넘었고) 바깥쪽을 보고 있으면 true.
+    private bool IsPatrolEdgeAhead()
+    {
+        float halfWidth = Mathf.Max(patrolSize.x / 2f, PatrolArriveDistance);
+        float offset = transform.position.x - PatrolCenter.x;
+        return Mathf.Abs(offset) >= halfWidth && (offset > 0 ? 1 : -1) == LookDirection;
+    }
+
+    public void TurnAround() => Face(-LookDirection);
+
+    public void FaceTowardPatrolCenter() => Face(PatrolCenter.x > transform.position.x ? 1 : -1);
 
     // 바라보는 방향을 바꾸는 곳은 모두 여기를 거친다. 방향 전환이 막혀 있으면(기절 등) 그대로 둔다.
     // 콜라이더가 한쪽으로 치우쳐 있으면 뒤집을 때 몸이 옮겨져 벽에 박히므로, 콜라이더 중심을 축으로 돌도록 위치를 보정한다.
     private void Face(int direction)
     {
         int look = direction > 0 ? 1 : -1;
-        if (look == LookDirection || !Restrictions.Can(ActionBlock.Turn))
+        if (!canChangeFace || look == LookDirection || !Restrictions.Can(ActionBlock.Turn))
             return;
-
+        canChangeFace = false;
+        changeFaceTime = Time.time + ChangeFaceDelay;
+        
         float shift = 2f * bodyCollider.offset.x * transform.lossyScale.x * LookDirection;
         transform.SetPositionAndRotation(
             transform.position + new Vector3(shift, 0f, 0f),
@@ -275,7 +300,7 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
 
     public bool IsInAttackRange()
     {
-        var first = Abilities.AbilityAt(0);
+        var first = Abilities?.AbilityAt(0);
         if (!HasTarget || first == null) return false;
         return Vector2.Distance(transform.position, Target.position) <= first.maxRange;
     }
@@ -355,12 +380,17 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
             Gizmos.DrawRay(currentPos, dir *  viewRadius);
         }
 
-        Vector2 patrolGizmoCenter = Application.isPlaying ? patrolCenter : (Vector2)transform.position;
+        Vector2 patrolGizmoCenter = Application.isPlaying ? PatrolCenter : (Vector2)transform.position;
         Gizmos.color = new Color32(0, 255, 0, 50);
         Gizmos.DrawCube(patrolGizmoCenter, patrolSize);
 
         Gizmos.color = Color.forestGreen;
         Gizmos.DrawWireSphere(WallCheckPoint, WallCheckRadius);
+        
+        Gizmos.color = IsInAttackRange() ? Color.red : Color.blue;
+        var first = abilities[0];
+        if (first != null)
+            Gizmos.DrawWireSphere(transform.position, first.maxRange);
     }
 
     public override void Die()

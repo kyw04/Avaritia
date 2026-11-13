@@ -72,7 +72,7 @@ public class EntityAnimator : AnimatorBase,
         
         float defaultSpeed = e.Source.GetDefaultStat<float>(StatType.MoveSpeed);
         AnimatorComponent.SetFloat(Speed, e.Speed / defaultSpeed);
-        PlayAnimation("Move");
+        PlayAnimation("move");
     }
     public void OnNotify(EntityJumpedEvent e) { if (e.Source == self) PlayAnimation(e.Data.jump.animClip.name); }
     // 사망 중에는 행동 취소(RestoreAnimation 등)가 보내는 낙하 애니메이션이 사망 모션을 덮지 않게 한다.

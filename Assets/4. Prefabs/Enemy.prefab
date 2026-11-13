@@ -62,6 +62,10 @@ MonoBehaviour:
   dropAbilityAsset: {fileID: 0}
   dropChance: 0
   feedbacks:
+    <Idle>k__BackingField:
+      animClip: {fileID: 7400000, guid: a131591b8308f324a8937cec868a2406, type: 2}
+      particle: {fileID: 0}
+      sound: {fileID: 0}
     <Land>k__BackingField:
       animClip: {fileID: 0}
       particle: {fileID: 0}
@@ -92,7 +96,7 @@ MonoBehaviour:
       sound: {fileID: 0}
   knockbackResistance: 0
   displayName: "\uC9D1\uAC8C\uAFBC"
-  patrolSize: {x: 5.275786, y: 8.160981}
+  patrolSize: {x: 5, y: 1}
   maxDropHeight: 1
   chaseGiveUpTime: 2
   giveUpSearchCooldown: 1

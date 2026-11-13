@@ -36,7 +36,8 @@ public class EnemyEditor : Editor
         }
 
         Handles.color = Color.green;
-        Handles.DrawWireCube(center, new Vector3(size.x, size.y, 0f));
+        Vector2 patrolGizmoCenter = Application.isPlaying ? enemy.PatrolCenter : (Vector2)center;
+        Handles.DrawWireCube(patrolGizmoCenter, new Vector3(size.x, size.y, 0f));
 
         sceneView.Repaint();
     }

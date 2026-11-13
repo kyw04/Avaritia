@@ -20,6 +20,7 @@ public class EnemyAliveState : StateBase<Enemy>
     public EnemyAliveState(Enemy owner) : base(owner)
     {
         AddChild(new EnemyPatrolState(Owner));
+        AddChild(new EnemyTurnState(Owner));
         AddChild(new EnemyReturnToPatrolState(Owner));
         AddChild(new EnemyCombatState(Owner));
 
@@ -27,15 +28,61 @@ public class EnemyAliveState : StateBase<Enemy>
     }
 }
 
-// 기절은 상태가 아니라 디버프(RestrictModule)다. 이동/공격/방향 전환이 막히면 각 상태가 그 행동만 못 한다.
-    
-        
+#region Turn
+// 순찰 중 벽/낭떠러지를 만나 돌아서는 동작. 방향을 뒤집고 제자리에 멈춰 돌아서기 모션(Feedbacks.Turn)이 끝나면 순찰로 돌아간다.
+// 돌아서는 동안에도 대상을 찾으면 바로 전투로 들어간다.
+public class EnemyTurnState : StateBase<Enemy>
+{
+    private float endTime;
+
+    public EnemyTurnState(Enemy owner) : base(owner)
+    {
+        Machine.AddTransition<EnemyTurnState, EnemyPatrolState>();
+        Machine.AddTransition<EnemyTurnState, EnemyCombatState>();
+    }
+
+    public override void Enter()
+    {
+        var clip = Owner.Feedbacks.Turn.animClip;
+        endTime = Time.time + (clip != null ? clip.length : 0f);
+
+        Owner.TurnAround();
+        Owner.Restrictions.Set(this, ActionBlock.Move);
+        Owner.Move(Vector2.zero);
+
+        if (clip != null)
+            EventBus.Publish(new EntityAnimationEvent(Owner, clip));
+    }
+
+    public override void Execute()
+    {
+        Owner.FindTarget();
+        if (Owner.HasTarget)
+            return;
+
+        if (Time.time >= endTime)
+            Machine.ChangeState<EnemyPatrolState>();
+    }
+
+    public override void FixedExecute()
+    {
+        Owner.Move(Vector2.zero);
+    }
+
+    public override void Exit()
+    {
+        Owner.Restrictions.Remove(this);
+    }
+}
+#endregion
+
 #region Patrol
 public class EnemyPatrolState : StateBase<Enemy>
 {
     public EnemyPatrolState(Enemy owner) : base(owner)
     {
         Machine.AddTransition<EnemyPatrolState, EnemyCombatState>();
+        Machine.AddTransition<EnemyPatrolState, EnemyTurnState>();
     }
     
     public override void Execute()
@@ -71,7 +118,7 @@ public class EnemyReturnToPatrolState : StateBase<Enemy>
 
     public override void Execute()
     {
-        if (Owner.IsInPatrolArea())
+        if (Owner.IsInPatrolArea(Owner.transform.position))
         {
             Machine.ChangeState<EnemyPatrolState>();
             return;
@@ -113,7 +160,7 @@ public class EnemyMoveState : StateBase<Enemy>
 
         if (!Owner.HasTarget)
         {
-            if (Owner.IsInPatrolArea())
+            if (Owner.IsInPatrolArea(Owner.transform.position))
                 Machine.ChangeState<EnemyPatrolState>();
             else
                 Machine.ChangeState<EnemyReturnToPatrolState>();
@@ -128,11 +175,12 @@ public class EnemyMoveState : StateBase<Enemy>
     {
         if (Owner.IsKnockedBack)
             return;
+        
         if (!Owner.IsInAttackRange())
             Owner.Move();
         else
         {
-            Owner.Rb.linearVelocity = new UnityEngine.Vector2(0, Owner.Rb.linearVelocityY);
+            Owner.Rb.linearVelocity = new Vector2(0, Owner.Rb.linearVelocityY);
             Owner.FaceTarget();
         }
     }
