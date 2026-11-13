@@ -19,8 +19,9 @@ MonoBehaviour:
     animClip: {fileID: 0}
     particle: {fileID: 0}
     sound: {fileID: 0}
-  displayName: "\uCD1D\uC54C \uAC15\uD654"
-  description: "\uD0C4\uCC3D\uC758 \uB2E4\uC12F\uBC88 \uC9F8 \uCD1D\uC54C\uC774 \uAC15\uD654\uB41C\uB2E4."
+  displayName: "\uB2E4\uC12F \uBC88\uC9F8 \uCD1D\uC54C \uAC15\uD654"
+  description: "\uD0C4\uCC3D\uC758 \uB2E4\uC12F \uBC88\uC9F8 \uCD1D\uC54C\uC774 \uAC15\uD654\uB41C\uB2E4(\uD53C\uD574
+    2\uBC30, \uD0C4\uC18D\uACFC \uD06C\uAE30 1.5\uBC30)."
   trigger:
     rid: 3411489292888309836
   conditions:

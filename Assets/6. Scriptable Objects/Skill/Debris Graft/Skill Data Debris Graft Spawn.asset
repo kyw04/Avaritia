@@ -20,7 +20,8 @@ MonoBehaviour:
     particle: {fileID: 0}
     sound: {fileID: 0}
   displayName: "\uC794\uD574 \uC0DD\uC131"
-  description: 
+  description: "\uC801\uC744 \uCC98\uCE58\uD558\uBA74 30% \uD655\uB960\uB85C \uAE30\uACC4\uC7A5\uCE58
+    \uB354\uBBF8\uAC00 \uC0DD\uAE34\uB2E4."
   trigger:
     rid: 5321512088978325576
   conditions:

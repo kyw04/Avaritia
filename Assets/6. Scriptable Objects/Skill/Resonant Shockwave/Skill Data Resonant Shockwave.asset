@@ -19,8 +19,10 @@ MonoBehaviour:
     animClip: {fileID: 0}
     particle: {fileID: 1698722073882453297, guid: d97fff8acf014071a3f835d51616e215, type: 3}
     sound: {fileID: 0}
-  displayName: 
-  description: 
+  displayName: "\uACF5\uBA85 \uCDA9\uACA9\uD30C"
+  description: "\uC8FC\uBCC0\uC744 \uD06C\uAC8C \uC6B8\uB9AC\uB294 \uCDA9\uACA9\uD30C\uB97C
+    \uC77C\uC73C\uCF1C \uADFC\uCC98 \uC801\uB4E4\uC5D0\uAC8C \uD53C\uD574\uB97C \uC8FC\uACE0,
+    3\uCD08 \uB3D9\uC548 \uBC29\uC5B4\uB825\uC744 10 \uB0AE\uCD98\uB2E4."
   trigger:
     rid: 5230665391898361926
   conditions:
