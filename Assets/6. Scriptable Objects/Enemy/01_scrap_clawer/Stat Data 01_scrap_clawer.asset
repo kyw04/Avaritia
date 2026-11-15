@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee431c950793c4d409cffdfc68b75dce, type: 3}
+  m_Name: Stat Data 01_scrap_clawer
+  m_EditorClassIdentifier: Assembly-CSharp::StatData
+  stats:
+  - rid: 5321512379202142504
+  - rid: 5321512379202142505
+  - rid: 5321512379202142506
+  - rid: 5321512379202142507
+  - rid: 5321512379202142508
+  - rid: 5321512379202142509
+  references:
+    version: 2
+    RefIds:
+    - rid: 5321512379202142336
+      type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
+      data:
+        value: 50
+    - rid: 5321512379202142346
+      type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
+      data:
+        value: 50
+    - rid: 5321512379202142356
+      type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
+      data:
+        value: 12
+    - rid: 5321512379202142366
+      type: {class: StatData/IntValue, ns: , asm: Assembly-CSharp}
+      data:
+        value: 1
+    - rid: 5321512379202142376
+      type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
+      data:
+        value: 2.6
+    - rid: 5321512379202142504
+      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
+      data:
+        statType: 1
+        value:
+          rid: 5321512379202142336
+    - rid: 5321512379202142505
+      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
+      data:
+        statType: 2
+        value:
+          rid: 5321512379202142346
+    - rid: 5321512379202142506
+      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
+      data:
+        statType: 3
+        value:
+          rid: 5321512379202142376
+    - rid: 5321512379202142507
+      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
+      data:
+        statType: 6
+        value:
+          rid: 5321512379202142356
+    - rid: 5321512379202142508
+      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
+      data:
+        statType: 7
+        value:
+          rid: 5321512379202142366
+    - rid: 5321512379202142509
+      type: {class: StatData/StatEntry, ns: , asm: Assembly-CSharp}
+      data:
+        statType: 10
+        value:
+          rid: 5321512379202142510
+    - rid: 5321512379202142510
+      type: {class: StatData/FloatValue, ns: , asm: Assembly-CSharp}
+      data:
+        value: 0

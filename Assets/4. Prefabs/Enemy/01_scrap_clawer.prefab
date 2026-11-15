@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7411222152702535793}
   - component: {fileID: 2976961367799137823}
   m_Layer: 7
-  m_Name: Enemy
+  m_Name: 01_scrap_clawer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
