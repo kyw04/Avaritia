@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66d99f0a6e5f4ccdad3bd77a2f0c5d2b, type: 3}
+  m_Name: Attack_Default Arm Air
+  m_EditorClassIdentifier: Assembly-CSharp::AttackData
+  duration: 0.5
+  ready:
+    animClip: {fileID: 7400000, guid: 306fa09471ab4bd46bf8cbf7c0332fff, type: 2}
+    particle: {fileID: 0}
+    sound: {fileID: 0}
+  attack:
+    animClip: {fileID: 7400000, guid: b338db48d3e043e4d91cd4a064f9efb6, type: 2}
+    particle: {fileID: 0}
+    sound: {fileID: 0}
+  damageMultiplier: 1.2
+  filter:
+    useTriggers: 0
+    useLayerMask: 1
+    useDepth: 0
+    useOutsideDepth: 0
+    useNormalAngle: 0
+    useOutsideNormalAngle: 0
+    layerMask:
+      serializedVersion: 2
+      m_Bits: 128
+    minDepth: 0
+    maxDepth: 0
+    minNormalAngle: 0
+    maxNormalAngle: 0
+  canTurn: 1
+  canMove: 1
+  moveDuration: 0
+  attackStrategy:
+    rid: 1772930754192081014
+  references:
+    version: 2
+    RefIds:
+    - rid: 1772930754192081014
+      type: {class: MeleeAttackStrategy, ns: , asm: Assembly-CSharp}
+      data:
+        hitboxPosition: {x: 0.5, y: 0.2}
+        hitboxSize: {x: 2, y: 1.2}

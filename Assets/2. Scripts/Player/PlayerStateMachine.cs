@@ -335,6 +335,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
                 () => owner.DoubleJumpCount < owner.MaxDoubleJumpCount);
             Machine.AddTransition<PlayerFallState, PlayerJumpState>(
                 () => owner.DoubleJumpCount < owner.MaxDoubleJumpCount);
+            Machine.AddTransition<PlayerJumpState, PlayerAttackState>(() => owner.CanAttack());
 
             DataLoad();
         }
@@ -424,6 +425,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             Machine.AddTransition<PlayerFallState, PlayerLandState>();
             Machine.AddTransition<PlayerFallState, PlayerDashState>(
                 () => owner.DashCount < owner.MaxDashCount);
+            Machine.AddTransition<PlayerFallState, PlayerAttackState>(() => owner.CanAttack());
         }
 
         public override void Enter()
@@ -472,13 +474,16 @@ public class PlayerStateMachine : StateMachineBase<Player>
         private bool hasAttack;
         private float timer;
         private int comboIndex;
-        private Vector2 lockedMoveDirection;
+        // 시작할 때 땅/공중에 따라 정한 콤보.
+        private AttackDataCombo combo;
+        private bool isAirCombo;
 
         public PlayerAttackState(Player owner) : base(owner)
         {
             EventBus.Subscribe<EntityAttackBufferEvent>(this);
 
             Machine.AddTransition<PlayerAttackState, PlayerIdleState>();
+            Machine.AddTransition<PlayerAttackState, PlayerFallState>();
             Machine.AddTransition<PlayerAttackState, PlayerDashState>(
                 () => owner.DashCount < owner.MaxDashCount);
         }
@@ -488,24 +493,18 @@ public class PlayerStateMachine : StateMachineBase<Player>
             if (data.canTurn)
                 Owner.UpdateFacing(InputHandler.Instance.MoveInput);
 
-            if (data.canMove)
-            {
-                // Owner.Move() below also updates facing to match lockedMoveDirection (same as every other
-                // movement state) — canTurn only controls the stationary one-time facing choice, not this.
-                float inputX = InputHandler.Instance.MoveInput.x;
-                float dirX = inputX != 0 ? Mathf.Sign(inputX) : Owner.LookDirection;
-                lockedMoveDirection = new Vector2(dirX, 0f);
-            }
-
-            Owner.Rb.linearVelocity = Vector2.zero;
-            weapon.Attack(Owner, comboIndex);
+            // 이동 가능한 공격은 이어서 움직이도록 가로 속도를 남긴다. 세로 속도는 두어 공중에서 멈추지 않게 한다.
+            Owner.Rb.linearVelocity = new Vector2(data.canMove ? Owner.Rb.linearVelocity.x : 0f, Owner.Rb.linearVelocity.y);
+            weapon.Attack(Owner, comboIndex, null, combo);
         }
 
         public override void Enter()
         {
-            if (Owner.Weapon == null || Owner.Weapon.Data.combo == null || Owner.Weapon.Data.combo.Count == 0)
+            combo = Owner.CurrentCombo;
+            isAirCombo = !Owner.IsGrounded;
+            if (combo == null || combo.Count == 0)
             {
-                Machine.ChangeState<PlayerIdleState>();
+                EndAttack();
                 return;
             }
 
@@ -514,11 +513,20 @@ public class PlayerStateMachine : StateMachineBase<Player>
             hasAttack = false;
             timer = 0f;
 
-            BeginAttack(weapon.Data.combo.datas[comboIndex]);
+            BeginAttack(combo.datas[comboIndex]);
         }
 
         public override void Execute()
         {
+            // 공중 콤보 도중에 착지하면 준비 동작이든 후딜레이든 바로 취소하고 콤보를 끝낸다.
+            if (isAirCombo && Owner.IsGrounded && Owner.Rb.linearVelocityY <= Entity.GroundedVelocityTolerance)
+            {
+                Owner.CancelAttack();
+                Owner.AttackReadyTime = Time.time + combo.cooldown;
+                Machine.ChangeState<PlayerIdleState>();
+                return;
+            }
+
             if (timer <= 0.01f)
                 buffer = false;
 
@@ -526,35 +534,44 @@ public class PlayerStateMachine : StateMachineBase<Player>
                 hasAttack = true;
 
             timer += Time.deltaTime;
-            if (timer >= weapon.Data.combo.datas[comboIndex].duration)
+            if (timer >= combo.datas[comboIndex].duration)
             {
                 comboIndex++;
                 
-                if (!(buffer || IsHoldingAttack()) || comboIndex >= weapon.Data.combo.datas.Count)
+                if (!(buffer || IsHoldingAttack()) || comboIndex >= combo.datas.Count)
                 {
                     comboIndex = 0;
-                    Owner.AttackReadyTime = Time.time + weapon.Data.combo.cooldown;
-                    Machine.ChangeState<PlayerIdleState>();
+                    Owner.AttackReadyTime = Time.time + combo.cooldown;
+                    EndAttack();
                     return;
                 }
                 
                 buffer = false;
                 hasAttack = false;
-                BeginAttack(weapon.Data.combo.datas[comboIndex]);
+                BeginAttack(combo.datas[comboIndex]);
                 timer = 0f;
             }
         }
 
         public override void FixedExecute()
         {
-            var data = weapon.Data.combo.datas[comboIndex];
-            if (data.canMove && timer < data.moveDuration)
-                Owner.Move(lockedMoveDirection);
+            var data = combo.datas[comboIndex];
+            // canMove면 moveDuration 동안 방향키대로 움직인다(방향도 따라 바뀐다). 0이면 공격 내내.
+            if (data.canMove && (data.moveDuration <= 0f || timer < data.moveDuration))
+                Owner.Move(InputHandler.Instance.MoveInput);
             else
                 Owner.Rb.linearVelocity = new Vector2(0f, Owner.Rb.linearVelocity.y);
         }
 
         public void OnNotify(EntityAttackBufferEvent e) => buffer = true;
+
+        private void EndAttack()
+        {
+            if (Owner.IsGrounded)
+                Machine.ChangeState<PlayerIdleState>();
+            else
+                Machine.ChangeState<PlayerFallState>();
+        }
 
         private bool IsHoldingAttack() => Owner.Weapon != null && Owner.Weapon.Data.holdToAttack && InputHandler.Instance.AttackHeld;
     }

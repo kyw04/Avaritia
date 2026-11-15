@@ -144,8 +144,7 @@ public class ParticleManager : Singleton<ParticleManager>,
     // SoundManager와 같은 이유로 무기 콤보 공격일 때만 스윙 파티클을 띄운다.
     public void OnNotify(EntityAttackStartEvent e)
     {
-        if (e.Source is Player player && player.Weapon != null && player.Weapon.Data.combo != null
-            && player.Weapon.Data.combo.datas.Contains(e.Data))
+        if (e.Source is Player player && player.Weapon != null && player.Weapon.Data.IsComboAttack(e.Data))
             Spawn(player.Weapon.Data.swing.particle, e.Source.transform);
     }
 }

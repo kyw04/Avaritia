@@ -14,6 +14,7 @@ public class InputHandler : Singleton<InputHandler>
     private bool Can(ActionBlock action) => player == null || player.Restrictions.Can(action);
     public bool AttackHeld => InputAction.Gameplay.Attack.IsPressed();
     private bool attackRequested;
+    private bool landingAttackRequested;
 
     public PlayerInputActions InputAction { get; private set; }
     
@@ -58,14 +59,40 @@ public class InputHandler : Singleton<InputHandler>
         if (!Can(ActionBlock.Attack))
         {
             attackRequested = false;
+            landingAttackRequested = false;
             return;
         }
 
         if (attackRequested)
         {
             attackRequested = false;
-            EventBus.Publish(new EntityAttackBufferEvent());
-            player.Machine.ChangeState<PlayerAttackState>();
+            // 곧 착지하면 공중 공격 대신 착지한 뒤 지상 공격을 한다.
+            if (player.IsLandingSoon)
+            {
+                landingAttackRequested = true;
+            }
+            else
+            {
+                EventBus.Publish(new EntityAttackBufferEvent());
+                player.Machine.ChangeState<PlayerAttackState>();
+            }
+        }
+
+        // 착지 경직(Land) 등으로 바로 공격할 수 없으면 공격이 시작될 때까지 기다리고, 다시 떠오르면 취소한다.
+        if (landingAttackRequested)
+        {
+            if (!player.IsGrounded)
+            {
+                if (!player.IsLandingSoon)
+                    landingAttackRequested = false;
+            }
+            else
+            {
+                EventBus.Publish(new EntityAttackBufferEvent());
+                player.Machine.ChangeState<PlayerAttackState>();
+                if (player.IsAttacking)
+                    landingAttackRequested = false;
+            }
         }
 
         if (player != null && player.Weapon != null && player.Weapon.Data.holdToAttack && AttackHeld)

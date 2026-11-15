@@ -11,6 +11,7 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
     [SerializeField] private PlayerInteractionController interactionController;
     [SerializeField] private LayerMask platformLayer;
     [SerializeField] private float dropThroughDuration = 1f;
+    [SerializeField, Min(0)] private float minAirAttackHeight = 1.5f;
     private Collider2D col;
     private SpriteLibrary spriteLibrary;
     private WeaponInstance weapon;
@@ -26,7 +27,15 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
     public PlayerInteractionController InteractionController => interactionController;
     public float AttackReadyTime { get; set; }
 
-    public bool CanAttack() => Restrictions.Can(ActionBlock.Attack) && Weapon != null &&Weapon.Data.combo != null && Weapon.Data.combo.Count > 0 && Time.time >= AttackReadyTime;
+    // 땅 위면 지상 콤보, 공중이면 공중 콤보. 곧 착지할 때는 공중 공격을 하지 않는다(착지 후 지상 공격).
+    public AttackDataCombo CurrentCombo =>
+        Weapon == null ? null : IsGrounded ? Weapon.Data.combo : IsLandingSoon ? null : Weapon.Data.airCombo;
+
+    // 떨어지는 중이고 발밑 minAirAttackHeight 안에 땅이 있으면 곧 착지하는 것으로 본다.
+    public bool IsLandingSoon =>
+        !IsGrounded && Rb.linearVelocityY <= 0f && Physics2D.Raycast(FootPosition, Vector2.down, minAirAttackHeight, groundLayer);
+
+    public bool CanAttack() => Restrictions.Can(ActionBlock.Attack) && CurrentCombo != null && CurrentCombo.Count > 0 && Time.time >= AttackReadyTime;
 
     public void EquipWeapon(WeaponInstance newWeapon)
     {
