@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 664a9fb7cf935614f9c0a93a9e1ef727, type: 3}
   m_Name: Debuff_Armor Break
   m_EditorClassIdentifier: Assembly-CSharp::DebuffData
-  displayName: "\uBC29\uC5B4\uB825 \uAC10\uC18C"
-  icon: {fileID: 0}
+  info:
+    icon: {fileID: 0}
+    displayName: "\uBC29\uC5B4\uB825 \uAC10\uC18C"
+    description: 
   tags: 2
   stackRule: 0
   maxStacks: 1

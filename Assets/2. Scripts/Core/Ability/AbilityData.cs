@@ -6,10 +6,9 @@ public class AbilityData : ScriptableObject, IInventoryItem
 {
     public float cooldown;
     public float maxRange = float.MaxValue;
-    public Sprite icon;
+    public RankData rank;
     public ActionFeedback cast;
-    public string displayName;
-    [TextArea] public string description;
+    [SerializeField] private DisplayInfo info = new();
     [SerializeReference, SubclassSelector] public IAbilityTrigger trigger;
     [SerializeReference, SubclassSelector] public List<IAbilityCondition> conditions = new();
     [SerializeReference, SubclassSelector] public List<IAbilityEffect> effects = new();
@@ -17,7 +16,7 @@ public class AbilityData : ScriptableObject, IInventoryItem
     public List<AbilityData> linkedAbilities = new();
 
     public Entity Owner { get; }
-    public string DisplayName => displayName;
-    public string Details => description;
-    public Sprite Icon => icon;
+    public string DisplayName => info.DisplayName;
+    public string Details => info.Details;
+    public Sprite Icon => info.Icon;
 }

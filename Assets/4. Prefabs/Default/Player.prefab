@@ -550,6 +550,10 @@ MonoBehaviour:
   dropAbilityAsset: {fileID: 0}
   dropChance: 0
   feedbacks:
+    <Idle>k__BackingField:
+      animClip: {fileID: 0}
+      particle: {fileID: 0}
+      sound: {fileID: 0}
     <Land>k__BackingField:
       animClip: {fileID: 7400000, guid: b0f87aa16caf28a4d9e4667bb045952f, type: 2}
       particle: {fileID: 3997078153917561944, guid: 121960c962a84982a420a44a2f68e135, type: 3}
@@ -579,7 +583,10 @@ MonoBehaviour:
       particle: {fileID: 0}
       sound: {fileID: 0}
   knockbackResistance: 0
-  displayName: 
+  info:
+    icon: {fileID: 0}
+    displayName: 
+    description: 
   defaultWeapon: {fileID: 11400000, guid: e82aa12019120254cb29df3fe5dffb83, type: 2}
   ammoCountBar: {fileID: 3843919711502366064}
   interactionController: {fileID: 6477522951164393474}
@@ -587,6 +594,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   dropThroughDuration: 1
+  minAirAttackHeight: 1.5
   references:
     version: 2
     RefIds:
@@ -624,6 +632,7 @@ MonoBehaviour:
   tapThreshold: 0.15
   fillStartDelay: 0.5
   holdDuration: 0.6
+  defaultPromptOffset: {x: 0, y: 1}
 --- !u!114 &258006038428868027
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 664a9fb7cf935614f9c0a93a9e1ef727, type: 3}
   m_Name: Debuff_Stun
   m_EditorClassIdentifier: Assembly-CSharp::DebuffData
-  displayName: "\uAE30\uC808"
-  icon: {fileID: 0}
+  info:
+    icon: {fileID: 0}
+    displayName: "\uAE30\uC808"
+    description: 
   tags: 1
   stackRule: 0
   maxStacks: 1

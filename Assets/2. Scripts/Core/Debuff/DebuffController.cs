@@ -148,13 +148,13 @@ public class DebuffController
     {
         foreach (var debuff in active)
         {
-            if (debuff.Data.icon == null)
+            if (debuff.Data.Icon == null)
                 continue;
 
             into.Add(new StatusIconEntry
             {
                 Key = (debuff.Data, StatusIconKind.Debuff),
-                Icon = debuff.Data.icon,
+                Icon = debuff.Data.Icon,
                 EndTime = debuff.EndTime,
                 Duration = debuff.Duration,
                 Count = debuff.Stacks > 1 ? debuff.Stacks : 0,

@@ -1,9 +1,6 @@
 using UnityEngine;
 
-public interface IInventoryItem
+public interface IInventoryItem : IInfo
 {
     Entity Owner { get; }
-    string DisplayName { get; }
-    string Details { get; }
-    Sprite Icon { get; }
 }

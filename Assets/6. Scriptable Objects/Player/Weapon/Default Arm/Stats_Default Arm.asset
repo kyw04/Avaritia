@@ -14,13 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
   cooldown: 0
   maxRange: 3.4028235e+38
-  icon: {fileID: 0}
+  rank: {fileID: 0}
   cast:
     animClip: {fileID: 0}
     particle: {fileID: 0}
     sound: {fileID: 0}
-  displayName: "\uAE30\uBCF8 \uB2A5\uB825\uCE58"
-  description: "\uCD5C\uB300 \uCCB4\uB825 +25, \uACF5\uACA9\uB825 +5."
+  info:
+    icon: {fileID: 0}
+    displayName: "\uAE30\uBCF8 \uB2A5\uB825\uCE58"
+    description: "\uCD5C\uB300 \uCCB4\uB825 +25, \uACF5\uACA9\uB825 +5."
   trigger:
     rid: 3411488982234300492
   conditions: []

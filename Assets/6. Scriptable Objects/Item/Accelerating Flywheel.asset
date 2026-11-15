@@ -14,16 +14,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Item
   cooldown: 0
   maxRange: 3.4028235e+38
-  icon: {fileID: 21300000, guid: 6ac4487ab1d3b8d4aa3b669b5dbc8a79, type: 3}
-  displayName: "\uAC00\uC18D \uD50C\uB77C\uC774\uD720"
-  description: "\uACF5\uACA9\uC744 \uC774\uC5B4\uAC08\uC218\uB85D \uC810\uC810 \uB354
-    \uBE60\uB974\uAC8C \uD68C\uC804\uD558\uB294 \uAD00\uC131 \uBC14\uD034. \uACF5\uACA9\uC744
-    \uBA48\uCD94\uC9C0 \uC54A\uB294 \uD55C \uAE30\uC138\uB294 \uACC4\uC18D\uD574\uC11C
-    \uC313\uC778\uB2E4."
+  rank: {fileID: 11400000, guid: 95e43758967e52b4b9cb055a7461f592, type: 2}
+  cast:
+    animClip: {fileID: 0}
+    particle: {fileID: 0}
+    sound: {fileID: 0}
+  info:
+    icon: {fileID: 21300000, guid: 6ac4487ab1d3b8d4aa3b669b5dbc8a79, type: 3}
+    displayName: "\uAC00\uC18D \uD50C\uB77C\uC774\uD720"
+    description: "\uACF5\uACA9\uC744 \uC774\uC5B4\uAC08\uC218\uB85D \uC810\uC810
+      \uB354 \uBE60\uB974\uAC8C \uD68C\uC804\uD558\uB294 \uAD00\uC131 \uBC14\uD034.
+      \uACF5\uACA9\uC744 \uBA48\uCD94\uC9C0 \uC54A\uB294 \uD55C \uAE30\uC138\uB294
+      \uACC4\uC18D\uD574\uC11C \uC313\uC778\uB2E4."
   trigger:
     rid: -2
   conditions: []
   effects: []
+  linkedAbilities: []
   references:
     version: 2
     RefIds:

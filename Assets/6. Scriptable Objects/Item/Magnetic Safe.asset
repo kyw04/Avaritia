@@ -14,16 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Item
   cooldown: 0
   maxRange: 3.4028235e+38
-  icon: {fileID: 21300000, guid: ab99142181f77a54b916c0ae4f8039bc, type: 3}
+  rank: {fileID: 11400000, guid: 95e43758967e52b4b9cb055a7461f592, type: 2}
   cast:
     animClip: {fileID: 0}
     particle: {fileID: 0}
     sound: {fileID: 0}
-  displayName: "\uC790\uC11D \uAE08\uACE0"
-  description: "\uC4F0\uB7EC\uC9C4 \uC790\uB4E4\uC758 \uC8FC\uBA38\uB2C8\uC5D0\uC11C
-    \uB3D9\uC804\uC744 \uAC15\uC81C\uB85C \uB04C\uC5B4\uB2F9\uAE30\uB294 \uBB34\uAC70\uC6B4
-    \uC790\uC11D \uAE08\uACE0. \uC7AC\uD654 \uD68D\uB4DD\uB7C9\uC774 \uB298\uC5B4\uB098\uACE0
-    \uC77C\uC77C\uC774 \uC8FC\uC6B8 \uC218\uACE0\uB3C4 \uB35C\uC5B4\uC900\uB2E4."
+  info:
+    icon: {fileID: 21300000, guid: ab99142181f77a54b916c0ae4f8039bc, type: 3}
+    displayName: "\uC790\uC11D \uAE08\uACE0"
+    description: "\uC4F0\uB7EC\uC9C4 \uC790\uB4E4\uC758 \uC8FC\uBA38\uB2C8\uC5D0\uC11C
+      \uB3D9\uC804\uC744 \uAC15\uC81C\uB85C \uB04C\uC5B4\uB2F9\uAE30\uB294 \uBB34\uAC70\uC6B4
+      \uC790\uC11D \uAE08\uACE0. \uC7AC\uD654 \uD68D\uB4DD\uB7C9\uC774 \uB298\uC5B4\uB098\uACE0
+      \uC77C\uC77C\uC774 \uC8FC\uC6B8 \uC218\uACE0\uB3C4 \uB35C\uC5B4\uC900\uB2E4."
   trigger:
     rid: -2
   conditions: []

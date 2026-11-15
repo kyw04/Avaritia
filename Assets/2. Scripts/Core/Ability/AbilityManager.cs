@@ -86,7 +86,7 @@ public class AbilityManager
     private Binding CreateBinding(AbilityData data, Sprite parentIcon = null)
     {
         if (data == null || data.trigger == null) return null;
-        var state = new AbilityRuntimeState { Icon = data.icon != null ? data.icon : parentIcon };
+        var state = new AbilityRuntimeState { Icon = data.Icon != null ? data.Icon : parentIcon };
         var binding = new Binding { Data = data, State = state, Trigger = CloneTrigger(data.trigger) };
         binding.State.StartCooldown = () => StartCooldown(binding);
         binding.Trigger.Bind(owner, data, ctx => TryActivate(binding, ctx));

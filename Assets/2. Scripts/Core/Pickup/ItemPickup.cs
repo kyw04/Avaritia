@@ -7,7 +7,8 @@ public class ItemPickup : IInteractable
 
     public Item Item => item;
     public string DisplayName => string.IsNullOrEmpty(item.DisplayName) ? item.name : item.DisplayName;
-    public Sprite Icon => item.icon;
+    public Sprite Icon => item.Icon;
+    public string Details => item.Details;
     // Payload-only: never registered directly, always wrapped by WorldPickup.
     public Transform Transform => null;
     public bool NeedsChoice(Player player) => false;

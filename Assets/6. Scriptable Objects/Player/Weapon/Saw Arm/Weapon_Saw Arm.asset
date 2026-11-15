@@ -14,12 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 801ce89494f74eb47be585198362eac3, type: 3}
   combo: {fileID: 11400000, guid: cfc1dc743dc402a41b45dc7453e77995, type: 2}
+  airCombo: {fileID: 0}
   holdToAttack: 1
-  icon: {fileID: -8680323682801573048, guid: 15f0d0007ab8e344895cf0b156b9f18d, type: 3}
-  displayName: "\uD1B1\uB0A0 \uD314"
-  description: "\uACF5\uACA9\uD560\uC218\uB85D \uC5F4\uC774 \uC313\uC778\uB2E4. \uCD5C\uB300\uCE58\uC5D0\uC11C
-    \uACC4\uC18D \uACF5\uACA9\uD558\uBA74 \uACFC\uC5F4\uB85C \uC790\uC2E0\uC774 \uD53C\uD574\uB97C
-    \uC785\uB294\uB2E4."
+  info:
+    icon: {fileID: -8680323682801573048, guid: 15f0d0007ab8e344895cf0b156b9f18d, type: 3}
+    displayName: "\uD1B1\uB0A0 \uD314"
+    description: "\uACF5\uACA9\uD560\uC218\uB85D \uC5F4\uC774 \uC313\uC778\uB2E4.
+      \uCD5C\uB300\uCE58\uC5D0\uC11C \uACC4\uC18D \uACF5\uACA9\uD558\uBA74 \uACFC\uC5F4\uB85C
+      \uC790\uC2E0\uC774 \uD53C\uD574\uB97C \uC785\uB294\uB2E4."
   passiveAbilities:
   - {fileID: 11400000, guid: b188cfa9bcd81aa4baec84847be699d9, type: 2}
   - {fileID: 11400000, guid: e65ec9621c50f63489349e04df8a9e9c, type: 2}

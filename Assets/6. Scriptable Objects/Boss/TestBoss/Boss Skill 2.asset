@@ -14,14 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
   cooldown: 3
   maxRange: 3
-  icon: {fileID: 0}
-  description: 
+  rank: {fileID: 0}
+  cast:
+    animClip: {fileID: 0}
+    particle: {fileID: 0}
+    sound: {fileID: 0}
+  info:
+    icon: {fileID: 0}
+    displayName: 
+    description: 
   trigger:
     rid: 5230665391898361941
   conditions:
   - rid: 5230665391898361942
   effects:
   - rid: 5230665391898361943
+  linkedAbilities: []
   references:
     version: 2
     RefIds:

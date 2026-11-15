@@ -20,9 +20,9 @@ public class WeaponInstance : IInventoryItem
     public WeaponData Data { get; }
     public Entity Owner { get; private set; }
     public IReadOnlyList<WeaponModule> Modules => modules;
-    public string DisplayName => string.IsNullOrEmpty(Data.displayName) ? Data.name : Data.displayName;
-    public string Details => Data.description;
-    public Sprite Icon => Data.icon;
+    public string DisplayName => string.IsNullOrEmpty(Data.DisplayName) ? Data.name : Data.DisplayName;
+    public string Details => Data.Details;
+    public Sprite Icon => Data.Icon;
 
     public WeaponInstance(WeaponData data)
     {
@@ -102,9 +102,11 @@ public class WeaponInstance : IInventoryItem
         return false;
     }
 
-    public void Attack(IAttacker attacker, int index = 0, Transform defender = null)
+    // combo를 비우면 지상 콤보를 쓴다.
+    public void Attack(IAttacker attacker, int index = 0, Transform defender = null, AttackDataCombo combo = null)
     {
-        var attack = new WeaponAttack { Attacker = attacker, Index = index, Defender = defender, Data = Data.combo.datas[index] };
+        combo ??= Data.combo;
+        var attack = new WeaponAttack { Attacker = attacker, Index = index, Defender = defender, Data = combo.datas[index] };
 
         foreach (var module in modules)
         {

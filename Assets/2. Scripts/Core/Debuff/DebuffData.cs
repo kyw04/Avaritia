@@ -12,15 +12,18 @@ public enum DebuffStackRule { Refresh, Extend, Stack }
 // 디버프 설정. 실제 효과는 modules 조합으로 정하고, 런타임 상태는 ActiveDebuff가 갖는다.
 // 대상에게 거는 입구는 Entity.Debuffs.Apply 하나다.
 [CreateAssetMenu(menuName = "Scriptable Objects/Debuff")]
-public class DebuffData : ScriptableObject
+public class DebuffData : ScriptableObject, IInfo
 {
-    public string displayName;
-    // 비우면 상태 아이콘을 표시하지 않는다.
-    public Sprite icon;
+    // 아이콘을 비우면 상태 아이콘을 표시하지 않는다.
+    [SerializeField] private DisplayInfo info = new();
     public DebuffTag tags;
     public DebuffStackRule stackRule;
     [Min(1)] public int maxStacks = 1;
     // 0 = 제한 없음. 건 쪽의 DebuffDuration 보너스까지 더한 뒤 이 값으로 자른다.
     [Min(0)] public float maxDuration;
     [SerializeReference, SubclassSelector] public List<DebuffModule> modules = new();
+
+    public string DisplayName => string.IsNullOrEmpty(info.DisplayName) ? name : info.DisplayName;
+    public Sprite Icon => info.Icon;
+    public string Details => info.Details;
 }

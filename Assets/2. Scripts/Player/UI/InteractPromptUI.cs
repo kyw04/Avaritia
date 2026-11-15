@@ -7,6 +7,10 @@ public class InteractPromptUI : MonoBehaviour
     [SerializeField] private GameObject root;
     [SerializeField] private Image fillImage;
     [SerializeField] private TextMeshProUGUI keyLabel;
+    // 키 표시 위에 띄우는 픽업 정보. 키 표시(root)를 숨기면 함께 숨는다.
+    [SerializeField] private ItemInfoUI info;
+
+    public ItemInfoUI Info => info;
 
     private void Awake()
     {

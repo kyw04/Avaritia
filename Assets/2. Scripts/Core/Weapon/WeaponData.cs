@@ -13,7 +13,7 @@ public class InputMethodAttribute : Attribute { }
 
 // 무기 설계값. 플레이 중에는 읽기만 하고, 런타임 상태는 WeaponInstance가 가진다.
 [CreateAssetMenu(menuName = "Scriptable Objects/Weapon/WeaponData")]
-public class WeaponData : ScriptableObject
+public class WeaponData : ScriptableObject, IInfo
 {
     [Serializable]
     public class InputMethodBinding
@@ -29,10 +29,10 @@ public class WeaponData : ScriptableObject
 
     public SpriteLibraryAsset spriteLibraryAsset;
     public AttackDataCombo combo;
+    // 공중에서 쓰는 콤보. 비워두면 이 무기는 공중 공격을 할 수 없다.
+    public AttackDataCombo airCombo;
     public bool holdToAttack;
-    public Sprite icon;
-    public string displayName;
-    [TextArea] public string description;
+    [SerializeField] private DisplayInfo info = new();
     public List<AbilityData> passiveAbilities = new();
     public ActionFeedback swing;
     public ActionFeedback hit;
@@ -46,9 +46,13 @@ public class WeaponData : ScriptableObject
     [SerializeField] private List<InputMethodBinding> inputMethods = new();
 
     public IReadOnlyList<InputMethodBinding> InputMethods => inputMethods;
-    public string DisplayName => displayName;
-    public string Details => description;
-    public Sprite Icon => icon;
+    public string DisplayName => info.DisplayName;
+    public string Details => info.Details;
+    public Sprite Icon => info.Icon;
+
+    // 스킬 공격과 구분해 지상·공중 콤보에 속한 공격인지 확인한다.
+    public bool IsComboAttack(AttackData data) =>
+        (combo != null && combo.datas.Contains(data)) || (airCombo != null && airCombo.datas.Contains(data));
 
     // 에디터 드롭다운과 런타임 호출이 같은 기준으로 메서드를 찾는다.
     public static IEnumerable<(Type moduleType, MethodInfo method)> GetInputMethods(IEnumerable<WeaponModule> modules)

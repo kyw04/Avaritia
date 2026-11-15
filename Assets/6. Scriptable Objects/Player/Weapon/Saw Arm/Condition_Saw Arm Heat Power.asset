@@ -14,14 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
   cooldown: 0
   maxRange: 3.4028235e+38
-  icon: {fileID: 0}
+  rank: {fileID: 0}
   cast:
     animClip: {fileID: 0}
     particle: {fileID: 0}
     sound: {fileID: 0}
-  displayName: "\uC5F4 \uCD95\uC801"
-  description: "\uC5F4\uC774 5 \uC774\uC0C1 \uC313\uC774\uBA74 \uACF5\uACA9\uB825\uC774
-    \uC99D\uAC00\uD55C\uB2E4."
+  info:
+    icon: {fileID: 0}
+    displayName: "\uC5F4 \uCD95\uC801"
+    description: "\uC5F4\uC774 5 \uC774\uC0C1 \uC313\uC774\uBA74 \uACF5\uACA9\uB825\uC774
+      \uC99D\uAC00\uD55C\uB2E4."
   trigger:
     rid: 5321512127343886408
   conditions: []

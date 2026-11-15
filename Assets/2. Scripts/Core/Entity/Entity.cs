@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable, IStatReadable, IStatMutable, IPoolable
+public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable, IStatReadable, IStatMutable, IPoolable, IInfo
 {
     [SerializeField] protected AbilityData[] abilities;
     [SerializeField] protected StatData statDataAsset;
@@ -15,8 +15,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     [SerializeField, Range(0, 100)] protected float dropChance;
     [SerializeField] protected EntityFeedbacks feedbacks;
     [SerializeField, Range(0, 1)] protected float knockbackResistance;
-    // 결과 화면 사망 원인 등에 보이는 이름. 비면 오브젝트 이름을 쓴다.
-    [SerializeField] private string displayName;
+    // 이름은 결과 화면 사망 원인 등에 보인다. 비면 오브젝트 이름을 쓴다.
+    [SerializeField] private DisplayInfo info = new();
 
     // 타일맵(Composite) 바닥 위에서는 접촉 해결 오차로 세로 속도가 +0.00001 정도로 남을 수 있다.
     // 착지/낙하 판정에서 "올라가는 중이 아님"을 vy <= 0으로 엄격하게 보면 착지를 놓치므로 이만큼은 허용한다.
@@ -64,7 +64,9 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     public AbilityManager Abilities { get; private set; }
     public DebuffController Debuffs { get; private set; }
     public bool IsDead => isDead;
-    public string DisplayName => string.IsNullOrEmpty(displayName) ? gameObject.name.Replace("(Clone)", "").Trim() : displayName;
+    public string DisplayName => string.IsNullOrEmpty(info.DisplayName) ? gameObject.name.Replace("(Clone)", "").Trim() : info.DisplayName;
+    public Sprite Icon => info.Icon;
+    public string Details => info.Details;
     public bool IsGrounded { get; protected set; }
     public bool IsKnockedBack => Time.time < knockbackUntil;
     // 공격 준비/진행 시간과 공격 애니메이션에 곱하는 배율. 1보다 작으면 공격이 느려진다(AttackSlowModule 디버프).

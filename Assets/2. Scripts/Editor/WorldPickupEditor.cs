@@ -23,7 +23,7 @@ public class WorldPickupEditor : Editor
         var spriteRenderer = serializedObject.FindProperty("spriteRenderer").objectReferenceValue as SpriteRenderer;
         if (spriteRenderer == null) return;
 
-        Sprite icon = weapon != null ? weapon.icon : ability != null ? ability.icon : null;
+        Sprite icon = weapon != null ? weapon.Icon : ability != null ? ability.Icon : null;
         if (icon == null || spriteRenderer.sprite == icon) return;
 
         Undo.RecordObject(spriteRenderer, "Change Pickup Sprite");

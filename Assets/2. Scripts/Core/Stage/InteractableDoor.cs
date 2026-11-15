@@ -13,6 +13,7 @@ public class InteractableDoor : MonoBehaviour, IInteractable, IObserver<StageNod
 
     public string DisplayName => "문";
     public Sprite Icon => null;
+    public string Details => null;
     public Transform Transform => transform;
 
     private void Awake()

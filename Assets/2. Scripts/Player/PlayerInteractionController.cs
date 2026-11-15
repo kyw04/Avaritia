@@ -61,6 +61,12 @@ public class PlayerInteractionController : MonoBehaviour
                 : anchor.position + (Vector3)defaultPromptOffset;
             // "Hold F | Hold Triangle" 대신 키보드 키 이름만 보여 준다.
             prompt.Show(action.GetBindingDisplayString(InputBinding.DisplayStringOptions.DontIncludeInteractions, "Keyboard&Mouse"));
+
+            // 무기·스킬·아이템 픽업이면 정보도 띄운다(상자, 문, 마커는 키만).
+            if (current is WorldPickup pickup)
+                prompt.Info.Show(pickup);
+            else
+                prompt.Info.Hide();
         }
 
         if (anchor != null && current == null)

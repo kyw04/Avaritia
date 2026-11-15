@@ -64,7 +64,7 @@ public class SkillUI : MonoBehaviour, IObserver<EntitySkillCooldownEvent>, IObse
     private static void SetIcon(SkillImage slot, AbilityData skill)
     {
         if (slot?.image == null) return;
-        slot.image.sprite = skill != null ? skill.icon : null;
+        slot.image.sprite = skill != null ? skill.Icon : null;
         slot.image.enabled = skill != null;
     }
 

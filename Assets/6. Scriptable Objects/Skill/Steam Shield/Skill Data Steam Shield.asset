@@ -14,14 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
   cooldown: 1
   maxRange: 3.4028235e+38
-  icon: {fileID: -614792169865968416, guid: 18ab63d2317f49bf9f3e9e7a6822ca06, type: 3}
+  rank: {fileID: 11400000, guid: 95e43758967e52b4b9cb055a7461f592, type: 2}
   cast:
     animClip: {fileID: 0}
     particle: {fileID: 7031813714008680, guid: 23847488505149a2be98a04bb2c23f71, type: 3}
     sound: {fileID: 0}
-  displayName: "\uC99D\uAE30 \uBC29\uD328"
-  description: "\uBAB8 \uC8FC\uC704\uC5D0 \uC99D\uAE30\uB9C9\uC744 \uB458\uB7EC \uB2E4\uC74C\uC5D0
-    \uBC1B\uB294 \uACF5\uACA9 1\uD68C\uB97C \uB9C9\uB294\uB2E4."
+  info:
+    icon: {fileID: -614792169865968416, guid: 18ab63d2317f49bf9f3e9e7a6822ca06, type: 3}
+    displayName: "\uC99D\uAE30 \uBC29\uD328"
+    description: "\uBAB8 \uC8FC\uC704\uC5D0 \uC99D\uAE30\uB9C9\uC744 \uB458\uB7EC
+      \uB2E4\uC74C\uC5D0 \uBC1B\uB294 \uACF5\uACA9 1\uD68C\uB97C \uB9C9\uB294\uB2E4."
   trigger:
     rid: 5230665391898361932
   conditions:

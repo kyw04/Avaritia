@@ -95,7 +95,10 @@ MonoBehaviour:
       particle: {fileID: 0}
       sound: {fileID: 0}
   knockbackResistance: 0
-  displayName: "\uC9D1\uAC8C\uAFBC"
+  info:
+    icon: {fileID: 0}
+    displayName: "\uC9D1\uAC8C\uAFBC"
+    description: 
   patrolSize: {x: 5, y: 1}
   maxDropHeight: 1
   chaseGiveUpTime: 2

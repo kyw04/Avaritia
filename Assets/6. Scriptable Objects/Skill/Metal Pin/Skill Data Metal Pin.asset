@@ -14,19 +14,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
   cooldown: 1.5
   maxRange: 3.4028235e+38
-  icon: {fileID: 21300000, guid: 61baf3aaca07add43b86a698b2e157bf, type: 3}
+  rank: {fileID: 11400000, guid: 95e43758967e52b4b9cb055a7461f592, type: 2}
   cast:
     animClip: {fileID: 0}
     particle: {fileID: 2994426646003545302, guid: ac7a92861fb04c7a8a988d721e25087c, type: 3}
     sound: {fileID: 0}
-  displayName: 금속 핀
-  description: "전방으로 작은 금속 핀을 발사합니다. 처음 맞은 적에게 피해를 주고, 작은 적은 공격을 취소시키며 큰 적은 공격을 느리게 합니다."
+  info:
+    icon: {fileID: 21300000, guid: 61baf3aaca07add43b86a698b2e157bf, type: 3}
+    displayName: "\uAE08\uC18D \uD540"
+    description: "\uC804\uBC29\uC73C\uB85C \uC791\uC740 \uAE08\uC18D \uD540\uC744
+      \uBC1C\uC0AC\uD569\uB2C8\uB2E4. \uCC98\uC74C \uB9DE\uC740 \uC801\uC5D0\uAC8C
+      \uD53C\uD574\uB97C \uC8FC\uACE0, \uC791\uC740 \uC801\uC740 \uACF5\uACA9\uC744
+      \uCDE8\uC18C\uC2DC\uD0A4\uBA70 \uD070 \uC801\uC740 \uACF5\uACA9\uC744 \uB290\uB9AC\uAC8C
+      \uD569\uB2C8\uB2E4."
   trigger:
     rid: 5230665391898361929
   conditions:
   - rid: 5230665391898361930
   effects:
   - rid: 5230665391898361931
+  linkedAbilities: []
   references:
     version: 2
     RefIds:
