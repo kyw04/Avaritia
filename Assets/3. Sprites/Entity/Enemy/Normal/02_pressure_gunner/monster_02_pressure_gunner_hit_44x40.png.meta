@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c8b631509e7c66d408f297bceb381694
+guid: 8acf29612422f524993a717ff7697638
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,177 +110,111 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: monster_02_pressure_gunner_idle_anim_0
+      name: monster_02_pressure_gunner_hit_44x40_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 64
-        height: 64
+        width: 44
+        height: 40
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 09b45d056781a1d49a3bf30fcfcdcd68
-      internalID: 359162343
+      spriteID: 280bc5cee0f21a8e0800000000000000
+      internalID: -1684013044518309758
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_02_pressure_gunner_idle_anim_1
+      name: monster_02_pressure_gunner_hit_44x40_1
       rect:
         serializedVersion: 2
-        x: 64
+        x: 44
         y: 0
-        width: 64
-        height: 64
+        width: 44
+        height: 40
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 72a635b8c8bb1b04b9f96e9bc5e82040
-      internalID: 1517640716
+      spriteID: ae175b8245fff8df0800000000000000
+      internalID: -175641123518844438
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_02_pressure_gunner_idle_anim_2
+      name: monster_02_pressure_gunner_hit_44x40_2
       rect:
         serializedVersion: 2
-        x: 128
+        x: 88
         y: 0
-        width: 64
-        height: 64
+        width: 44
+        height: 40
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 629b33882a2a24349b3c7039925b887e
-      internalID: -1230589816
+      spriteID: ce89616a0261ee2d0800000000000000
+      internalID: -3247633951806285588
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_02_pressure_gunner_idle_anim_3
+      name: monster_02_pressure_gunner_hit_44x40_3
       rect:
         serializedVersion: 2
-        x: 192
+        x: 132
         y: 0
-        width: 64
-        height: 64
+        width: 44
+        height: 40
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: b052e660b099bd642aec197ba1fabd6d
-      internalID: 1305757828
+      spriteID: 69678566cd1fb9570800000000000000
+      internalID: 8474633052739892886
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_02_pressure_gunner_idle_anim_4
+      name: monster_02_pressure_gunner_hit_44x40_4
       rect:
         serializedVersion: 2
-        x: 256
+        x: 176
         y: 0
-        width: 64
-        height: 64
+        width: 44
+        height: 40
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 9c35cbadeb0e071488e8e5ad77c65252
-      internalID: -1975031252
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: monster_02_pressure_gunner_idle_anim_5
-      rect:
-        serializedVersion: 2
-        x: 320
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d5a0ff671ccb0e84d80859b58373d1de
-      internalID: 2096089513
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: monster_02_pressure_gunner_idle_anim_6
-      rect:
-        serializedVersion: 2
-        x: 384
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 68a0033b5b8865a4e9c2a4a16a33f962
-      internalID: -304978549
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: monster_02_pressure_gunner_idle_anim_7
-      rect:
-        serializedVersion: 2
-        x: 448
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1f72a5d2918e2b04199ee74029c1187a
-      internalID: -1310124013
+      spriteID: fe04fe573cd40beb0800000000000000
+      internalID: -4706176108709592849
       vertices: []
       indices: 
       edges: []
@@ -289,7 +223,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: a0a085340d268bc4ebf31e4f5415e92d
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -297,18 +231,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+      entries: []
     nameFileIdTable:
-      monster_02_pressure_gunner_idle_anim_0: 359162343
-      monster_02_pressure_gunner_idle_anim_1: 1517640716
-      monster_02_pressure_gunner_idle_anim_2: -1230589816
-      monster_02_pressure_gunner_idle_anim_3: 1305757828
-      monster_02_pressure_gunner_idle_anim_4: -1975031252
-      monster_02_pressure_gunner_idle_anim_5: 2096089513
-      monster_02_pressure_gunner_idle_anim_6: -304978549
-      monster_02_pressure_gunner_idle_anim_7: -1310124013
+      monster_02_pressure_gunner_hit_44x40_0: -1684013044518309758
+      monster_02_pressure_gunner_hit_44x40_1: -175641123518844438
+      monster_02_pressure_gunner_hit_44x40_2: -3247633951806285588
+      monster_02_pressure_gunner_hit_44x40_3: 8474633052739892886
+      monster_02_pressure_gunner_hit_44x40_4: -4706176108709592849
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

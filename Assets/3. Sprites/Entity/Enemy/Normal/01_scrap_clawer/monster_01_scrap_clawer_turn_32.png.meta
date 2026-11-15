@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f8f0f1935ec3208418fc5d5a7b663fd7
+guid: b76de55cb7f419447b75bcb29864fda4
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,177 +110,177 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: monster_02_pressure_gunner_walk_0
+      name: monster_01_scrap_clawer_turn_32_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 64
-        height: 64
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: d4712cc4108777d40b0cbdfcb8d48b42
-      internalID: 1010047507
+      spriteID: e890caf3d05d7e720800000000000000
+      internalID: 2875501139978881422
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_02_pressure_gunner_walk_1
+      name: monster_01_scrap_clawer_turn_32_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 033bc6521c37451e0800000000000000
+      internalID: -2210014243738307792
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monster_01_scrap_clawer_turn_32_2
       rect:
         serializedVersion: 2
         x: 64
         y: 0
-        width: 64
-        height: 64
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 58b7d8af12bd11a418e1f74305459c56
-      internalID: 1777780285
+      spriteID: 361cc630001186640800000000000000
+      internalID: 5073323671987994979
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_02_pressure_gunner_walk_2
+      name: monster_01_scrap_clawer_turn_32_3
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ed01649e40ca36c0800000000000000
+      internalID: -4162803461821231648
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monster_01_scrap_clawer_turn_32_4
       rect:
         serializedVersion: 2
         x: 128
         y: 0
-        width: 64
-        height: 64
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 2e5ba2577c719e3428f0f257abcf40d1
-      internalID: -688068891
+      spriteID: fd11b00d24a7b9170800000000000000
+      internalID: 8186271175052825055
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_02_pressure_gunner_walk_3
+      name: monster_01_scrap_clawer_turn_32_5
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f904b4c401f6cb00800000000000000
+      internalID: 848630582588213745
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monster_01_scrap_clawer_turn_32_6
       rect:
         serializedVersion: 2
         x: 192
         y: 0
-        width: 64
-        height: 64
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: c49816f22b9922a4bb50dbd5a9b54eee
-      internalID: 1384456787
+      spriteID: 9f62886cd20ab5b50800000000000000
+      internalID: 6583031398796895993
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_02_pressure_gunner_walk_4
+      name: monster_01_scrap_clawer_turn_32_7
       rect:
         serializedVersion: 2
-        x: 256
+        x: 224
         y: 0
-        width: 64
-        height: 64
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: ce46d33aab4940745a35ddf3fa767ca5
-      internalID: -1576435968
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: monster_02_pressure_gunner_walk_5
-      rect:
-        serializedVersion: 2
-        x: 320
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 0001afc0cae3e724dbcce28031c553b7
-      internalID: 1492165022
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: monster_02_pressure_gunner_walk_6
-      rect:
-        serializedVersion: 2
-        x: 384
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 655aeefed625da6409e145d1f2caf1bf
-      internalID: -464456076
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: monster_02_pressure_gunner_walk_7
-      rect:
-        serializedVersion: 2
-        x: 448
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 98c6effc715dc9c4bbacf34bafd06fa8
-      internalID: 8471351
+      spriteID: 501c9a89b3dd01140800000000000000
+      internalID: 4688490460126757125
       vertices: []
       indices: 
       edges: []
@@ -289,7 +289,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: d1e13734d8f7ffd42839cabd984b2620
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -297,18 +297,16 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+      entries: []
     nameFileIdTable:
-      monster_02_pressure_gunner_walk_0: 1010047507
-      monster_02_pressure_gunner_walk_1: 1777780285
-      monster_02_pressure_gunner_walk_2: -688068891
-      monster_02_pressure_gunner_walk_3: 1384456787
-      monster_02_pressure_gunner_walk_4: -1576435968
-      monster_02_pressure_gunner_walk_5: 1492165022
-      monster_02_pressure_gunner_walk_6: -464456076
-      monster_02_pressure_gunner_walk_7: 8471351
+      monster_01_scrap_clawer_turn_32_0: 2875501139978881422
+      monster_01_scrap_clawer_turn_32_1: -2210014243738307792
+      monster_01_scrap_clawer_turn_32_2: 5073323671987994979
+      monster_01_scrap_clawer_turn_32_3: -4162803461821231648
+      monster_01_scrap_clawer_turn_32_4: 8186271175052825055
+      monster_01_scrap_clawer_turn_32_5: 848630582588213745
+      monster_01_scrap_clawer_turn_32_6: 6583031398796895993
+      monster_01_scrap_clawer_turn_32_7: 4688490460126757125
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

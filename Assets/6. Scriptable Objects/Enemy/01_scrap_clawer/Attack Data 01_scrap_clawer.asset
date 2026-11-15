@@ -17,6 +17,7 @@ MonoBehaviour:
     animClip: {fileID: 7400000, guid: bf20b5c4a650523499cfa9f988600402, type: 2}
     particle: {fileID: 0}
     sound: {fileID: 0}
+  readyDuration: 0
   attack:
     animClip: {fileID: 7400000, guid: 4d87eb963d69d8344ae73e0f57c3ba22, type: 2}
     particle: {fileID: 0}
@@ -41,11 +42,12 @@ MonoBehaviour:
   moveDuration: 0
   attackStrategy:
     rid: 1772930754192081019
+  previewSpriteOffset: {x: 0, y: 0}
   references:
     version: 2
     RefIds:
     - rid: 1772930754192081019
       type: {class: MeleeAttackStrategy, ns: , asm: Assembly-CSharp}
       data:
-        hitboxPosition: {x: 0.5, y: 0}
-        hitboxSize: {x: 1, y: 1}
+        hitboxPosition: {x: 0.25, y: 0}
+        hitboxSize: {x: 0.5, y: 0.5}

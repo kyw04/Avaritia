@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ffa21c87a15cc4747ad51254120b87c3
+guid: 4617dbe0729a03942b1cbac199d36e48
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,177 +110,133 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: monster_02_pressure_gunner_attack_0
+      name: monster_01_scrap_clawer_hit_32_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 64
-        height: 64
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: f1eb7bb0e51407242a3279c647d0a810
-      internalID: 1394821819
+      spriteID: 4251b989b630c8d40800000000000000
+      internalID: 5587844998316627236
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_02_pressure_gunner_attack_1
+      name: monster_01_scrap_clawer_hit_32_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf750e9c264730070800000000000000
+      internalID: 8071422924820600827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monster_01_scrap_clawer_hit_32_2
       rect:
         serializedVersion: 2
         x: 64
         y: 0
-        width: 64
-        height: 64
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: fb6a10496c3d89b478ee058d7afb404a
-      internalID: 469409625
+      spriteID: 67a2d12e321d195c0800000000000000
+      internalID: -4210354224567080330
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_02_pressure_gunner_attack_2
+      name: monster_01_scrap_clawer_hit_32_3
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb5df1ba108581830800000000000000
+      internalID: 4042077429754222014
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monster_01_scrap_clawer_hit_32_4
       rect:
         serializedVersion: 2
         x: 128
         y: 0
-        width: 64
-        height: 64
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: f746371f15352824baad409d5f2b0f96
-      internalID: -966245848
+      spriteID: ff4d966d6747efcc0800000000000000
+      internalID: -3675372192135523073
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_02_pressure_gunner_attack_3
+      name: monster_01_scrap_clawer_hit_32_5
       rect:
         serializedVersion: 2
-        x: 192
+        x: 160
         y: 0
-        width: 64
-        height: 64
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 311dc2680a2a03f4b96eaf3dc9dbe605
-      internalID: -2085435732
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: monster_02_pressure_gunner_attack_4
-      rect:
-        serializedVersion: 2
-        x: 256
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1fb264ad62e708b4994e57bc1844d3aa
-      internalID: 1144726927
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: monster_02_pressure_gunner_attack_5
-      rect:
-        serializedVersion: 2
-        x: 320
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d8169a44fbd618e4abfdd747202c8321
-      internalID: -1388011690
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: monster_02_pressure_gunner_attack_6
-      rect:
-        serializedVersion: 2
-        x: 384
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e96e61c28ef82b845b34ef57cb48f1a0
-      internalID: -1260284293
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: monster_02_pressure_gunner_attack_7
-      rect:
-        serializedVersion: 2
-        x: 448
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1581f24978aec2f40a5d36a870b75d73
-      internalID: 1217803853
+      spriteID: 8b361739498d44c90800000000000000
+      internalID: -7186380972736027720
       vertices: []
       indices: 
       edges: []
@@ -289,7 +245,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 63f34a5445250c646aa509da3efe3eb1
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -297,18 +253,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+      entries: []
     nameFileIdTable:
-      monster_02_pressure_gunner_attack_0: 1394821819
-      monster_02_pressure_gunner_attack_1: 469409625
-      monster_02_pressure_gunner_attack_2: -966245848
-      monster_02_pressure_gunner_attack_3: -2085435732
-      monster_02_pressure_gunner_attack_4: 1144726927
-      monster_02_pressure_gunner_attack_5: -1388011690
-      monster_02_pressure_gunner_attack_6: -1260284293
-      monster_02_pressure_gunner_attack_7: 1217803853
+      monster_01_scrap_clawer_hit_32_0: 5587844998316627236
+      monster_01_scrap_clawer_hit_32_1: 8071422924820600827
+      monster_01_scrap_clawer_hit_32_2: -4210354224567080330
+      monster_01_scrap_clawer_hit_32_3: 4042077429754222014
+      monster_01_scrap_clawer_hit_32_4: -3675372192135523073
+      monster_01_scrap_clawer_hit_32_5: -7186380972736027720
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 04d3ea950f209f4448176560b07c1a47
+guid: 428236df6b7028d48bc7bb0d54db9195
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,265 +110,177 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: monster_01_scrap_clawer_idle_anim_0
+      name: monster_02_pressure_gunner_attack_44x40_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 64
-        height: 64
+        width: 44
+        height: 40
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: bd01e9b21db3af04ca03c5ae48b2605c
-      internalID: -2018500586
+      spriteID: 876c0a23082e96390800000000000000
+      internalID: -7824473837346437512
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_01_scrap_clawer_idle_anim_1
+      name: monster_02_pressure_gunner_attack_44x40_1
       rect:
         serializedVersion: 2
-        x: 64
+        x: 44
         y: 0
-        width: 64
-        height: 64
+        width: 44
+        height: 40
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 2e963497eecf88b408594e2f5c85f46c
-      internalID: 1175619569
+      spriteID: abaaed25334ff3620800000000000000
+      internalID: 2756189998244866746
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_01_scrap_clawer_idle_anim_2
+      name: monster_02_pressure_gunner_attack_44x40_2
       rect:
         serializedVersion: 2
-        x: 128
+        x: 88
         y: 0
-        width: 64
-        height: 64
+        width: 44
+        height: 40
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 6180b43f4fdb4564b9d2eb9e358affa3
-      internalID: 1754848246
+      spriteID: 1d89423c83d426580800000000000000
+      internalID: -8835414612760028975
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_01_scrap_clawer_idle_anim_3
+      name: monster_02_pressure_gunner_attack_44x40_3
       rect:
         serializedVersion: 2
-        x: 192
+        x: 132
         y: 0
-        width: 64
-        height: 64
+        width: 44
+        height: 40
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 5e0bd87f814e3eb4486e00677c657e9a
-      internalID: -1823372502
+      spriteID: 0e4869ccac43f0b90800000000000000
+      internalID: -7273536827559607072
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_01_scrap_clawer_idle_anim_4
+      name: monster_02_pressure_gunner_attack_44x40_4
       rect:
         serializedVersion: 2
-        x: 256
+        x: 176
         y: 0
-        width: 64
-        height: 64
+        width: 44
+        height: 40
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: edc65e795a7832143ad1737d44f9324c
-      internalID: -1578885360
+      spriteID: b10cc2825c6c95060800000000000000
+      internalID: 6942798850653208603
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_01_scrap_clawer_idle_anim_5
+      name: monster_02_pressure_gunner_attack_44x40_5
       rect:
         serializedVersion: 2
-        x: 320
+        x: 220
         y: 0
-        width: 64
-        height: 64
+        width: 44
+        height: 40
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: d828736b47ebabb4fb69165c61cdad37
-      internalID: 121332568
+      spriteID: b7190166a7a012dd0800000000000000
+      internalID: -2512715596281376389
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_01_scrap_clawer_idle_anim_6
+      name: monster_02_pressure_gunner_attack_44x40_6
       rect:
         serializedVersion: 2
-        x: 384
+        x: 264
         y: 0
-        width: 64
-        height: 64
+        width: 44
+        height: 40
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 1b24ade4f9afa9f49a982af2828001f2
-      internalID: -1393512417
+      spriteID: 336a9fa2811f74010800000000000000
+      internalID: 1173171314055816755
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_01_scrap_clawer_idle_anim_7
+      name: monster_02_pressure_gunner_attack_44x40_7
       rect:
         serializedVersion: 2
-        x: 448
+        x: 308
         y: 0
-        width: 64
-        height: 64
+        width: 44
+        height: 40
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 7b52da22adf6b134c84b52c6b963930e
-      internalID: 1414763398
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: monster_01_scrap_clawer_idle_anim_8
-      rect:
-        serializedVersion: 2
-        x: 512
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 46b503e10a9ffe0419f11a4e55b103c8
-      internalID: -301654300
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: monster_01_scrap_clawer_idle_anim_9
-      rect:
-        serializedVersion: 2
-        x: 576
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 37485c5ae7e53cc499dc2d1f7ddff3f5
-      internalID: 1187240267
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: monster_01_scrap_clawer_idle_anim_10
-      rect:
-        serializedVersion: 2
-        x: 640
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3086755ffff836048a671fe51f2dfebc
-      internalID: 140596577
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: monster_01_scrap_clawer_idle_anim_11
-      rect:
-        serializedVersion: 2
-        x: 704
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: aac84b1a87fdff44ca213465d8e8496a
-      internalID: 1894075435
+      spriteID: 9268fc8e440173540800000000000000
+      internalID: 4987473000485848617
       vertices: []
       indices: 
       edges: []
@@ -377,7 +289,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: dfd097a61774cd7449f2da436d3722ef
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -385,22 +297,16 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+      entries: []
     nameFileIdTable:
-      monster_01_scrap_clawer_idle_anim_0: -2018500586
-      monster_01_scrap_clawer_idle_anim_1: 1175619569
-      monster_01_scrap_clawer_idle_anim_10: 140596577
-      monster_01_scrap_clawer_idle_anim_11: 1894075435
-      monster_01_scrap_clawer_idle_anim_2: 1754848246
-      monster_01_scrap_clawer_idle_anim_3: -1823372502
-      monster_01_scrap_clawer_idle_anim_4: -1578885360
-      monster_01_scrap_clawer_idle_anim_5: 121332568
-      monster_01_scrap_clawer_idle_anim_6: -1393512417
-      monster_01_scrap_clawer_idle_anim_7: 1414763398
-      monster_01_scrap_clawer_idle_anim_8: -301654300
-      monster_01_scrap_clawer_idle_anim_9: 1187240267
+      monster_02_pressure_gunner_attack_44x40_0: -7824473837346437512
+      monster_02_pressure_gunner_attack_44x40_1: 2756189998244866746
+      monster_02_pressure_gunner_attack_44x40_2: -8835414612760028975
+      monster_02_pressure_gunner_attack_44x40_3: -7273536827559607072
+      monster_02_pressure_gunner_attack_44x40_4: 6942798850653208603
+      monster_02_pressure_gunner_attack_44x40_5: -2512715596281376389
+      monster_02_pressure_gunner_attack_44x40_6: 1173171314055816755
+      monster_02_pressure_gunner_attack_44x40_7: 4987473000485848617
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -42,7 +42,7 @@ MonoBehaviour:
   moveDuration: 0
   attackStrategy:
     rid: 5321512379202142403
-  previewSpriteOffset: {x: 0.25, y: 0.5}
+  previewSpriteOffset: {x: 0.15625, y: 0.375}
   references:
     version: 2
     RefIds:
@@ -52,7 +52,7 @@ MonoBehaviour:
         bulletPrefab: {fileID: 1333631079470740473, guid: 706b7d7f91fbc1c40a6df1b125a9dad7, type: 3}
         spreadAngle: 0
         lifeTime: 0
-        muzzleOffset: {x: 1.05, y: 0.87}
+        muzzleOffset: {x: 0.65625, y: 0.60625}
         bulletCount: 1
         bulletDelay: 0
         bulletMaxDelay: 0

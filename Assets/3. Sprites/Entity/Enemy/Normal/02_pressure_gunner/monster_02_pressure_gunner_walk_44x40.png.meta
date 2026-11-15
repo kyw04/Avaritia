@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: fe2a12916a3b6d64aa8c1640a31d52ed
+guid: 3df6cf6f28808564db6512a5230a5424
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,243 +110,177 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: monster_02_pressure_gunner_death_0
+      name: monster_02_pressure_gunner_walk_44x40_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 64
-        height: 64
+        width: 44
+        height: 40
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 23877e50c646e314881348301c23f123
-      internalID: 1105578031
+      spriteID: fce74e34469eaddc0800000000000000
+      internalID: -3613319134166352177
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_02_pressure_gunner_death_1
+      name: monster_02_pressure_gunner_walk_44x40_1
       rect:
         serializedVersion: 2
-        x: 64
+        x: 44
         y: 0
-        width: 64
-        height: 64
+        width: 44
+        height: 40
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 69eb61c05fcc4dc4d9840dc6ca3d6b8d
-      internalID: 1906681958
+      spriteID: c170c4e047f3d04c0800000000000000
+      internalID: -4319726699889817828
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_02_pressure_gunner_death_2
+      name: monster_02_pressure_gunner_walk_44x40_2
       rect:
         serializedVersion: 2
-        x: 128
+        x: 88
         y: 0
-        width: 64
-        height: 64
+        width: 44
+        height: 40
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: a75fd53fa10c7194393b3ca84c7e4400
-      internalID: 2002734235
+      spriteID: f21a080ec32a05d00800000000000000
+      internalID: 959445102978179375
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_02_pressure_gunner_death_3
+      name: monster_02_pressure_gunner_walk_44x40_3
       rect:
         serializedVersion: 2
-        x: 192
+        x: 132
         y: 0
-        width: 64
-        height: 64
+        width: 44
+        height: 40
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: fb637aaa88dce9247b8eab4082b1eb01
-      internalID: 30891136
+      spriteID: b687aec51495679f0800000000000000
+      internalID: -471090973747021717
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_02_pressure_gunner_death_4
+      name: monster_02_pressure_gunner_walk_44x40_4
       rect:
         serializedVersion: 2
-        x: 256
+        x: 176
         y: 0
-        width: 64
-        height: 64
+        width: 44
+        height: 40
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 2b4abf137aea94e448460c43d67e578f
-      internalID: -1681767292
+      spriteID: 5ef442c026038f040800000000000000
+      internalID: 4681545010320265189
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_02_pressure_gunner_death_5
+      name: monster_02_pressure_gunner_walk_44x40_5
       rect:
         serializedVersion: 2
-        x: 320
+        x: 220
         y: 0
-        width: 64
-        height: 64
+        width: 44
+        height: 40
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: dc5eced27f6c0004b89863401e330fd1
-      internalID: -2081094456
+      spriteID: f0b461dd028204290800000000000000
+      internalID: -7908276824049300721
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_02_pressure_gunner_death_6
+      name: monster_02_pressure_gunner_walk_44x40_6
       rect:
         serializedVersion: 2
-        x: 384
+        x: 264
         y: 0
-        width: 64
-        height: 64
+        width: 44
+        height: 40
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 9f76c39853168524096914e788c16725
-      internalID: 953389512
+      spriteID: 689bc739939fb8ea0800000000000000
+      internalID: -5869323663664432762
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monster_02_pressure_gunner_death_7
+      name: monster_02_pressure_gunner_walk_44x40_7
       rect:
         serializedVersion: 2
-        x: 448
+        x: 308
         y: 0
-        width: 64
-        height: 64
+        width: 44
+        height: 40
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 5b14114b5a678b141b20defd26357853
-      internalID: 785928147
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: monster_02_pressure_gunner_death_8
-      rect:
-        serializedVersion: 2
-        x: 512
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6f21e9351776d53448fd7454b65b4828
-      internalID: -102700560
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: monster_02_pressure_gunner_death_9
-      rect:
-        serializedVersion: 2
-        x: 576
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: eb3e57bb63862674f8227b6cbfcafeed
-      internalID: 918921000
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: monster_02_pressure_gunner_death_10
-      rect:
-        serializedVersion: 2
-        x: 640
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3548fdaab775a8d4e820fcf0d1b916d5
-      internalID: 1843530167
+      spriteID: 242d662c86f8ad880800000000000000
+      internalID: -8585392059527540158
       vertices: []
       indices: 
       edges: []
@@ -355,7 +289,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: a4ae094f5023da54fa91cae3574620c9
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -363,21 +297,16 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+      entries: []
     nameFileIdTable:
-      monster_02_pressure_gunner_death_0: 1105578031
-      monster_02_pressure_gunner_death_1: 1906681958
-      monster_02_pressure_gunner_death_10: 1843530167
-      monster_02_pressure_gunner_death_2: 2002734235
-      monster_02_pressure_gunner_death_3: 30891136
-      monster_02_pressure_gunner_death_4: -1681767292
-      monster_02_pressure_gunner_death_5: -2081094456
-      monster_02_pressure_gunner_death_6: 953389512
-      monster_02_pressure_gunner_death_7: 785928147
-      monster_02_pressure_gunner_death_8: -102700560
-      monster_02_pressure_gunner_death_9: 918921000
+      monster_02_pressure_gunner_walk_44x40_0: -3613319134166352177
+      monster_02_pressure_gunner_walk_44x40_1: -4319726699889817828
+      monster_02_pressure_gunner_walk_44x40_2: 959445102978179375
+      monster_02_pressure_gunner_walk_44x40_3: -471090973747021717
+      monster_02_pressure_gunner_walk_44x40_4: 4681545010320265189
+      monster_02_pressure_gunner_walk_44x40_5: -7908276824049300721
+      monster_02_pressure_gunner_walk_44x40_6: -5869323663664432762
+      monster_02_pressure_gunner_walk_44x40_7: -8585392059527540158
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
