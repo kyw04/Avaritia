@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,9 +7,11 @@ public class ItemBox : MonoBehaviour, IInteractable, IPoolable
     [SerializeField] private Animator animator;
     [SerializeField] private float popUpSpeed = 5f;
     [SerializeField] private float popHorizontalSpeed = 2f;
-
-    private List<ScriptableObject> itemPool;
-    private int itemCount;
+    [SerializeField] private float itemSpawnDelayMax = 0.25f;
+    
+    [Header("Test Case")]
+    [SerializeField] private List<ScriptableObject> itemPool;
+    [SerializeField] private int itemCount;
     private bool opened;
     private bool itemsSpawned;
     private WorldInteractionManager manager;
@@ -68,12 +71,12 @@ public class ItemBox : MonoBehaviour, IInteractable, IPoolable
     {
         if (itemsSpawned) return;
         itemsSpawned = true;
-        SpawnItems();
+        StartCoroutine(StartSpawnItems());
     }
 
-    private void SpawnItems()
+    private IEnumerator StartSpawnItems()
     {
-        if (itemPool == null) return;
+        if (itemPool == null) yield break;
 
         var pool = new List<ScriptableObject>(itemPool);
         int count = Mathf.Min(itemCount, pool.Count);
@@ -89,10 +92,6 @@ public class ItemBox : MonoBehaviour, IInteractable, IPoolable
             if (payload == null) continue;
 
             var pickup = WorldInteractionManager.Instance.Spawn(payload, transform.position);
-            float direction = Random.value < 0.5f ? -1f : 1f;
-            float horizontalSpeed = Random.Range(0.5f, popHorizontalSpeed);
-            float verticalSpeed = Random.Range(popUpSpeed * 0.8f, popUpSpeed);
-            pickup.Launch(new Vector2(direction * horizontalSpeed, verticalSpeed));
             spawned.Add(pickup);
         }
 
@@ -100,6 +99,15 @@ public class ItemBox : MonoBehaviour, IInteractable, IPoolable
         {
             foreach (var pickup in spawned)
                 pickup.SetBatchGroup(spawned);
+        }
+        
+        for (int i = 0; i < spawned.Count; i++)
+        {
+            yield return new WaitForSeconds(Random.Range(0.1f, itemSpawnDelayMax));
+            float direction = i == 0 ? 0 : i % 2 == 0 ? 1f : -1f;
+            float horizontalSpeed = i % 2 == 0 ? popHorizontalSpeed * i / 2f : popHorizontalSpeed * i;
+            float verticalSpeed = Random.Range(popUpSpeed * 0.8f, popUpSpeed);
+            spawned[i].Launch(new Vector2(direction * horizontalSpeed, verticalSpeed));
         }
     }
 

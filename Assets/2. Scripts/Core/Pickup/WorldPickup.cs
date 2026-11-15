@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -11,23 +12,32 @@ public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
     [SerializeField] private SpriteRenderer spriteRender;
     [SerializeField] private Animator animator;
     [SerializeField] private Light2D light2D;
+    [SerializeField] private float groundCheckDelay = 0.25f;
     
+    private Collider2D[] colliders;
     private IInteractable payload;
     private WorldInteractionManager manager;
     private List<WorldPickup> batchGroup;
     // 풀에서 무기 픽업으로 다시 쓸 때 등급 색을 지우기 위한 프리팹 원래 색.
     private Color defaultSpriteColor;
     private Color defaultLightColor;
+    
+    private float groundCheckTimer;
+    private bool isReady;
 
     public string DisplayName => payload.DisplayName;
     public Sprite Icon => payload.Icon;
     public Transform Transform => transform;
     public string Details => payload.Details;
+    // 상자에서 튀어나온 픽업은 같은 상자의 픽업이 모두 착지해야 줍을 수 있다. 그 외(드롭, 버린 무기, 씬 배치)는 바로 줍는다.
+    public bool IsReady => isReady && BatchGroupIsReady();
+    private bool BatchGroupIsReady() => batchGroup == null || batchGroup.All(pickup => pickup.isReady);
 
     // Enemy/Boss와 동일한 이유: Awake에서도 등록해야 씬 배치 픽업이 감지되고,
     // OnSpawn은 풀 재사용 시 다시 등록한다(이중 등록 방지를 위해 먼저 해제 후 등록).
     private void Awake()
     {
+        colliders = GetComponents<Collider2D>();
         defaultSpriteColor = spriteRender.color;
         defaultLightColor = light2D.color;
 
@@ -41,12 +51,15 @@ public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
 
         manager = WorldInteractionManager.Instance;
         manager.Register(this);
+        isReady = true;
     }
 
     private void OnDestroy() => manager.Unregister(this);
 
     public void OnSpawn()
     {
+        isReady = true;
+        SetVisible(true);
         manager.Unregister(this);
         manager.Register(this);
         rb.bodyType = RigidbodyType2D.Kinematic;
@@ -55,12 +68,14 @@ public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
 
     public void OnDespawn()
     {
+        isReady = false;
         manager.Unregister(this);
         batchGroup = null;
     }
 
     public void Init(IInteractable payload)
     {
+        isReady = true;
         this.payload = payload;
         weaponAsset = (payload as WeaponPickup)?.Weapon.Data;
         abilityAsset = (payload as AbilityPickup)?.Ability ?? (payload as ItemPickup)?.Item;
@@ -87,29 +102,59 @@ public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
         light2D.color = color;
     }
 
-    public void SetBatchGroup(List<WorldPickup> group) => batchGroup = group;
+    // 상자 픽업은 Launch로 튀어나와 착지할 때까지 줍지 못하고, 튀어나오기 전까지는 보이지 않는다.
+    public void SetBatchGroup(List<WorldPickup> group)
+    {
+        batchGroup = group;
+        isReady = false;
+        SetVisible(false);
+    }
 
-    // 상자에서 튀어나올 때 위/좌우 속도를 부여한다. Floor/Platform에 닿으면 OnCollisionEnter2D에서 고정된다.
+    private void SetVisible(bool value)
+    {
+        spriteRenderer.enabled = value;
+        light2D.enabled = value;
+    }
+
+    private void SetCollidersEnabled(bool value)
+    {
+        foreach (var col in colliders)
+            col.enabled = value;
+    }
+
     public void Launch(Vector2 velocity)
     {
+        isReady = false;
+        SetVisible(true);
+        SetCollidersEnabled(true);
+        groundCheckTimer = Time.time + groundCheckDelay;
         rb.bodyType = RigidbodyType2D.Dynamic;
         rb.linearVelocity = velocity;
     }
+    
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
+        if (Time.time < groundCheckTimer)
+            return;
+        
         int layer = collision.gameObject.layer;
         if (layer != LayerMask.NameToLayer("Floor") && layer != LayerMask.NameToLayer("Platform"))
             return;
 
+        isReady = true;
         rb.linearVelocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Kinematic;
+        SetCollidersEnabled(false);
     }
 
     public bool NeedsChoice(Player player) => payload.NeedsChoice(player);
 
     public void Interact(Player player, InteractChoice choice)
     {
+        if (!IsReady)
+            return;
+        
         EventBus.Publish(new PickupCollectedEvent(this));
         payload.Interact(player, choice);
         RemoveBatchMates();
@@ -128,7 +173,7 @@ public class WorldPickup : MonoBehaviour, IInteractable, IPoolable
         }
         batchGroup = null;
     }
-
+    
     // 풀에서 온 인스턴스면 반납(재사용), 씬에 직접 배치된 인스턴스면 기존처럼 파괴.
     public void Remove()
     {

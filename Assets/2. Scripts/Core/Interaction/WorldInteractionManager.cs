@@ -16,7 +16,9 @@ public class WorldInteractionManager : Singleton<WorldInteractionManager>
         float nearestSqr = radius * radius;
         foreach (var i in interactables)
         {
-            if ((i as Object) == null) continue;
+            if ((i as Object) == null) continue; 
+            if (i is WorldPickup { IsReady: false }) continue;
+            
             float sqr = (i.Transform.position - position).sqrMagnitude;
             if (sqr > nearestSqr) continue;
             if (nearest == null || sqr < nearestSqr)

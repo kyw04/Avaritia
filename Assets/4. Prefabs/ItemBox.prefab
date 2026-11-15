@@ -106,4 +106,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemBox
   animator: {fileID: 0}
   popUpSpeed: 5
-  popHorizontalSpeed: 2
+  popHorizontalSpeed: 1
+  itemPool:
+  - {fileID: 11400000, guid: e82aa12019120254cb29df3fe5dffb83, type: 2}
+  - {fileID: 11400000, guid: 60ebf458ec6afb048aac0412682eb016, type: 2}
+  - {fileID: 11400000, guid: 61df77652e682dd4f903bc40f22cdd0a, type: 2}
+  itemCount: 3
