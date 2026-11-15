@@ -45,6 +45,18 @@ public class AttackDataEditor : Editor
                 canMoveProp.boolValue = false;
         }
 
+        // 프리팹을 넣으면 애니메이션이 그리는 스프라이트(Animator가 붙은 자식)의 루트 기준 위치를 가져온다.
+        var prefab = (GameObject)EditorGUILayout.ObjectField("Get Offset From Prefab", null, typeof(GameObject), false);
+        if (prefab != null)
+        {
+            var animator = prefab.GetComponentInChildren<Animator>(true);
+            if (animator != null)
+                serializedObject.FindProperty("previewSpriteOffset").vector2Value =
+                    prefab.transform.InverseTransformPoint(animator.transform.position);
+            else
+                Debug.LogWarning($"{prefab.name}: Animator가 없어 스프라이트 위치를 가져올 수 없습니다.");
+        }
+
         serializedObject.ApplyModifiedProperties();
     }
 
@@ -87,6 +99,15 @@ public class AttackDataEditor : Editor
         }
         else if (data.attackStrategy is RangedAttackStrategy rangedStrategy)
         {
+            // 오른쪽을 바라보는 기준으로 총구 위치를 드래그해 정한다.
+            Vector3 muzzle = Handles.PositionHandle(rangedStrategy.muzzleOffset, Quaternion.identity);
+            if (EditorGUI.EndChangeCheck())
+            {
+                Undo.RecordObject(data, "Modify Muzzle Offset");
+                rangedStrategy.muzzleOffset = muzzle;
+                EditorUtility.SetDirty(data);
+            }
+
             DrawRangedAttackGizmo(rangedStrategy);
             sceneView.Repaint();
         }
@@ -95,6 +116,7 @@ public class AttackDataEditor : Editor
     private void DrawRangedAttackGizmo(RangedAttackStrategy strategy)
     {
         int count = Mathf.Max(1, strategy.bulletCount);
+        Vector3 muzzle = strategy.muzzleOffset;
 
         Handles.color = Color.cyan;
         for (int i = 0; i < count; i++)
@@ -103,7 +125,7 @@ public class AttackDataEditor : Editor
                 ? Mathf.Lerp(-strategy.spreadAngle / 2f, strategy.spreadAngle / 2f, (float)i / (count - 1))
                 : 0f;
             Vector3 dir = Quaternion.Euler(0f, 0f, angle) * Vector3.right;
-            Handles.DrawLine(Vector3.zero, dir);
+            Handles.DrawLine(muzzle, muzzle + dir);
         }
     }
 
@@ -124,7 +146,7 @@ public class AttackDataEditor : Editor
 
         Vector2 pivotWorld = (sprite.pivot / ppu) * scale;
 
-        Vector3 origin = Vector3.zero;
+        Vector3 origin = data.previewSpriteOffset;
         Vector3 bottomLeft = origin - (Vector3)pivotWorld;
         Vector3 topRight   = bottomLeft + new Vector3(worldSize.x, worldSize.y, 0);
 

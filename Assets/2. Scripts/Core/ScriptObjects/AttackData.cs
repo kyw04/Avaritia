@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Scriptable Objects/AttackData")]
@@ -6,6 +7,8 @@ public class AttackData : ScriptableObject
 {
     public float duration;
     public ActionFeedback ready;
+    // 준비 단계의 최소 시간. 준비 시간은 이 값과 ready 애니메이션 길이 중 긴 쪽이다(애니메이션이 없을 때 쓴다).
+    [Min(0)] public float readyDuration;
     public ActionFeedback attack;
     public float damageMultiplier = 1f;
     public ContactFilter2D filter;
@@ -14,6 +17,10 @@ public class AttackData : ScriptableObject
     public float moveDuration;
 
     [SerializeReference, SubclassSelector] public IAttackStrategy attackStrategy;
+
+    [Header("Editor Preview")]
+    [Tooltip("씬 뷰 미리보기에서 공격 스프라이트를 그릴 위치(엔티티 루트 기준). 프리팹의 스프라이트 자식 위치와 맞추면 총구·판정 위치가 게임과 일치한다. 게임 동작에는 쓰이지 않는다.")]
+    public Vector2 previewSpriteOffset;
 
     public void Attack(IAttacker attacker, Transform target = null, BulletEnhancement enhancement = null)
     {
@@ -25,20 +32,36 @@ public class AttackData : ScriptableObject
     private IEnumerator PlayAttack(IAttacker attacker, int cancelVersion, Transform target = null, BulletEnhancement enhancement = null)
     {
         ready.Play(attacker.Mono.transform.position);
-        if (ready.animClip)
-            yield return WaitAttackTime(attacker, cancelVersion, ready.animClip.length);
+
+        float readyTime = Mathf.Max(readyDuration, ready.animClip ? ready.animClip.length : 0f);
+
+        // 원거리 조준: 궤도 프리팹이 있으면 준비 동안 방향을 고정하고 궤도를 보여 준 뒤 그 방향으로 쏜다.
+        Vector2? aim = null;
+        List<TrajectoryTelegraph> telegraphs = null;
+        if (readyTime > 0f && attackStrategy is RangedAttackStrategy ranged && ranged.aimTelegraphPrefab != null)
+        {
+            aim = ranged.GetAimDirection(attacker, target);
+            telegraphs = ranged.ShowAim(attacker, aim.Value, readyTime);
+        }
+
+        if (readyTime > 0f)
+            yield return WaitAttackTime(attacker, cancelVersion, readyTime);
+
+        if (telegraphs != null)
+            foreach (var telegraph in telegraphs)
+                telegraph.Hide();
         if (IsCanceled(attacker, cancelVersion)) yield break;
 
-        attacker.Mono.StartCoroutine(Execute(attacker, cancelVersion, target, enhancement));
+        attacker.Mono.StartCoroutine(Execute(attacker, cancelVersion, target, enhancement, aim));
     }
 
-    private IEnumerator Execute(IAttacker attacker, int cancelVersion, Transform target = null, BulletEnhancement enhancement = null)
+    private IEnumerator Execute(IAttacker attacker, int cancelVersion, Transform target = null, BulletEnhancement enhancement = null, Vector2? aim = null)
     {
         var resolvedFilter = filter;
         if (filter.useLayerMask && attacker is Entity entity)
             resolvedFilter.SetLayerMask(entity.ResolveTargetLayer(filter.layerMask));
         attack.Play(attacker.Mono.transform.position);
-        attackStrategy?.Offensive(attacker, damageMultiplier, resolvedFilter, target, enhancement);
+        attackStrategy?.Offensive(attacker, damageMultiplier, resolvedFilter, target, enhancement, aim);
 
         if (attack.animClip)
             yield return WaitAttackTime(attacker, cancelVersion, attack.animClip.length);
