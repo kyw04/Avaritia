@@ -17,7 +17,8 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
 
     private const float ChangeFaceDelay = 0.5f;
     private float changeFaceTime;
-    [SerializeField] private Vector2 patrolSize;
+    // 순찰 범위는 스폰 포인트(EntitySpawnPoint)가 정해 준다. 정해 주지 않으면 0이라 제자리에 선다.
+    private Vector2 patrolSize;
     // 순찰 폭이 0이어도 중심에 도착했다고 판정할 여유 거리
     private const float PatrolArriveDistance = 0.1f;
     // 추격 대상과 x 차이가 이 안이면 방향을 바꾸지 않고 멈춘다.
@@ -95,6 +96,7 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
         base.OnSpawn();
         if (Machine != null) stateManager.Unregister(Machine);
         PatrolCenter = transform.position;
+        patrolSize = Vector2.zero;
         Target = null;
         blockedTime = 0f;
         searchBlockedUntil = 0f;
@@ -277,6 +279,13 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
         return Mathf.Abs(offset) >= halfWidth && (offset > 0 ? 1 : -1) == LookDirection;
     }
 
+    // 스폰 포인트가 스폰 직후 순찰 범위를 정해 준다. 풀 재사용(OnSpawn) 때 크기 0, 중심은 제자리로 초기화된다.
+    public void SetPatrolArea(Vector2 center, Vector2 size)
+    {
+        PatrolCenter = center;
+        patrolSize = size;
+    }
+
     public void TurnAround() => Face(-LookDirection);
 
     public void FaceTowardPatrolCenter() => Face(PatrolCenter.x > transform.position.x ? 1 : -1);
@@ -378,10 +387,6 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
 
             Gizmos.DrawRay(currentPos, dir *  viewRadius);
         }
-
-        Vector2 patrolGizmoCenter = Application.isPlaying ? PatrolCenter : (Vector2)transform.position;
-        Gizmos.color = new Color32(0, 255, 0, 50);
-        Gizmos.DrawCube(patrolGizmoCenter, patrolSize);
 
         Gizmos.color = Color.forestGreen;
         Gizmos.DrawWireSphere(WallCheckPoint, WallCheckRadius);

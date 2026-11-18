@@ -115,6 +115,8 @@ public class RoomContentSpawner : MonoBehaviour,
         {
             var actor = ObjectPoolManager.Instance.Spawn(spawnPoint.entityPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
             var entity = actor.GetComponent<Entity>();
+            if (entity is Enemy enemy)
+                enemy.SetPatrolArea(spawnPoint.PatrolCenter, spawnPoint.patrolSize);
             if (entity != null)
                 aliveActors.Add(entity);
         }

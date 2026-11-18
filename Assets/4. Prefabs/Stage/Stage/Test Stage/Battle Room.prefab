@@ -269,6 +269,7 @@ Transform:
   - {fileID: 9009330616486319150}
   - {fileID: 9044268228976581962}
   - {fileID: 471818028921433747}
+  - {fileID: 4311414873407021748}
   - {fileID: 1110760130649152602}
   - {fileID: 8214339822838514270}
   - {fileID: 1491879585315074831}
@@ -5104,6 +5105,22 @@ PrefabInstance:
       propertyPath: entityPrefab
       value: 
       objectReference: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolSize.x
+      value: 6.796876
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolSize.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolOffset.x
+      value: 0.29322052
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolOffset.y
+      value: 4.0122023
+      objectReference: {fileID: 0}
     - target: {fileID: 6932648260790840698, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
       propertyPath: m_Name
       value: Entity Spawn Point (1)
@@ -5170,6 +5187,22 @@ PrefabInstance:
       propertyPath: entityPrefab
       value: 
       objectReference: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolSize.x
+      value: 6.976491
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolSize.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolOffset.x
+      value: 1.8364956
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolOffset.y
+      value: 4.006257
+      objectReference: {fileID: 0}
     - target: {fileID: 6932648260790840698, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
       propertyPath: m_Name
       value: Entity Spawn Point (8)
@@ -5298,6 +5331,22 @@ PrefabInstance:
       propertyPath: entityPrefab
       value: 
       objectReference: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolSize.x
+      value: 10.944435
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolSize.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolOffset.x
+      value: -0.73612785
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolOffset.y
+      value: 4.29406
+      objectReference: {fileID: 0}
     - target: {fileID: 6932648260790840698, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
       propertyPath: m_Name
       value: Entity Spawn Point (5)
@@ -5364,6 +5413,22 @@ PrefabInstance:
       propertyPath: entityPrefab
       value: 
       objectReference: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolSize.x
+      value: 10.809325
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolSize.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolOffset.x
+      value: 0.49075317
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolOffset.y
+      value: 4.334956
+      objectReference: {fileID: 0}
     - target: {fileID: 6932648260790840698, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
       propertyPath: m_Name
       value: Entity Spawn Point (4)
@@ -5492,6 +5557,18 @@ PrefabInstance:
       propertyPath: entityPrefab
       value: 
       objectReference: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolSize.x
+      value: 6.406249
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolSize.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolOffset.y
+      value: 4.3428054
+      objectReference: {fileID: 0}
     - target: {fileID: 6932648260790840698, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
       propertyPath: m_Name
       value: Entity Spawn Point
@@ -5558,6 +5635,22 @@ PrefabInstance:
       propertyPath: entityPrefab
       value: 
       objectReference: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolSize.x
+      value: 11.120337
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolSize.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolOffset.x
+      value: 2.290162
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolOffset.y
+      value: 4.334956
+      objectReference: {fileID: 0}
     - target: {fileID: 6932648260790840698, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
       propertyPath: m_Name
       value: Entity Spawn Point (2)
@@ -6108,6 +6201,76 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 235103327727747856, guid: d67b2d145fb74dc49a2bd3d9f22b2d8a, type: 3}
   m_PrefabInstance: {fileID: 4719450984669096940}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &5634226692817894001
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 963781889135945207}
+    m_Modifications:
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: entityPrefab
+      value: 
+      objectReference: {fileID: 7549000288731461967, guid: 92d6b887e68546248a57c0814842f6f1, type: 3}
+    - target: {fileID: 6932648260790840698, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: m_Icon
+      value: 
+      objectReference: {fileID: 3306451490063965843, guid: 0000000000000000d000000000000000, type: 0}
+    - target: {fileID: 6932648260790840698, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: m_Name
+      value: Entity Spawn Point (9)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8495464206822136005, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 24.87
+      objectReference: {fileID: 0}
+    - target: {fileID: 8495464206822136005, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.67
+      objectReference: {fileID: 0}
+    - target: {fileID: 8495464206822136005, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8495464206822136005, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8495464206822136005, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8495464206822136005, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8495464206822136005, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8495464206822136005, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8495464206822136005, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8495464206822136005, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+--- !u!4 &4311414873407021748 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8495464206822136005, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+  m_PrefabInstance: {fileID: 5634226692817894001}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5636963078912494422
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6182,6 +6345,22 @@ PrefabInstance:
       propertyPath: entityPrefab
       value: 
       objectReference: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolSize.x
+      value: 6.796876
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolSize.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolOffset.x
+      value: -0.84056664
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolOffset.y
+      value: 4.0351763
+      objectReference: {fileID: 0}
     - target: {fileID: 6932648260790840698, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
       propertyPath: m_Name
       value: Entity Spawn Point (6)
@@ -6506,7 +6685,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8495464206822136005, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 24.9
+      value: 23.75
       objectReference: {fileID: 0}
     - target: {fileID: 8495464206822136005, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
       propertyPath: m_LocalPosition.y
@@ -6566,6 +6745,22 @@ PrefabInstance:
       propertyPath: entityPrefab
       value: 
       objectReference: {fileID: 6004862550223445198, guid: 1aaeb6326a75db346bf54eb3ec507966, type: 3}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolSize.x
+      value: 8.2177725
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolSize.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolOffset.x
+      value: 0.8892174
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolOffset.y
+      value: 4.214121
+      objectReference: {fileID: 0}
     - target: {fileID: 6932648260790840698, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
       propertyPath: m_Name
       value: Entity Spawn Point (7)
