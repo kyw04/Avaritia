@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 57c10e821121c10479f63dd94b073632
+guid: a57b2e7b352591d4e8cbd3491cf6cecf
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -72,7 +72,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -110,7 +110,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: autotile_platform_sheet_0
+      name: autotile_platform_sheet_greige_0
       rect:
         serializedVersion: 2
         x: 0
@@ -122,21 +122,17 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape:
-      - - {x: -16, y: -8}
-        - {x: -16, y: 12}
-        - {x: 16, y: 12}
-        - {x: 16, y: -8}
+      physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5011987f5df19034994430dda0beeb7f
-      internalID: -1140052365
+      spriteID: a305dc4adf5bf4b4dbfee9a3715da56f
+      internalID: 893096177
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: autotile_platform_sheet_1
+      name: autotile_platform_sheet_greige_1
       rect:
         serializedVersion: 2
         x: 32
@@ -148,21 +144,17 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape:
-      - - {x: -16, y: -8}
-        - {x: -16, y: 12}
-        - {x: 16, y: 12}
-        - {x: 16, y: -8}
+      physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d7e52450bb75aaf42a3de934fd9d9db8
-      internalID: 1914975655
+      spriteID: 31a3aa5fcd0354149af1cb5cf1f448d8
+      internalID: 1589172689
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: autotile_platform_sheet_2
+      name: autotile_platform_sheet_greige_2
       rect:
         serializedVersion: 2
         x: 64
@@ -174,21 +166,17 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape:
-      - - {x: -16, y: -8}
-        - {x: -16, y: 12}
-        - {x: 16, y: 12}
-        - {x: 16, y: -8}
+      physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 96a209897b2afaa4493e37de008e7d95
-      internalID: -640585578
+      spriteID: b7ba8119edb540149943c339c978d600
+      internalID: 247094776
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: autotile_platform_sheet_3
+      name: autotile_platform_sheet_greige_3
       rect:
         serializedVersion: 2
         x: 96
@@ -200,15 +188,11 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape:
-      - - {x: -16, y: -8}
-        - {x: -16, y: 12}
-        - {x: 16, y: 12}
-        - {x: 16, y: -8}
+      physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c8352e40695a1364b9b333bf2952ad30
-      internalID: 1276239063
+      spriteID: 1ecddeb2ae7118941ba08f1f7121bdfb
+      internalID: 1216732533
       vertices: []
       indices: 
       edges: []
@@ -217,7 +201,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 0e8d674f9f9ee3f449fb7e9c184cb795
+    spriteID: 24d03227142960a49b9edf4dcb0cede1
     internalID: 0
     vertices: []
     indices: 
@@ -229,10 +213,10 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":32.0,"y":32.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      autotile_platform_sheet_0: -1140052365
-      autotile_platform_sheet_1: 1914975655
-      autotile_platform_sheet_2: -640585578
-      autotile_platform_sheet_3: 1276239063
+      autotile_platform_sheet_greige_0: 893096177
+      autotile_platform_sheet_greige_1: 1589172689
+      autotile_platform_sheet_greige_2: 247094776
+      autotile_platform_sheet_greige_3: 1216732533
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

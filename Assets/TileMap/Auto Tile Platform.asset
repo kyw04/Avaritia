@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b08ceb78e3b2495b8d808a5860e66794, type: 3}
-  m_Name: Platform Auto Tile
+  m_Name: Auto Tile Platform
   m_EditorClassIdentifier: Unity.2D.Tilemap.Extras::UnityEngine.Tilemaps.AutoTile
   m_DefaultSprite: {fileID: -1140052365, guid: 57c10e821121c10479f63dd94b073632, type: 3}
   m_DefaultGameObject: {fileID: 0}
@@ -19,25 +19,25 @@ MonoBehaviour:
   m_Random: 1
   m_PhysicsShapeCheck: 0
   m_AutoTileDictionary:
-    keyData: 10000000300000001800000038000000
+    keyData: 38000000100000001800000030000000
     valueData:
     - spriteList:
-      - {fileID: -1140052365, guid: 57c10e821121c10479f63dd94b073632, type: 3}
+      - {fileID: 247094776, guid: a57b2e7b352591d4e8cbd3491cf6cecf, type: 3}
       textureList:
-      - {fileID: 2800000, guid: 57c10e821121c10479f63dd94b073632, type: 3}
+      - {fileID: 2800000, guid: a57b2e7b352591d4e8cbd3491cf6cecf, type: 3}
     - spriteList:
-      - {fileID: 1914975655, guid: 57c10e821121c10479f63dd94b073632, type: 3}
+      - {fileID: 893096177, guid: a57b2e7b352591d4e8cbd3491cf6cecf, type: 3}
       textureList:
-      - {fileID: 2800000, guid: 57c10e821121c10479f63dd94b073632, type: 3}
+      - {fileID: 2800000, guid: a57b2e7b352591d4e8cbd3491cf6cecf, type: 3}
     - spriteList:
-      - {fileID: 1276239063, guid: 57c10e821121c10479f63dd94b073632, type: 3}
+      - {fileID: 1216732533, guid: a57b2e7b352591d4e8cbd3491cf6cecf, type: 3}
       textureList:
-      - {fileID: 2800000, guid: 57c10e821121c10479f63dd94b073632, type: 3}
+      - {fileID: 2800000, guid: a57b2e7b352591d4e8cbd3491cf6cecf, type: 3}
     - spriteList:
-      - {fileID: -640585578, guid: 57c10e821121c10479f63dd94b073632, type: 3}
+      - {fileID: 1589172689, guid: a57b2e7b352591d4e8cbd3491cf6cecf, type: 3}
       textureList:
-      - {fileID: 2800000, guid: 57c10e821121c10479f63dd94b073632, type: 3}
+      - {fileID: 2800000, guid: a57b2e7b352591d4e8cbd3491cf6cecf, type: 3}
   m_TextureList:
-  - {fileID: 2800000, guid: 57c10e821121c10479f63dd94b073632, type: 3}
+  - {fileID: 2800000, guid: a57b2e7b352591d4e8cbd3491cf6cecf, type: 3}
   m_TextureScaleList:
-  - 2.5
+  - 1.9
