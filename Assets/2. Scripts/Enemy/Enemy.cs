@@ -125,6 +125,19 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
         PublishLocomotionAnimation();
     }
 
+    // 넉백으로 순찰 구역 가로 경계에 닿으면 벽에 부딪힌 것처럼 바깥쪽 가로 속도를 없앤다(띄우는 힘은 그대로).
+    // 순찰 폭이 0인 적(제자리)은 구역이 점이라 넉백 자체가 막히므로 제외한다.
+    private void FixedUpdate()
+    {
+        if (!IsKnockedBack || patrolSize.x <= 0f)
+            return;
+
+        float offset = Rb.position.x - PatrolCenter.x;
+        float velocityX = Rb.linearVelocityX;
+        if (Mathf.Abs(offset) >= patrolSize.x / 2f && velocityX * offset > 0f)
+            Rb.linearVelocity = new Vector2(0f, Rb.linearVelocityY);
+    }
+
     // 걷기/대기 애니메이션. 공격 중이나 사망 후에는 그쪽 모션을 덮지 않는다.
     // 피격 경직 중에는 EntityAnimator가 행동 제한을 보고 무시한다.
     private void PublishLocomotionAnimation()
