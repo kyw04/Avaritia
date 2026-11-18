@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b08ceb78e3b2495b8d808a5860e66794, type: 3}
   m_Name: Auto Tile Platform
   m_EditorClassIdentifier: Unity.2D.Tilemap.Extras::UnityEngine.Tilemaps.AutoTile
-  m_DefaultSprite: {fileID: -1140052365, guid: 57c10e821121c10479f63dd94b073632, type: 3}
+  m_DefaultSprite: {fileID: 893096177, guid: a57b2e7b352591d4e8cbd3491cf6cecf, type: 3}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_MaskType: 1

@@ -328,7 +328,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StageNode
   roomType: 2
   wasCleared: 0
-  battleRoomType: 0
 --- !u!1 &8870345817086926086
 GameObject:
   m_ObjectHideFlags: 0
