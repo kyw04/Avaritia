@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d2c1e2f9e61cc304f96847b485d190a9, type: 3}
-  m_Name: New Jump Data List
+  m_Name: Jump Data List
   m_EditorClassIdentifier: Assembly-CSharp::JumpDataList
   datas:
   - {fileID: 11400000, guid: 6c1f074b41abc714ba7b3b78142c2ad6, type: 2}
