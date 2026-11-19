@@ -49,5 +49,5 @@ MonoBehaviour:
     - rid: 1772930754192081019
       type: {class: MeleeAttackStrategy, ns: , asm: Assembly-CSharp}
       data:
-        hitboxPosition: {x: 0.25, y: 0}
-        hitboxSize: {x: 0.5, y: 0.5}
+        hitboxPosition: {x: 0.15, y: 0}
+        hitboxSize: {x: 0.6, y: 0.5}
