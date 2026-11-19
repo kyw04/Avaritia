@@ -53,7 +53,7 @@ public class DamageOverTimeModule : DebuffModule
         if (scaleWithStacks)
             amount *= debuff.Stacks;
         if (amount > 0f)
-            debuff.Target.TakeDamage(new DamageInfo(amount, debuff.Inflictor, flags: flags));
+            debuff.Target.TakeDamage(new DamageInfo(amount, debuff.Inflictor, flags: flags), null, null);
     }
 
     private static float InflictorDamage(ActiveDebuff debuff) =>

@@ -446,7 +446,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         OnDashCountChanged();
     }
 
-    public void TakeDamage(DamageInfo info)
+    public void TakeDamage(DamageInfo info, KnockbackData? knockbackData, CameraData? cameraData)
     {
         var attacker = info.Attacker;
         var hitPoint = info.HitPoint;
@@ -483,7 +483,9 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         }
         OnHealthChanged();
         info.Amount = damage;
-        EventBus.Publish(new EntityDamagedEvent(this, info));
+        var knockback = knockbackData ??  new KnockbackData();
+        var cameraShake = cameraData ?? new CameraData();
+        EventBus.Publish(new EntityDamagedEvent(this, info, knockback, cameraShake));
 
         if (CurrentHealth > 0) return;
         // Listeners (e.g. a revive item) may heal in response; only die if nothing did.

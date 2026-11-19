@@ -1,6 +1,22 @@
 using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
+using Random = UnityEngine.Random;
+
+[System.Serializable]
+public struct CameraData
+{
+    public float shakeForce;
+    [Range(0f, 1f)] public float hitStopTimeScale;
+    [Min(0)] public float hitStopDuration;
+
+    public static CameraData Default => new CameraData
+    {
+        shakeForce = 0.5f,
+        hitStopTimeScale = 0.1f,
+        hitStopDuration = 0.05f
+    };
+}
 
 [RequireComponent(typeof(CinemachineImpulseSource))]
 public class CameraManager : MonoBehaviour, IObserver<EntityDamagedEvent>
@@ -36,10 +52,10 @@ public class CameraManager : MonoBehaviour, IObserver<EntityDamagedEvent>
             Shake(hitShakeForce);
         }
         // 사망 연출 중에 날아가던 탄환 등이 맞아도 히트스톱이 연출의 슬로모션을 끊지 않게 한다.
-        else if (e.Attacker is Player player && player.Weapon != null && !player.IsDead)
+        else if (e.Attacker is Player { IsDead: false })
         {
-            Shake(player.Weapon.Data.shakeForce);
-            SlowMotion(player.Weapon.Data.hitStopTimeScale, player.Weapon.Data.hitStopDuration);
+            Shake(e.CameraData.shakeForce);
+            SlowMotion(e.CameraData.hitStopTimeScale, e.CameraData.hitStopDuration);
         }
     }
 

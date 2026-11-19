@@ -1,6 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
+
+[System.Serializable]
+public struct KnockbackData
+{
+    public float knockbackForce;
+    public float knockbackUpForce;
+    [Min(0)] public float knockbackDuration;
+
+    public static KnockbackData Default => new KnockbackData
+    {
+        knockbackForce = 2f,
+        knockbackUpForce = 0f,
+        knockbackDuration = 0.5f
+    };
+}
 
 [CreateAssetMenu(menuName = "Scriptable Objects/AttackData")]
 public class AttackData : ScriptableObject
@@ -10,6 +26,8 @@ public class AttackData : ScriptableObject
     // 준비 단계의 최소 시간. 준비 시간은 이 값과 ready 애니메이션 길이 중 긴 쪽이다(애니메이션이 없을 때 쓴다).
     [Min(0)] public float readyDuration;
     public ActionFeedback attack;
+    public KnockbackData knockbackData = KnockbackData.Default;
+    public CameraData cameraData = CameraData.Default;
     public float damageMultiplier = 1f;
     public ContactFilter2D filter;
     public bool canTurn;
@@ -61,7 +79,7 @@ public class AttackData : ScriptableObject
         if (filter.useLayerMask && attacker is Entity entity)
             resolvedFilter.SetLayerMask(entity.ResolveTargetLayer(filter.layerMask));
         attack.Play(attacker.Mono.transform.position);
-        attackStrategy?.Offensive(attacker, damageMultiplier, resolvedFilter, target, enhancement, aim);
+        attackStrategy?.Offensive(attacker, knockbackData, cameraData, damageMultiplier, resolvedFilter, target, enhancement, aim);
 
         if (attack.animClip)
             yield return WaitAttackTime(attacker, cancelVersion, attack.animClip.length);

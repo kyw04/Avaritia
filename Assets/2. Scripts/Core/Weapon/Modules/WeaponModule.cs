@@ -46,7 +46,7 @@ public abstract class WeaponModule
     {
         bool isCritical = UnityEngine.Random.Range(0f, 100f) < Owner.GetStat<float>(StatType.CritRate);
         float damage = Owner.GetDamageAgainst(target.transform) * multiplier * (isCritical ? CritConfig.Multiplier : 1f);
-        target.TakeDamage(damage, Owner, target.transform.position, isCritical);
+        target.TakeDamage(damage, Owner, null, null, target.transform.position, isCritical);
     }
 
     protected static bool IsAlive(Entity entity) => entity != null && entity.isActiveAndEnabled && entity.CurrentHealth > 0;

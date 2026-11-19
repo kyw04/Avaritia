@@ -36,12 +36,6 @@ public class WeaponData : ScriptableObject, IInfo
     public List<AbilityData> passiveAbilities = new();
     public ActionFeedback swing;
     public ActionFeedback hit;
-    public float shakeForce = 0.3f;
-    [Range(0f, 1f)] public float hitStopTimeScale = 0.1f;
-    [Min(0)] public float hitStopDuration = 0.08f;
-    public float knockbackForce = 5f;
-    public float knockbackUpForce = 2f;
-    [Min(0)] public float knockbackDuration = 0.2f;
     [SerializeReference, SubclassSelector] public List<WeaponModule> modules = new();
     [SerializeField] private List<InputMethodBinding> inputMethods = new();
 

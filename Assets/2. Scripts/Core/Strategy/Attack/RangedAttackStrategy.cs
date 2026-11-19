@@ -55,7 +55,9 @@ public class RangedAttackStrategy : IAttackStrategy
     private float SpreadAngle(int index, int count) =>
         count > 1 ? Mathf.Lerp(-spreadAngle / 2f, spreadAngle / 2f, (float)index / (count - 1)) : 0f;
 
-    public void Offensive(IAttacker attacker, float damageMultiplier, ContactFilter2D filter, Transform target = null, BulletEnhancement enhancement = null, Vector2? aimDirection = null)
+    public void Offensive(IAttacker attacker, KnockbackData knockbackData, CameraData cameraData, float damageMultiplier,
+        ContactFilter2D filter, Transform target = null, BulletEnhancement enhancement = null,
+        Vector2? aimDirection = null)
     {
         if (bulletPrefab == null)
         {

@@ -79,11 +79,20 @@ public struct EntityDamagedEvent : ISubject
 {
     public Entity Source { get; private set; }
     public DamageInfo Info { get; private set; }
+    public KnockbackData KnockbackData { get; private set; }
+    public CameraData CameraData { get; private set; }
     public Entity Attacker => Info.Attacker;
     public float Amount => Info.Amount;
     public Vector3? HitPoint => Info.HitPoint;
     public bool IsCritical => Info.IsCritical;
-    public EntityDamagedEvent(Entity source, DamageInfo info) { Source = source; Info = info; }
+
+    public EntityDamagedEvent(Entity source, DamageInfo info, KnockbackData knockbackData, CameraData cameraData)
+    {
+        Source = source;
+        Info = info;
+        KnockbackData = knockbackData;
+        CameraData = cameraData;
+    }
 }
 
 // Published when Source dodged an attack via the Evasion stat (no damage was applied).

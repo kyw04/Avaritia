@@ -205,7 +205,9 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
             Machine.ChangeState<PlayerHitState>();
 
         if (e.Attacker != this || weapon == null || e.Source == this || e.Info.Has(DamageFlags.NoKnockback)) return;
-        e.Source.ApplyKnockback(new Vector2(LookDirection * weapon.Data.knockbackForce, weapon.Data.knockbackUpForce), weapon.Data.knockbackDuration);
+        e.Source.ApplyKnockback(
+            new Vector2(LookDirection * e.KnockbackData.knockbackForce, e.KnockbackData.knockbackUpForce), 
+            e.KnockbackData.knockbackDuration);
     }
 
     private void OnDestroy()

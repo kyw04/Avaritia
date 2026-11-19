@@ -17,10 +17,19 @@ MonoBehaviour:
     animClip: {fileID: 7400000, guid: 7da3ec21d97b71c4fb88e01ea0f6c230, type: 2}
     particle: {fileID: 0}
     sound: {fileID: 0}
+  readyDuration: 0
   attack:
     animClip: {fileID: 7400000, guid: b075438dbfab78a419918467d753e74c, type: 2}
     particle: {fileID: 0}
     sound: {fileID: 0}
+  knockbackData:
+    knockbackForce: 2
+    knockbackUpForce: 1
+    knockbackDuration: 0.5
+  cameraData:
+    shakeForce: 1.5
+    hitStopTimeScale: 0.1
+    hitStopDuration: 0.05
   damageMultiplier: 1.5
   filter:
     useTriggers: 0
@@ -41,6 +50,7 @@ MonoBehaviour:
   moveDuration: 0.1
   attackStrategy:
     rid: 1772930754192081015
+  previewSpriteOffset: {x: 0, y: 0}
   references:
     version: 2
     RefIds:

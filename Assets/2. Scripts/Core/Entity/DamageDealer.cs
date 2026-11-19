@@ -25,7 +25,7 @@ public class DamageDealer : MonoBehaviour
     protected virtual void Attack(Transform target)
     {
         if (target.TryGetComponent<IDamageable>(out var d))
-            d.TakeDamage(damage, attacker, transform.position, isCritical);
+            d.TakeDamage(damage, attacker, null, null, transform.position, isCritical);
     }
     
     private void OnTriggerEnter2D(Collider2D other)

@@ -22,7 +22,7 @@ public class FallZone : MonoBehaviour
             player.Rb.position = respawnPoint.position;
             player.Rb.linearVelocity = Vector2.zero;
             player.TakeDamage(new DamageInfo(damage,
-                flags: DamageFlags.IgnoreArmor | DamageFlags.IgnoreEvasion | DamageFlags.NoKnockback));
+                flags: DamageFlags.IgnoreArmor | DamageFlags.IgnoreEvasion | DamageFlags.NoKnockback), null, null);
         }
         else
         {
