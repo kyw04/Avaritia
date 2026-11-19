@@ -4,13 +4,13 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 [System.Serializable]
-public struct CameraData
+public struct HitCameraSettings
 {
     public float shakeForce;
     [Range(0f, 1f)] public float hitStopTimeScale;
     [Min(0)] public float hitStopDuration;
 
-    public static CameraData Default => new CameraData
+    public static HitCameraSettings Default => new HitCameraSettings
     {
         shakeForce = 0.25f,
         hitStopTimeScale = 0.1f,
@@ -54,8 +54,8 @@ public class CameraManager : MonoBehaviour, IObserver<EntityDamagedEvent>
         // 사망 연출 중에 날아가던 탄환 등이 맞아도 히트스톱이 연출의 슬로모션을 끊지 않게 한다.
         else if (e.Attacker is Player { IsDead: false })
         {
-            Shake(e.CameraData.shakeForce);
-            SlowMotion(e.CameraData.hitStopTimeScale, e.CameraData.hitStopDuration);
+            Shake(e.HitCamera.shakeForce);
+            SlowMotion(e.HitCamera.hitStopTimeScale, e.HitCamera.hitStopDuration);
         }
     }
 

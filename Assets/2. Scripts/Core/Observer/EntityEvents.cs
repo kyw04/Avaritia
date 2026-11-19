@@ -79,19 +79,19 @@ public struct EntityDamagedEvent : ISubject
 {
     public Entity Source { get; private set; }
     public DamageInfo Info { get; private set; }
-    public KnockbackData KnockbackData { get; private set; }
-    public CameraData CameraData { get; private set; }
+    public KnockbackSettings Knockback { get; private set; }
+    public HitCameraSettings HitCamera { get; private set; }
     public Entity Attacker => Info.Attacker;
     public float Amount => Info.Amount;
     public Vector3? HitPoint => Info.HitPoint;
     public bool IsCritical => Info.IsCritical;
 
-    public EntityDamagedEvent(Entity source, DamageInfo info, KnockbackData knockbackData, CameraData cameraData)
+    public EntityDamagedEvent(Entity source, DamageInfo info, KnockbackSettings knockback, HitCameraSettings hitCamera)
     {
         Source = source;
         Info = info;
-        KnockbackData = knockbackData;
-        CameraData = cameraData;
+        Knockback = knockback;
+        HitCamera = hitCamera;
     }
 }
 

@@ -11,7 +11,7 @@ public class AreaDamageDealer : DamageDealer
         foreach (var hit in Physics2D.OverlapCircleAll(transform.position, r, targetLayer))
         {
             if (hit.TryGetComponent<IDamageable>(out var d))
-                d.TakeDamage(damage, attacker, null, null, transform.position, isCritical);
+                d.TakeDamage(damage, attacker, knockback, hitCamera, transform.position, isCritical);
         }
     }
 }

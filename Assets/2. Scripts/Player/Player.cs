@@ -206,8 +206,8 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
 
         if (e.Attacker != this || weapon == null || e.Source == this || e.Info.Has(DamageFlags.NoKnockback)) return;
         e.Source.ApplyKnockback(
-            new Vector2(LookDirection * e.KnockbackData.knockbackForce, e.KnockbackData.knockbackUpForce), 
-            e.KnockbackData.knockbackDuration);
+            new Vector2(LookDirection * e.Knockback.knockbackForce, e.Knockback.knockbackUpForce), 
+            e.Knockback.knockbackDuration);
     }
 
     private void OnDestroy()

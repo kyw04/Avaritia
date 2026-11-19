@@ -66,7 +66,7 @@ public class RangedAttackStrategy : IAttackStrategy
     private float SpreadAngle(int index, int count) =>
         count > 1 ? Mathf.Lerp(-spreadAngle / 2f, spreadAngle / 2f, (float)index / (count - 1)) : 0f;
 
-    public void Offensive(IAttacker attacker, KnockbackData knockbackData, CameraData cameraData, float damageMultiplier,
+    public void Offensive(IAttacker attacker, KnockbackSettings knockback, HitCameraSettings hitCamera, float damageMultiplier,
         ContactFilter2D filter, Transform target = null, BulletEnhancement enhancement = null,
         Vector2? aimDirection = null)
     {
@@ -115,6 +115,8 @@ public class RangedAttackStrategy : IAttackStrategy
             dealer.damage = dmg;
             dealer.attacker = attacker as Entity;
             dealer.isCritical = isCritical;
+            dealer.knockback = knockback;
+            dealer.hitCamera = hitCamera;
             // 풀링된 탄환은 아군/적이 같이 쓰므로 매번 프리팹 값에서 다시 정한다.
             var prefabTargetLayer = prefab.GetComponent<DamageDealer>().targetLayer;
             dealer.targetLayer = dealer.attacker != null ? dealer.attacker.ResolveTargetLayer(prefabTargetLayer) : prefabTargetLayer;

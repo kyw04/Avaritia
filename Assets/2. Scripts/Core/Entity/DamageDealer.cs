@@ -5,6 +5,9 @@ public class DamageDealer : MonoBehaviour
     [HideInInspector] public float damage;
     [HideInInspector] public Entity attacker;
     [HideInInspector] public bool isCritical;
+    // 쏜 공격 데이터의 넉백·카메라 연출. 발사할 때마다 RangedAttackStrategy가 채운다(null이면 없음).
+    [System.NonSerialized] public KnockbackSettings? knockback;
+    [System.NonSerialized] public HitCameraSettings? hitCamera;
     public LayerMask targetLayer;
     public ActionFeedback hit;
     
@@ -25,7 +28,7 @@ public class DamageDealer : MonoBehaviour
     protected virtual void Attack(Transform target)
     {
         if (target.TryGetComponent<IDamageable>(out var d))
-            d.TakeDamage(damage, attacker, null, null, transform.position, isCritical);
+            d.TakeDamage(damage, attacker, knockback, hitCamera, transform.position, isCritical);
     }
     
     private void OnTriggerEnter2D(Collider2D other)

@@ -7,7 +7,7 @@ public class MeleeAttackStrategy : IAttackStrategy
     public Vector2 hitboxPosition;
     public Vector2 hitboxSize;
 
-    public void Offensive(IAttacker attacker, KnockbackData knockbackData, CameraData cameraData, float damageMultiplier, ContactFilter2D filter, Transform target = null, BulletEnhancement enhancement = null, Vector2? aimDirection = null)
+    public void Offensive(IAttacker attacker, KnockbackSettings knockback, HitCameraSettings hitCamera, float damageMultiplier, ContactFilter2D filter, Transform target = null, BulletEnhancement enhancement = null, Vector2? aimDirection = null)
     {
         float scale = damageMultiplier;
         bool isCritical = attacker is IStatReadable readable && Random.Range(0f, 100f) < readable.GetStat<float>(StatType.CritRate);
@@ -28,7 +28,7 @@ public class MeleeAttackStrategy : IAttackStrategy
             if (hit.TryGetComponent<IDamageable>(out var d))
             {
                 float baseDmg = attackerEntity != null ? attackerEntity.GetDamageAgainst(hit.transform) : attacker.Damage;
-                d.TakeDamage(baseDmg * scale, attackerEntity, knockbackData, cameraData, null, isCritical);
+                d.TakeDamage(baseDmg * scale, attackerEntity, knockback, hitCamera, null, isCritical);
             }
         }
     }
