@@ -393,6 +393,8 @@ public class PlayerStateMachine : StateMachineBase<Player>
             EventBus.Publish(new EntityDashEvent(Owner, Owner.Feedbacks.Dash.particle));
             Owner.Rb.gravityScale = 0f;
             Owner.Dash();
+            // 대쉬하는 동안 무적. 이미 더 길게 남은 무적(아이템 등)이 있으면 그쪽이 유지된다.
+            Owner.SetInvincible(dashTime);
             dashStartTime = Time.time;
         }
 
