@@ -198,10 +198,10 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
     }
 
     // 내 공격에 맞은 대상을 플레이어가 바라보는 방향으로 무기 넉백 값만큼 밀어낸다(근접/탄환 공통).
-    // 내가 맞으면(지속 피해 등 NoInterrupt 제외) 피격 상태로 간다. 죽는 피해면 사망 처리에 맡긴다.
+    // 내가 맞으면(지속 피해 등 NoInterrupt, 경직 무시 버프 제외) 피격 상태로 간다. 죽는 피해면 사망 처리에 맡긴다.
     public void OnNotify(EntityDamagedEvent e)
     {
-        if (e.Source == this && !e.Info.Has(DamageFlags.NoInterrupt) && CurrentHealth > 0)
+        if (e.Source == this && !e.Info.Has(DamageFlags.NoInterrupt) && CurrentHealth > 0 && !IgnoresHitStun)
             Machine.ChangeState<PlayerHitState>();
 
         if (e.Attacker != this || weapon == null || e.Source == this || e.Info.Has(DamageFlags.NoKnockback)) return;

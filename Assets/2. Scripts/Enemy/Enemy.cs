@@ -155,11 +155,12 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
     private void OnEnable() => EventBus.Subscribe<EntityDamagedEvent>(this);
     private void OnDisable() => EventBus.Unsubscribe<EntityDamagedEvent>(this);
 
-    // 맞으면(지속 피해 등 NoInterrupt 제외) 피격 경직. 죽는 피해면 사망 처리에 맡기고, 피격 모션이 없는 적은 경직하지 않는다.
+    // 맞으면(지속 피해 등 NoInterrupt 제외) 피격 경직. 죽는 피해면 사망 처리에 맡기고, 피격 모션이 없거나
+    // 경직 무시 버프(NoHitStunEffect)가 걸린 적은 경직하지 않는다.
     public void OnNotify(EntityDamagedEvent e)
     {
         if (e.Source == this && !e.Info.Has(DamageFlags.NoInterrupt) && CurrentHealth > 0
-            && Feedbacks.Hit.animClip != null)
+            && Feedbacks.Hit.animClip != null && !IgnoresHitStun)
             Machine.ChangeState<EnemyHitState>();
     }
 

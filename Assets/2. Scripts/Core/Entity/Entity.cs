@@ -53,6 +53,9 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     private float invincibleUntil;
     private float invincibleDuration;
     private Sprite invincibleIcon;
+    private float noHitStunUntil;
+    private float noHitStunDuration;
+    private Sprite noHitStunIcon;
     private float knockbackUntil;
     private float trackedMaxHealth;
 
@@ -68,6 +71,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     public Sprite Icon => info.Icon;
     public string Details => info.Details;
     public bool IsGrounded { get; protected set; }
+    public bool IgnoresHitStun => Time.time < noHitStunUntil;
     public bool IsKnockedBack => Time.time < knockbackUntil;
     // 공격 준비/진행 시간과 공격 애니메이션에 곱하는 배율. 1보다 작으면 공격이 느려진다(AttackSlowModule 디버프).
     public float AttackSpeedMultiplier => Debuffs.AttackSpeedMultiplier;
@@ -252,6 +256,16 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         invincibleIcon = icon;
     }
 
+    // SetInvincible과 같은 규칙: 더 길게 남는 쪽의 아이콘/길이를 유지한다. duration 0 = 만료되지 않음.
+    public void SetNoHitStun(float duration, Sprite icon = null)
+    {
+        float until = duration > 0f ? Time.time + duration : float.MaxValue;
+        if (until <= noHitStunUntil) return;
+        noHitStunUntil = until;
+        noHitStunDuration = duration;
+        noHitStunIcon = icon;
+    }
+
     // 상태 아이콘 UI용: 지금 걸려 있는 버프/실드/무효화/무적/디버프를 into에 추가한다.
     // 아이콘을 알 수 없는 출처(AbilityRuntimeState가 아닌 source 등)는 건너뛴다.
     public virtual void CollectStatusIcons(List<StatusIconEntry> into)
@@ -295,6 +309,13 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
             {
                 Key = (this, StatusIconKind.Invincible), Icon = invincibleIcon,
                 EndTime = invincibleUntil, Duration = invincibleDuration,
+            });
+
+        if (noHitStunIcon != null && IgnoresHitStun)
+            into.Add(new StatusIconEntry
+            {
+                Key = (this, StatusIconKind.NoHitStun), Icon = noHitStunIcon,
+                EndTime = noHitStunUntil, Duration = noHitStunDuration,
             });
 
         Debuffs.CollectStatusIcons(into);
@@ -348,6 +369,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         activeBuffs.Clear();
         shields.Clear();
         hitBlocks.Clear();
+        noHitStunUntil = 0f;
+        noHitStunIcon = null;
         initialAbilities ??= abilities != null ? (AbilityData[])abilities.Clone() : null;
         abilities = initialAbilities != null ? (AbilityData[])initialAbilities.Clone() : null;
         Abilities = new AbilityManager(this, abilities);
