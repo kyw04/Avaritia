@@ -12,7 +12,7 @@ public struct CameraData
 
     public static CameraData Default => new CameraData
     {
-        shakeForce = 0.5f,
+        shakeForce = 0.25f,
         hitStopTimeScale = 0.1f,
         hitStopDuration = 0.05f
     };

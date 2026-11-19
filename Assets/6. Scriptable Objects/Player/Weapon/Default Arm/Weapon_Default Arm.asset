@@ -34,7 +34,7 @@ MonoBehaviour:
   shakeForce: 0.3
   hitStopTimeScale: 0.1
   hitStopDuration: 0.08
-  knockbackForce: 5
+  knockbackForce: 2
   knockbackUpForce: 0
   knockbackDuration: 0.2
   modules: []

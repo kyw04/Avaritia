@@ -27,7 +27,7 @@ MonoBehaviour:
     knockbackUpForce: 1
     knockbackDuration: 0.5
   cameraData:
-    shakeForce: 1.5
+    shakeForce: 0.5
     hitStopTimeScale: 0.1
     hitStopDuration: 0.05
   damageMultiplier: 1.5

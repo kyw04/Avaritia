@@ -22,14 +22,14 @@ MonoBehaviour:
     animClip: {fileID: 7400000, guid: b338db48d3e043e4d91cd4a064f9efb6, type: 2}
     particle: {fileID: 0}
     sound: {fileID: 0}
-  knockbackInfo:
-    knockbackForce: 10
+  knockbackData:
+    knockbackForce: 2
     knockbackUpForce: 0
-    knockbackDuration: 0.2
-  cameraInfo:
-    shakeForce: 1
-    hitStopTimeScale: 0.05
-    hitStopDuration: 0.5
+    knockbackDuration: 0.5
+  cameraData:
+    shakeForce: 0.25
+    hitStopTimeScale: 0.1
+    hitStopDuration: 0.05
   damageMultiplier: 1.2
   filter:
     useTriggers: 0
