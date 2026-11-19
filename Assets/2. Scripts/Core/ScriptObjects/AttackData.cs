@@ -40,6 +40,10 @@ public class AttackData : ScriptableObject
     [Tooltip("씬 뷰 미리보기에서 공격 스프라이트를 그릴 위치(엔티티 루트 기준). 프리팹의 스프라이트 자식 위치와 맞추면 총구·판정 위치가 게임과 일치한다. 게임 동작에는 쓰이지 않는다.")]
     public Vector2 previewSpriteOffset;
 
+    // 지금 위치에서 대상에게 공격이 닿을 수 있는지(좌우로만 쏘는 원거리 공격의 높이 판정).
+    public bool CanReach(IAttacker attacker, Transform target) =>
+        attackStrategy is not RangedAttackStrategy ranged || ranged.IsTargetInLine(attacker, target);
+
     public void Attack(IAttacker attacker, Transform target = null, BulletEnhancement enhancement = null)
     {
         attacker.IsAttacking = true;

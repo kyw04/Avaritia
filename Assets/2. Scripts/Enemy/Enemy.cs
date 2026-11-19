@@ -330,7 +330,16 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
     public bool CanAttack()
     {
         var first = Abilities.AbilityAt(0);
-        return first != null && Restrictions.Can(ActionBlock.Attack) && !Abilities.IsOnCooldown(first);
+        return first != null && Restrictions.Can(ActionBlock.Attack) && !Abilities.IsOnCooldown(first) && CanReachTarget(first);
+    }
+
+    // 좌우로만 쏘는 공격(RangedAttackStrategy.horizontalOnly)이면 대상이 총구 높이에 있을 때만 공격한다.
+    private bool CanReachTarget(AbilityData ability)
+    {
+        foreach (var effect in ability.effects)
+            if (effect is AttackEffect attack && attack.attackData != null && !attack.attackData.CanReach(this, Target))
+                return false;
+        return true;
     }
 
     public void Attack() => Abilities.TryActivate(Abilities.AbilityAt(0), new AbilityContext { Caster = this, Target = Target });

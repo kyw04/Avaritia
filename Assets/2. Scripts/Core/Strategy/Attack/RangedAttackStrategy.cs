@@ -9,6 +9,8 @@ public class RangedAttackStrategy : IAttackStrategy
     public float lifeTime;
     [Tooltip("총알이 나가고 궤도가 시작되는 위치. 공격자 기준이며 x는 바라보는 방향에 맞춰 뒤집힌다.")]
     public Vector2 muzzleOffset;
+    [Tooltip("켜면 대상 방향과 상관없이 바라보는 쪽(좌/우)으로만 쏜다. 적은 대상이 총구 높이의 수평선 위에 있을 때만 공격한다.")]
+    public bool horizontalOnly;
     
     [Header("Dynamic Stat")]
     [Tooltip("If the attacker has custom stats, they will be applied instead.")]
@@ -26,9 +28,18 @@ public class RangedAttackStrategy : IAttackStrategy
         attacker.Mono.transform.position + new Vector3(muzzleOffset.x * attacker.LookDirection, muzzleOffset.y, 0f);
 
     public Vector2 GetAimDirection(IAttacker attacker, Transform target) =>
-        target != null
+        target != null && !horizontalOnly
             ? ((Vector2)(target.position - GetMuzzlePosition(attacker))).normalized
             : Vector2.right * attacker.LookDirection;
+
+    // horizontalOnly일 때 총구 높이의 수평선이 대상 콜라이더를 지나는지. horizontalOnly가 아니면 항상 true.
+    public bool IsTargetInLine(IAttacker attacker, Transform target)
+    {
+        if (!horizontalOnly) return true;
+        if (target == null || !target.TryGetComponent<Collider2D>(out var col)) return false;
+        float y = GetMuzzlePosition(attacker).y;
+        return col.bounds.min.y <= y && y <= col.bounds.max.y;
+    }
 
     // 쏠 총알마다(퍼짐 각도 포함) 궤도를 띄운다. 궤도는 duration 동안 가늘어진다.
     public List<TrajectoryTelegraph> ShowAim(IAttacker attacker, Vector2 aimDirection, float duration)
@@ -111,7 +122,7 @@ public class RangedAttackStrategy : IAttackStrategy
             var dir = Vector3.right * attacker.LookDirection;
             if (aimDirection.HasValue)
                 dir = aimDirection.Value;
-            else if (target != null)
+            else if (target != null && !horizontalOnly)
                 dir = (target.position - mover.transform.position).normalized;
             dir = Quaternion.Euler(0f, 0f, angle) * dir;
             var setting = new BulletMoveSettings(dir, speed);

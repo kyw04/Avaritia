@@ -53,6 +53,7 @@ MonoBehaviour:
         spreadAngle: 0
         lifeTime: 0
         muzzleOffset: {x: 0.65625, y: 0.60625}
+        horizontalOnly: 1
         bulletCount: 1
         bulletDelay: 0
         bulletMaxDelay: 0
