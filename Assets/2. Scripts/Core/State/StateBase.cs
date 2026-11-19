@@ -45,16 +45,4 @@ public abstract class StateBase<T> : IState where T : IStateOwner<T>
         CurrentChild?.PropagateExit();
         Exit();
     }
-
-    internal void PropagateExecute()
-    {
-        Execute();
-        CurrentChild?.PropagateExecute();
-    }
-
-    internal void PropagateFixedExecute()
-    {
-        FixedExecute();
-        CurrentChild?.PropagateFixedExecute();
-    }
 }

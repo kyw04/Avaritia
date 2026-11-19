@@ -8,6 +8,8 @@ public class StateMachineBase<T> : IStateMachine where T : IStateOwner<T>
     private StateBase<T> currentState;
     private Dictionary<Type, StateBase<T>> states = new();
     private Dictionary<(Type from, Type to), Func<bool>> transitionTable = new();
+    // ChangeState가 실제로 상태를 바꿀 때마다 증가. Execute 도중 상태가 바뀌었는지 판단한다.
+    private int changeCount;
 
     protected StateMachineBase(T owner)
     {
@@ -58,6 +60,7 @@ public class StateMachineBase<T> : IStateMachine where T : IStateOwner<T>
         if (currentState != null && !CanTransition(targetType))
             return;
 
+        changeCount++;
         if (states.TryGetValue(targetType, out var topState))
         {
             currentState?.PropagateExit();
@@ -140,13 +143,19 @@ public class StateMachineBase<T> : IStateMachine where T : IStateOwner<T>
         return null;
     }
     
+    // 부모부터 자식 순으로 실행하다가 중간에 상태가 바뀌면 멈춘다. 이미 빠져나온 자식 상태가
+    // 같은 프레임에 이어서 실행되면 새 상태의 연출(애니메이션 등)을 덮어쓰기 때문이다.
     public void Execute()
     {
-        currentState?.PropagateExecute();
+        int version = changeCount;
+        for (var node = currentState; node != null && version == changeCount; node = node.CurrentChild)
+            node.Execute();
     }
 
     public void FixedExecute()
     {
-        currentState?.PropagateFixedExecute();
+        int version = changeCount;
+        for (var node = currentState; node != null && version == changeCount; node = node.CurrentChild)
+            node.FixedExecute();
     }
 }
