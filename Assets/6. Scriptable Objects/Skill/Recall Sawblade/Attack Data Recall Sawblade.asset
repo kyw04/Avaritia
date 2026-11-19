@@ -17,10 +17,19 @@ MonoBehaviour:
     animClip: {fileID: 0}
     particle: {fileID: 0}
     sound: {fileID: 0}
+  readyDuration: 0
   attack:
     animClip: {fileID: 0}
     particle: {fileID: 0}
     sound: {fileID: 0}
+  knockback:
+    knockbackForce: 2
+    knockbackUpForce: 0
+    knockbackDuration: 0.5
+  hitCamera:
+    shakeForce: 0.1
+    hitStopTimeScale: 0.025
+    hitStopDuration: 0.01
   damageMultiplier: 1
   filter:
     useTriggers: 0
@@ -41,6 +50,7 @@ MonoBehaviour:
   moveDuration: 0
   attackStrategy:
     rid: 6083184005721358512
+  previewSpriteOffset: {x: 0, y: 0}
   references:
     version: 2
     RefIds:
@@ -50,7 +60,11 @@ MonoBehaviour:
         bulletPrefab: {fileID: 425338924651187246, guid: 2532e1c2854ca5341a8eab3d978e9189, type: 3}
         spreadAngle: 0
         lifeTime: 0
+        muzzleOffset: {x: 0, y: 0}
+        horizontalOnly: 0
         bulletCount: 1
         bulletDelay: 0
         bulletMaxDelay: 0
         bulletSpeed: 18
+        aimTelegraphPrefab: {fileID: 0}
+        aimLength: 8
