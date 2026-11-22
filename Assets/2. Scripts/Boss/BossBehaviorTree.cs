@@ -48,6 +48,7 @@ public class BossBehaviorTree : BT.BehaviorTree
                             var available = board.Get<List<AbilityData>>(BBKey.AvailableAttacks);
                             var randomIndex = Random.Range(0, available.Count);
                             boss.FlipToTarget();
+                            boss.StopMoving();
                             boss.Abilities.TryActivate(available[randomIndex], new AbilityContext { Caster = boss, Target = boss.Target });
 
                             return BT.NodeStatus.Running;
@@ -57,7 +58,7 @@ public class BossBehaviorTree : BT.BehaviorTree
                     new BT.Action(() =>
                     {
                         boss.MoveToTarget();
-                        EventBus.Publish(new EntityMovedEvent(boss, 0f));
+                        boss.PublishLocomotionAnimation();
 
                         return BT.NodeStatus.Running;
                     })

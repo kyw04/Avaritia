@@ -15,11 +15,27 @@ public class EntityAnimator : AnimatorBase,
 {
     private static readonly int Speed = Animator.StringToHash("Speed");
     private Entity self;
+    private bool? hasSpeedParameter;
 
     protected override void Awake()
     {
         base.Awake();
         self = GetComponentInParent<Entity>();
+    }
+
+    private bool HasSpeedParameter
+    {
+        get
+        {
+            if (hasSpeedParameter == null)
+            {
+                hasSpeedParameter = false;
+                foreach (var parameter in AnimatorComponent.parameters)
+                    if (parameter.nameHash == Speed && parameter.type == AnimatorControllerParameterType.Float)
+                        hasSpeedParameter = true;
+            }
+            return hasSpeedParameter.Value;
+        }
     }
 
     private void OnEnable()
@@ -70,8 +86,12 @@ public class EntityAnimator : AnimatorBase,
         if (e.Source != self || LocomotionLocked)
             return;
         
-        float defaultSpeed = e.Source.GetDefaultStat<float>(StatType.MoveSpeed);
-        AnimatorComponent.SetFloat(Speed, e.Speed / defaultSpeed);
+        // 이동 속도 파라미터가 없는 애니메이터(보스 등)는 move 상태만 튼다.
+        if (HasSpeedParameter)
+        {
+            float defaultSpeed = e.Source.GetDefaultStat<float>(StatType.MoveSpeed);
+            AnimatorComponent.SetFloat(Speed, e.Speed / defaultSpeed);
+        }
         PlayAnimation("move");
     }
     public void OnNotify(EntityJumpedEvent e) { if (e.Source == self) PlayAnimation(e.Data.jump.animClip.name); }
