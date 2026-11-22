@@ -100,7 +100,6 @@ MonoBehaviour:
     icon: {fileID: 0}
     displayName: "\uD3D0\uC5F4 \uC555\uCC29\uB85C"
     description: 
-  patrolSize: {x: 8, y: 3}
   maxDropHeight: 1
   chaseGiveUpTime: 2
   giveUpSearchCooldown: 4
@@ -108,10 +107,9 @@ MonoBehaviour:
   viewLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  viewAngle: 15
-  viewDensity: 15
-  viewRadius: 4
-  alertRadius: 5
+  viewAngle: 30
+  viewRadius: 5
+  alertRadius: 2.5
   size: 1
   stationary: 0
   allyColor: {r: 0.5, g: 1, b: 0.5, a: 1}

@@ -47,7 +47,8 @@ MonoBehaviour:
     maxNormalAngle: 0
   canTurn: 1
   canMove: 1
-  moveDuration: 1
+  moveDuration: 0.1
+  moveForce: 10
   attackStrategy:
     rid: 1772930754192081019
   previewSpriteOffset: {x: 0, y: 0}
