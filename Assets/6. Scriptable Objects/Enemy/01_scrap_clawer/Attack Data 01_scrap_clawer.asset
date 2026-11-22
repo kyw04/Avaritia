@@ -22,6 +22,14 @@ MonoBehaviour:
     animClip: {fileID: 7400000, guid: 4d87eb963d69d8344ae73e0f57c3ba22, type: 2}
     particle: {fileID: 0}
     sound: {fileID: 0}
+  knockback:
+    knockbackForce: 2
+    knockbackUpForce: 0
+    knockbackDuration: 0.5
+  hitCamera:
+    shakeForce: 0.25
+    hitStopTimeScale: 0.1
+    hitStopDuration: 0.05
   damageMultiplier: 1
   filter:
     useTriggers: 0
@@ -37,9 +45,9 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  canTurn: 0
-  canMove: 0
-  moveDuration: 0
+  canTurn: 1
+  canMove: 1
+  moveDuration: 1
   attackStrategy:
     rid: 1772930754192081019
   previewSpriteOffset: {x: 0, y: 0}
@@ -50,4 +58,4 @@ MonoBehaviour:
       type: {class: MeleeAttackStrategy, ns: , asm: Assembly-CSharp}
       data:
         hitboxPosition: {x: 0.15, y: 0}
-        hitboxSize: {x: 0.6, y: 0.5}
+        hitboxSize: {x: 0.65, y: 0.5}

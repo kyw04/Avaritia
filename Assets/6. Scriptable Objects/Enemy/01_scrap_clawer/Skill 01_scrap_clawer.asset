@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Skill 01_scrap_clawer
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
   cooldown: 1
-  maxRange: 0.75
+  minRange: 0.25
+  maxRange: 0.65
   rank: {fileID: 0}
   cast:
     animClip: {fileID: 0}
