@@ -42,7 +42,6 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
     private const float WallCheckRadius = 0.15f;
     [SerializeField] private LayerMask viewLayerMask;
     [SerializeField, Range(0, 360)] private int viewAngle;
-    [SerializeField] private float viewDensity;
     [SerializeField] private float viewRadius;
     [SerializeField] private float alertRadius;
     [SerializeField] private EnemySize size;
@@ -60,6 +59,7 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
     private Collider2D bodyCollider;
     private int groundMask;
     private int wallMask;
+    private readonly System.Collections.Generic.List<Collider2D> viewCandidates = new();
     private float blockedTime;
     private float searchBlockedUntil;
     private bool canChangeFace;
@@ -441,27 +441,26 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
             return;
         }
 
-        var halfAngle = viewAngle / 2f;
-        var stepAngle = viewAngle / viewDensity;
-        for (int i = 0; i <= viewDensity; i++)
+        // 시야: viewRadius 안의 후보 중 바라보는 방향과의 내적이 cos(viewAngle/2) 이상이고(시야각 안),
+        // 대상까지 벽/바닥 타일에 가리지 않은 첫 대상을 찾는다. 발 높이 차이에 흔들리지 않도록 콜라이더 중심끼리 잰다.
+        float minDot = Mathf.Cos(viewAngle * 0.5f * Mathf.Deg2Rad);
+        Vector2 eye = bodyCollider.bounds.center;
+        var filter = new ContactFilter2D { useLayerMask = true, layerMask = viewLayerMask };
+        Physics2D.OverlapCircle(currentPos, viewRadius, filter, viewCandidates);
+        foreach (var candidate in viewCandidates)
         {
-            var currentAngle = -halfAngle + (stepAngle * i);
-            var dir = Quaternion.Euler(0, 0, currentAngle) * transform.right;
+            Vector2 targetPoint = candidate.bounds.center;
+            if (Vector2.Dot(transform.right, (targetPoint - eye).normalized) < minDot)
+                continue;
 
-            hit = Physics2D.Raycast(currentPos, dir, viewRadius, ~(1 << gameObject.layer));
-            if (hit)
-            {
-                if ((viewLayerMask & (1 << hit.transform.gameObject.layer)) != 0)
-                {
-                    Target = hit.transform;
-                    Machine.ChangeState<EnemyCombatState>();
-                    return;
-                }
+            bool blocked = Physics2D.Linecast(eye, targetPoint, wallMask);
+            Debug.DrawLine(eye, targetPoint, blocked ? Color.red : Color.green);
+            if (blocked)
+                continue;
 
-                Debug.DrawRay(currentPos, dir * hit.distance, Color.red);
-            }
-            else
-                Debug.DrawRay(currentPos, dir * viewRadius, Color.red);
+            Target = candidate.transform;
+            Machine.ChangeState<EnemyCombatState>();
+            return;
         }
 
         Target = null;
@@ -472,15 +471,10 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
         var currentPos = transform.position;
         Gizmos.color = Color.gray2;
         Gizmos.DrawWireSphere(currentPos, alertRadius);
+        // 시야 부채꼴은 양 끝 선만 그린다.
         var halfAngle = viewAngle / 2f;
-        var stepAngle = viewAngle / viewDensity;
-        for (int i = 0; i <= viewDensity; i++)
-        {
-            var currentAngle = -halfAngle + (stepAngle * i);
-            var dir = Quaternion.Euler(0, 0, currentAngle) * transform.right;
-
-            Gizmos.DrawRay(currentPos, dir *  viewRadius);
-        }
+        Gizmos.DrawRay(currentPos, Quaternion.Euler(0, 0, -halfAngle) * transform.right * viewRadius);
+        Gizmos.DrawRay(currentPos, Quaternion.Euler(0, 0, halfAngle) * transform.right * viewRadius);
 
         Gizmos.color = Color.forestGreen;
         Gizmos.DrawWireSphere(WallCheckPoint, WallCheckRadius);
