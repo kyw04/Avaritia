@@ -98,7 +98,7 @@ MonoBehaviour:
   knockbackResistance: 1
   info:
     icon: {fileID: 0}
-    displayName: 
+    displayName: "\uD074\uB85C\uC5B4 \uC655"
     description: 
   references:
     version: 2
