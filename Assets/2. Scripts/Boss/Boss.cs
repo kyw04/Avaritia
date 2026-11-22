@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Boss : Entity
@@ -30,6 +31,7 @@ public class Boss : Entity
         Machine.Init();
     }
 
+    // 스폰(보스방 입장)과 풀 반납(사망 모션 종료·방 이동·다시 시작)을 알려 보스 체력 UI가 켜지고 꺼지게 한다.
     public override void OnSpawn()
     {
         base.OnSpawn();
@@ -38,8 +40,16 @@ public class Boss : Entity
         if (player != null)
             Target = player.transform;
 
+        Rb.simulated = true;
         Machine = new BossBehaviorTree(this);
         Machine.Init();
+        EventBus.Publish(new BossSpawnedEvent(this));
+    }
+
+    public override void OnDespawn()
+    {
+        EventBus.Publish(new BossDespawnedEvent(this));
+        base.OnDespawn();
     }
 
     // 공격 스킬 사거리 안이면 멈춰 대상을 바라보고, 모든 공격 스킬의 minRange보다 가까우면 뒤로 물러나고, 아니면 다가간다.
@@ -94,12 +104,35 @@ public class Boss : Entity
         return flip;
     }
 
+    // 진행 중인 행동을 멈추고 사망 모션(Feedbacks.Death)을 튼 뒤, 모션이 끝나면 풀에 돌려보낸다.
+    // 사망 모션 동안 공격 판정에 걸리지 않게 물리에서 뺀다(OnSpawn에서 되돌린다).
     public override void Die()
     {
         if (!TryMarkDead()) return;
         stateManager.Unregister(Machine);
-        ObjectPoolManager.Instance.Despawn(gameObject);
+        CancelAttack();
+        CancelChannels();
+        Restrictions.Set(this, EnemyHitState.AllActions);
+        Rb.linearVelocity = Vector2.zero;
+        Rb.simulated = false;
         Debug.Log("Boss: 사망");
+
+        var feedback = Feedbacks.Death;
+        feedback.Play(FootPosition);
+        if (feedback.animClip != null)
+        {
+            EventBus.Publish(new EntityAnimationEvent(this, feedback.animClip));
+            StartCoroutine(DespawnAfter(feedback.animClip.length));
+        }
+        else
+            ObjectPoolManager.Instance.Despawn(gameObject);
+    }
+
+    // 그 전에 풀에 먼저 돌아가면(방 이동 등) 비활성화로 코루틴도 멈춘다.
+    private IEnumerator DespawnAfter(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        ObjectPoolManager.Instance.Despawn(gameObject);
     }
 
     private void OnDestroy()

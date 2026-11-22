@@ -67,6 +67,20 @@ public struct PlayerDiedEvent : ISubject
     public PlayerDiedEvent(Player player) { Player = player; }
 }
 
+// 보스가 스폰됐을 때(보스방 입장). 보스 체력 UI가 받는다.
+public struct BossSpawnedEvent : ISubject
+{
+    public Boss Source { get; private set; }
+    public BossSpawnedEvent(Boss source) { Source = source; }
+}
+
+// 보스가 풀에 돌아갔을 때(사망 모션 종료·방 이동·다시 시작). 보스 체력 UI가 받는다.
+public struct BossDespawnedEvent : ISubject
+{
+    public Boss Source { get; private set; }
+    public BossDespawnedEvent(Boss source) { Source = source; }
+}
+
 public struct EntityDeadEvent : ISubject
 {
     public Entity Source { get; private set; }

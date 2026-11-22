@@ -828,6 +828,7 @@ GameObject:
   - component: {fileID: 5153929003463623296}
   - component: {fileID: 5015084188496311770}
   - component: {fileID: 7064545354882817041}
+  - component: {fileID: 3228457182873050934}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -920,6 +921,21 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &3228457182873050934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2864976043299116330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bd70e70d22681e4eb2f5ccff44e2a25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossHealthUI
+  root: {fileID: 1565869018735336475}
+  healthUI: {fileID: 215344865382056913}
+  nameText: {fileID: 5516540052263288582}
 --- !u!1 &3208351320842657178
 GameObject:
   m_ObjectHideFlags: 0

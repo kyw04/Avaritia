@@ -26,14 +26,24 @@ public class HealthUI : MonoBehaviour, IObserver<EntityHealthChangedEvent>
         if (e.Source != target)
             return;
 
-        float max = e.Max;
-        float current = e.Current;
+        Refresh(e.Max, e.Current);
+        changedPunch.Play();
+    }
+
+    // 대상을 바꾸고(보스 등 런타임에 정해지는 대상) 지금 체력으로 바로 채운다.
+    public void SetTarget(Entity newTarget)
+    {
+        target = newTarget;
+        if (target != null)
+            Refresh(target.MaxHealth, target.CurrentHealth);
+    }
+
+    private void Refresh(float max, float current)
+    {
         if (maxHealthText != null)
             maxHealthText.text = max.ToString("0");
         if (currentHealthText != null)
             currentHealthText.text = current.ToString("0");
-        
-        changedPunch.Play();
         healthBarImage.fillAmount = current / max;
     }
 }
