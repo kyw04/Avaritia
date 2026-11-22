@@ -17,6 +17,8 @@ MonoBehaviour:
   - {fileID: 7737080550683484816, guid: bf687e53625c075479f7517a54ec8bb8, type: 3}
   - {fileID: 6907148043191348306, guid: 17ca1e629bae346468d9f3685fd2d1c8, type: 3}
   - {fileID: 4215414893252317282, guid: 8d5b772508b6b3c4bb62f07226212f9a, type: 3}
+  - {fileID: 7737080550683484816, guid: f575bac23c7617a43b2c8bd45d9cb4d4, type: 3}
+  - {fileID: 7737080550683484816, guid: df772f1f521f93a4b8797143083785e3, type: 3}
   shopNode: {fileID: -1521703388426580451, guid: cb2c8fab8ad00594faaec59ff6814ba6, type: 3}
   shopRoomDistance: 99999
   bossNode: {fileID: 7954200374822473593, guid: d1a56713a9af5c84d907e03d0da26f13, type: 3}
