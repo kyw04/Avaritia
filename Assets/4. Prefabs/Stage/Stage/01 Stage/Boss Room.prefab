@@ -22185,11 +22185,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
       propertyPath: patrolSize.y
-      value: 20
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
       propertyPath: patrolOffset.y
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6932648260790840698, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
       propertyPath: m_Name
