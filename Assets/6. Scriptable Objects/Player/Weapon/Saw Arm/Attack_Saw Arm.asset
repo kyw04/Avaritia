@@ -22,11 +22,11 @@ MonoBehaviour:
     animClip: {fileID: 7400000, guid: b1e46fcbfcee5a948a5e3df314b32f13, type: 2}
     particle: {fileID: 0}
     sound: {fileID: 0}
-  knockbackData:
+  knockback:
     knockbackForce: 1
     knockbackUpForce: 0
     knockbackDuration: 0.5
-  cameraData:
+  hitCamera:
     shakeForce: 0
     hitStopTimeScale: 0
     hitStopDuration: 0
@@ -45,9 +45,10 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  canTurn: 1
+  canTurn: 0
   canMove: 0
   moveDuration: 0
+  moveForce: 0
   attackStrategy:
     rid: 1772930754192081013
   previewSpriteOffset: {x: 0, y: 0}
