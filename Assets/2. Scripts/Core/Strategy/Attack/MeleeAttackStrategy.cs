@@ -8,6 +8,10 @@ public class MeleeAttackStrategy : IAttackStrategy
     public Vector2 hitboxSize;
 
     public void Offensive(IAttacker attacker, KnockbackSettings knockback, HitCameraSettings hitCamera, float damageMultiplier, ContactFilter2D filter, Transform target = null, BulletEnhancement enhancement = null, Vector2? aimDirection = null)
+        => Offensive(attacker, knockback, hitCamera, damageMultiplier, filter, (HashSet<IDamageable>)null);
+
+    // alreadyHit이 있으면 그 안의 대상은 건너뛰고, 새로 맞힌 대상을 넣는다(판정을 여러 번 검사해도 대상마다 한 번만 맞는다).
+    public void Offensive(IAttacker attacker, KnockbackSettings knockback, HitCameraSettings hitCamera, float damageMultiplier, ContactFilter2D filter, HashSet<IDamageable> alreadyHit)
     {
         float scale = damageMultiplier;
         bool isCritical = attacker is IStatReadable readable && Random.Range(0f, 100f) < readable.GetStat<float>(StatType.CritRate);
@@ -27,6 +31,7 @@ public class MeleeAttackStrategy : IAttackStrategy
             if (hit.transform.IsChildOf(attacker.Mono.transform)) continue;
             if (hit.TryGetComponent<IDamageable>(out var d))
             {
+                if (alreadyHit != null && !alreadyHit.Add(d)) continue;
                 float baseDmg = attackerEntity != null ? attackerEntity.GetDamageAgainst(hit.transform) : attacker.Damage;
                 d.TakeDamage(baseDmg * scale, attackerEntity, knockback, hitCamera, null, isCritical);
             }

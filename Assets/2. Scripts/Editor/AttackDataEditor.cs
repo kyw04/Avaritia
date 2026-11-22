@@ -32,7 +32,7 @@ public class AttackDataEditor : Editor
         {
             enterChildren = false;
 
-            if ((iterator.propertyPath == "canMove" || iterator.propertyPath == "moveDuration")
+            if ((iterator.propertyPath == "canMove" || iterator.propertyPath == "moveDuration" || iterator.propertyPath == "moveForce")
                 && !canTurnProp.boolValue)
                 continue;
 

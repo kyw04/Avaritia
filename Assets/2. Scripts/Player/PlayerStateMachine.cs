@@ -475,6 +475,8 @@ public class PlayerStateMachine : StateMachineBase<Player>
         private bool buffer;
         private bool hasAttack;
         private float timer;
+        // 공격 준비 대기와 같이 공격 속도 배율을 반영해 세는 시간(moveForce 밀어내기 시점용).
+        private float attackTime;
         private int comboIndex;
         // 시작할 때 땅/공중에 따라 정한 콤보.
         private AttackDataCombo combo;
@@ -497,6 +499,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
             // 이동 가능한 공격은 이어서 움직이도록 가로 속도를 남긴다. 세로 속도는 두어 공중에서 멈추지 않게 한다.
             Owner.Rb.linearVelocity = new Vector2(data.canMove ? Owner.Rb.linearVelocity.x : 0f, Owner.Rb.linearVelocity.y);
+            attackTime = 0f;
             weapon.Attack(Owner, comboIndex, null, combo);
         }
 
@@ -536,6 +539,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
                 hasAttack = true;
 
             timer += Time.deltaTime;
+            attackTime += Time.deltaTime * Owner.AttackSpeedMultiplier;
             if (timer >= combo.datas[comboIndex].duration)
             {
                 comboIndex++;
@@ -558,8 +562,19 @@ public class PlayerStateMachine : StateMachineBase<Player>
         public override void FixedExecute()
         {
             var data = combo.datas[comboIndex];
-            // canMove면 moveDuration 동안 방향키대로 움직인다(방향도 따라 바뀐다). 0이면 공격 내내.
-            if (data.canMove && (data.moveDuration <= 0f || timer < data.moveDuration))
+            // canMove에 moveForce가 있으면 공격 준비가 끝날 때 바라보는 쪽으로 moveForce 속도로 밀려나
+            // moveDuration 동안 0까지 줄어든다. 넉백 중이면 넉백 속도를 그대로 둔다.
+            if (data.canMove && data.moveForce > 0f)
+            {
+                float moveTime = attackTime - data.ReadyTime;
+                float speed = data.moveDuration > 0f && moveTime >= 0f && moveTime < data.moveDuration
+                    ? data.moveForce * (1f - moveTime / data.moveDuration)
+                    : 0f;
+                if (!Owner.IsKnockedBack)
+                    Owner.Rb.linearVelocity = new Vector2(Owner.LookDirection * speed, Owner.Rb.linearVelocity.y);
+            }
+            // moveForce가 없으면 moveDuration 동안 방향키대로 움직인다(방향도 따라 바뀐다). 0이면 공격 내내.
+            else if (data.canMove && (data.moveDuration <= 0f || timer < data.moveDuration))
                 Owner.Move(InputHandler.Instance.MoveInput);
             else
                 Owner.Rb.linearVelocity = new Vector2(0f, Owner.Rb.linearVelocity.y);

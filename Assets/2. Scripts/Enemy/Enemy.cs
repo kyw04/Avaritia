@@ -387,6 +387,32 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
         return true;
     }
 
+    // 첫 번째 스킬이 쓰는 공격 데이터(AttackEffect). 없으면 null.
+    public AttackData FirstAttackData
+    {
+        get
+        {
+            var first = Abilities?.AbilityAt(0);
+            if (first == null) return null;
+            foreach (var effect in first.effects)
+                if (effect is AttackEffect attack && attack.attackData != null)
+                    return attack.attackData;
+            return null;
+        }
+    }
+
+    // 공격 중 이동(AttackData.canMove). 바라보는 쪽으로 speed만큼 밀고, 앞이 낭떠러지·벽·순찰 구역 경계면 멈춘다.
+    public void MoveForward(float speed)
+    {
+        if (stationary || IsKnockedBack)
+            return;
+
+        bool blocked = IsLedgeAhead() || IsWallAhead() || (patrolSize.x > 0f && IsPatrolEdgeAhead());
+        if (blocked || !Restrictions.Can(ActionBlock.Move))
+            speed = 0f;
+        Rb.linearVelocity = new Vector2(LookDirection * speed, Rb.linearVelocityY);
+    }
+
     public void Attack() => Abilities.TryActivate(Abilities.AbilityAt(0), new AbilityContext { Caster = this, Target = Target });
 
     public void FaceTarget()

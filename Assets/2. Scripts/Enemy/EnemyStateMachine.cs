@@ -190,6 +190,10 @@ public class EnemyMoveState : StateBase<Enemy>
 
 public class EnemyAttackState : StateBase<Enemy>
 {
+    private AttackData attackData;
+    private float timer;
+    private bool moving;
+
     public EnemyAttackState(Enemy owner) : base(owner)
     {
         Machine.AddTransition<EnemyAttackState, EnemyMoveState>();
@@ -202,13 +206,38 @@ public class EnemyAttackState : StateBase<Enemy>
         if (!Owner.IsKnockedBack)
             Owner.Rb.linearVelocity = new Vector2(0, Owner.Rb.linearVelocityY);
         Owner.FaceTarget();
+        attackData = Owner.FirstAttackData;
+        timer = 0f;
+        moving = false;
         Owner.Attack();
     }
 
+    // 공격 준비 대기(AttackData.WaitAttackTime)와 같이 공격 속도 배율을 반영해 시간을 센다.
     public override void Execute()
     {
+        timer += Time.deltaTime * Owner.AttackSpeedMultiplier;
         if (!Owner.IsAttacking)
             Machine.ChangeState<EnemyMoveState>();
+    }
+
+    // 공격 데이터의 canMove가 켜져 있으면 공격 준비가 끝날 때 moveForce 속도로 앞으로 밀려나
+    // moveDuration 동안 0까지 줄어든다. 이동 시간이 끝나면 한 번 멈춘다.
+    public override void FixedExecute()
+    {
+        float moveTime = attackData != null ? timer - attackData.ReadyTime : -1f;
+        bool canMove = attackData != null && attackData.canMove && attackData.moveDuration > 0f
+                       && moveTime >= 0f && moveTime < attackData.moveDuration;
+        if (canMove)
+        {
+            moving = true;
+            Owner.MoveForward(attackData.moveForce * (1f - moveTime / attackData.moveDuration));
+        }
+        else if (moving)
+        {
+            moving = false;
+            if (!Owner.IsKnockedBack)
+                Owner.Rb.linearVelocity = new Vector2(0, Owner.Rb.linearVelocityY);
+        }
     }
 }
     
