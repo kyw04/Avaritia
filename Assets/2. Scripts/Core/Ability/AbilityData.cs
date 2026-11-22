@@ -5,6 +5,8 @@ using UnityEngine;
 public class AbilityData : ScriptableObject, IInventoryItem
 {
     public float cooldown;
+    // 대상이 이보다 가까우면 적은 뒤로 물러난 뒤 공격한다.
+    public float minRange;
     public float maxRange = float.MaxValue;
     public RankData rank;
     public ActionFeedback cast;

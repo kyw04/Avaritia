@@ -27,6 +27,10 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
     private const float MoveAnimationSpeed = 0.05f;
     // 낭떠러지 검사 레이를 몸 앞쪽 끝/발바닥에서 이만큼 떨어뜨려 쏜다.
     private const float LedgeProbeOffset = 0.1f;
+    // 뒷걸음질할 때의 이동 속도 배율
+    private const float RetreatSpeedMultiplier = 0.5f;
+    // 뒷걸음질할 때는 이 높이보다 깊은 단차를 낭떠러지로 보고 내려가지 않는다.
+    private const float RetreatMaxDropHeight = 0.1f;
     // 앞쪽 발밑으로 이 높이 안에 바닥/발판이 있을 때만 내려간다. 더 깊으면 낭떠러지로 보고 돌아서거나 멈춘다.
     [SerializeField] private float maxDropHeight = 1f;
     // 추격 중 낭떠러지나 벽에 막혀 이 시간 동안 못 가면 추격을 포기하고 순찰 구역으로 돌아간다.
@@ -229,19 +233,25 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
     }
 
     // 바라보는 쪽 wallCheckOffset 위치에 벽/바닥 타일이 있으면 벽이다. 일방향 발판은 벽으로 보지 않는다.
-    public bool IsWallAhead() => Physics2D.OverlapCircle(WallCheckPoint, WallCheckRadius, wallMask);
+    public bool IsWallAhead() => IsWallAt(LookDirection);
 
-    private Vector2 WallCheckPoint =>
-        (Vector2)transform.position + new Vector2(wallCheckOffset.x * LookDirection, wallCheckOffset.y);
+    private bool IsWallAt(int direction) => Physics2D.OverlapCircle(WallCheckPointAt(direction), WallCheckRadius, wallMask);
+
+    private Vector2 WallCheckPoint => WallCheckPointAt(LookDirection);
+
+    private Vector2 WallCheckPointAt(int direction) =>
+        (Vector2)transform.position + new Vector2(wallCheckOffset.x * direction, wallCheckOffset.y);
 
     // 바라보는 쪽 발 앞에서 아래로 쏴서 maxDropHeight 안에 바닥/발판이 없으면 낭떠러지다.
-    public bool IsLedgeAhead()
+    public bool IsLedgeAhead() => IsLedgeAt(LookDirection, maxDropHeight);
+
+    private bool IsLedgeAt(int direction, float dropHeight)
     {
         var bounds = bodyCollider.bounds;
         var origin = new Vector2(
-            bounds.center.x + LookDirection * (bounds.extents.x + LedgeProbeOffset),
+            bounds.center.x + direction * (bounds.extents.x + LedgeProbeOffset),
             bounds.min.y + LedgeProbeOffset);
-        return !Physics2D.Raycast(origin, Vector2.down, maxDropHeight + LedgeProbeOffset, groundMask);
+        return !Physics2D.Raycast(origin, Vector2.down, dropHeight + LedgeProbeOffset, groundMask);
     }
 
     // 낭떠러지나 벽에 막힌 채 chaseGiveUpTime이 지나면 추격을 포기하고 순찰 구역으로 돌아간다.
@@ -286,11 +296,13 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
     }
 
     // 순찰 구역 가로 경계에 닿았고(또는 넘었고) 바깥쪽을 보고 있으면 true.
-    private bool IsPatrolEdgeAhead()
+    private bool IsPatrolEdgeAhead() => IsPatrolEdgeAt(LookDirection);
+
+    private bool IsPatrolEdgeAt(int direction)
     {
         float halfWidth = Mathf.Max(patrolSize.x / 2f, PatrolArriveDistance);
         float offset = transform.position.x - PatrolCenter.x;
-        return Mathf.Abs(offset) >= halfWidth && (offset > 0 ? 1 : -1) == LookDirection;
+        return Mathf.Abs(offset) >= halfWidth && (offset > 0 ? 1 : -1) == direction;
     }
 
     // 스폰 포인트가 스폰 직후 순찰 범위를 정해 준다. 풀 재사용(OnSpawn) 때 크기 0, 중심은 제자리로 초기화된다.
@@ -320,11 +332,44 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
             Quaternion.Euler(0, look > 0 ? 0 : 180, 0));
     }
 
+    // minRange보다 가까우면 물러나서 거리가 벌어진 뒤에 공격한다.
+    // 더 물러날 수 없으면(벽·낭떠러지·순찰 구역 경계) 그 자리에서 공격한다. 순찰 폭이 0인 적은 순찰 구역에 묶이지 않는다.
     public bool IsInAttackRange()
     {
         var first = Abilities?.AbilityAt(0);
         if (!HasTarget || first == null) return false;
-        return Vector2.Distance(transform.position, Target.position) <= first.maxRange;
+        float distance = Vector2.Distance(transform.position, Target.position);
+        return distance <= first.maxRange && (distance >= first.minRange || !CanRetreat());
+    }
+
+    public bool IsTooClose()
+    {
+        var first = Abilities?.AbilityAt(0);
+        return HasTarget && first != null && Vector2.Distance(transform.position, Target.position) < first.minRange;
+    }
+
+    // 대상을 바라본 채 대상 반대쪽으로 이동 속도의 RetreatSpeedMultiplier만큼 뒷걸음질한다.
+    public void Retreat()
+    {
+        FaceTarget();
+        if (!CanRetreat())
+        {
+            Rb.linearVelocity = new Vector2(0, Rb.linearVelocityY);
+            return;
+        }
+        Move(new Vector2(RetreatDirection * RetreatSpeedMultiplier, 0f));
+    }
+
+    private int RetreatDirection => Target.position.x > transform.position.x ? -1 : 1;
+
+    // 뒷걸음질은 떨어지지 않도록 maxDropHeight 대신 RetreatMaxDropHeight로 낭떠러지를 본다.
+    // 순찰 폭이 0인 적은 순찰 구역 경계를 보지 않는다.
+    private bool CanRetreat()
+    {
+        if (stationary || !HasTarget) return false;
+        int direction = RetreatDirection;
+        return !IsLedgeAt(direction, RetreatMaxDropHeight) && !IsWallAt(direction)
+            && (patrolSize.x <= 0f || !IsPatrolEdgeAt(direction));
     }
 
     public bool CanAttack()
@@ -417,7 +462,11 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
         Gizmos.color = IsInAttackRange() ? Color.red : Color.blue;
         var first = abilities[0];
         if (first != null)
+        {
             Gizmos.DrawWireSphere(transform.position, first.maxRange);
+            if (first.minRange > 0f)
+                Gizmos.DrawWireSphere(transform.position, first.minRange);
+        }
     }
 
     public override void Die()

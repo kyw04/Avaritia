@@ -133,7 +133,7 @@ public class AbilityManager
         foreach (var data in abilities)
         {
             if (data == null) continue;
-            if (targetDistance > data.maxRange) continue;
+            if (targetDistance > data.maxRange || targetDistance < data.minRange) continue;
             if (IsOnCooldown(data)) continue;
             available.Add(data);
         }

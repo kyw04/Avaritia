@@ -176,13 +176,15 @@ public class EnemyMoveState : StateBase<Enemy>
         if (Owner.IsKnockedBack)
             return;
         
-        if (!Owner.IsInAttackRange())
-            Owner.Move();
-        else
+        if (Owner.IsInAttackRange())
         {
             Owner.Rb.linearVelocity = new Vector2(0, Owner.Rb.linearVelocityY);
             Owner.FaceTarget();
         }
+        else if (Owner.IsTooClose())
+            Owner.Retreat();
+        else
+            Owner.Move();
     }
 }
 
@@ -194,8 +196,11 @@ public class EnemyAttackState : StateBase<Enemy>
     }
 
     // 이동 상태는 FixedUpdate에서만 대상을 바라보므로, 공격 준비 동작에 들어가기 전에 한 번 더 대상을 바라본다.
+    // 추격·뒷걸음질 속도가 남아 미끄러지지 않도록 가로 속도를 없앤다(넉백 중이면 그대로 둔다).
     public override void Enter()
     {
+        if (!Owner.IsKnockedBack)
+            Owner.Rb.linearVelocity = new Vector2(0, Owner.Rb.linearVelocityY);
         Owner.FaceTarget();
         Owner.Attack();
     }
