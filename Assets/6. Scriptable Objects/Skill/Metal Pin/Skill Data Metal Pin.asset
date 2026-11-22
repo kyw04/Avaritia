@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Skill Data Metal Pin
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
   cooldown: 1.5
+  minRange: 0
   maxRange: 3.4028235e+38
   rank: {fileID: 11400000, guid: 95e43758967e52b4b9cb055a7461f592, type: 2}
   cast:
@@ -20,7 +21,7 @@ MonoBehaviour:
     particle: {fileID: 2994426646003545302, guid: ac7a92861fb04c7a8a988d721e25087c, type: 3}
     sound: {fileID: 0}
   info:
-    icon: {fileID: 21300000, guid: 61baf3aaca07add43b86a698b2e157bf, type: 3}
+    icon: {fileID: 21300000, guid: 1b6363e870bd638428ea95a299059d91, type: 3}
     displayName: "\uAE08\uC18D \uD540"
     description: "\uC804\uBC29\uC73C\uB85C \uC791\uC740 \uAE08\uC18D \uD540\uC744
       \uBC1C\uC0AC\uD569\uB2C8\uB2E4. \uCC98\uC74C \uB9DE\uC740 \uC801\uC5D0\uAC8C

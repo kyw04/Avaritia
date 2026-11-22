@@ -8716,11 +8716,11 @@ PrefabInstance:
     - target: {fileID: 5773720602588636574, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
       propertyPath: abilityAsset
       value: 
-      objectReference: {fileID: 11400000, guid: 1575af593c12af148935baeb4784cd8a, type: 2}
+      objectReference: {fileID: 11400000, guid: f4b2349251fa11943bcef0d211b7cb61, type: 2}
     - target: {fileID: 6021740498178327085, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -614792169865968416, guid: 18ab63d2317f49bf9f3e9e7a6822ca06, type: 3}
+      objectReference: {fileID: 21300000, guid: 1b6363e870bd638428ea95a299059d91, type: 3}
     - target: {fileID: 6021740498178327085, guid: 0c42e793bc1f993458fdc5c91ed71c35, type: 3}
       propertyPath: m_Color.b
       value: 1
