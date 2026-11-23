@@ -89,6 +89,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
 
     public float MaxHealth => GetStat<float>(StatType.MaxHealth);
     public float CurrentHealth => GetStat<float>(StatType.CurrentHealth);
+    public float HealthRatio => MaxHealth > 0f ? CurrentHealth / MaxHealth : 0f;
     public float MoveSpeed => GetStat<float>(StatType.MoveSpeed);
     public virtual float Damage => GetStat<float>(StatType.Damage);
     public int MaxDoubleJumpCount => GetAssetStat<int>(StatType.DoubleJumpCount);
@@ -216,6 +217,9 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         if (Mathf.Approximately(MaxHealth, trackedMaxHealth)) return;
         SetHealthRatio(trackedMaxHealth > 0f ? CurrentHealth / trackedMaxHealth : 0f);
     }
+
+    // 세이브 복원용. 0이면 죽은 채로 시작하므로 최소값을 둔다.
+    public void RestoreHealthRatio(float ratio) => SetHealthRatio(Mathf.Clamp(ratio, 0.0001f, 1f));
 
     private void SetHealthRatio(float ratio)
     {

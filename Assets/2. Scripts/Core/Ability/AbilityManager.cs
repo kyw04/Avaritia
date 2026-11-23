@@ -140,6 +140,8 @@ public class AbilityManager
         return available;
     }
 
+    public int SlotCount => abilities.Length;
+
     public AbilityData AbilityAt(int index) =>
         index >= 0 && index < abilities.Length ? abilities[index] : null;
 
