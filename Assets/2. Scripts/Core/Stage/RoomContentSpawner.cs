@@ -98,7 +98,7 @@ public class RoomContentSpawner : MonoBehaviour,
 
         currentRoom = Instantiate(node.gameObject, Vector3.zero, Quaternion.identity);
 
-        PositionPlayer();
+        PositionPlayer(restored);
 
         // 복원된 클리어 방은 적을 만들지 않는다.
         if (restored)
@@ -108,9 +108,12 @@ public class RoomContentSpawner : MonoBehaviour,
         SpawnActors(stageData);
     }
 
-    private void PositionPlayer()
+    // 클리어 상태로 복원한 방은 보상 위치에서 시작한다. 보상 위치가 없는 방(시작 방, 상점)은 플레이어 스폰 지점을 쓴다.
+    private void PositionPlayer(bool restored)
     {
-        var spawnPoint = currentRoom.GetComponentInChildren<PlayerSpawnPoint>();
+        Component spawnPoint = restored ? currentRoom.GetComponentInChildren<PickupSpawnPoint>() : null;
+        if (spawnPoint == null)
+            spawnPoint = currentRoom.GetComponentInChildren<PlayerSpawnPoint>();
         if (spawnPoint == null)
             return;
 
