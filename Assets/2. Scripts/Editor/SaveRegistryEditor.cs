@@ -31,8 +31,9 @@ public static class SaveRegistryEditor
                 {
                     prop.stringValue = guid;
                     so.ApplyModifiedPropertiesWithoutUndo();
-                    EditorUtility.SetDirty(asset);
                 }
+                // 이미 메모리에만 ID가 있는 에셋도 디스크에 저장되도록 항상 dirty 처리
+                EditorUtility.SetDirty(asset);
                 found.Add(asset);
             }
         }
