@@ -18,6 +18,12 @@ public class RoomContentSpawner : MonoBehaviour,
     private readonly List<WorldPickup> roomPickups = new();
     private readonly List<ItemBox> roomBoxes = new();
 
+    // 미니맵이 방과 방 안 오브젝트를 표시할 때 읽는다.
+    public GameObject CurrentRoom => currentRoom;
+    public IReadOnlyList<Entity> AliveActors => aliveActors;
+    public IReadOnlyList<WorldPickup> RoomPickups => roomPickups;
+    public IReadOnlyList<ItemBox> RoomBoxes => roomBoxes;
+
     private void Awake()
     {
         EventBus.Subscribe<StageNodeChangedEvent>(this);

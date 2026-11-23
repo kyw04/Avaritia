@@ -20,6 +20,7 @@ public class ItemBox : MonoBehaviour, IInteractable, IPoolable
     public Sprite Icon => null;
     public string Details => null;
     public Transform Transform => transform;
+    public bool IsOpened => opened;
 
     private void Awake()
     {
