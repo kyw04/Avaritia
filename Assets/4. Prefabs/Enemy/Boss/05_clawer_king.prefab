@@ -90,7 +90,7 @@ MonoBehaviour:
     <Hit>k__BackingField:
       animClip: {fileID: 7400000, guid: 7757e81ba04a1a74bacf91bae617e915, type: 2}
       particle: {fileID: 0}
-      sound: {fileID: 0}
+      sound: {fileID: 8300000, guid: 21a23957a77c3bc488f38c0c48b7cb7e, type: 3}
     <Death>k__BackingField:
       animClip: {fileID: 7400000, guid: 1a1a0fee23bd9b7408f7c464cf3d619e, type: 2}
       particle: {fileID: 0}

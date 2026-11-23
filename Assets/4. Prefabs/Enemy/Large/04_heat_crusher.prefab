@@ -49,8 +49,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   abilities:
-  - {fileID: 11400000, guid: a256e9f13a2cefd4894f817d5699f65c, type: 2}
   - {fileID: 11400000, guid: 6c5e622e576d4b479e3ee43e24722620, type: 2}
+  - {fileID: 11400000, guid: a256e9f13a2cefd4894f817d5699f65c, type: 2}
   statDataAsset: {fileID: 11400000, guid: d75bf7b063143524caa6c6a75e19ea9c, type: 2}
   movementStrategy:
     rid: 1772930779186724988
@@ -90,7 +90,7 @@ MonoBehaviour:
     <Hit>k__BackingField:
       animClip: {fileID: 7400000, guid: 453d4f832ff455448b1f1a7e072e9cd4, type: 2}
       particle: {fileID: 0}
-      sound: {fileID: 0}
+      sound: {fileID: 8300000, guid: 21a23957a77c3bc488f38c0c48b7cb7e, type: 3}
     <Death>k__BackingField:
       animClip: {fileID: 7400000, guid: 1b153b8e82fef584b84200b64d1cc22f, type: 2}
       particle: {fileID: 0}
