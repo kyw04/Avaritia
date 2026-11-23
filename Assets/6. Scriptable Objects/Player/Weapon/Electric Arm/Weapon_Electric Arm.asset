@@ -34,7 +34,7 @@ MonoBehaviour:
   hit:
     animClip: {fileID: 0}
     particle: {fileID: 2461976908696895058, guid: 59a335fab3ff41368182b36efcac9d4b, type: 3}
-    sound: {fileID: 8300000, guid: 21a23957a77c3bc488f38c0c48b7cb7e, type: 3}
+    sound: {fileID: 0}
   modules:
   - rid: 5321512127343886423
   - rid: 5321512127343886424
