@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2ed5d1f543e1549b8e840ac741f500, type: 3}
   m_Name: Gold Coin Bullets
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  saveId: 77998a843a9a48c449407754d76b5e23
   cooldown: 0
+  minRange: 0
   maxRange: 3.4028235e+38
   rank: {fileID: 11400000, guid: 95e43758967e52b4b9cb055a7461f592, type: 2}
   cast:

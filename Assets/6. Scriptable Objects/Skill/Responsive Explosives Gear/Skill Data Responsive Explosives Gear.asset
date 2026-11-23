@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb0df744d57e40cb9ea6b9de91702fea, type: 3}
   m_Name: Skill Data Responsive Explosives Gear
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  saveId: 24897805a33703149908f3757c348de9
   cooldown: 2
+  minRange: 0
   maxRange: 3.4028235e+38
   rank: {fileID: 11400000, guid: 95e43758967e52b4b9cb055a7461f592, type: 2}
   cast:

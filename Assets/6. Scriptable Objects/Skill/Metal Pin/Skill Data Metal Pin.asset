@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb0df744d57e40cb9ea6b9de91702fea, type: 3}
   m_Name: Skill Data Metal Pin
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  saveId: f4b2349251fa11943bcef0d211b7cb61
   cooldown: 1.5
   minRange: 0
   maxRange: 3.4028235e+38

@@ -13,8 +13,18 @@ public class InputMethodAttribute : Attribute { }
 
 // 무기 설계값. 플레이 중에는 읽기만 하고, 런타임 상태는 WeaponInstance가 가진다.
 [CreateAssetMenu(menuName = "Scriptable Objects/Weapon/WeaponData")]
-public class WeaponData : ScriptableObject, IInfo
+public class WeaponData : ScriptableObject, IInfo, ISaveId
 {
+    [SerializeField, HideInInspector] private string saveId;
+    public string SaveId => saveId;
+
+    private void OnValidate()
+    {
+#if UNITY_EDITOR
+        SaveIdUtility.Sync(this, ref saveId);
+#endif
+    }
+
     [Serializable]
     public class InputMethodBinding
     {

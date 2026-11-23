@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb0df744d57e40cb9ea6b9de91702fea, type: 3}
   m_Name: Stats_Magazine Arm
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  saveId: aac30a3539ffbe346b1f0d5a8c697d97
   cooldown: 0
+  minRange: 0
   maxRange: 3.4028235e+38
   rank: {fileID: 0}
   cast:

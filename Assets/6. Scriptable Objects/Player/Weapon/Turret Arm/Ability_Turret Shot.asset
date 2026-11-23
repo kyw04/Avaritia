@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb0df744d57e40cb9ea6b9de91702fea, type: 3}
   m_Name: Ability_Turret Shot
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  saveId: 5d9153ffedebdd545ae61d3c3a770d04
   cooldown: 0.8
+  minRange: 0
   maxRange: 8
   rank: {fileID: 0}
   cast:

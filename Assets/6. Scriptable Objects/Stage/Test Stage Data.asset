@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecd7d74057f6d874988a676e9c2e839e, type: 3}
   m_Name: Test Stage Data
   m_EditorClassIdentifier: Assembly-CSharp::StageData
+  saveId: 3cfa7f7120bfbb9478a8f920b116bd39
   startNode: {fileID: -4546772831511800760, guid: 8359b627b3905ac40baa97f8f93913ba, type: 3}
   battleNodes:
   - {fileID: 7737080550683484816, guid: bf687e53625c075479f7517a54ec8bb8, type: 3}

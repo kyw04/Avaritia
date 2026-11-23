@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb0df744d57e40cb9ea6b9de91702fea, type: 3}
   m_Name: Skill Data Debris Graft Spawn
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  saveId: 709e3a9fd878abf4ab83cf2fa7aea8f1
   cooldown: 0
+  minRange: 0
   maxRange: 3.4028235e+38
   rank: {fileID: 0}
   cast:

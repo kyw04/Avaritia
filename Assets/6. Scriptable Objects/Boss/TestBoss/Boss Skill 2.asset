@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb0df744d57e40cb9ea6b9de91702fea, type: 3}
   m_Name: Boss Skill 2
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  saveId: a61f0e51e7ec4a24a68acd5c79bd8791
   cooldown: 3
+  minRange: 0
   maxRange: 3
   rank: {fileID: 0}
   cast:

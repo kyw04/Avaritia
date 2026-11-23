@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb0df744d57e40cb9ea6b9de91702fea, type: 3}
   m_Name: Condition_Drill Arm Max Damage
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  saveId: 8c4754123db5989449fa966d6676e6d9
   cooldown: 0
+  minRange: 0
   maxRange: 3.4028235e+38
   rank: {fileID: 0}
   cast:

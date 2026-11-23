@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb0df744d57e40cb9ea6b9de91702fea, type: 3}
   m_Name: Skill 05_clawer_king
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  saveId: d412a9c6b333ac04b99712854595f812
   cooldown: 2
   minRange: 3
   maxRange: 5

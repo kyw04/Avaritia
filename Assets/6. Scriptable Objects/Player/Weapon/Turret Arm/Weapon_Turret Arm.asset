@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f935b32e47f32148a0e4aac5329210c, type: 3}
   m_Name: Weapon_Turret Arm
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
+  saveId: a04ff35fa990a344da264ab96a64bf0b
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 5c431dcf496307f4fb1e4568275b5433, type: 3}
   combo: {fileID: 11400000, guid: ad285d61f01211c48b3ee816af43a91d, type: 2}
   airCombo: {fileID: 0}
@@ -31,12 +32,6 @@ MonoBehaviour:
     animClip: {fileID: 0}
     particle: {fileID: 0}
     sound: {fileID: 0}
-  shakeForce: 0.1
-  hitStopTimeScale: 0.1
-  hitStopDuration: 0.01
-  knockbackForce: 0.2
-  knockbackUpForce: 0
-  knockbackDuration: 0.1
   modules:
   - rid: 5321512219315011656
   - rid: 5321512219315011657

@@ -2,8 +2,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Scriptable Objects/Ability Data")]
-public class AbilityData : ScriptableObject, IInventoryItem
+public class AbilityData : ScriptableObject, IInventoryItem, ISaveId
 {
+    [SerializeField, HideInInspector] private string saveId;
+    public string SaveId => saveId;
+
+    private void OnValidate()
+    {
+#if UNITY_EDITOR
+        SaveIdUtility.Sync(this, ref saveId);
+#endif
+    }
+
     public float cooldown;
     // 대상이 이보다 가까우면 적은 뒤로 물러난 뒤 공격한다.
     public float minRange;

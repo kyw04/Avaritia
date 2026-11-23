@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb0df744d57e40cb9ea6b9de91702fea, type: 3}
   m_Name: Skill 01_scrap_clawer
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  saveId: 2c32ea8b83c64696b063dcd2db907a13
   cooldown: 1
   minRange: 0.25
   maxRange: 0.65

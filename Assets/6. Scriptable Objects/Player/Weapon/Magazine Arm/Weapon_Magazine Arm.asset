@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f935b32e47f32148a0e4aac5329210c, type: 3}
   m_Name: Weapon_Magazine Arm
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
+  saveId: 8f90c9de59615a64cb89b59694958ffe
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 5c431dcf496307f4fb1e4568275b5433, type: 3}
   combo: {fileID: 11400000, guid: b0cf0df8d9747d64985aa45fd8dd8088, type: 2}
   airCombo: {fileID: 0}
@@ -35,12 +36,6 @@ MonoBehaviour:
     animClip: {fileID: 0}
     particle: {fileID: 0}
     sound: {fileID: 0}
-  shakeForce: 0.1
-  hitStopTimeScale: 0.1
-  hitStopDuration: 0.01
-  knockbackForce: 0.2
-  knockbackUpForce: 0
-  knockbackDuration: 0.1
   modules:
   - rid: 5321512127343886420
   inputMethods: []

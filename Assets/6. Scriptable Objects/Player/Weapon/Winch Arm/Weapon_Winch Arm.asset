@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f935b32e47f32148a0e4aac5329210c, type: 3}
   m_Name: Weapon_Winch Arm
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
+  saveId: c198edf5f61cd5b489aa168e5298d50d
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: ecc38dd349438d74a9dbd0884d9a9b4f, type: 3}
   combo: {fileID: 11400000, guid: aa917b9b7cd923244bd2a65c4488f506, type: 2}
   airCombo: {fileID: 0}
@@ -35,12 +36,6 @@ MonoBehaviour:
     animClip: {fileID: 0}
     particle: {fileID: 2461976908696895058, guid: 59a335fab3ff41368182b36efcac9d4b, type: 3}
     sound: {fileID: 8300000, guid: 21a23957a77c3bc488f38c0c48b7cb7e, type: 3}
-  shakeForce: 0.3
-  hitStopTimeScale: 0.1
-  hitStopDuration: 0.08
-  knockbackForce: 5
-  knockbackUpForce: 2
-  knockbackDuration: 0.2
   modules:
   - rid: 5321512127343886422
   - rid: 5321512157137862729

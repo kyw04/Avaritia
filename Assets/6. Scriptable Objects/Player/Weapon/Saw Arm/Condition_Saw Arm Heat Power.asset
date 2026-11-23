@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb0df744d57e40cb9ea6b9de91702fea, type: 3}
   m_Name: Condition_Saw Arm Heat Power
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  saveId: b188cfa9bcd81aa4baec84847be699d9
   cooldown: 0
+  minRange: 0
   maxRange: 3.4028235e+38
   rank: {fileID: 0}
   cast:

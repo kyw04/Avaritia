@@ -2,8 +2,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Scriptable Objects/Stage Data")]
-public class StageData : ScriptableObject
+public class StageData : ScriptableObject, ISaveId
 {
+    [SerializeField, HideInInspector] private string saveId;
+    public string SaveId => saveId;
+
+    private void OnValidate()
+    {
+#if UNITY_EDITOR
+        SaveIdUtility.Sync(this, ref saveId);
+#endif
+    }
+
     public StageNode startNode;
     public List<StageNode> battleNodes = new();
 

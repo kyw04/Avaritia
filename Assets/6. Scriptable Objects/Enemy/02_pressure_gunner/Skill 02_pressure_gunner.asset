@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb0df744d57e40cb9ea6b9de91702fea, type: 3}
   m_Name: Skill 02_pressure_gunner
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  saveId: 249b8e9606ae1a8429060a583151aa0e
   cooldown: 2
   minRange: 1
   maxRange: 10
