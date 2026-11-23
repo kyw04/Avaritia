@@ -43,7 +43,7 @@ public class RunSaveData
 
     public int version = CurrentVersion;
     public StageSave stage = new StageSave();
-    public float hpRatio;
+    public float hpRatio = 1f;
     public List<AssetRef> skills = new List<AssetRef>();
     public List<AssetRef> inventory = new List<AssetRef>();
     public WeaponSave weapon = new WeaponSave();

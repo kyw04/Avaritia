@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.Build;
+using UnityEditor.Build.Reporting;
 using UnityEngine;
 
 public static class SaveRegistryEditor
@@ -48,4 +50,12 @@ public static class SaveRegistryEditor
         AssetDatabase.SaveAssets();
         Debug.Log($"SaveRegistry: {found.Count}개 에셋 등록");
     }
+}
+
+// 빌드 직전에 레지스트리를 갱신해 새 에셋이 빠지지 않게 한다.
+public class SaveRegistryBuildHook : IPreprocessBuildWithReport
+{
+    public int callbackOrder => 0;
+
+    public void OnPreprocessBuild(BuildReport report) => SaveRegistryEditor.Rebuild();
 }

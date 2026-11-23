@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 public class SaveFileTests
 {
@@ -81,5 +83,19 @@ public class SaveFileTests
         File.WriteAllText(path, "x");
         SaveFile.Delete(path);
         Assert.IsFalse(File.Exists(path));
+    }
+
+    [Test]
+    public void Write_ToInvalidPath_DoesNotThrow()
+    {
+        string bad = Path.Combine(Application.temporaryCachePath, "no_such_dir", "save.json");
+        LogAssert.Expect(LogType.Warning, new Regex("SaveFile: 저장 실패"));
+        Assert.DoesNotThrow(() => SaveFile.Write(bad, new RunSaveData()));
+    }
+
+    [Test]
+    public void Delete_MissingFile_DoesNotThrow()
+    {
+        Assert.DoesNotThrow(() => SaveFile.Delete(path));
     }
 }

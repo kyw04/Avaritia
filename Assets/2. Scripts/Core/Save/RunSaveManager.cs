@@ -12,7 +12,6 @@ public class RunSaveManager : Singleton<RunSaveManager>,
     [SerializeField] private Player player;
     [SerializeField] private SaveRegistry registry;
 
-    private bool suppressSave;
     private bool deleted;
     // 복원 중 플레이어를 바꾸기 시작했는지. 실패하면 플레이어만 되돌린다.
     private bool playerTouched;
@@ -56,8 +55,6 @@ public class RunSaveManager : Singleton<RunSaveManager>,
             player.OnNotify(new RunResetEvent());
         StageManager.Instance.BeginStage();
     }
-
-    private void LateUpdate() => suppressSave = false;
 
     // 모든 ID를 먼저 찾고, 하나라도 없으면 아무것도 바꾸지 않는다.
     private bool TryRestore(RunSaveData d, out string reason)
@@ -129,7 +126,7 @@ public class RunSaveManager : Singleton<RunSaveManager>,
 
     public void OnNotify(StageNodeChangedEvent e)
     {
-        if (suppressSave || e.Restored) return;
+        if (e.Restored) return;
         SaveFile.Write(SaveFile.DefaultPath, Capture(cleared: false));
     }
 
@@ -139,11 +136,11 @@ public class RunSaveManager : Singleton<RunSaveManager>,
         deleted = true;
     }
 
-    // 다시 시작: 이전 런의 세이브를 지우고, 이번 프레임의 방 입장은 저장하지 않는다.
+    // 다시 시작: StageManager가 먼저 리셋 전 상태로 방 입장 세이브를 쓰지만,
+    // 이 핸들러가 곧바로 지우므로 순서와 상관없이 디스크 결과는 올바르다.
     public void OnNotify(RunResetEvent e)
     {
         SaveFile.Delete(SaveFile.DefaultPath);
-        suppressSave = true;
         deleted = false;
     }
 
