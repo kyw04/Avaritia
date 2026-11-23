@@ -20,6 +20,10 @@ public abstract class WeaponModule
     public virtual void Equip(ImageCountBar countBar) { }
     public virtual void Unequip() { }
 
+    // 런 세이브용 상태. 저장할 상태가 없으면 null. 복원은 Equip 전에 호출된다.
+    public virtual string CaptureState() => null;
+    public virtual void RestoreState(string state) { }
+
     // false를 반환하면 이번 공격을 취소한다.
     public virtual bool BeforeAttack(WeaponAttack attack) => true;
     public virtual void AfterAttack(WeaponAttack attack) { }

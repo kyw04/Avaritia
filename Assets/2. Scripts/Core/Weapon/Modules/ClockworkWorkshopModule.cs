@@ -48,6 +48,13 @@ public class ClockworkWorkshopModule : WeaponModule, IObserver<EntityDamagedEven
         kitCountBar?.Activate();
     }
 
+    [Serializable]
+    private struct SaveState { public int kitCount; }
+
+    public override string CaptureState() => JsonUtility.ToJson(new SaveState { kitCount = kitCount });
+
+    public override void RestoreState(string state) => kitCount = JsonUtility.FromJson<SaveState>(state).kitCount;
+
     public override void Unequip()
     {
         EventBus.UnsubscribeAll(this);

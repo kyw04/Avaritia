@@ -65,6 +65,13 @@ public class StackModule : WeaponModule, IAmmoModule, IObserver<EntityDamagedEve
             RestartDecay();
     }
 
+    [Serializable]
+    private struct SaveState { public int stack; }
+
+    public override string CaptureState() => JsonUtility.ToJson(new SaveState { stack = stack });
+
+    public override void RestoreState(string state) => stack = JsonUtility.FromJson<SaveState>(state).stack;
+
     // 아이템을 줍거나 버리면 최대 스택이 바뀔 수 있으므로 넘친 스택을 깎고 바를 다시 그린다.
     // Player가 Awake에서 먼저 구독한 아이템 버프 재바인딩이 끝난 뒤에 호출된다.
     private void OnInventoryChanged()

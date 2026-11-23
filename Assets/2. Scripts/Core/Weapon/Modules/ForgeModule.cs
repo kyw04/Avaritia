@@ -30,6 +30,19 @@ public class ForgeModule : WeaponModule
         return copy;
     }
 
+    [Serializable]
+    private struct SaveState { public int[] counts; }
+
+    public override string CaptureState() => JsonUtility.ToJson(new SaveState { counts = counts });
+
+    // rewards 구성이 바뀌어 길이가 다르면 복원하지 않는다.
+    public override void RestoreState(string state)
+    {
+        var saved = JsonUtility.FromJson<SaveState>(state);
+        if (saved.counts != null && saved.counts.Length == rewards.Count)
+            counts = saved.counts;
+    }
+
     public override void Equip(ImageCountBar countBar)
     {
         equipped = true;

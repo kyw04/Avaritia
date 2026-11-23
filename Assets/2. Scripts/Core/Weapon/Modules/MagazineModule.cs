@@ -95,6 +95,18 @@ public class MagazineModule : WeaponModule, IAmmoModule
             StartReload(idleReloadDelay);
     }
 
+    [Serializable]
+    private struct SaveState { public int currentAmmo; }
+
+    public override string CaptureState() => JsonUtility.ToJson(new SaveState { currentAmmo = currentAmmo });
+
+    // initialized를 켜서 Equip이 탄을 가득 채우지 않게 한다.
+    public override void RestoreState(string state)
+    {
+        currentAmmo = JsonUtility.FromJson<SaveState>(state).currentAmmo;
+        initialized = true;
+    }
+
     public override void Unequip()
     {
         ammoCountBar?.Deactivate();

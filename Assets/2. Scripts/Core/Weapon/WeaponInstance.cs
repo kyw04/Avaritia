@@ -51,6 +51,32 @@ public class WeaponInstance : IInventoryItem
             currentAttack.Enhancement = enhancement;
     }
 
+    // 런 세이브용. 상태가 있는 모듈만 담는다. 인덱스는 런타임 모듈 목록 기준이다.
+    public List<ModuleSave> CaptureModuleStates()
+    {
+        var saves = new List<ModuleSave>();
+        for (int i = 0; i < modules.Count; i++)
+        {
+            var state = modules[i].CaptureState();
+            if (state != null)
+                saves.Add(new ModuleSave { index = i, type = modules[i].GetType().Name, state = state });
+        }
+        return saves;
+    }
+
+    // 반드시 Equip 전에 호출한다. 인덱스가 범위 밖이거나 타입이 다르면 그 항목은 건너뛴다.
+    public void RestoreModuleStates(List<ModuleSave> saves)
+    {
+        if (saves == null)
+            return;
+        foreach (var save in saves)
+        {
+            if (save == null || save.index < 0 || save.index >= modules.Count || modules[save.index].GetType().Name != save.type)
+                continue;
+            modules[save.index].RestoreState(save.state);
+        }
+    }
+
     public void Equip(Entity owner, ImageCountBar countBar = null)
     {
         Owner = owner;
