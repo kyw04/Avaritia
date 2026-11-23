@@ -48,7 +48,7 @@ public class RunStatsTracker : MonoBehaviour,
     // 처음부터 클리어 상태인 방(시작 방, 상점)은 들어가기만 해도 클리어 이벤트가 나오므로 세지 않는다.
     public void OnNotify(StageNodeClearedEvent e)
     {
-        if (e.Node != null && !e.Node.wasCleared)
+        if (!e.Restored && e.Node != null && !e.Node.wasCleared)
             RoomsCleared++;
     }
 

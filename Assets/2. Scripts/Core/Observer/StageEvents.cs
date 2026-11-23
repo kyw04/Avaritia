@@ -1,14 +1,16 @@
 public struct StageNodeClearedEvent : ISubject
 {
     public StageNode Node { get; private set; }
-    public StageNodeClearedEvent(StageNode node) { Node = node; }
+    public bool Restored { get; private set; }
+    public StageNodeClearedEvent(StageNode node, bool restored = false) { Node = node; Restored = restored; }
 }
 
 public struct StageNodeChangedEvent : ISubject
 {
     public StageNode Previous { get; private set; }
     public StageNode Current { get; private set; }
-    public StageNodeChangedEvent(StageNode previous, StageNode current) { Previous = previous; Current = current; }
+    public bool Restored { get; private set; }
+    public StageNodeChangedEvent(StageNode previous, StageNode current, bool restored = false) { Previous = previous; Current = current; Restored = restored; }
 }
 
 public struct StageCompletedEvent : ISubject

@@ -34,11 +34,6 @@ public class StageManager : Singleton<StageManager>, IObserver<RunResetEvent>
         BeginStage();
     }
 
-    private void Start()
-    {
-        BeginStage();
-    }
-
     public void BeginStage()
     {
         if (currentStageData == null)
@@ -52,17 +47,20 @@ public class StageManager : Singleton<StageManager>, IObserver<RunResetEvent>
         SetCurrentNode(currentStageData.startNode);
     }
 
-    public void NotifyRoomCleared()
+    public void NotifyRoomCleared() => NotifyRoomCleared(false);
+
+    // restored: 세이브 복원. 진행도는 저장값에 이미 반영되어 있으므로 다시 올리지 않는다.
+    private void NotifyRoomCleared(bool restored)
     {
         if (currentNode == null || isCurrentNodeCleared)
             return;
 
         isCurrentNodeCleared = true;
 
-        if (currentNode.roomType == RoomType.Battle)
+        if (!restored && currentNode.roomType == RoomType.Battle)
             AdvanceBattleProgress();
 
-        EventBus.Publish(new StageNodeClearedEvent(currentNode));
+        EventBus.Publish(new StageNodeClearedEvent(currentNode, restored));
 
         // if (currentNode.nextNodes.Count == 0)
         //     EventBus.Publish(new StageCompletedEvent(CurrentStageData));
@@ -163,14 +161,71 @@ public class StageManager : Singleton<StageManager>, IObserver<RunResetEvent>
         SetCurrentNode(nextStage.startNode);
     }
 
-    private void SetCurrentNode(StageNode node)
+    private void SetCurrentNode(StageNode node, bool restoredCleared = false)
     {
         var previous = currentNode;
         currentNode = node;
         isCurrentNodeCleared = false;
-        EventBus.Publish(new StageNodeChangedEvent(previous, currentNode));
+        EventBus.Publish(new StageNodeChangedEvent(previous, currentNode, restoredCleared));
 
-        if (node.wasCleared)
+        if (restoredCleared)
+            NotifyRoomCleared(true);
+        else if (node.wasCleared)
             NotifyRoomCleared();
     }
+
+    public StageSave CaptureProgress()
+    {
+        var stage = currentStageData;
+        var (role, index) = NodeToRole(stage, currentNode);
+        return new StageSave
+        {
+            stage = SaveRegistry.ToRef(stage),
+            nodeRole = role,
+            nodeIndex = index,
+            battleClearCount = battleClearCount,
+            pendingSpecialRole = NodeToRole(stage, pendingSpecialNode).role,
+            battleRoomType = CurrentBattleRoomType.ToString(),
+            cleared = isCurrentNodeCleared,
+        };
+    }
+
+    // 스테이지나 노드를 찾지 못하면 아무것도 바꾸지 않고 false를 반환한다.
+    public bool TryRestoreProgress(StageSave save, SaveRegistry registry)
+    {
+        var stage = registry.Find<StageData>(save.stage.id);
+        if (stage == null)
+            return false;
+
+        var node = RoleToNode(stage, save.nodeRole, save.nodeIndex);
+        if (node == null)
+            return false;
+
+        currentStageData = stage;
+        battleClearCount = save.battleClearCount;
+        pendingSpecialNode = RoleToNode(stage, save.pendingSpecialRole, 0);
+        CurrentBattleRoomType = System.Enum.TryParse(save.battleRoomType, out BattleRoomType type) ? type : BattleRoomType.Normal;
+        SetCurrentNode(node, save.cleared);
+        return true;
+    }
+
+    // 같은 프리팹이 여러 역할이면 Start, Shop, Boss, Battle 순으로 앞의 것을 택한다.
+    private static (string role, int index) NodeToRole(StageData stage, StageNode node)
+    {
+        if (stage == null || node == null) return ("None", 0);
+        if (node == stage.startNode) return ("Start", 0);
+        if (node == stage.shopNode) return ("Shop", 0);
+        if (node == stage.bossNode) return ("Boss", 0);
+        int i = stage.battleNodes.IndexOf(node);
+        return i >= 0 ? ("Battle", i) : ("None", 0);
+    }
+
+    private static StageNode RoleToNode(StageData stage, string role, int index) => role switch
+    {
+        "Start" => stage.startNode,
+        "Shop" => stage.shopNode,
+        "Boss" => stage.bossNode,
+        "Battle" => index >= 0 && index < stage.battleNodes.Count ? stage.battleNodes[index] : null,
+        _ => null,
+    };
 }

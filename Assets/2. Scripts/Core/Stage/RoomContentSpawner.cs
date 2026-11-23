@@ -34,7 +34,7 @@ public class RoomContentSpawner : MonoBehaviour,
         EventBus.UnsubscribeAll(this);
     }
 
-    public void OnNotify(StageNodeChangedEvent e)  => Spawn(e.Current);
+    public void OnNotify(StageNodeChangedEvent e)  => Spawn(e.Current, e.Restored);
 
     public void OnNotify(EntityDeadEvent e)
     {
@@ -55,11 +55,16 @@ public class RoomContentSpawner : MonoBehaviour,
     }
 
     public void OnNotify(PickupCollectedEvent e) => roomPickups.Remove(e.Pickup);
-    public void OnNotify(StageNodeClearedEvent e) => SpawnPickups();
+    public void OnNotify(StageNodeClearedEvent e)
+    {
+        // 복원된 클리어 방은 보상 상자를 다시 만들지 않는다.
+        if (!e.Restored)
+            SpawnPickups();
+    }
     public void OnNotify(PickupSpawnedEvent e) => roomPickups.Add(e.Pickup);
     public void OnNotify(ItemBoxSpawnedEvent e) => roomBoxes.Add(e.Box);
 
-    public void Spawn(StageNode node)
+    public void Spawn(StageNode node, bool restored = false)
     {
         if (currentRoom != null)
             Destroy(currentRoom);
@@ -94,6 +99,10 @@ public class RoomContentSpawner : MonoBehaviour,
         currentRoom = Instantiate(node.gameObject, Vector3.zero, Quaternion.identity);
 
         PositionPlayer();
+
+        // 복원된 클리어 방은 적을 만들지 않는다.
+        if (restored)
+            return;
 
         var stageData = StageManager.Instance.CurrentStageData;
         SpawnActors(stageData);
