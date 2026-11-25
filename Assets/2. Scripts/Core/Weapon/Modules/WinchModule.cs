@@ -49,6 +49,7 @@ public class WinchModule : WeaponModule
     public override void Equip(ImageCountBar countBar)
     {
         rope = UnityEngine.Object.Instantiate(ropePrefab, Owner.transform);
+        LightShaftOccluderFeature.Mark(rope.gameObject);
         rope.enabled = false;
     }
 

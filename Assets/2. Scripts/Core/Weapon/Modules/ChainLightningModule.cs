@@ -131,6 +131,7 @@ public class ChainLightningModule : WeaponModule, IObserver<EntityDamagedEvent>
     private void SpawnArc(Vector3 from, Vector3 to)
     {
         var arc = UnityEngine.Object.Instantiate(arcPrefab);
+        LightShaftOccluderFeature.Mark(arc.gameObject);
         arc.positionCount = 2;
         arc.SetPosition(0, from);
         arc.SetPosition(1, to);

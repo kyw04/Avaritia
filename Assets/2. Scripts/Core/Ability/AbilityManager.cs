@@ -14,12 +14,18 @@ public class AbilityManager
         public IAbilityTrigger Trigger;
         public AbilityRuntimeState State;
         public List<Binding> Linked = new();
+        // 다시 바인딩할 때 새로 만들지 않도록 처음 만든 콜백과 복제 원본 트리거를 들고 있는다.
+        public Action StartCooldown;
+        public Action<AbilityContext> Fire;
+        public IAbilityTrigger SourceTrigger;
     }
 
     private readonly Entity owner;
     private readonly AbilityData[] abilities;
     private readonly bool publishEvents;
     private readonly List<Binding> bindings = new();
+    // UnbindAll로 해제한 바인딩. 풀에서 다시 꺼내 BindAll할 때 같은 AbilityData면 바인딩·트리거 복제본·콜백을 재사용한다.
+    private readonly List<Binding> released = new();
 
     public AbilityManager(Entity owner, AbilityData[] abilities, bool publishEvents = true)
     {
@@ -37,7 +43,10 @@ public class AbilityManager
     public void UnbindAll()
     {
         foreach (var binding in bindings)
+        {
             ReleaseBinding(binding);
+            released.Add(binding);
+        }
         bindings.Clear();
     }
 
@@ -79,17 +88,38 @@ public class AbilityManager
     // finds no bound state for an ability equipped after spawn and silently refuses to activate it.
     private void BindOne(AbilityData data)
     {
-        var binding = CreateBinding(data);
+        var binding = TryReuseReleased(data) ?? CreateBinding(data);
         if (binding != null) bindings.Add(binding);
+    }
+
+    // 해제해 둔 같은 AbilityData의 바인딩을 다시 쓴다. 상태(AbilityRuntimeState)는 버프 출처·이펙트 키로 쓰여
+    // 이전 생의 것과 섞이면 안 되므로 새로 만든다. 연결 Ability가 있는 바인딩은 구성이 바뀔 수 있어 재사용하지 않는다.
+    private Binding TryReuseReleased(AbilityData data)
+    {
+        if (data == null || data.trigger == null || data.linkedAbilities.Count > 0) return null;
+
+        for (int i = 0; i < released.Count; i++)
+        {
+            var binding = released[i];
+            if (binding.Data != data || binding.SourceTrigger != data.trigger || binding.Linked.Count > 0) continue;
+
+            released.RemoveAt(i);
+            binding.State = new AbilityRuntimeState { Icon = data.Icon, StartCooldown = binding.StartCooldown };
+            binding.Trigger.Bind(owner, data, binding.Fire);
+            return binding;
+        }
+        return null;
     }
 
     private Binding CreateBinding(AbilityData data, Sprite parentIcon = null)
     {
         if (data == null || data.trigger == null) return null;
         var state = new AbilityRuntimeState { Icon = data.Icon != null ? data.Icon : parentIcon };
-        var binding = new Binding { Data = data, State = state, Trigger = CloneTrigger(data.trigger) };
-        binding.State.StartCooldown = () => StartCooldown(binding);
-        binding.Trigger.Bind(owner, data, ctx => TryActivate(binding, ctx));
+        var binding = new Binding { Data = data, State = state, Trigger = CloneTrigger(data.trigger), SourceTrigger = data.trigger };
+        binding.StartCooldown = () => StartCooldown(binding);
+        binding.Fire = ctx => TryActivate(binding, ctx);
+        binding.State.StartCooldown = binding.StartCooldown;
+        binding.Trigger.Bind(owner, data, binding.Fire);
         foreach (var linked in data.linkedAbilities)
         {
             var child = CreateBinding(linked, state.Icon);

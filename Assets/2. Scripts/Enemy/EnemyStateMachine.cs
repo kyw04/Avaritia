@@ -12,6 +12,14 @@ public class EnemyStateMachine : StateMachineBase<Enemy>
         
         ChangeState<EnemyAliveState>();
     }
+
+    // 풀에서 다시 꺼낼 때 상태 객체를 새로 만들지 않고 Init 직후와 같은 처음 상태로 되돌린다.
+    public void Restart()
+    {
+        ResetStates();
+        StateManager.Instance.Register(this);
+        ChangeState<EnemyAliveState>();
+    }
 }
 
 #region Alive

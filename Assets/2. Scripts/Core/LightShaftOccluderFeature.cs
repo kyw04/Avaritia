@@ -4,6 +4,7 @@ using UnityEngine.Experimental.Rendering;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.RenderGraphModule;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.SceneManagement;
 
 // order in layer가 기준보다 큰 렌더러만 빛줄기 가림막 마스크(_LightShaftOccluderMask)에 그림. 기준 이하 스프라이트는 빛줄기 뒤에 있는 것처럼 무시됨
 public class LightShaftOccluderFeature : ScriptableRendererFeature
@@ -15,35 +16,51 @@ public class LightShaftOccluderFeature : ScriptableRendererFeature
     [SerializeField] private int maxIgnoredOrder = 10;
 
     private MaskPass pass;
-    private int markedFrame = -1;
+
+    // Mark는 게임 코드에서 정적으로 불리므로 기준값을 정적으로 보관(에셋 값이 Create에서 덮어씀)
+    private static int ignoredOrderThreshold = 10;
+    private static readonly List<Renderer> MarkBuffer = new();
 
     public override void Create()
     {
+        ignoredOrderThreshold = maxIgnoredOrder;
         pass = new MaskPass { renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing };
     }
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
-        MarkOccluders();
         renderer.EnqueuePass(pass);
     }
 
     protected override void Dispose(bool disposing) => pass?.Dispose();
 
-    // 에디트 모드에서 바꾸면 씬에 저장되므로 플레이 중에만, 프레임당 한 번 표시
-    private void MarkOccluders()
+    // 매 프레임 씬 전체를 찾으면 배열 할당으로 GC가 생기므로, 씬 로드 때와 오브젝트를 새로 만들 때만 표시한다.
+    // 풀에서 재사용되는 인스턴스는 표시가 남아 있어 다시 할 필요 없음. sortingOrder는 Awake에서만 바뀌므로 Instantiate 직후에 부르면 된다.
+    // 에디트 모드에서 바꾸면 씬에 저장되므로 플레이 중에만 표시한다.
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void RegisterSceneLoaded()
     {
-        if (!Application.isPlaying || markedFrame == Time.frameCount)
-            return;
-        markedFrame = Time.frameCount;
-
-        foreach (var r in FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+        SceneManager.sceneLoaded += (scene, _) =>
         {
-            if (r.sortingOrder > maxIgnoredOrder)
+            foreach (var root in scene.GetRootGameObjects())
+                Mark(root);
+        };
+    }
+
+    public static void Mark(GameObject root)
+    {
+        if (!Application.isPlaying || root == null)
+            return;
+
+        root.GetComponentsInChildren(true, MarkBuffer);
+        foreach (var r in MarkBuffer)
+        {
+            if (r.sortingOrder > ignoredOrderThreshold)
                 r.renderingLayerMask |= OccluderLayer;
             else
                 r.renderingLayerMask &= ~OccluderLayer;
         }
+        MarkBuffer.Clear();
     }
 
     private class MaskPass : ScriptableRenderPass

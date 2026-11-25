@@ -74,8 +74,8 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
 
     // Machine is built here too (not just OnSpawn) so a directly scene-placed
     // (non-pooled) instance still gets a working state machine — OnSpawn only
-    // fires for pool-spawned instances. OnSpawn unregisters and rebuilds it
-    // again on every pool (re)spawn.
+    // fires for pool-spawned instances. OnSpawn unregisters it and restarts the
+    // same instance on every pool (re)spawn instead of rebuilding it.
     protected override void Awake()
     {
         base.Awake();
@@ -112,8 +112,7 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
         canChangeFace = true;
         for (int i = 0; i < spriteRenderers.Length; i++)
             spriteRenderers[i].color = hostileColors[i];
-        Machine = new EnemyStateMachine(Owner);
-        Machine.Init();
+        ((EnemyStateMachine)Machine).Restart();
     }
 
     protected override void Update()

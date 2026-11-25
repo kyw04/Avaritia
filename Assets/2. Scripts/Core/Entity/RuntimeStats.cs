@@ -5,8 +5,12 @@ public class RuntimeStats
 {
     private readonly Dictionary<StatType, object> _values = new();
 
-    public RuntimeStats(StatData source)
+    public RuntimeStats(StatData source) => Reset(source);
+
+    // 풀에서 다시 꺼낼 때 딕셔너리를 새로 만들지 않고 에셋 값으로 되돌린다.
+    public void Reset(StatData source)
     {
+        _values.Clear();
         foreach (var stat in source.stats)
         {
             _values[stat.statType] = stat.value.Value;

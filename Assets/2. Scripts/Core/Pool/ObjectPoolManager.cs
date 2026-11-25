@@ -30,6 +30,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         {
             instance = Instantiate(prefab, position, rotation);
             instanceToPrefab[instance] = prefab;
+            LightShaftOccluderFeature.Mark(instance);
         }
 
         instance.SetActive(true);

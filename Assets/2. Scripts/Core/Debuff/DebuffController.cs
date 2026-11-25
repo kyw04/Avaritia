@@ -7,6 +7,7 @@ public class DebuffController
 {
     private readonly Entity owner;
     private readonly List<ActiveDebuff> active = new();
+    private readonly List<ActiveDebuff> tickBuffer = new();
 
     public DebuffController(Entity owner) => this.owner = owner;
 
@@ -126,7 +127,10 @@ public class DebuffController
             return;
 
         float now = Time.time;
-        foreach (var debuff in active.ToArray())
+        // 매 프레임 ToArray로 복사본을 만들지 않도록 버퍼를 재사용한다. Tick 안에서 불릴 수 있는 ClearAll 등은 각자 복사본을 쓴다.
+        tickBuffer.Clear();
+        tickBuffer.AddRange(active);
+        foreach (var debuff in tickBuffer)
         {
             // 앞선 디버프의 모듈이 이 디버프를 이미 끝냈을 수 있다.
             if (!active.Contains(debuff))

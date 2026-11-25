@@ -90,19 +90,34 @@ public class StatData : ScriptableObject
     [Serializable] public class IntValue : StatValue
     {
         public int value;
+        // 스폰마다 RuntimeStats가 읽을 때 새로 박싱하지 않도록 값이 같으면 같은 박스를 돌려준다(박스는 불변이라 공유해도 안전).
+        [NonSerialized] private object boxed;
 
         public override object Value
         {
-            get => value;
+            get
+            {
+                if (boxed is not int cached || cached != value)
+                    boxed = value;
+                return boxed;
+            }
             internal set => this.value = (int)value;
         }
     }
     [Serializable] public class FloatValue : StatValue
     {
         public float value;
+        // IntValue와 같은 이유로 박스를 재사용한다.
+        [NonSerialized] private object boxed;
+
         public override object Value
         {
-            get => value;
+            get
+            {
+                if (boxed is not float cached || cached != value)
+                    boxed = value;
+                return boxed;
+            }
             internal set => this.value = (float)value;
         }
     }

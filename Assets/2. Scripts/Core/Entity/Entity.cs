@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable, IStatReadable, IStatMutable, IPoolable, IInfo
 {
@@ -46,6 +48,10 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     }
 
     private readonly List<ActiveBuff> activeBuffs = new();
+    // activeBuffs를 스탯별로 나눈 색인. GetStat은 이 스탯의 버프만 본다(전체를 돌며 type을 비교하지 않는다).
+    // 버프를 넣고 빼는 것은 AddActiveBuff/RemoveActiveBuffs/ClearActiveBuffs로만 해서 두 목록을 맞춘다.
+    private readonly Dictionary<StatType, List<ActiveBuff>> buffsByType = new();
+    private static readonly List<ActiveBuff> NoBuffs = new();
     // Keyed by the granting binding's AbilityRuntimeState (same as buff sources), so each copy
     // of an item refills/loses only its own share and RemoveBuffsBySource can drop it on unequip.
     private readonly Dictionary<object, float> shields = new();
@@ -121,7 +127,39 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     public float GetDamageAgainst(Transform target) =>
         ApplyBuffs(StatType.Damage, stats.Get<float>(StatType.Damage), target);
 
-    private bool HasActiveBuff(StatType type) => activeBuffs.Exists(b => b.type == type && IsBuffActive(b, null));
+    private bool HasActiveBuff(StatType type)
+    {
+        foreach (var b in BuffsOf(type))
+            if (IsBuffActive(b, null))
+                return true;
+        return false;
+    }
+
+    // 읽기 전용. 버프가 없는 스탯은 공용 빈 목록을 돌려주므로 여기에 추가하면 안 된다.
+    private List<ActiveBuff> BuffsOf(StatType type) => buffsByType.TryGetValue(type, out var list) ? list : NoBuffs;
+
+    private void AddActiveBuff(ActiveBuff buff)
+    {
+        activeBuffs.Add(buff);
+        if (!buffsByType.TryGetValue(buff.type, out var list))
+            buffsByType[buff.type] = list = new List<ActiveBuff>();
+        list.Add(buff);
+    }
+
+    // match는 같은 버프에 두 번(전체 목록, 스탯별 목록) 쓰이므로 부작용이 없어야 한다.
+    private void RemoveActiveBuffs(System.Predicate<ActiveBuff> match)
+    {
+        if (activeBuffs.RemoveAll(match) == 0) return;
+        foreach (var list in buffsByType.Values)
+            list.RemoveAll(match);
+    }
+
+    private void ClearActiveBuffs()
+    {
+        activeBuffs.Clear();
+        foreach (var list in buffsByType.Values)
+            list.Clear();
+    }
 
     // A buff's conditions may themselves read stats (e.g. HealthRatioCondition -> MaxHealth), which
     // re-enters ApplyBuffs — so this must never mutate activeBuffs; expired ones are skipped here and
@@ -143,9 +181,9 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
             // Int stats (DoubleJumpCount, DashCount, ...) only make sense as flat additions —
             // a "Percent" modifier is ignored here rather than silently truncating.
             int intResult = (int)(object)value;
-            foreach (var b in activeBuffs)
+            foreach (var b in BuffsOf(type))
             {
-                if (b.type != type || b.valueType != BuffValueType.Flat || !IsBuffActive(b, target)) continue;
+                if (b.valueType != BuffValueType.Flat || !IsBuffActive(b, target)) continue;
                 intResult += (int)b.amount;
             }
             return (T)(object)intResult;
@@ -153,9 +191,9 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
 
         float result = (float)(object)value;
         float flatSum = 0f, percentSum = 0f;
-        foreach (var b in activeBuffs)
+        foreach (var b in BuffsOf(type))
         {
-            if (b.type != type || !IsBuffActive(b, target)) continue;
+            if (!IsBuffActive(b, target)) continue;
             if (b.valueType == BuffValueType.Flat) flatSum += b.amount;
             else percentSum += b.amount;
         }
@@ -167,7 +205,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     public void ApplyBuff(object source, StatType type, BuffValueType valueType, float amount, float duration,
         List<IAbilityCondition> conditions = null, bool clearOnDamageTaken = false)
     {
-        activeBuffs.RemoveAll(b => b.expireTime <= Time.time);
+        RemoveActiveBuffs(b => b.expireTime <= Time.time);
 
         // duration <= 0 (the Inspector default when a designer leaves it unset) means "never expires
         // on its own" — it only ever ends when its binding is torn down (drop/replace), same as any
@@ -183,7 +221,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     private void AddOrUpdateBuff(object source, StatType type, BuffValueType valueType, float amount, float expireTime,
         float duration, List<IAbilityCondition> conditions, bool clearOnDamageTaken)
     {
-        var existing = activeBuffs.Find(b => b.source == source && b.type == type && b.valueType == valueType);
+        var existing = BuffsOf(type).Find(b => b.source == source && b.valueType == valueType);
         if (existing != null)
         {
             existing.amount = amount;
@@ -194,7 +232,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         }
         else
         {
-            activeBuffs.Add(new ActiveBuff
+            AddActiveBuff(new ActiveBuff
             {
                 source = source, type = type, valueType = valueType, amount = amount, expireTime = expireTime,
                 duration = Mathf.Max(0f, duration), conditions = conditions, clearOnDamageTaken = clearOnDamageTaken
@@ -237,7 +275,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
 
     public float GetBuffAmount(object source, StatType type, BuffValueType valueType)
     {
-        var existing = activeBuffs.Find(b => b.source == source && b.type == type && b.valueType == valueType && b.expireTime > Time.time);
+        var existing = BuffsOf(type).Find(b => b.source == source && b.valueType == valueType && b.expireTime > Time.time);
         return existing?.amount ?? 0f;
     }
 
@@ -352,6 +390,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         ResetEntityState();
     }
 
+    private void OnDestroy() => OnDespawn();
+
     public virtual void OnSpawn() => ResetEntityState();
 
     public virtual void OnDespawn()
@@ -363,21 +403,32 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     protected void ResetEntityState()
     {
         isDead = false;
-        stats = new RuntimeStats(statDataAsset);
+        if (stats == null)
+            stats = new RuntimeStats(statDataAsset);
+        else
+            stats.Reset(statDataAsset);
         // 에셋 기준(장비 보너스 제외) 비율에서 출발해, 스폰 시 장착된 무기/아이템 보너스도 비율 유지로 반영되게 한다.
         trackedMaxHealth = stats.Get<float>(StatType.MaxHealth);
         Abilities?.UnbindAll();
         // 장착 즉시 발동하는 어빌리티(OnEquippedTrigger)의 버프가 지워지지 않도록 바인딩 전에 비운다.
         Debuffs?.ClearAll();
-        Debuffs = new DebuffController(this);
-        activeBuffs.Clear();
+        Debuffs ??= new DebuffController(this);
+        ClearActiveBuffs();
         shields.Clear();
         hitBlocks.Clear();
         noHitStunUntil = 0f;
         noHitStunIcon = null;
-        initialAbilities ??= abilities != null ? (AbilityData[])abilities.Clone() : null;
-        abilities = initialAbilities != null ? (AbilityData[])initialAbilities.Clone() : null;
-        Abilities = new AbilityManager(this, abilities);
+        initialAbilities ??= (AbilityData[])abilities?.Clone();
+        // 풀에서 다시 꺼낼 때는 매니저와 슬롯 배열을 그대로 두고 슬롯만 처음 구성으로 되돌린다(바인딩은 매니저가 재사용).
+        if (Abilities != null && abilities != null && initialAbilities != null)
+        {
+            Array.Copy(initialAbilities, abilities, initialAbilities.Length);
+        }
+        else
+        {
+            abilities = (AbilityData[])initialAbilities?.Clone();
+            Abilities = new AbilityManager(this, abilities);
+        }
         Abilities.BindAll();
         invincibleUntil = 0f;
         invincibleIcon = null;
@@ -389,9 +440,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         wasGroundCheckerChanged = !IsGrounded;
     }
 
-    protected virtual void Start()
-    {
-    }
+    protected virtual void Start() { }
 
     protected virtual void Update()
     {
@@ -506,7 +555,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         if (!info.Has(DamageFlags.NoInterrupt))
         {
             LastDamagedTime = Time.time;
-            activeBuffs.RemoveAll(b => b.clearOnDamageTaken);
+            RemoveActiveBuffs(b => b.clearOnDamageTaken);
         }
         OnHealthChanged();
         info.Amount = damage;
@@ -568,12 +617,28 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     protected void OnHealthChanged() => EventBus.Publish(new EntityHealthChangedEvent(this, MaxHealth, CurrentHealth));
     protected void OnDashCountChanged() => EventBus.Publish(new EntityDashCountChangedEvent(this, MaxDashCount - DashCount, MaxDashCount, Time.time));
 
+    // 지울 버프가 없으면(풀 반납 때 대부분) 람다를 만들지 않는다. 그때 PreserveHealthRatio가 하는 일은 SyncHealthRatio뿐이다.
     public void RemoveBuffsBySource(object source)
     {
-        PreserveHealthRatio(() => activeBuffs.RemoveAll(b => b.source == source));
+        if (HasBuffFrom(source))
+            RemoveActiveBuffsBySource(source);
+        else
+            SyncHealthRatio();
         shields.Remove(source);
         hitBlocks.Remove(source);
     }
+
+    private bool HasBuffFrom(object source)
+    {
+        for (int i = 0; i < activeBuffs.Count; i++)
+            if (activeBuffs[i].source == source)
+                return true;
+        return false;
+    }
+
+    // 캡처용 클로저가 RemoveBuffsBySource 진입마다 만들어지지 않도록 람다를 별도 메서드로 뺐다.
+    private void RemoveActiveBuffsBySource(object source) =>
+        PreserveHealthRatio(() => RemoveActiveBuffs(b => b.source == source));
     
     public abstract void Die();
 }

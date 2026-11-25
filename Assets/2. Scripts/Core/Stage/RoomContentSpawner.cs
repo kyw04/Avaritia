@@ -103,6 +103,7 @@ public class RoomContentSpawner : MonoBehaviour,
                 ObjectPoolManager.Instance.Despawn(marker.gameObject);
 
         currentRoom = Instantiate(node.gameObject, Vector3.zero, Quaternion.identity);
+        LightShaftOccluderFeature.Mark(currentRoom);
 
         PositionPlayer(restored);
 

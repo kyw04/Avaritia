@@ -7,6 +7,8 @@ public class StateMachineBase<T> : IStateMachine where T : IStateOwner<T>
     
     private StateBase<T> currentState;
     private Dictionary<Type, StateBase<T>> states = new();
+    // 자식까지 포함한 모든 상태. ChangeState가 트리를 뒤지며 경로 리스트를 만들지 않고 바로 찾는다.
+    private readonly Dictionary<Type, StateBase<T>> allStates = new();
     private Dictionary<(Type from, Type to), Func<bool>> transitionTable = new();
     // ChangeState가 실제로 상태를 바꿀 때마다 증가. Execute 도중 상태가 바뀌었는지 판단한다.
     private int changeCount;
@@ -20,10 +22,27 @@ public class StateMachineBase<T> : IStateMachine where T : IStateOwner<T>
     {
         StateManager.Instance.Register(this);
     }
-    
+
+    // 상태 객체를 새로 만들지 않고 상태를 넣은 직후(첫 ChangeState 전)로 되돌린다. 빠져나오는 상태의 Exit는 부르지 않는다.
+    protected void ResetStates()
+    {
+        currentState = null;
+        foreach (var state in states.Values)
+            state.ResetChildren();
+    }
+
     public void AddState(StateBase<T> state)
     {
         states.Add(state.GetType(), state);
+        RegisterRecursive(state);
+    }
+
+    // 같은 타입이 여러 곳에 있으면 먼저 넣은 쪽을 쓴다(예전 FindPath가 먼저 찾던 쪽).
+    private void RegisterRecursive(StateBase<T> state)
+    {
+        allStates.TryAdd(state.GetType(), state);
+        foreach (var child in state.Children.Values)
+            RegisterRecursive(child);
     }
     
     public void AddTransition<From, To>(Func<bool> condition = null) where From : IState where To : IState
@@ -69,78 +88,55 @@ public class StateMachineBase<T> : IStateMachine where T : IStateOwner<T>
             return;
         }
 
-        foreach (var root in states.Values)
+        if (!allStates.TryGetValue(targetType, out var target))
+            return;
+
+        var root = target;
+        while (root.Parent != null)
+            root = root.Parent;
+
+        // 목표가 속한 루트에서 활성 자식을 따라 내려가며, 목표의 조상이기도 한 가장 깊은 상태(lca)와 활성 경로 끝(leaf)을 찾는다.
+        var lca = root;
+        while (lca.CurrentChild != null && IsAncestorOrSelf(lca.CurrentChild, target))
+            lca = lca.CurrentChild;
+        var leaf = lca;
+        while (leaf.CurrentChild != null)
+            leaf = leaf.CurrentChild;
+
+        // 이미 목표가 활성 경로의 끝이면 그 상태만 다시 시작한다.
+        if (leaf == target)
         {
-            var targetPath = FindPath(root, targetType);
-            if (targetPath == null) continue;
-
-            var currentPath = GetActivePath(root);
-            int lcaIndex = FindLcaIndex(currentPath, targetPath);
-
-            if (currentPath.Count == targetPath.Count && lcaIndex == targetPath.Count - 1)
-            {
-                targetPath[lcaIndex].Exit();
-                targetPath[lcaIndex].Enter();
-                currentState = targetPath[0];
-                return;
-            }
-
-            for (int i = currentPath.Count - 1; i > lcaIndex; i--)
-                currentPath[i].Exit();
-
-            for (int i = lcaIndex; i < targetPath.Count - 1; i++)
-                targetPath[i].SetCurrentChild(targetPath[i + 1]);
-
-            for (int i = lcaIndex + 1; i < targetPath.Count; i++)
-                targetPath[i].Enter();
-
-            currentState = targetPath[0];
+            target.Exit();
+            target.Enter();
+            currentState = root;
             return;
         }
+
+        for (var node = leaf; node != lca; node = node.Parent)
+            node.Exit();
+
+        for (var node = target; node != lca; node = node.Parent)
+            node.Parent.SetCurrentChild(node);
+
+        EnterDownTo(lca, target);
+        currentState = root;
     }
 
-    private List<StateBase<T>> GetActivePath(StateBase<T> root)
+    private static bool IsAncestorOrSelf(StateBase<T> node, StateBase<T> of)
     {
-        var path = new List<StateBase<T>>();
-        var node = root;
-
-        while (node != null)
-        {
-            path.Add(node);
-            node = node.CurrentChild;
-        }
-        return path;
+        for (var n = of; n != null; n = n.Parent)
+            if (n == node)
+                return true;
+        return false;
     }
 
-    private int FindLcaIndex(List<StateBase<T>> currentPath, List<StateBase<T>> targetPath)
+    // lca 바로 아래부터 node까지 위에서 아래 순서로 Enter한다.
+    private static void EnterDownTo(StateBase<T> lca, StateBase<T> node)
     {
-        int lca = -1;
-        int len = Math.Min(currentPath.Count, targetPath.Count);
-
-        for (int i = 0; i < len; i++)
-        {
-            if (currentPath[i].GetType() == targetPath[i].GetType())
-                lca = i;
-            else
-                break;
-        }
-        return lca;
-    }
-    
-    private List<StateBase<T>> FindPath(StateBase<T> node, Type targetType)
-    {
-        if (node.GetType() == targetType)
-            return new List<StateBase<T>> { node };
-
-        foreach (var child in node.Children.Values)
-        {
-            var path = FindPath(child, targetType);
-            if (path == null) continue;
-
-            path.Insert(0, node);
-            return path;
-        }
-        return null;
+        if (node == lca)
+            return;
+        EnterDownTo(lca, node.Parent);
+        node.Enter();
     }
     
     // 부모부터 자식 순으로 실행하다가 중간에 상태가 바뀌면 멈춘다. 이미 빠져나온 자식 상태가
