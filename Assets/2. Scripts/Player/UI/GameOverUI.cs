@@ -29,9 +29,8 @@ public class GameOverUI : Singleton<GameOverUI>, IObserver<RunResetEvent>
 
     private UISelector selector;
 
-    protected override void Awake()
+    protected override void OnAwake()
     {
-        base.Awake();
         UIManager.Instance.Register(Key,
             open: Open,
             close: Close);
@@ -42,7 +41,7 @@ public class GameOverUI : Singleton<GameOverUI>, IObserver<RunResetEvent>
 
     private void OnDestroy()
     {
-        selector.Dispose();
+        selector?.Dispose();
         EventBus.UnsubscribeAll(this);
     }
 

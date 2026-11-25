@@ -50,10 +50,8 @@ public class SoundManager : Singleton<SoundManager>,
     private int panelSoundFrame = -10;
     private AudioClip pendingInputSound;
 
-    protected override void Awake()
+    protected override void OnAwake()
     {
-        base.Awake();
-        
         EventBus.Subscribe<EntityJumpedEvent>(this);
         EventBus.Subscribe<EntityLandedEvent>(this);
         EventBus.Subscribe<EntityTurnEvent>(this);

@@ -9,16 +9,15 @@ public class KeyboardSettingUI : Singleton<KeyboardSettingUI>
     
     private UISelector selector;
     
-    protected override void Awake()
+    protected override void OnAwake()
     {
-        base.Awake();
         UIManager.Instance.Register(Key,
             open: Open,
             close: Close);
 
         selector = new UISelector();
     }
-    private void OnDestroy() => selector.Dispose();
+    private void OnDestroy() => selector?.Dispose();
     
     private void Open()
     {

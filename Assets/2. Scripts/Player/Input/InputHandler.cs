@@ -18,9 +18,8 @@ public class InputHandler : Singleton<InputHandler>
 
     public PlayerInputActions InputAction { get; private set; }
     
-    protected override void Awake()
+    protected override void OnAwake()
     {
-        base.Awake();
         InputAction = new PlayerInputActions();
         _ = GameFreezeManager.Instance;
         _ = UIManager.Instance;
@@ -49,7 +48,8 @@ public class InputHandler : Singleton<InputHandler>
 
     private void OnDisable()
     {
-        InputAction.Disable();
+        // 중복이라 지워지는 인스턴스는 OnAwake를 거치지 않아 InputAction이 없다.
+        InputAction?.Disable();
     }
 
     // 누르고 있기 무기: 공격 중이 아닐 때(콤보가 끝나고 쿨다운이 지난 뒤) 키가 눌려 있으면 다시 공격을 시작한다.

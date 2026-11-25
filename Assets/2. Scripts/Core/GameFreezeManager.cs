@@ -4,9 +4,8 @@ public class GameFreezeManager : Singleton<GameFreezeManager>, IObserver<RunRese
 {
     private int freezeCount;
 
-    protected override void Awake()
+    protected override void OnAwake()
     {
-        base.Awake();
         EventBus.Subscribe<RunResetEvent>(this);
     }
 

@@ -9,14 +9,13 @@ public class ItemReplaceController : Singleton<ItemReplaceController>
     private InventoryUI inventoryUI;
     private UISelector selector;
 
-    protected override void Awake()
+    protected override void OnAwake()
     {
-        base.Awake();
         inventoryUI = FindAnyObjectByType<InventoryUI>();
         selector = new UISelector { Submit = OnSubmit };
     }
 
-    private void OnDestroy() => selector.Dispose();
+    private void OnDestroy() => selector?.Dispose();
 
     public void BeginReplace(Player player, Item item)
     {

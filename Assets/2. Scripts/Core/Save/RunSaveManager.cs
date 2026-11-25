@@ -16,9 +16,8 @@ public class RunSaveManager : Singleton<RunSaveManager>,
     // 복원 중 플레이어를 바꾸기 시작했는지. 실패하면 플레이어만 되돌린다.
     private bool playerTouched;
 
-    protected override void Awake()
+    protected override void OnAwake()
     {
-        base.Awake();
         EventBus.Subscribe<StageNodeChangedEvent>(this);
         EventBus.Subscribe<PlayerDiedEvent>(this);
         EventBus.Subscribe<RunResetEvent>(this);

@@ -20,9 +20,8 @@ public class ConfirmationPopup : Singleton<ConfirmationPopup>
     private Action onCancel;
     private GameObject previousSelected;
 
-    protected override void Awake()
+    protected override void OnAwake()
     {
-        base.Awake();
         selector = new UISelector
         {
             Submit = OnSubmit
@@ -31,7 +30,7 @@ public class ConfirmationPopup : Singleton<ConfirmationPopup>
         UIManager.Instance.Register(Key, open: Open, close: Close);
     }
 
-    private void OnDestroy() => selector.Dispose();
+    private void OnDestroy() => selector?.Dispose();
 
     public void Show(string message, Action onConfirm, Action onCancel = null)
     {

@@ -16,9 +16,8 @@ public class StageManager : Singleton<StageManager>, IObserver<RunResetEvent>
     public bool HasPendingSpecialNode => pendingSpecialNode != null;
     public BattleRoomType CurrentBattleRoomType { get; private set; }
 
-    protected override void Awake()
+    protected override void OnAwake()
     {
-        base.Awake();
         initialStageData = currentStageData;
         EventBus.Subscribe<RunResetEvent>(this);
     }
