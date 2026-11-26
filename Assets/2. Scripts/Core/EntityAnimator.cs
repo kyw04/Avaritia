@@ -14,6 +14,12 @@ public class EntityAnimator : AnimatorBase,
     IObserver<EntityAnimationEvent>
 {
     private static readonly int Speed = Animator.StringToHash("Speed");
+    private static readonly int Idle = Animator.StringToHash("idle");
+    private static readonly int Move = Animator.StringToHash("move");
+    private static readonly int FallLoop = Animator.StringToHash("fall_loop");
+    private static readonly int Land = Animator.StringToHash("land");
+    private static readonly int Turn = Animator.StringToHash("turn");
+    private static readonly int Dash = Animator.StringToHash("dash");
     private Entity self;
     private bool? hasSpeedParameter;
 
@@ -100,7 +106,7 @@ public class EntityAnimator : AnimatorBase,
         feedback.Play(self.FootPosition);
     }
 
-    public void OnNotify(EntityIdleEvent e) { if (e.Source == self && !LocomotionLocked) PlayAnimation("idle"); }
+    public void OnNotify(EntityIdleEvent e) { if (e.Source == self && !LocomotionLocked) PlayAnimation(Idle); }
     public void OnNotify(EntityMovedEvent e)
     {
         if (e.Source != self || LocomotionLocked)
@@ -112,15 +118,15 @@ public class EntityAnimator : AnimatorBase,
             float defaultSpeed = e.Source.GetDefaultStat<float>(StatType.MoveSpeed);
             AnimatorComponent.SetFloat(Speed, e.Speed / defaultSpeed);
         }
-        PlayAnimation("move");
+        PlayAnimation(Move);
     }
-    public void OnNotify(EntityJumpedEvent e) { if (e.Source == self) PlayAnimation(e.Data.jump.animClip.name); }
+    public void OnNotify(EntityJumpedEvent e) { if (e.Source == self) PlayAnimation(ClipHash(e.Data.jump.animClip)); }
     // 사망 중에는 행동 취소(RestoreAnimation 등)가 보내는 낙하 애니메이션이 사망 모션을 덮지 않게 한다.
-    public void OnNotify(EntityFallingEvent e) { if (e.Source == self && !self.IsDead) PlayAnimation("fall_loop"); }
-    public void OnNotify(EntityLandedEvent e) { if (e.Source == self) PlayAnimation("land"); }
-    public void OnNotify(EntityTurnEvent e) { if (e.Source == self && !LocomotionLocked) PlayAnimation("turn"); }
-    public void OnNotify(EntityDashEvent e) { if (e.Source == self) PlayAnimation("dash"); }
-    public void OnNotify(EntityAnimationEvent e) { if (e.Source == self) PlayAnimation(e.Clip.name); }
+    public void OnNotify(EntityFallingEvent e) { if (e.Source == self && !self.IsDead) PlayAnimation(FallLoop); }
+    public void OnNotify(EntityLandedEvent e) { if (e.Source == self) PlayAnimation(Land); }
+    public void OnNotify(EntityTurnEvent e) { if (e.Source == self && !LocomotionLocked) PlayAnimation(Turn); }
+    public void OnNotify(EntityDashEvent e) { if (e.Source == self) PlayAnimation(Dash); }
+    public void OnNotify(EntityAnimationEvent e) { if (e.Source == self) PlayAnimation(ClipHash(e.Clip)); }
 
     public void OnNotify(EntityAttackStartEvent e)
     {
@@ -134,32 +140,32 @@ public class EntityAnimator : AnimatorBase,
             if (animCoroutine != null)
                 StopCoroutine(animCoroutine);
 
-            PlayAnimation(readyClip.name);
+            PlayAnimation(ClipHash(readyClip));
             if (attackClip != null)
-                animCoroutine = StartCoroutine(PlayAttackAfterReady(attackClip.name, readyClip.length));
+                animCoroutine = StartCoroutine(PlayAttackAfterReady(ClipHash(attackClip), readyClip.length));
         }
         else if (attackClip != null)
         {
-            PlayAttackClip(attackClip.name);
+            PlayAttackClip(ClipHash(attackClip));
         }
     }
 
     // 같은 공격을 연달아 할 때: 반복 클립(누르고 있는 연속 공격)은 끊지 않고 이어서 재생하고,
     // 한 번만 재생하는 클립(총 쏘기 등)은 매번 처음부터 다시 튼다. Animator.Play는 같은 상태면 처음으로 돌리지 않는다.
-    private void PlayAttackClip(string animName)
+    private void PlayAttackClip(int stateHash)
     {
         var info = AnimatorComponent.GetCurrentAnimatorStateInfo(0);
-        PlayAnimation(animName);
-        if (info.IsName(animName) && !info.loop)
-            AnimatorComponent.Play(animName, 0, 0f);
+        PlayAnimation(stateHash);
+        if (info.shortNameHash == stateHash && !info.loop)
+            AnimatorComponent.Play(stateHash, 0, 0f);
     }
 
     // 준비 동작은 Animator.speed로 느려지므로 공격 애니메이션 전환도 같은 배율로 늦춘다.
-    private IEnumerator PlayAttackAfterReady(string animName, float length)
+    private IEnumerator PlayAttackAfterReady(int stateHash, float length)
     {
         for (float t = 0f; t < length; t += Time.deltaTime * self.AttackSpeedMultiplier)
             yield return null;
-        PlayAnimation(animName);
+        PlayAnimation(stateHash);
     }
 
     // 준비 동작 중 캔슬되면 이어질 공격 애니메이션을 재생하지 않는다.
