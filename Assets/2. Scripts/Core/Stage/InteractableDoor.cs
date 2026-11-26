@@ -5,6 +5,8 @@ public class InteractableDoor : MonoBehaviour, IInteractable, IObserver<StageNod
     [SerializeField] private RoomType roomType;
     [SerializeField] private BattleRoomTypeFilter battleRoomTypeFilter;
     [SerializeField] private StageData targetStage;
+    // 지정하면 방 종류 대신 이 방으로 바로 간다(스테이지 데이터에 없는 테스트 방 등).
+    [SerializeField] private StageNode targetNode;
     [SerializeField] private Color specialColor = new Color(1f, 0.7255f, 0.6f);
 
     private WorldInteractionManager manager;
@@ -48,7 +50,9 @@ public class InteractableDoor : MonoBehaviour, IInteractable, IObserver<StageNod
 
     public void Interact(Player player, InteractChoice choice)
     {
-        if (targetStage == null)
+        if (targetNode != null)
+            StageManager.Instance.MoveTo(targetNode);
+        else if (targetStage == null)
             StageManager.Instance.MoveTo(StageManager.Instance.GetStage(roomType, battleRoomTypeFilter));
         else if (targetStage != StageManager.Instance.CurrentStageData)
             StageManager.Instance.AdvanceStage(targetStage);
