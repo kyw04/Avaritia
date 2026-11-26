@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 
-public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>, IObserver<RunResetEvent>
+public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>, IObserver<RunResetEvent>, IWeaponFeedbackSource
 {
     [SerializeField] private WeaponData defaultWeapon;
     [SerializeField] private JumpDataList jumpDataList;
@@ -38,6 +38,20 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
         !IsGrounded && Rb.linearVelocityY <= 0f && Physics2D.Raycast(FootPosition, Vector2.down, minAirAttackHeight, groundLayer);
 
     public bool CanAttack() => Restrictions.Can(ActionBlock.Attack) && CurrentCombo != null && CurrentCombo.Count > 0 && Time.time >= AttackReadyTime;
+
+    public bool TryGetWeaponHitFeedback(out ActionFeedback feedback)
+    {
+        feedback = weapon != null ? weapon.Data.hit : default;
+        return weapon != null;
+    }
+
+    // 스킬 공격(AttackEffect)도 같은 공격 시작 이벤트를 쓰므로 무기 콤보 공격일 때만 돌려준다.
+    public bool TryGetWeaponSwingFeedback(AttackData attack, out ActionFeedback feedback)
+    {
+        bool isCombo = weapon != null && weapon.Data.IsComboAttack(attack);
+        feedback = isCombo ? weapon.Data.swing : default;
+        return isCombo;
+    }
 
     public void EquipWeapon(WeaponInstance newWeapon)
     {

@@ -182,15 +182,14 @@ public class SoundManager : Singleton<SoundManager>,
     {
         if (e.Info.Has(DamageFlags.NoHitReaction)) return;
         PlayOneShotClip(e.Source.Feedbacks.Hit.sound, AudioType.Effect);
-        if (e.Attacker is Player player && player.Weapon != null)
-            PlayOneShotClip(player.Weapon.Data.hit.sound, AudioType.Effect);
+        if (e.Attacker is IWeaponFeedbackSource source && source.TryGetWeaponHitFeedback(out var hit))
+            PlayOneShotClip(hit.sound, AudioType.Effect);
     }
 
-    // 스킬 공격(AttackEffect)도 같은 이벤트를 쓰므로 무기 콤보 공격일 때만 스윙 소리를 낸다.
     public void OnNotify(EntityAttackStartEvent e)
     {
-        if (e.Source is Player player && player.Weapon != null && player.Weapon.Data.IsComboAttack(e.Data))
-            PlayOneShotClip(player.Weapon.Data.swing.sound, AudioType.Effect);
+        if (e.Source is IWeaponFeedbackSource source && source.TryGetWeaponSwingFeedback(e.Data, out var swing))
+            PlayOneShotClip(swing.sound, AudioType.Effect);
     }
 
     public void PlayOneShotClip(AudioClip clip, AudioType type, float mul = 1f)
