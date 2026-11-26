@@ -27,6 +27,7 @@ public class ChainLightningModule : WeaponModule, IObserver<EntityDamagedEvent>
     // 연쇄가 첫 yield 전에 끝나면 StartCoroutine이 이미 끝난 코루틴을 반환하므로 chainRoutine 대신 이 플래그로 재진입을 막는다.
     private bool isChaining;
     private IAmmoModule pausedAmmo;
+    private WaitForSeconds arcWait;
 
     public override void Equip(ImageCountBar countBar)
     {
@@ -133,14 +134,23 @@ public class ChainLightningModule : WeaponModule, IObserver<EntityDamagedEvent>
         return best;
     }
 
+    // 풀이 처음 만들 때 LightShaftOccluderFeature.Mark를 불러 주므로 다시 부르지 않는다.
+    // 반납은 늘 살아 있는 풀 매니저에서 기다려, 플레이어가 꺼져도 아크가 남지 않게 한다.
     private void SpawnArc(Vector3 from, Vector3 to)
     {
-        var arc = UnityEngine.Object.Instantiate(arcPrefab);
-        LightShaftOccluderFeature.Mark(arc.gameObject);
+        var pool = ObjectPoolManager.Instance;
+        var arc = pool.Spawn(arcPrefab, arcPrefab.transform.position, arcPrefab.transform.rotation);
         arc.positionCount = 2;
         arc.SetPosition(0, from);
         arc.SetPosition(1, to);
-        UnityEngine.Object.Destroy(arc.gameObject, arcDuration);
+        arcWait ??= new WaitForSeconds(arcDuration);
+        pool.StartCoroutine(DespawnArc(arc));
+    }
+
+    private IEnumerator DespawnArc(LineRenderer arc)
+    {
+        yield return arcWait;
+        ObjectPoolManager.Instance.Despawn(arc);
     }
 
     private void ReleaseAmmo()
