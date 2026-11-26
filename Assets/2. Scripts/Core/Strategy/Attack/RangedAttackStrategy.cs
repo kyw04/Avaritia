@@ -113,13 +113,14 @@ public class RangedAttackStrategy : IAttackStrategy
             }
             var dealer = mover.GetComponent<DamageDealer>();
             dealer.damage = dmg;
+            // 피격 이벤트가 공격자를 Entity로 다루므로 식별용으로만 넘긴다.
             dealer.attacker = attacker as Entity;
             dealer.isCritical = isCritical;
             dealer.knockback = knockback;
             dealer.hitCamera = hitCamera;
             // 풀링된 탄환은 아군/적이 같이 쓰므로 매번 프리팹 값에서 다시 정한다.
             var prefabTargetLayer = prefab.GetComponent<DamageDealer>().targetLayer;
-            dealer.targetLayer = dealer.attacker != null ? dealer.attacker.ResolveTargetLayer(prefabTargetLayer) : prefabTargetLayer;
+            dealer.targetLayer = attacker.ResolveTargetLayer(prefabTargetLayer);
             
             var dir = Vector3.right * attacker.LookDirection;
             if (aimDirection.HasValue)

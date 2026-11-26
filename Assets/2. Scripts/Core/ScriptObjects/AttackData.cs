@@ -53,8 +53,7 @@ public class AttackData : ScriptableObject
     public void Attack(IAttacker attacker, Transform target = null, BulletEnhancement enhancement = null)
     {
         attacker.IsAttacking = true;
-        int cancelVersion = attacker is Entity entity ? entity.AttackCancelVersion : 0;
-        attacker.Mono.StartCoroutine(PlayAttack(attacker, cancelVersion, target, enhancement));
+        attacker.Mono.StartCoroutine(PlayAttack(attacker, attacker.AttackCancelVersion, target, enhancement));
     }
 
     private IEnumerator PlayAttack(IAttacker attacker, int cancelVersion, Transform target = null, BulletEnhancement enhancement = null)
@@ -86,8 +85,8 @@ public class AttackData : ScriptableObject
     private IEnumerator Execute(IAttacker attacker, int cancelVersion, Transform target = null, BulletEnhancement enhancement = null, Vector2? aim = null)
     {
         var resolvedFilter = filter;
-        if (filter.useLayerMask && attacker is Entity entity)
-            resolvedFilter.SetLayerMask(entity.ResolveTargetLayer(filter.layerMask));
+        if (filter.useLayerMask)
+            resolvedFilter.SetLayerMask(attacker.ResolveTargetLayer(filter.layerMask));
         attack.Play(attacker.Mono.transform.position);
         // moveForce로 밀려나는 근접 공격은 이동하는 동안(moveDuration) 판정을 계속 검사한다. 대상마다 한 번만 맞는다.
         if (canMove && moveForce > 0f && moveDuration > 0f && attackStrategy is MeleeAttackStrategy melee)
@@ -106,9 +105,8 @@ public class AttackData : ScriptableObject
     // 이동 시간(공격 속도 배율 반영) 동안 매 프레임 근접 판정을 검사한다. 공격이 캔슬되면 멈춘다.
     private IEnumerator SweepMelee(MeleeAttackStrategy melee, IAttacker attacker, int cancelVersion, ContactFilter2D resolvedFilter)
     {
-        var entity = attacker as Entity;
         var alreadyHit = new HashSet<IDamageable>();
-        for (float t = 0f; t < moveDuration; t += Time.deltaTime * (entity != null ? entity.AttackSpeedMultiplier : 1f))
+        for (float t = 0f; t < moveDuration; t += Time.deltaTime * attacker.AttackSpeedMultiplier)
         {
             if (IsCanceled(attacker, cancelVersion)) yield break;
             melee.Offensive(attacker, knockback, hitCamera, damageMultiplier, resolvedFilter, alreadyHit);
@@ -119,8 +117,7 @@ public class AttackData : ScriptableObject
     // 대기 중에 공격 둔화가 걸려도 남은 시간이 늘어나도록 매 프레임 배율을 반영한다.
     private static IEnumerator WaitAttackTime(IAttacker attacker, int cancelVersion, float seconds)
     {
-        var entity = attacker as Entity;
-        for (float t = 0f; t < seconds; t += Time.deltaTime * (entity != null ? entity.AttackSpeedMultiplier : 1f))
+        for (float t = 0f; t < seconds; t += Time.deltaTime * attacker.AttackSpeedMultiplier)
         {
             if (IsCanceled(attacker, cancelVersion)) yield break;
             yield return null;
@@ -128,5 +125,5 @@ public class AttackData : ScriptableObject
     }
 
     private static bool IsCanceled(IAttacker attacker, int cancelVersion) =>
-        attacker is Entity entity && entity.AttackCancelVersion != cancelVersion;
+        attacker.AttackCancelVersion != cancelVersion;
 }

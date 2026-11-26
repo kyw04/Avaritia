@@ -18,6 +18,7 @@ public class MeleeAttackStrategy : IAttackStrategy
         bool isCritical = attacker is IStatReadable readable && Random.Range(0f, 100f) < readable.GetStat<float>(StatType.CritRate);
         if (isCritical)
             scale *= CritConfig.Multiplier;
+        // 피격 이벤트가 공격자를 Entity로 다루므로 식별용으로만 넘긴다.
         var attackerEntity = attacker as Entity;
         var pos = hitboxPosition;
         if (attacker.LookDirection < 0)
@@ -35,8 +36,7 @@ public class MeleeAttackStrategy : IAttackStrategy
                 if (hit.TryGetComponent<IDamageable>(out var d))
                 {
                     if (alreadyHit != null && !alreadyHit.Add(d)) continue;
-                    float baseDmg = attackerEntity != null ? attackerEntity.GetDamageAgainst(hit.transform) : attacker.Damage;
-                    d.TakeDamage(baseDmg * scale, attackerEntity, knockback, hitCamera, null, isCritical);
+                    d.TakeDamage(attacker.GetDamageAgainst(hit.transform) * scale, attackerEntity, knockback, hitCamera, null, isCritical);
                 }
             }
         }
