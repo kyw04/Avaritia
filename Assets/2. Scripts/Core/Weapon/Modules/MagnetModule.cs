@@ -162,11 +162,15 @@ public class MagnetModule : WeaponModule
         for (float elapsed = 0f; elapsed < maxPullDuration; elapsed += Time.fixedDeltaTime)
         {
             yield return new WaitForFixedUpdate();
-            foreach (var enemy in FindTargets())
+            using (ListPool<Enemy>.Get(out var targets))
             {
-                pulledEnemies.Add(enemy);
-                Vector2 toOwner = (Vector2)Owner.transform.position - (Vector2)enemy.transform.position;
-                Hold(enemy, toOwner.magnitude <= pullStopDistance ? Vector2.zero : toOwner.normalized * pullSpeed);
+                FindTargets(targets);
+                foreach (var enemy in targets)
+                {
+                    pulledEnemies.Add(enemy);
+                    Vector2 toOwner = (Vector2)Owner.transform.position - (Vector2)enemy.transform.position;
+                    Hold(enemy, toOwner.magnitude <= pullStopDistance ? Vector2.zero : toOwner.normalized * pullSpeed);
+                }
             }
         }
         pullRoutine = null;
@@ -229,20 +233,24 @@ public class MagnetModule : WeaponModule
         pushFeedback.Play(Owner.transform.position, FacingRotation);
         float direction = Owner.LookDirection;
 
-        foreach (var enemy in FindTargets())
+        using (ListPool<Enemy>.Get(out var targets))
         {
-            if (pushDamageMultiplier > 0f)
-                DealDamage(enemy, pushDamageMultiplier);
-            if (!IsAlive(enemy))
-                continue;
+            FindTargets(targets);
+            foreach (var enemy in targets)
+            {
+                if (pushDamageMultiplier > 0f)
+                    DealDamage(enemy, pushDamageMultiplier);
+                if (!IsAlive(enemy))
+                    continue;
 
-            enemy.ApplyKnockback(PushVelocity(direction), Time.fixedDeltaTime * 2f);
-            // 기절은 이동 입력만 막고 넉백은 그대로 받아 날아가는 속도를 유지한다.
-            enemy.Debuffs.Apply(stunDebuff, pushDuration, Owner);
-            if (slamRoutines.Remove(enemy, out var previous) && previous != null)
-                enemy.StopCoroutine(previous);
-            // 적에서 돌려 무기를 바꾸거나 버려도 날아가는 적은 그대로 벽에 박힐 수 있다.
-            slamRoutines[enemy] = enemy.StartCoroutine(Fly(enemy, direction));
+                enemy.ApplyKnockback(PushVelocity(direction), Time.fixedDeltaTime * 2f);
+                // 기절은 이동 입력만 막고 넉백은 그대로 받아 날아가는 속도를 유지한다.
+                enemy.Debuffs.Apply(stunDebuff, pushDuration, Owner);
+                if (slamRoutines.Remove(enemy, out var previous) && previous != null)
+                    enemy.StopCoroutine(previous);
+                // 적에서 돌려 무기를 바꾸거나 버려도 날아가는 적은 그대로 벽에 박힐 수 있다.
+                slamRoutines[enemy] = enemy.StartCoroutine(Fly(enemy, direction));
+            }
         }
     }
 
@@ -282,10 +290,11 @@ public class MagnetModule : WeaponModule
         slamFeedback.Play(enemy.transform.position);
     }
 
-    private List<Enemy> FindTargets()
+    // 결과는 targets에 채운다(호출하는 쪽이 ListPool에서 빌린 리스트를 넘긴다).
+    private void FindTargets(List<Enemy> targets)
     {
         var center = (Vector2)Owner.transform.position + new Vector2(areaOffset.x * Owner.LookDirection, areaOffset.y);
-        var targets = new List<Enemy>();
+        targets.Clear();
         using (ListPool<Collider2D>.Get(out var hits))
         {
             Physics2D.OverlapBox(center, areaSize, 0f, ContactFilters.ForLayer(enemyLayer), hits);
@@ -296,6 +305,5 @@ public class MagnetModule : WeaponModule
                     targets.Add(enemy);
             }
         }
-        return targets;
     }
 }

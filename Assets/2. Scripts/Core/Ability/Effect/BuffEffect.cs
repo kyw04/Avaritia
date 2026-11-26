@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public enum BuffValueType { Flat, Percent }
 // 순서 = 직렬화 값이므로 새 항목은 맨 뒤에만 추가할 것.
@@ -29,17 +30,21 @@ public class BuffEffect : IAbilityEffect
 
     public void Apply(AbilityContext context)
     {
-        foreach (var t in AbilityTargeting.Resolve(context, applyTo, radius, targetLayer))
+        using (ListPool<Transform>.Get(out var targets))
         {
-            if (!t.TryGetComponent<IBuffable>(out var buffable)) continue;
+            AbilityTargeting.Resolve(context, applyTo, radius, targetLayer, targets);
+            foreach (var t in targets)
+            {
+                if (!t.TryGetComponent<IBuffable>(out var buffable)) continue;
 
-            // context.State identifies this specific binding (e.g. one particular copy of a held
-            // Item), not the shared BuffEffect asset data — using `this` here would make two copies
-            // of the same item collide on the same buff slot instead of stacking independently.
-            foreach (var mod in modifiers)
-                buffable.ApplyBuff(context.State, mod.statType, mod.valueType, mod.amount, duration, activeWhile);
+                // context.State identifies this specific binding (e.g. one particular copy of a held
+                // Item), not the shared BuffEffect asset data — using `this` here would make two copies
+                // of the same item collide on the same buff slot instead of stacking independently.
+                foreach (var mod in modifiers)
+                    buffable.ApplyBuff(context.State, mod.statType, mod.valueType, mod.amount, duration, activeWhile);
 
-            ParticleManager.Instance.SpawnFollow(particle, t, duration, context.State);
+                ParticleManager.Instance.SpawnFollow(particle, t, duration, context.State);
+            }
         }
     }
 }

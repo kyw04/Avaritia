@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Pool;
 
 // 대상에게 디버프를 건다. 건 쪽은 시전자라서, 시전자의 DebuffDuration 보너스가 지속 시간에 더해진다.
 [System.Serializable]
@@ -13,8 +14,12 @@ public class DebuffEffect : IAbilityEffect
     public void Apply(AbilityContext context)
     {
         var inflictor = context.Caster.Mono as Entity;
-        foreach (var t in AbilityTargeting.Resolve(context, applyTo, radius, targetLayer))
-            if (t.TryGetComponent<Entity>(out var entity))
-                entity.Debuffs.Apply(debuff, duration, inflictor);
+        using (ListPool<Transform>.Get(out var targets))
+        {
+            AbilityTargeting.Resolve(context, applyTo, radius, targetLayer, targets);
+            foreach (var t in targets)
+                if (t.TryGetComponent<Entity>(out var entity))
+                    entity.Debuffs.Apply(debuff, duration, inflictor);
+        }
     }
 }
