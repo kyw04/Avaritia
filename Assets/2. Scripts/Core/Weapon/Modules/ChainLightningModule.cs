@@ -28,6 +28,9 @@ public class ChainLightningModule : WeaponModule, IObserver<EntityDamagedEvent>
     private bool isChaining;
     private IAmmoModule pausedAmmo;
     private WaitForSeconds arcWait;
+    // 아크 인스턴스는 풀에서 모든 연쇄 번개가 같이 쓰므로 생성 번호도 공용으로 둔다.
+    private static readonly Dictionary<LineRenderer, int> ArcSpawnIds = new();
+    private static int lastArcSpawnId;
 
     public override void Equip(ImageCountBar countBar)
     {
@@ -144,13 +147,17 @@ public class ChainLightningModule : WeaponModule, IObserver<EntityDamagedEvent>
         arc.SetPosition(0, from);
         arc.SetPosition(1, to);
         arcWait ??= new WaitForSeconds(arcDuration);
-        pool.StartCoroutine(DespawnArc(arc));
+        int spawnId = ++lastArcSpawnId;
+        ArcSpawnIds[arc] = spawnId;
+        pool.StartCoroutine(DespawnArc(arc, spawnId));
     }
 
-    private IEnumerator DespawnArc(LineRenderer arc)
+    // 기다리는 동안 런 초기화(DespawnAll)로 이미 반납됐거나, 반납 뒤 다른 연쇄가 다시 꺼내 쓴 아크는 건드리지 않는다.
+    private IEnumerator DespawnArc(LineRenderer arc, int spawnId)
     {
         yield return arcWait;
-        ObjectPoolManager.Instance.Despawn(arc);
+        if (arc != null && arc.gameObject.activeSelf && ArcSpawnIds.TryGetValue(arc, out int current) && current == spawnId)
+            ObjectPoolManager.Instance.Despawn(arc);
     }
 
     private void ReleaseAmmo()
