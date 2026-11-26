@@ -60,6 +60,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     // of an item refills/loses only its own share and RemoveBuffsBySource can drop it on unequip.
     private readonly Dictionary<object, float> shields = new();
     private readonly Dictionary<object, int> hitBlocks = new();
+    private readonly List<object> keyBuffer = new();
     private float invincibleUntil;
     private float invincibleDuration;
     private Sprite invincibleIcon;
@@ -571,9 +572,12 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         if (CurrentHealth <= 0) Die();
     }
 
+    // 딕셔너리를 돌면서 값을 바꿀 수 없어 키를 버퍼에 옮겨 돈다. 두 메서드는 안에서 외부 코드를 부르지 않아 버퍼를 같이 쓴다.
     private bool TryConsumeHitBlock()
     {
-        foreach (var source in new List<object>(hitBlocks.Keys))
+        keyBuffer.Clear();
+        keyBuffer.AddRange(hitBlocks.Keys);
+        foreach (var source in keyBuffer)
         {
             if (hitBlocks[source] <= 0) continue;
             hitBlocks[source]--;
@@ -584,7 +588,9 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
 
     private float AbsorbWithShields(float damage)
     {
-        foreach (var source in new List<object>(shields.Keys))
+        keyBuffer.Clear();
+        keyBuffer.AddRange(shields.Keys);
+        foreach (var source in keyBuffer)
         {
             if (damage <= 0f) break;
             float absorbed = Mathf.Min(shields[source], damage);
