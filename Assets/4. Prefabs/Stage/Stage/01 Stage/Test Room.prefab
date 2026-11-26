@@ -13443,6 +13443,14 @@ PrefabInstance:
       propertyPath: entityPrefab
       value: 
       objectReference: {fileID: 7393131509881489506, guid: e0a112c5ee6a24844b162a6bdc314f38, type: 3}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolSize.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512411090396930281, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
+      propertyPath: patrolSize.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6932648260790840698, guid: 3cdeb27cb17a5d1438165d4b179e85f0, type: 3}
       propertyPath: m_Name
       value: Training Dummy Spawn Point
