@@ -150,13 +150,13 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
 
         float speed = Mathf.Abs(Rb.linearVelocityX);
         if (speed > MoveAnimationSpeed)
-            EventBus.Publish(new EntityMovedEvent(this, speed));
+            EntityEventRouter.Raise(new EntityMovedEvent(this, speed));
         else
-            EventBus.Publish(new EntityIdleEvent(this));
+            EntityEventRouter.Raise(new EntityIdleEvent(this));
     }
 
-    private void OnEnable() => EventBus.Subscribe<EntityDamagedEvent>(this);
-    private void OnDisable() => EventBus.Unsubscribe<EntityDamagedEvent>(this);
+    private void OnEnable() => Events.Subscribe<EntityDamagedEvent>(this);
+    private void OnDisable() => Events.Unsubscribe<EntityDamagedEvent>(this);
 
     // 맞으면(지속 피해 등 NoInterrupt 제외) 피격 경직. 죽는 피해면 사망 처리에 맡기고, 피격 모션이 없거나
     // 경직 무시 버프(NoHitStunEffect)가 걸린 적은 경직하지 않는다.

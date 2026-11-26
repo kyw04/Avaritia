@@ -38,18 +38,38 @@ public class EntityAnimator : AnimatorBase,
         }
     }
 
+    // 자기 엔티티 이벤트만 쓰므로 전역 버스가 아니라 엔티티의 로컬 허브를 구독한다.
     private void OnEnable()
     {
-        EventBus.Subscribe<EntityIdleEvent>(this);
-        EventBus.Subscribe<EntityMovedEvent>(this);
-        EventBus.Subscribe<EntityJumpedEvent>(this);
-        EventBus.Subscribe<EntityFallingEvent>(this);
-        EventBus.Subscribe<EntityLandedEvent>(this);
-        EventBus.Subscribe<EntityTurnEvent>(this);
-        EventBus.Subscribe<EntityDashEvent>(this);
-        EventBus.Subscribe<EntityAttackStartEvent>(this);
-        EventBus.Subscribe<EntityAttackCanceledEvent>(this);
-        EventBus.Subscribe<EntityAnimationEvent>(this);
+        if (self == null) return;
+        var hub = self.Events;
+        hub.Subscribe<EntityIdleEvent>(this);
+        hub.Subscribe<EntityMovedEvent>(this);
+        hub.Subscribe<EntityJumpedEvent>(this);
+        hub.Subscribe<EntityFallingEvent>(this);
+        hub.Subscribe<EntityLandedEvent>(this);
+        hub.Subscribe<EntityTurnEvent>(this);
+        hub.Subscribe<EntityDashEvent>(this);
+        hub.Subscribe<EntityAttackStartEvent>(this);
+        hub.Subscribe<EntityAttackCanceledEvent>(this);
+        hub.Subscribe<EntityAnimationEvent>(this);
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        if (self == null) return;
+        var hub = self.Events;
+        hub.Unsubscribe<EntityIdleEvent>(this);
+        hub.Unsubscribe<EntityMovedEvent>(this);
+        hub.Unsubscribe<EntityJumpedEvent>(this);
+        hub.Unsubscribe<EntityFallingEvent>(this);
+        hub.Unsubscribe<EntityLandedEvent>(this);
+        hub.Unsubscribe<EntityTurnEvent>(this);
+        hub.Unsubscribe<EntityDashEvent>(this);
+        hub.Unsubscribe<EntityAttackStartEvent>(this);
+        hub.Unsubscribe<EntityAttackCanceledEvent>(this);
+        hub.Unsubscribe<EntityAnimationEvent>(this);
     }
 
     // 공격 둔화 중에는 공격 애니메이션도 같은 배율로 느리게 재생한다.

@@ -152,7 +152,7 @@ public class MagnetModule : WeaponModule
             particle.Follow(Owner.transform, 0f, () => IsPulling);
         // 흡인 애니메이션은 반복 재생 클립이어야 하며, 흡인이 끝나면 EndPull에서 되돌린다.
         if (pullFeedback.animClip != null)
-            EventBus.Publish(new EntityAnimationEvent(Owner, pullFeedback.animClip));
+            EntityEventRouter.Raise(new EntityAnimationEvent(Owner, pullFeedback.animClip));
         pullRoutine = Owner.StartCoroutine(PullRoutine());
     }
 

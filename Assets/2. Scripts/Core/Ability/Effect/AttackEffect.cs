@@ -7,7 +7,7 @@ public class AttackEffect : IAbilityEffect
     {
         if (attackData == null) return;
         if (context.Caster is Entity entity)
-            EventBus.Publish(new EntityAttackStartEvent(entity, attackData));
+            EntityEventRouter.Raise(new EntityAttackStartEvent(entity, attackData));
         attackData.Attack(context.Caster, context.Target);
     }
 }

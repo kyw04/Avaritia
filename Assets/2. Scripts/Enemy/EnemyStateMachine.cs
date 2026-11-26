@@ -59,7 +59,7 @@ public class EnemyTurnState : StateBase<Enemy>
         Owner.Move(Vector2.zero);
 
         if (clip != null)
-            EventBus.Publish(new EntityAnimationEvent(Owner, clip));
+            EntityEventRouter.Raise(new EntityAnimationEvent(Owner, clip));
     }
 
     public override void Execute()
@@ -277,7 +277,7 @@ public class EnemyHitState : StateBase<Enemy>
         Owner.Move(Vector2.zero);
 
         if (clip != null)
-            EventBus.Publish(new EntityAnimationEvent(Owner, clip));
+            EntityEventRouter.Raise(new EntityAnimationEvent(Owner, clip));
     }
 
     public override void Execute()
@@ -324,6 +324,6 @@ public class EnemyDeadState : StateBase<Enemy>
         var feedback = Owner.Feedbacks.Death;
         feedback.Play(Owner.FootPosition);
         if (feedback.animClip != null)
-            EventBus.Publish(new EntityAnimationEvent(Owner, feedback.animClip));
+            EntityEventRouter.Raise(new EntityAnimationEvent(Owner, feedback.animClip));
     }
 }

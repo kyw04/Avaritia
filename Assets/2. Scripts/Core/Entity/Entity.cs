@@ -493,7 +493,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         if (!IsAttacking) return;
         AttackCancelVersion++;
         IsAttacking = false;
-        EventBus.Publish(new EntityAttackCanceledEvent(this));
+        EntityEventRouter.Raise(new EntityAttackCanceledEvent(this));
     }
 
     // 진행 중인 채널링을 모두 중단한다(완료 효과는 적용되지 않는다).
@@ -563,7 +563,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         }
         OnHealthChanged();
         info.Amount = damage;
-        EventBus.Publish(new EntityDamagedEvent(this, info, knockback ?? new KnockbackSettings(), hitCamera ?? new HitCameraSettings()));
+        EntityEventRouter.Raise(new EntityDamagedEvent(this, info, knockback ?? new KnockbackSettings(), hitCamera ?? new HitCameraSettings()));
 
         if (CurrentHealth > 0) return;
         // Listeners (e.g. a revive item) may heal in response; only die if nothing did.

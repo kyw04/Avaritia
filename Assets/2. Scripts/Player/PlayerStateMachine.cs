@@ -55,7 +55,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             Owner.Restrictions.Set(this, AllActions);
 
             if (clip != null)
-                EventBus.Publish(new EntityAnimationEvent(Owner, clip));
+                EntityEventRouter.Raise(new EntityAnimationEvent(Owner, clip));
         }
 
         public override void Execute()
@@ -108,7 +108,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             var feedback = Owner.Feedbacks.Death;
             feedback.Play(Owner.FootPosition);
             if (feedback.animClip != null)
-                EventBus.Publish(new EntityAnimationEvent(Owner, feedback.animClip));
+                EntityEventRouter.Raise(new EntityAnimationEvent(Owner, feedback.animClip));
         }
 
         // 공중에서 죽어도 중력으로 떨어지되 옆으로는 미끄러지지 않게 한다.
@@ -179,7 +179,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         {
             idlePending = AttackAnimationPlaying();
             if (!idlePending)
-                EventBus.Publish(new EntityIdleEvent(Owner));
+                EntityEventRouter.Raise(new EntityIdleEvent(Owner));
         }
 
         public override void Execute()
@@ -187,7 +187,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             if (idlePending && !AttackAnimationPlaying())
             {
                 idlePending = false;
-                EventBus.Publish(new EntityIdleEvent(Owner));
+                EntityEventRouter.Raise(new EntityIdleEvent(Owner));
             }
 
             if (Mathf.Abs(InputHandler.Instance.MoveInput.x) > 0)
@@ -213,7 +213,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         
         public override void Enter()
         {
-            EventBus.Publish(new EntityMovedEvent(Owner, currentSpeed));
+            EntityEventRouter.Raise(new EntityMovedEvent(Owner, currentSpeed));
         }
 
         public override void Execute()
@@ -224,7 +224,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             }
             else
             {
-                EventBus.Publish(new EntityMovedEvent(Owner, currentSpeed));
+                EntityEventRouter.Raise(new EntityMovedEvent(Owner, currentSpeed));
             }
         }
 
@@ -235,7 +235,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Exit()
         {
-            EventBus.Publish(new EntityMovedEvent(Owner, 0));
+            EntityEventRouter.Raise(new EntityMovedEvent(Owner, 0));
         }
     }
 
@@ -252,7 +252,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             Machine.AddTransition<PlayerTurnState, PlayerMoveState>();
             
             moveDir = InputHandler.Instance.MoveInput;
-            EventBus.Publish(new EntityTurnEvent(Owner, Owner.Feedbacks.Turn.particle));
+            EntityEventRouter.Raise(new EntityTurnEvent(Owner, Owner.Feedbacks.Turn.particle));
         }
 
         public override void Execute()
@@ -295,7 +295,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         public override void Enter()
         {
             landStartTime = Time.time;
-            EventBus.Publish(new EntityLandedEvent(Owner, Owner.Feedbacks.Land.particle));
+            EntityEventRouter.Raise(new EntityLandedEvent(Owner, Owner.Feedbacks.Land.particle));
         }
 
         public override void Execute()
@@ -357,7 +357,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         public override void Enter()
         {
             int index = Owner.IsGrounded ? 0 : 1;
-            EventBus.Publish(new EntityJumpedEvent(Owner, jumpDataList.datas[index]));
+            EntityEventRouter.Raise(new EntityJumpedEvent(Owner, jumpDataList.datas[index]));
             Owner.Jump();
         }
 
@@ -390,7 +390,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Enter()
         {
-            EventBus.Publish(new EntityDashEvent(Owner, Owner.Feedbacks.Dash.particle));
+            EntityEventRouter.Raise(new EntityDashEvent(Owner, Owner.Feedbacks.Dash.particle));
             Owner.Rb.gravityScale = 0f;
             Owner.Dash();
             // 대쉬하는 동안 무적. 이미 더 길게 남은 무적(아이템 등)이 있으면 그쪽이 유지된다.
@@ -433,7 +433,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         public override void Enter()
         {
             lastFallVelocityY = 0f;
-            EventBus.Publish(new EntityFallingEvent(Owner));
+            EntityEventRouter.Raise(new EntityFallingEvent(Owner));
         }
 
         // 착지하면 직전 낙하 속도로 세게 떨어졌는지 판단해 착지 경직(Land) 또는 바로 Idle로 간다.

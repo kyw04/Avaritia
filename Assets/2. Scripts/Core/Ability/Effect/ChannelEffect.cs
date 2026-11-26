@@ -87,7 +87,7 @@ public class ChannelEffect : IAbilityEffect
     {
         feedback.Play(caster.transform.position);
         if (feedback.animClip != null)
-            EventBus.Publish(new EntityAnimationEvent(caster, feedback.animClip));
+            EntityEventRouter.Raise(new EntityAnimationEvent(caster, feedback.animClip));
     }
 
     // 채널링 애니메이션이 남지 않도록 현재 이동 상태의 애니메이션으로 되돌린다.
@@ -95,8 +95,8 @@ public class ChannelEffect : IAbilityEffect
     private static void RestoreLocomotionAnimation(Entity caster)
     {
         if (!caster.IsGrounded)
-            EventBus.Publish(new EntityFallingEvent(caster));
+            EntityEventRouter.Raise(new EntityFallingEvent(caster));
         else if (Mathf.Abs(caster.Rb.linearVelocityX) < 0.01f)
-            EventBus.Publish(new EntityIdleEvent(caster));
+            EntityEventRouter.Raise(new EntityIdleEvent(caster));
     }
 }

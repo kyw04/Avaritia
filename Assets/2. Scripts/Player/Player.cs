@@ -164,13 +164,13 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
 
     private void OnEnable()
     {
-        EventBus.Subscribe<EntityDamagedEvent>(this);
+        Events.Subscribe<EntityDamagedEvent>(this);
         EventBus.Subscribe<RunResetEvent>(this);
     }
 
     private void OnDisable()
     {
-        EventBus.Unsubscribe<EntityDamagedEvent>(this);
+        Events.Unsubscribe<EntityDamagedEvent>(this);
         EventBus.Unsubscribe<RunResetEvent>(this);
     }
 

@@ -22,12 +22,12 @@ public class HitFlash : MonoBehaviour, IObserver<EntityDamagedEvent>
             originalMaterials[i] = renderers[i].sharedMaterial;
     }
 
-    private void OnEnable() => EventBus.Subscribe<EntityDamagedEvent>(this);
+    private void OnEnable() => entity.Events.Subscribe<EntityDamagedEvent>(this);
 
     // 플래시 도중 비활성화(풀 반환 등)되면 코루틴이 멈추므로 여기서 원래 머티리얼로 되돌린다.
     private void OnDisable()
     {
-        EventBus.Unsubscribe<EntityDamagedEvent>(this);
+        entity.Events.Unsubscribe<EntityDamagedEvent>(this);
         flashRoutine = null;
         Restore();
     }

@@ -141,7 +141,7 @@ public class WeaponInstance : IInventoryItem
         }
 
         currentAttack = attack;
-        EventBus.Publish(new EntityAttackStartEvent(Owner, attack.Data));
+        EntityEventRouter.Raise(new EntityAttackStartEvent(Owner, attack.Data));
         currentAttack = null;
 
         attack.Data.Attack(attacker, defender, attack.Enhancement);
@@ -211,9 +211,9 @@ public class WeaponInstance : IInventoryItem
         if (Owner.IsAttacking)
             return;
         if (!Owner.IsGrounded)
-            EventBus.Publish(new EntityFallingEvent(Owner));
+            EntityEventRouter.Raise(new EntityFallingEvent(Owner));
         else if (Mathf.Abs(Owner.Rb.linearVelocityX) < 0.01f)
-            EventBus.Publish(new EntityIdleEvent(Owner));
+            EntityEventRouter.Raise(new EntityIdleEvent(Owner));
     }
 
     // 홀드 애니메이션이 있으면 그 애니메이션이 실제로 재생 중인 동안만 시간을 센다.
@@ -240,7 +240,7 @@ public class WeaponInstance : IInventoryItem
 
                 elapsed = 0f;
                 if (IsStandingStill())
-                    EventBus.Publish(new EntityAnimationEvent(Owner, clip));
+                    EntityEventRouter.Raise(new EntityAnimationEvent(Owner, clip));
             }
         }
         holds.Remove(binding);
@@ -337,7 +337,7 @@ public class WeaponInstance : IInventoryItem
         if (feedback.animClip == null)
             return;
 
-        EventBus.Publish(new EntityAnimationEvent(Owner, feedback.animClip));
+        EntityEventRouter.Raise(new EntityAnimationEvent(Owner, feedback.animClip));
         if (binding.phase != InputActionPhase.Canceled)
             animatedActions.Add(binding.action.action.id);
     }

@@ -1,22 +1,22 @@
 using UnityEngine;
 
-public struct EntityIdleEvent : ISubject
+public struct EntityIdleEvent : IEntityEvent
 {
     public Entity Source { get; private set; }
     public EntityIdleEvent(Entity source) { Source = source; }
 }
-public struct EntityFallingEvent : ISubject
+public struct EntityFallingEvent : IEntityEvent
 {
     public Entity Source { get; private set; }
     public EntityFallingEvent(Entity source) { Source = source; }
 }
-public struct EntityLandedEvent : ISubject
+public struct EntityLandedEvent : IEntityEvent
 {
     public Entity Source { get; private set; }
     public PooledParticle Particle { get; private set; }
     public EntityLandedEvent(Entity source, PooledParticle particle) { Source = source; Particle = particle; }
 }
-public struct EntityTurnEvent : ISubject
+public struct EntityTurnEvent : IEntityEvent
 {
     public Entity Source { get; private set; }
     public PooledParticle Particle { get; private set; }
@@ -28,26 +28,26 @@ public struct EntityTurnEndedEvent : ISubject
     public Entity Source { get; private set; }
     public EntityTurnEndedEvent(Entity source) { Source = source; }
 }
-public struct EntityDashEvent : ISubject
+public struct EntityDashEvent : IEntityEvent
 {
     public Entity Source { get; private set; }
     public PooledParticle Particle { get; private set; }
     public EntityDashEvent(Entity source, PooledParticle particle) { Source = source; Particle = particle; }
 }
-public struct EntityJumpedEvent : ISubject
+public struct EntityJumpedEvent : IEntityEvent
 {
     public Entity Source { get; private set; }
     public JumpData Data { get; private set; }
     public EntityJumpedEvent(Entity source, JumpData data) { Source = source; Data = data; }
 }
-public struct EntityMovedEvent : ISubject
+public struct EntityMovedEvent : IEntityEvent
 {
     public Entity Source { get; private set; }
     public float Speed { get; private set; }
     public EntityMovedEvent(Entity source, float speed) { Source = source; Speed = speed; }
 }
 
-public struct EntityAnimationEvent : ISubject
+public struct EntityAnimationEvent : IEntityEvent
 {
     public Entity Source { get; private set; }
     public AnimationClip Clip { get; private set; }
@@ -89,7 +89,7 @@ public struct EntityDeadEvent : ISubject
 
 // Source = the entity that took the damage. Attacker is null when unknown (effects).
 // Amount는 방어력/실드를 거친 실제 피해량. 반응하는 쪽은 Info.Has(DamageFlags.X)로 무시할지 정한다.
-public struct EntityDamagedEvent : ISubject
+public struct EntityDamagedEvent : IEntityEvent
 {
     public Entity Source { get; private set; }
     public DamageInfo Info { get; private set; }
@@ -140,14 +140,14 @@ public struct EntityAttackEvent : ISubject
     public EntityAttackEvent(AttackData data)  { Data = data; }
 }
 
-public struct EntityAttackStartEvent : ISubject
+public struct EntityAttackStartEvent : IEntityEvent
 {
     public Entity Source { get; private set; }
     public AttackData Data { get; private set; }
     public EntityAttackStartEvent(Entity source, AttackData data)  { Source = source; Data = data; }
 }
 
-public struct EntityAttackCanceledEvent : ISubject
+public struct EntityAttackCanceledEvent : IEntityEvent
 {
     public Entity Source { get; private set; }
     public EntityAttackCanceledEvent(Entity source) { Source = source; }

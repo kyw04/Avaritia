@@ -28,7 +28,7 @@ public class AnimatorBase : MonoBehaviour
         PlayAnimation(animName);
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         EventBus.UnsubscribeAll(this);
     }

@@ -91,9 +91,9 @@ public class Boss : Entity
     {
         float speed = Mathf.Abs(Rb.linearVelocityX);
         if (speed > MoveAnimationSpeed)
-            EventBus.Publish(new EntityMovedEvent(this, speed));
+            EntityEventRouter.Raise(new EntityMovedEvent(this, speed));
         else
-            EventBus.Publish(new EntityIdleEvent(this));
+            EntityEventRouter.Raise(new EntityIdleEvent(this));
     }
 
     public int FlipToTarget()
@@ -121,7 +121,7 @@ public class Boss : Entity
         feedback.Play(FootPosition);
         if (feedback.animClip != null)
         {
-            EventBus.Publish(new EntityAnimationEvent(this, feedback.animClip));
+            EntityEventRouter.Raise(new EntityAnimationEvent(this, feedback.animClip));
             StartCoroutine(DespawnAfter(feedback.animClip.length));
         }
         else

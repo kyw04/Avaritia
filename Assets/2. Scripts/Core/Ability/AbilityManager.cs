@@ -264,7 +264,7 @@ public class AbilityManager
         binding.State.ActivationCount++;
         data.cast.Play(owner.transform.position);
         if (data.cast.animClip != null)
-            EventBus.Publish(new EntityAnimationEvent(owner, data.cast.animClip));
+            EntityEventRouter.Raise(new EntityAnimationEvent(owner, data.cast.animClip));
         binding.State.DeferCooldown = false;
         foreach (var effect in data.effects)
             effect?.Apply(context);
