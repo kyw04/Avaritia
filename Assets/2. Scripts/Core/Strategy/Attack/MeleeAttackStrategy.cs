@@ -18,8 +18,7 @@ public class MeleeAttackStrategy : IAttackStrategy
         bool isCritical = attacker is IStatReadable readable && Random.Range(0f, 100f) < readable.GetStat<float>(StatType.CritRate);
         if (isCritical)
             scale *= CritConfig.Multiplier;
-        // 피격 이벤트가 공격자를 Entity로 다루므로 식별용으로만 넘긴다.
-        var attackerEntity = attacker as Entity;
+        var attackerEntity = attacker.SourceEntity;
         var pos = hitboxPosition;
         if (attacker.LookDirection < 0)
             pos.x = -pos.x;

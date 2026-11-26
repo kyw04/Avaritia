@@ -14,4 +14,6 @@ public interface IAttacker
     LayerMask ResolveTargetLayer(LayerMask mask);
     // 대상에 따라 달라지는 버프까지 반영한 피해.
     float GetDamageAgainst(Transform target);
+    // 피해를 준 쪽으로 기록할 엔티티(피격 이벤트, 처치 판정). 엔티티가 아닌 공격자면 null.
+    Entity SourceEntity { get; }
 }

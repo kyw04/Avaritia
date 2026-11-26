@@ -10,4 +10,5 @@ public class Bullet : MonoBehaviour, IAttacker
     public float AttackSpeedMultiplier => 1f;
     public LayerMask ResolveTargetLayer(LayerMask mask) => mask;
     public float GetDamageAgainst(Transform target) => Damage;
+    public Entity SourceEntity => null;
 }

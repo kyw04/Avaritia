@@ -113,8 +113,7 @@ public class RangedAttackStrategy : IAttackStrategy
             }
             var dealer = mover.GetComponent<DamageDealer>();
             dealer.damage = dmg;
-            // 피격 이벤트가 공격자를 Entity로 다루므로 식별용으로만 넘긴다.
-            dealer.attacker = attacker as Entity;
+            dealer.attacker = attacker.SourceEntity;
             dealer.isCritical = isCritical;
             dealer.knockback = knockback;
             dealer.hitCamera = hitCamera;
