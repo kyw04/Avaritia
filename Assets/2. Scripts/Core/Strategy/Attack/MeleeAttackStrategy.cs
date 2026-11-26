@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 [System.Serializable]
 public class MeleeAttackStrategy : IAttackStrategy
@@ -18,22 +19,25 @@ public class MeleeAttackStrategy : IAttackStrategy
         if (isCritical)
             scale *= CritConfig.Multiplier;
         var attackerEntity = attacker as Entity;
-        var hits = new List<Collider2D>();
         var pos = hitboxPosition;
         if (attacker.LookDirection < 0)
             pos.x = -pos.x;
         pos += (Vector2)attacker.Mono.transform.position;
-        
-        Physics2D.OverlapBox(pos, hitboxSize, 0f, filter, hits);
-        DebugExtension.DrawBox(pos, hitboxSize / 2f, Quaternion.identity, Color.green, 1.0f);
-        foreach (var hit in hits)
+
+        // 피해 처리 중 다른 공격이 같은 전략을 다시 부를 수 있어 호출마다 풀에서 빌린다.
+        using (ListPool<Collider2D>.Get(out var hits))
         {
-            if (hit.transform.IsChildOf(attacker.Mono.transform)) continue;
-            if (hit.TryGetComponent<IDamageable>(out var d))
+            Physics2D.OverlapBox(pos, hitboxSize, 0f, filter, hits);
+            DebugExtension.DrawBox(pos, hitboxSize / 2f, Quaternion.identity, Color.green, 1.0f);
+            foreach (var hit in hits)
             {
-                if (alreadyHit != null && !alreadyHit.Add(d)) continue;
-                float baseDmg = attackerEntity != null ? attackerEntity.GetDamageAgainst(hit.transform) : attacker.Damage;
-                d.TakeDamage(baseDmg * scale, attackerEntity, knockback, hitCamera, null, isCritical);
+                if (hit.transform.IsChildOf(attacker.Mono.transform)) continue;
+                if (hit.TryGetComponent<IDamageable>(out var d))
+                {
+                    if (alreadyHit != null && !alreadyHit.Add(d)) continue;
+                    float baseDmg = attackerEntity != null ? attackerEntity.GetDamageAgainst(hit.transform) : attacker.Damage;
+                    d.TakeDamage(baseDmg * scale, attackerEntity, knockback, hitCamera, null, isCritical);
+                }
             }
         }
     }

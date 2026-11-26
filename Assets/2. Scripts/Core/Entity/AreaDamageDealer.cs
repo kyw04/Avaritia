@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Pool;
 
 public class AreaDamageDealer : DamageDealer
 {
@@ -8,10 +9,14 @@ public class AreaDamageDealer : DamageDealer
     {
         // 탄환 크기 강화가 폭발 범위에도 적용되도록 스케일을 곱한다.
         float r = radius * transform.lossyScale.x;
-        foreach (var hit in Physics2D.OverlapCircleAll(transform.position, r, targetLayer))
+        using (ListPool<Collider2D>.Get(out var hits))
         {
-            if (hit.TryGetComponent<IDamageable>(out var d))
-                d.TakeDamage(damage, attacker, knockback, hitCamera, transform.position, isCritical);
+            Physics2D.OverlapCircle(transform.position, r, ContactFilters.ForLayer(targetLayer), hits);
+            foreach (var hit in hits)
+            {
+                if (hit.TryGetComponent<IDamageable>(out var d))
+                    d.TakeDamage(damage, attacker, knockback, hitCamera, transform.position, isCritical);
+            }
         }
     }
 }

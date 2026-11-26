@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 // 효과를 받을 대상을 고른다.
 // Self = 시전자, Target = 트리거/호출자가 넘긴 context.Target,
@@ -37,11 +38,15 @@ public static class AbilityTargeting
     private static List<Transform> Overlap(Transform caster, float radius, LayerMask layer)
     {
         var found = new List<Transform>();
-        foreach (var hit in Physics2D.OverlapCircleAll(caster.position, radius, layer))
+        using (ListPool<Collider2D>.Get(out var hits))
         {
-            var entity = hit.GetComponentInParent<Entity>();
-            var t = entity != null ? entity.transform : hit.transform;
-            if (t != caster && !found.Contains(t)) found.Add(t);
+            Physics2D.OverlapCircle(caster.position, radius, ContactFilters.ForLayer(layer), hits);
+            foreach (var hit in hits)
+            {
+                var entity = hit.GetComponentInParent<Entity>();
+                var t = entity != null ? entity.transform : hit.transform;
+                if (t != caster && !found.Contains(t)) found.Add(t);
+            }
         }
         return found;
     }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Pool;
 
 // 자석 모듈: 앞쪽 범위의 적을 밀쳐내거나(밀치기) 빨아들인다(흡인). 일반 크기 Enemy만 영향을 받는다.
 // 입력은 두 방식 중 하나로 연결한다.
@@ -285,11 +286,15 @@ public class MagnetModule : WeaponModule
     {
         var center = (Vector2)Owner.transform.position + new Vector2(areaOffset.x * Owner.LookDirection, areaOffset.y);
         var targets = new List<Enemy>();
-        foreach (var collider in Physics2D.OverlapBoxAll(center, areaSize, 0f, enemyLayer))
+        using (ListPool<Collider2D>.Get(out var hits))
         {
-            var enemy = collider.GetComponentInParent<Enemy>();
-            if (enemy is { IsAlly: false, Size: EnemySize.Normal } && IsAlive(enemy) && !targets.Contains(enemy))
-                targets.Add(enemy);
+            Physics2D.OverlapBox(center, areaSize, 0f, ContactFilters.ForLayer(enemyLayer), hits);
+            foreach (var collider in hits)
+            {
+                var enemy = collider.GetComponentInParent<Enemy>();
+                if (enemy is { IsAlly: false, Size: EnemySize.Normal } && IsAlive(enemy) && !targets.Contains(enemy))
+                    targets.Add(enemy);
+            }
         }
         return targets;
     }

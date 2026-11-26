@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Pool;
 
 // 전기 팔 모듈: 탄약(스택)이 가득 찬 상태에서 아래 공격이 적중하면 스택을 모두 소모하고,
 // 맞은 적에서 시작해 주변 적에게 차례로 피해와 스턴을 건다.
@@ -113,16 +114,20 @@ public class ChainLightningModule : WeaponModule, IObserver<EntityDamagedEvent>
     {
         Enemy best = null;
         float bestDist = float.MaxValue;
-        foreach (var hit in Physics2D.OverlapCircleAll(from.transform.position, radius, enemyLayer))
+        using (ListPool<Collider2D>.Get(out var hits))
         {
-            if (!hit.TryGetComponent(out Enemy candidate) || visited.Contains(candidate) || candidate.IsAlly || candidate.CurrentHealth <= 0)
-                continue;
-
-            float dist = ((Vector2)(candidate.transform.position - from.transform.position)).sqrMagnitude;
-            if (dist < bestDist)
+            Physics2D.OverlapCircle(from.transform.position, radius, ContactFilters.ForLayer(enemyLayer), hits);
+            foreach (var hit in hits)
             {
-                bestDist = dist;
-                best = candidate;
+                if (!hit.TryGetComponent(out Enemy candidate) || visited.Contains(candidate) || candidate.IsAlly || candidate.CurrentHealth <= 0)
+                    continue;
+
+                float dist = ((Vector2)(candidate.transform.position - from.transform.position)).sqrMagnitude;
+                if (dist < bestDist)
+                {
+                    bestDist = dist;
+                    best = candidate;
+                }
             }
         }
         return best;
