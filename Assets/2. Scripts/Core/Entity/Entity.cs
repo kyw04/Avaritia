@@ -12,9 +12,6 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     [SerializeField] protected Transform groundCheck;
     [SerializeField] protected float groundRadius;
     [SerializeField] protected LayerMask groundLayer;
-    [SerializeField] protected WeaponData dropWeaponAsset;
-    [SerializeField] protected AbilityData dropAbilityAsset;
-    [SerializeField, Range(0, 100)] protected float dropChance;
     [SerializeField] protected EntityFeedbacks feedbacks;
     [SerializeField, Range(0, 1)] protected float knockbackResistance;
     // 이름은 결과 화면 사망 원인 등에 보인다. 비면 오브젝트 이름을 쓴다.
@@ -606,22 +603,10 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         isDead = true;
         Debuffs.ClearAll();
         EventBus.Publish(new EntityDeadEvent(this));
-        TryDropPickup();
+        // 무엇을 떨어뜨릴지는 DropTable이 정한다(없으면 드롭 없음).
+        if (TryGetComponent<DropTable>(out var dropTable))
+            dropTable.Drop(transform.position);
         return true;
-    }
-
-    private void TryDropPickup()
-    {
-        IInteractable payload = null;
-        if (dropWeaponAsset != null)
-            payload = new WeaponPickup(dropWeaponAsset);
-        else if (dropAbilityAsset != null)
-            payload = dropAbilityAsset is Item item ? new ItemPickup(item) : new AbilityPickup(dropAbilityAsset);
-
-        if (payload == null) return;
-        if (Random.Range(0f, 100f) >= dropChance) return;
-
-        WorldInteractionManager.Instance.Spawn(payload, transform.position);
     }
 
     protected void OnHealthChanged() => EventBus.Publish(new EntityHealthChangedEvent(this, MaxHealth, CurrentHealth));
