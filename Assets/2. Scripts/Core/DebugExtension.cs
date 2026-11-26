@@ -2,6 +2,8 @@
 
 public static class DebugExtension
 {
+    // 빌드에서는 호출과 인자 계산까지 빠진다.
+    [System.Diagnostics.Conditional("UNITY_EDITOR")]
     public static void DrawBox(Vector2 center, Vector2 halfSize, Quaternion rotation, Color color, float duration = 0f)
     {
         Vector3[] localPoints =

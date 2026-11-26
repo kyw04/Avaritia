@@ -432,10 +432,11 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
 
         var currentPos = transform.position;
 
-        var hit = Physics2D.CircleCast(currentPos, alertRadius, Vector2.zero, 1f, viewLayerMask);
-        if (hit)
+        // 경계 반경 안에 들어오면 방향과 시야에 상관없이 바로 알아챈다.
+        var alerted = Physics2D.OverlapCircle(currentPos, alertRadius, viewLayerMask);
+        if (alerted != null)
         {
-            Target = hit.transform;
+            Target = alerted.transform;
             Machine.ChangeState<EnemyCombatState>();
             return;
         }
@@ -453,7 +454,9 @@ public class Enemy : Entity, IStateOwner<Enemy>, IObserver<EntityDamagedEvent>
                 continue;
 
             bool blocked = Physics2D.Linecast(eye, targetPoint, wallMask);
+#if UNITY_EDITOR
             Debug.DrawLine(eye, targetPoint, blocked ? Color.red : Color.green);
+#endif
             if (blocked)
                 continue;
 
