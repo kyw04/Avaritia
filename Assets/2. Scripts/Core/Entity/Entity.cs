@@ -29,7 +29,11 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     // 스폰 시점의 스킬 구성. 런 중 SetAbility로 바뀐 슬롯을 리셋 때 되돌린다.
     private AbilityData[] initialAbilities;
     protected bool wasGroundCheckerChanged;
-    
+
+    // 자기 엔티티 이벤트용 로컬 허브. 필드 초기화로 만들어 자식 컴포넌트의 OnEnable이 Awake보다 먼저 돌아도 쓸 수 있다.
+    // 구독자가 OnDisable에서 해제하므로 풀에서 다시 꺼내도 그대로 재사용한다.
+    public readonly EntityEventHub Events = new();
+
     public T GetDefaultStat<T>(StatType statType) => statDataAsset.TryGetValue<T>(statType);
     public EntityFeedbacks Feedbacks => feedbacks;
     // 발밑 위치. 발소리 먼지 등 발에서 나와야 하는 연출용(없으면 중심).

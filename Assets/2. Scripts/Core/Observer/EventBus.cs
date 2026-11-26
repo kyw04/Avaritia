@@ -1,8 +1,13 @@
 using System;
 using System.Collections.Generic;
+using Unity.Profiling;
 
 public static class EventBus
 {
+    private static readonly ProfilerMarker PublishMarker = new("EventBus.Publish");
+    // 측정용: 전역 버스와 엔티티 로컬 허브가 부른 OnNotify 누적 횟수. EventDispatchBenchmark가 프레임 차이로 읽는다.
+    public static int NotifyCount;
+
     private static readonly Dictionary<Type, List<object>> observers = new();
     // 구독자별로 구독한 이벤트 타입을 기억해 UnsubscribeAll이 관계없는 리스트까지 훑지 않게 한다.
     private static readonly Dictionary<object, List<Type>> subscriptions = new();
@@ -49,9 +54,13 @@ public static class EventBus
         if (!observers.TryGetValue(type, out var list))
             return;
 
-        for (int i = 0; i < list.Count; i++)
+        using (PublishMarker.Auto())
         {
-            ((IObserver<T>)list[i]).OnNotify(gameEvent);
+            NotifyCount += list.Count;
+            for (int i = 0; i < list.Count; i++)
+            {
+                ((IObserver<T>)list[i]).OnNotify(gameEvent);
+            }
         }
     }
 
