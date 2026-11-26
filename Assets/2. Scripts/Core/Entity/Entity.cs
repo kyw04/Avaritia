@@ -36,23 +36,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     // 발밑 위치. 발소리 먼지 등 발에서 나와야 하는 연출용(없으면 중심).
     public Vector3 FootPosition => groundCheck != null ? groundCheck.position : transform.position;
 
-    private class ActiveBuff
-    {
-        public object source;
-        public StatType type;
-        public BuffValueType valueType;
-        public float amount;
-        public float expireTime;
-        public float duration; // 0 = 만료 없음. 상태 아이콘의 채움 비율용.
-        public List<IAbilityCondition> conditions;
-        public bool clearOnDamageTaken;
-    }
-
-    private readonly List<ActiveBuff> activeBuffs = new();
-    // activeBuffs를 스탯별로 나눈 색인. GetStat은 이 스탯의 버프만 본다(전체를 돌며 type을 비교하지 않는다).
-    // 버프를 넣고 빼는 것은 AddActiveBuff/RemoveActiveBuffs/ClearActiveBuffs로만 해서 두 목록을 맞춘다.
-    private readonly Dictionary<StatType, List<ActiveBuff>> buffsByType = new();
-    private static readonly List<ActiveBuff> NoBuffs = new();
+    private BuffContainer buffs;
     // Keyed by the granting binding's AbilityRuntimeState (same as buff sources), so each copy
     // of an item refills/loses only its own share and RemoveBuffsBySource can drop it on unequip.
     private readonly Dictionary<object, float> shields = new();
@@ -113,101 +97,26 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     // 기본 스탯에 없는 항목(예: 탄환 스탯)도 활성 버프(무기 패시브 등)가 있으면 기본값 0에서 버프를 더해 반환한다.
     public bool TryGetStat<T>(StatType type, out T stat)
     {
-        if (!stats.TryGet<T>(type, out var baseValue) && !HasActiveBuff(type))
+        if (!stats.TryGet<T>(type, out var baseValue) && !buffs.HasActive(type))
         {
             stat = default;
             return false;
         }
-        stat = ApplyBuffs(type, baseValue);
+        stat = buffs.Apply(type, baseValue);
         return true;
     }
 
-    public T GetStat<T>(StatType type) => ApplyBuffs(type, stats.Get<T>(type));
+    public T GetStat<T>(StatType type) => buffs.Apply(type, stats.Get<T>(type));
 
     // Damage against a specific target: also counts buffs whose conditions depend on the target
     // (e.g. "HP lower than the target's"), which plain `Damage` (no target) always leaves out.
     public float GetDamageAgainst(Transform target) =>
-        ApplyBuffs(StatType.Damage, stats.Get<float>(StatType.Damage), target);
-
-    private bool HasActiveBuff(StatType type)
-    {
-        foreach (var b in BuffsOf(type))
-            if (IsBuffActive(b, null))
-                return true;
-        return false;
-    }
-
-    // 읽기 전용. 버프가 없는 스탯은 공용 빈 목록을 돌려주므로 여기에 추가하면 안 된다.
-    private List<ActiveBuff> BuffsOf(StatType type) => buffsByType.TryGetValue(type, out var list) ? list : NoBuffs;
-
-    private void AddActiveBuff(ActiveBuff buff)
-    {
-        activeBuffs.Add(buff);
-        if (!buffsByType.TryGetValue(buff.type, out var list))
-            buffsByType[buff.type] = list = new List<ActiveBuff>();
-        list.Add(buff);
-    }
-
-    // match는 같은 버프에 두 번(전체 목록, 스탯별 목록) 쓰이므로 부작용이 없어야 한다.
-    private void RemoveActiveBuffs(System.Predicate<ActiveBuff> match)
-    {
-        if (activeBuffs.RemoveAll(match) == 0) return;
-        foreach (var list in buffsByType.Values)
-            list.RemoveAll(match);
-    }
-
-    private void ClearActiveBuffs()
-    {
-        activeBuffs.Clear();
-        foreach (var list in buffsByType.Values)
-            list.Clear();
-    }
-
-    // A buff's conditions may themselves read stats (e.g. HealthRatioCondition -> MaxHealth), which
-    // re-enters ApplyBuffs — so this must never mutate activeBuffs; expired ones are skipped here and
-    // pruned in ApplyBuff instead.
-    private bool IsBuffActive(ActiveBuff b, Transform target)
-    {
-        if (b.expireTime <= Time.time) return false;
-        if (b.conditions == null || b.conditions.Count == 0) return true;
-        var context = new AbilityContext { Caster = this, Target = target, State = b.source as AbilityRuntimeState };
-        return b.conditions.TrueForAll(c => c == null || c.IsMet(context));
-    }
-
-    private T ApplyBuffs<T>(StatType type, T value, Transform target = null)
-    {
-        if (typeof(T) != typeof(float) && typeof(T) != typeof(int)) return value;
-
-        if (typeof(T) == typeof(int))
-        {
-            // Int stats (DoubleJumpCount, DashCount, ...) only make sense as flat additions —
-            // a "Percent" modifier is ignored here rather than silently truncating.
-            int intResult = (int)(object)value;
-            foreach (var b in BuffsOf(type))
-            {
-                if (b.valueType != BuffValueType.Flat || !IsBuffActive(b, target)) continue;
-                intResult += (int)b.amount;
-            }
-            return (T)(object)intResult;
-        }
-
-        float result = (float)(object)value;
-        float flatSum = 0f, percentSum = 0f;
-        foreach (var b in BuffsOf(type))
-        {
-            if (!IsBuffActive(b, target)) continue;
-            if (b.valueType == BuffValueType.Flat) flatSum += b.amount;
-            else percentSum += b.amount;
-        }
-
-        result = (result + flatSum) * (1f + percentSum / 100f);
-        return (T)(object)result;
-    }
+        buffs.Apply(StatType.Damage, stats.Get<float>(StatType.Damage), target);
 
     public void ApplyBuff(object source, StatType type, BuffValueType valueType, float amount, float duration,
         List<IAbilityCondition> conditions = null, bool clearOnDamageTaken = false)
     {
-        RemoveActiveBuffs(b => b.expireTime <= Time.time);
+        buffs.RemoveExpired();
 
         // duration <= 0 (the Inspector default when a designer leaves it unset) means "never expires
         // on its own" — it only ever ends when its binding is torn down (drop/replace), same as any
@@ -215,31 +124,9 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         float expireTime = duration > 0f ? Time.time + duration : float.MaxValue;
 
         if (type == StatType.MaxHealth)
-            PreserveHealthRatio(() => AddOrUpdateBuff(source, type, valueType, amount, expireTime, duration, conditions, clearOnDamageTaken));
+            PreserveHealthRatio(() => buffs.AddOrUpdate(source, type, valueType, amount, expireTime, duration, conditions, clearOnDamageTaken));
         else
-            AddOrUpdateBuff(source, type, valueType, amount, expireTime, duration, conditions, clearOnDamageTaken);
-    }
-
-    private void AddOrUpdateBuff(object source, StatType type, BuffValueType valueType, float amount, float expireTime,
-        float duration, List<IAbilityCondition> conditions, bool clearOnDamageTaken)
-    {
-        var existing = BuffsOf(type).Find(b => b.source == source && b.valueType == valueType);
-        if (existing != null)
-        {
-            existing.amount = amount;
-            existing.expireTime = expireTime;
-            existing.duration = Mathf.Max(0f, duration);
-            existing.conditions = conditions;
-            existing.clearOnDamageTaken = clearOnDamageTaken;
-        }
-        else
-        {
-            AddActiveBuff(new ActiveBuff
-            {
-                source = source, type = type, valueType = valueType, amount = amount, expireTime = expireTime,
-                duration = Mathf.Max(0f, duration), conditions = conditions, clearOnDamageTaken = clearOnDamageTaken
-            });
-        }
+            buffs.AddOrUpdate(source, type, valueType, amount, expireTime, duration, conditions, clearOnDamageTaken);
     }
 
     // 최대 체력이 바뀌는 변경(버프 추가/제거, 기본 스탯, 무기 교체)을 감싸 현재 체력 비율을 유지한다.
@@ -275,11 +162,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         OnHealthChanged();
     }
 
-    public float GetBuffAmount(object source, StatType type, BuffValueType valueType)
-    {
-        var existing = BuffsOf(type).Find(b => b.source == source && b.valueType == valueType && b.expireTime > Time.time);
-        return existing?.amount ?? 0f;
-    }
+    public float GetBuffAmount(object source, StatType type, BuffValueType valueType) =>
+        buffs.GetAmount(source, type, valueType);
 
     // Refills (not adds to) this source's share — re-granting every room shouldn't stack up.
     public void GrantShield(object source, float amount) => shields[source] = amount;
@@ -314,23 +198,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     // 아이콘을 알 수 없는 출처(AbilityRuntimeState가 아닌 source 등)는 건너뛴다.
     public virtual void CollectStatusIcons(List<StatusIconEntry> into)
     {
-        foreach (var b in activeBuffs)
-        {
-            if (b.source is not AbilityRuntimeState state || state.Icon == null || !IsBuffActive(b, null)) continue;
-
-            var key = (b.source, StatusIconKind.Buff);
-            int index = into.FindIndex(e => e.Key.Equals(key));
-            // 한 출처가 여러 스탯을 바꿔도 아이콘은 하나. 가장 늦게 끝나는 버프 기준으로 표시한다.
-            if (index >= 0 && into[index].EndTime >= b.expireTime) continue;
-
-            var entry = new StatusIconEntry
-            {
-                Key = key, Icon = state.Icon, EndTime = b.expireTime, Duration = b.duration,
-                Count = state.StackCount > 1 ? state.StackCount : 0,
-            };
-            if (index >= 0) into[index] = entry;
-            else into.Add(entry);
-        }
+        buffs.CollectStatusIcons(into);
 
         foreach (var pair in shields)
             if (pair.Value > 0f && pair.Key is AbilityRuntimeState state && state.Icon != null)
@@ -383,7 +251,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
 
     protected T GetAssetStat<T>(StatType type)
     {
-        return ApplyBuffs(type, statDataAsset.TryGetValue<T>(type));
+        return buffs.Apply(type, statDataAsset.TryGetValue<T>(type));
     }
 
     protected virtual void Awake()
@@ -409,13 +277,15 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
             stats = new RuntimeStats(statDataAsset);
         else
             stats.Reset(statDataAsset);
+        // 생성자에 this가 필요해 필드 초기화 대신 여기서 만든다. 스탯을 읽는 다른 초기화보다 먼저 있어야 한다.
+        buffs ??= new BuffContainer(this);
         // 에셋 기준(장비 보너스 제외) 비율에서 출발해, 스폰 시 장착된 무기/아이템 보너스도 비율 유지로 반영되게 한다.
         trackedMaxHealth = stats.Get<float>(StatType.MaxHealth);
         Abilities?.UnbindAll();
         // 장착 즉시 발동하는 어빌리티(OnEquippedTrigger)의 버프가 지워지지 않도록 바인딩 전에 비운다.
         Debuffs?.ClearAll();
         Debuffs ??= new DebuffController(this);
-        ClearActiveBuffs();
+        buffs.Clear();
         shields.Clear();
         hitBlocks.Clear();
         noHitStunUntil = 0f;
@@ -557,7 +427,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         if (!info.Has(DamageFlags.NoInterrupt))
         {
             LastDamagedTime = Time.time;
-            RemoveActiveBuffs(b => b.clearOnDamageTaken);
+            buffs.RemoveClearedOnDamage();
         }
         OnHealthChanged();
         info.Amount = damage;
@@ -615,7 +485,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     // 지울 버프가 없으면(풀 반납 때 대부분) 람다를 만들지 않는다. 그때 PreserveHealthRatio가 하는 일은 SyncHealthRatio뿐이다.
     public void RemoveBuffsBySource(object source)
     {
-        if (HasBuffFrom(source))
+        if (buffs.HasFrom(source))
             RemoveActiveBuffsBySource(source);
         else
             SyncHealthRatio();
@@ -623,17 +493,9 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         hitBlocks.Remove(source);
     }
 
-    private bool HasBuffFrom(object source)
-    {
-        for (int i = 0; i < activeBuffs.Count; i++)
-            if (activeBuffs[i].source == source)
-                return true;
-        return false;
-    }
-
     // 캡처용 클로저가 RemoveBuffsBySource 진입마다 만들어지지 않도록 람다를 별도 메서드로 뺐다.
     private void RemoveActiveBuffsBySource(object source) =>
-        PreserveHealthRatio(() => RemoveActiveBuffs(b => b.source == source));
+        PreserveHealthRatio(() => buffs.RemoveBySource(source));
     
     public abstract void Die();
 }
