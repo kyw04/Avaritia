@@ -588,6 +588,7 @@ MonoBehaviour:
     displayName: 
     description: 
   defaultWeapon: {fileID: 11400000, guid: e82aa12019120254cb29df3fe5dffb83, type: 2}
+  jumpDataList: {fileID: 11400000, guid: 3b2660f1302a92840af4a26428490af5, type: 2}
   ammoCountBar: {fileID: 3843919711502366064}
   interactionController: {fileID: 6477522951164393474}
   platformLayer:

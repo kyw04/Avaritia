@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 public class PlayerStateMachine : StateMachineBase<Player>
 {
@@ -324,8 +322,6 @@ public class PlayerStateMachine : StateMachineBase<Player>
     
     public class PlayerJumpState : StateBase<Player>
     {
-        private JumpDataList jumpDataList;
-
         public PlayerJumpState(Player owner) : base(owner)
         {
             Machine.AddTransition<PlayerJumpState, PlayerDashState>(
@@ -336,28 +332,12 @@ public class PlayerStateMachine : StateMachineBase<Player>
             Machine.AddTransition<PlayerFallState, PlayerJumpState>(
                 () => owner.DoubleJumpCount < owner.MaxDoubleJumpCount);
             Machine.AddTransition<PlayerJumpState, PlayerAttackState>(() => owner.CanAttack());
-
-            DataLoad();
-        }
-
-        private async void DataLoad()
-        {
-            try
-            {
-                var handle = Addressables.LoadAssetAsync<JumpDataList>("jump_data/player_001");
-                await handle.Task;
-                jumpDataList = handle.Result;
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e.Message);
-            }
         }
 
         public override void Enter()
         {
             int index = Owner.IsGrounded ? 0 : 1;
-            EntityEventRouter.Raise(new EntityJumpedEvent(Owner, jumpDataList.datas[index]));
+            EntityEventRouter.Raise(new EntityJumpedEvent(Owner, Owner.JumpDataList.datas[index]));
             Owner.Jump();
         }
 

@@ -7,6 +7,7 @@ using UnityEngine.U2D.Animation;
 public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>, IObserver<RunResetEvent>
 {
     [SerializeField] private WeaponData defaultWeapon;
+    [SerializeField] private JumpDataList jumpDataList;
     [SerializeField] private ImageCountBar ammoCountBar;
     [SerializeField] private PlayerInteractionController interactionController;
     [SerializeField] private LayerMask platformLayer;
@@ -24,6 +25,7 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
     public AbilityManager ItemAbilities { get; private set; }
     private StateManager stateManager;
     public WeaponInstance Weapon => weapon;
+    public JumpDataList JumpDataList => jumpDataList;
     public PlayerInteractionController InteractionController => interactionController;
     public float AttackReadyTime { get; set; }
 
