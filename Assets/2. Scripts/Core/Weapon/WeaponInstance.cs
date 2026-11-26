@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,7 +10,8 @@ public class WeaponInstance : IInventoryItem
     private readonly List<WeaponModule> modules;
     private WeaponAttack currentAttack;
     private bool inputSubscribed;
-    private Dictionary<string, MethodInfo> methodCache;
+    // "모듈타입명.메서드명" → 런타임 모듈 인스턴스에 바인딩된 호출. 입력마다 리플렉션과 박싱을 피하려고 Equip 때 만든다.
+    private readonly Dictionary<string, System.Action<InputAction.CallbackContext>> inputMethods = new();
     private readonly Dictionary<WeaponData.InputMethodBinding, (Coroutine routine, InputAction action)> holds = new();
     // 누를 때 애니메이션을 튼 액션. 그 키를 떼면 애니메이션을 되돌린다.
     private readonly HashSet<System.Guid> animatedActions = new();
@@ -93,11 +93,44 @@ public class WeaponInstance : IInventoryItem
 
         if (Data.InputMethods.Count > 0)
         {
-            methodCache = WeaponData.GetInputMethods(modules)
-                .GroupBy(x => x.moduleType.Name + "." + x.method.Name)
-                .ToDictionary(g => g.Key, g => g.First().method);
+            BindInputMethods();
             InputHandler.Instance.InputAction.Gameplay.Get().actionTriggered += HandleInput;
             inputSubscribed = true;
+        }
+    }
+
+    // 메서드는 타입명이 같은 첫 모듈(런타임 복사본)에 바인딩한다. 매개변수 없는 메서드는 감싸서 같은 타입으로 맞춘다.
+    private void BindInputMethods()
+    {
+        inputMethods.Clear();
+        foreach (var (moduleType, method) in WeaponData.GetInputMethods(modules))
+        {
+            var key = moduleType.Name + "." + method.Name;
+            if (inputMethods.ContainsKey(key))
+                continue;
+
+            WeaponModule target = null;
+            foreach (var m in modules)
+            {
+                if (m.GetType().Name == moduleType.Name)
+                {
+                    target = m;
+                    break;
+                }
+            }
+            if (target == null)
+                continue;
+
+            if (method.GetParameters().Length == 0)
+            {
+                var call = (System.Action)System.Delegate.CreateDelegate(typeof(System.Action), target, method);
+                inputMethods[key] = _ => call();
+            }
+            else
+            {
+                inputMethods[key] = (System.Action<InputAction.CallbackContext>)System.Delegate.CreateDelegate(
+                    typeof(System.Action<InputAction.CallbackContext>), target, method);
+            }
         }
     }
 
@@ -106,6 +139,7 @@ public class WeaponInstance : IInventoryItem
     {
         CancelHolds();
         animatedActions.Clear();
+        inputMethods.Clear();
 
         if (inputSubscribed)
         {
@@ -304,8 +338,11 @@ public class WeaponInstance : IInventoryItem
     {
         if (binding.phase != InputActionPhase.Canceled && !Owner.Restrictions.Can(ActionBlock.Attack))
             return;
-        if (modules.Any(m => !m.CanExecute(binding)))
-            return;
+        for (int i = 0; i < modules.Count; i++)
+        {
+            if (!modules[i].CanExecute(binding))
+                return;
+        }
         foreach (var m in modules)
             m.OnExecuted(binding);
 
@@ -314,21 +351,13 @@ public class WeaponInstance : IInventoryItem
         if (string.IsNullOrEmpty(binding.methodName))
             return;
 
-        if (!methodCache.TryGetValue(binding.methodName, out var method))
+        if (!inputMethods.TryGetValue(binding.methodName, out var method))
         {
             Debug.LogWarning($"{Data.name}: [InputMethod] method '{binding.methodName}' do not found.");
             return;
         }
 
-        var typeName = binding.methodName.Split('.')[0];
-        var module = modules.FirstOrDefault(m => m.GetType().Name == typeName);
-        if (module == null)
-        {
-            Debug.LogWarning($"{Data.name}: module '{typeName}' do not found.");
-            return;
-        }
-
-        method.Invoke(module, method.GetParameters().Length == 0 ? null : new object[] { context });
+        method(context);
     }
 
     private void PlayFeedback(ActionFeedback feedback, WeaponData.InputMethodBinding binding)
