@@ -2,19 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 // 플레이 중의 무기 하나. 모듈 상태(탄, 스택, 키트)를 가지므로 버렸다 다시 주워도 상태가 유지된다.
 public class WeaponInstance : IInventoryItem
 {
     private readonly List<WeaponModule> modules;
     private WeaponAttack currentAttack;
+    // 무기 입력을 받는 입력. 장착한 쪽(플레이어)의 입력이며, 입력 메서드가 없는 무기는 구독하지 않는다.
+    private IPlayerInput input;
+    // 장착 중이고 입력 메서드가 있어 입력을 받아야 하는지. 입력이 잠시 없어도(null) 이 값은 유지된다.
+    private bool receivesInput;
     private bool inputSubscribed;
     // "모듈타입명.메서드명" → 런타임 모듈 인스턴스에 바인딩된 호출. 입력마다 리플렉션과 박싱을 피하려고 Equip 때 만든다.
-    private readonly Dictionary<string, System.Action<InputAction.CallbackContext>> inputMethods = new();
-    private readonly Dictionary<WeaponData.InputMethodBinding, (Coroutine routine, InputAction action)> holds = new();
-    // 누를 때 애니메이션을 튼 액션. 그 키를 떼면 애니메이션을 되돌린다.
-    private readonly HashSet<System.Guid> animatedActions = new();
+    private readonly Dictionary<string, System.Action<PlayerInputSignal>> inputMethods = new();
+    private readonly Dictionary<WeaponData.InputMethodBinding, (Coroutine routine, string action)> holds = new();
+    // 누를 때 애니메이션을 튼 액션 이름. 그 키를 떼면 애니메이션을 되돌린다.
+    private readonly HashSet<string> animatedActions = new();
     private Animator ownerAnimator;
 
     public WeaponData Data { get; }
@@ -23,6 +26,8 @@ public class WeaponInstance : IInventoryItem
     public string DisplayName => string.IsNullOrEmpty(Data.DisplayName) ? Data.name : Data.DisplayName;
     public string Details => Data.Details;
     public Sprite Icon => Data.Icon;
+    // 모듈이 읽는 이동 입력. 행동 제한(기절 등) 중이거나 입력이 없으면 0이다.
+    public Vector2 MoveInput => input != null && Owner != null && Owner.Restrictions.Can(ActionBlock.Move) ? input.MoveInput : Vector2.zero;
 
     public WeaponInstance(WeaponData data)
     {
@@ -77,9 +82,10 @@ public class WeaponInstance : IInventoryItem
         }
     }
 
-    public void Equip(Entity owner, ImageCountBar countBar = null)
+    public void Equip(Entity owner, ImageCountBar countBar = null, IPlayerInput playerInput = null)
     {
         Owner = owner;
+        input = playerInput;
         ownerAnimator = owner.GetComponentInChildren<EntityAnimator>()?.AnimatorComponent;
 
         foreach (var module in modules)
@@ -91,12 +97,36 @@ public class WeaponInstance : IInventoryItem
         if (modules.Count > 0 && !modules.Any(m => m.UsesCountBar))
             countBar?.Deactivate();
 
-        if (Data.InputMethods.Count > 0)
+        receivesInput = Data.InputMethods.Count > 0;
+        if (receivesInput)
         {
             BindInputMethods();
-            InputHandler.Instance.InputAction.Gameplay.Get().actionTriggered += HandleInput;
-            inputSubscribed = true;
+            SubscribeInput();
         }
+    }
+
+    // 장착 중에 입력이 바뀌면(AI·리플레이로 전환 등) 새 입력으로 다시 구독한다. 진행 중인 홀드는 취소한다.
+    public void SetInput(IPlayerInput playerInput)
+    {
+        UnsubscribeInput();
+        CancelHolds();
+        input = playerInput;
+        if (receivesInput)
+            SubscribeInput();
+    }
+
+    private void SubscribeInput()
+    {
+        if (input == null || inputSubscribed) return;
+        input.ActionTriggered += HandleInput;
+        inputSubscribed = true;
+    }
+
+    private void UnsubscribeInput()
+    {
+        if (!inputSubscribed) return;
+        input.ActionTriggered -= HandleInput;
+        inputSubscribed = false;
     }
 
     // 메서드는 타입명이 같은 첫 모듈(런타임 복사본)에 바인딩한다. 매개변수 없는 메서드는 감싸서 같은 타입으로 맞춘다.
@@ -128,8 +158,8 @@ public class WeaponInstance : IInventoryItem
             }
             else
             {
-                inputMethods[key] = (System.Action<InputAction.CallbackContext>)System.Delegate.CreateDelegate(
-                    typeof(System.Action<InputAction.CallbackContext>), target, method);
+                inputMethods[key] = (System.Action<PlayerInputSignal>)System.Delegate.CreateDelegate(
+                    typeof(System.Action<PlayerInputSignal>), target, method);
             }
         }
     }
@@ -140,12 +170,8 @@ public class WeaponInstance : IInventoryItem
         CancelHolds();
         animatedActions.Clear();
         inputMethods.Clear();
-
-        if (inputSubscribed)
-        {
-            InputHandler.Instance.InputAction.Gameplay.Get().actionTriggered -= HandleInput;
-            inputSubscribed = false;
-        }
+        receivesInput = false;
+        UnsubscribeInput();
 
         foreach (var module in modules)
             module.Unequip();
@@ -184,51 +210,50 @@ public class WeaponInstance : IInventoryItem
             module.AfterAttack(attack);
     }
 
-    // 에셋의 액션(InputActionReference)과 생성된 PlayerInputActions의 액션은 인스턴스가 달라 id로 비교한다.
-    // 메서드와 애니메이션은 각각 비워둘 수 있다.
-    private void HandleInput(InputAction.CallbackContext context)
+    // 바인딩과 입력 신호는 액션 이름으로 맞춘다. 메서드와 애니메이션은 각각 비워둘 수 있다.
+    private void HandleInput(PlayerInputSignal signal)
     {
-        CancelHoldsByOtherInput(context);
-        if (context.phase == InputActionPhase.Canceled)
-            HandleRelease(context.action);
+        CancelHoldsByOtherInput(signal);
+        if (signal.Phase == InputPhase.Canceled)
+            HandleRelease(signal.Action);
 
         foreach (var binding in Data.InputMethods)
         {
-            if (binding.action == null || binding.action.action.id != context.action.id)
+            if (binding.ActionName != signal.Action)
                 continue;
 
             if (binding.holdDuration > 0f)
-                HandleHold(binding, context);
-            else if (binding.phase == context.phase)
-                Execute(binding, context);
+                HandleHold(binding, signal);
+            else if (binding.phase == signal.Phase)
+                Execute(binding, signal);
         }
     }
 
     // 누르기 시작하면 홀드를 시작하고, 시간이 다 되기 전에 떼면 취소한다.
     // 시작할 때 holdStartFeedback, 완료하면 feedback을 재생한다.
-    private void HandleHold(WeaponData.InputMethodBinding binding, InputAction.CallbackContext context)
+    private void HandleHold(WeaponData.InputMethodBinding binding, PlayerInputSignal signal)
     {
-        if (context.phase == InputActionPhase.Started)
+        if (signal.Phase == InputPhase.Started)
         {
             StopHold(binding);
             PlayFeedback(binding.holdStartFeedback, binding);
-            holds[binding] = (Owner.StartCoroutine(HoldRoutine(binding, context)), context.action);
+            holds[binding] = (Owner.StartCoroutine(HoldRoutine(binding, signal)), signal.Action);
         }
-        else if (context.phase == InputActionPhase.Canceled)
+        else if (signal.Phase == InputPhase.Canceled)
         {
             StopHold(binding);
         }
     }
 
     // 키를 떼면 누를 때 튼 애니메이션을 되돌리고, 그 키를 누르는 바인딩의 모듈들에 알린다.
-    private void HandleRelease(InputAction action)
+    private void HandleRelease(string action)
     {
-        if (animatedActions.Remove(action.id))
+        if (animatedActions.Remove(action))
             RestoreAnimation();
 
         foreach (var binding in Data.InputMethods)
         {
-            if (binding.action == null || binding.action.action.id != action.id || binding.phase == InputActionPhase.Canceled)
+            if (binding.ActionName != action || binding.phase == InputPhase.Canceled)
                 continue;
             foreach (var module in modules)
                 module.OnReleased(binding);
@@ -253,7 +278,7 @@ public class WeaponInstance : IInventoryItem
     // 홀드 애니메이션이 있으면 그 애니메이션이 실제로 재생 중인 동안만 시간을 센다.
     // 다른 애니메이션(이동, 대기 등)에 덮이면 처음부터 다시 세고, 멈춰 서면 홀드 애니메이션을 다시 튼다.
     // 그래서 홀드 애니메이션 상태는 누르는 동안 유지돼야 한다(반복 재생).
-    private IEnumerator HoldRoutine(WeaponData.InputMethodBinding binding, InputAction.CallbackContext context)
+    private IEnumerator HoldRoutine(WeaponData.InputMethodBinding binding, PlayerInputSignal signal)
     {
         var clip = binding.holdStartFeedback.animClip;
         if (clip == null || ownerAnimator == null)
@@ -278,7 +303,7 @@ public class WeaponInstance : IInventoryItem
             }
         }
         holds.Remove(binding);
-        Execute(binding, context);
+        Execute(binding, signal);
     }
 
     // 진행 중인 홀드를 모두 취소한다(피격 등). 다시 하려면 키를 다시 눌러야 한다.
@@ -298,14 +323,14 @@ public class WeaponInstance : IInventoryItem
 
     // 홀드 중인 액션에 속하지 않은 키가 눌리면 keepHoldOnOtherInput이 꺼진 홀드를 취소한다.
     // 아래 방향키처럼 같은 키를 쓰는 다른 액션(이동 등)은 홀드 액션의 컨트롤이므로 취소하지 않는다.
-    private void CancelHoldsByOtherInput(InputAction.CallbackContext context)
+    private void CancelHoldsByOtherInput(PlayerInputSignal signal)
     {
-        if (holds.Count == 0 || context.phase == InputActionPhase.Canceled || context.control == null || !context.control.IsPressed())
+        if (holds.Count == 0 || signal.Phase == InputPhase.Canceled || signal.Control == null || !signal.ControlPressed)
             return;
 
         foreach (var (binding, hold) in holds.ToList())
         {
-            if (!binding.keepHoldOnOtherInput && hold.action != context.action && !hold.action.controls.Contains(context.control))
+            if (!binding.keepHoldOnOtherInput && hold.action != signal.Action && !input.IsControlOf(signal.Control, hold.action))
                 StopHold(binding);
         }
     }
@@ -334,9 +359,9 @@ public class WeaponInstance : IInventoryItem
     // methodName은 "모듈타입명.메서드명" 형식이며, 타입명이 같은 첫 모듈에서 호출한다.
     // 모듈이 막거나(쿨타임 등) 공격이 막혀 있으면(기절, 채널링 등) 피드백도 재생하지 않는다.
     // 뗌(Canceled)은 막지 않는다. 누르는 동안 이어지는 동작(자석 흡인 등)이 끝나지 않게 되기 때문이다.
-    private void Execute(WeaponData.InputMethodBinding binding, InputAction.CallbackContext context)
+    private void Execute(WeaponData.InputMethodBinding binding, PlayerInputSignal signal)
     {
-        if (binding.phase != InputActionPhase.Canceled && !Owner.Restrictions.Can(ActionBlock.Attack))
+        if (binding.phase != InputPhase.Canceled && !Owner.Restrictions.Can(ActionBlock.Attack))
             return;
         for (int i = 0; i < modules.Count; i++)
         {
@@ -357,7 +382,7 @@ public class WeaponInstance : IInventoryItem
             return;
         }
 
-        method(context);
+        method(signal);
     }
 
     private void PlayFeedback(ActionFeedback feedback, WeaponData.InputMethodBinding binding)
@@ -367,7 +392,7 @@ public class WeaponInstance : IInventoryItem
             return;
 
         EntityEventRouter.Raise(new EntityAnimationEvent(Owner, feedback.animClip));
-        if (binding.phase != InputActionPhase.Canceled)
-            animatedActions.Add(binding.action.action.id);
+        if (binding.phase != InputPhase.Canceled)
+            animatedActions.Add(binding.ActionName);
     }
 }

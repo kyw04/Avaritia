@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.Pool;
 
 // 전기 팔 모듈: 탄약(스택)이 가득 찬 상태에서 아래 공격이 적중하면 스택을 모두 소모하고,
@@ -59,8 +58,8 @@ public class ChainLightningModule : WeaponModule, IObserver<EntityDamagedEvent>
     }
 
     [InputMethod]
-    private void SetDownAttackHeld(InputAction.CallbackContext context) =>
-        downAttackHeld = context.phase != InputActionPhase.Canceled;
+    private void SetDownAttackHeld(PlayerInputSignal signal) =>
+        downAttackHeld = signal.Phase != InputPhase.Canceled;
 
     public void OnNotify(EntityDamagedEvent e)
     {

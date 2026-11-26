@@ -74,7 +74,7 @@ public class WinchModule : WeaponModule
     {
         if (hookRoutine != null || Owner is not Player player || Owner.IsAttacking)
             return;
-        if (!TryGetHookDirection(InputHandler.Instance.MoveInput, out var direction))
+        if (!TryGetHookDirection(Weapon.MoveInput, out var direction))
             return;
 
         // InputHandler는 같은 공격 입력으로 Update에서 근접 공격을 시작하려 하므로, 끝날 때까지 CanAttack을 막아둔다.

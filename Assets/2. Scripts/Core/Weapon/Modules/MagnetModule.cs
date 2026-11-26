@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.Pool;
 
 // 자석 모듈: 앞쪽 범위의 적을 밀쳐내거나(밀치기) 빨아들인다(흡인). 일반 크기 Enemy만 영향을 받는다.
@@ -76,9 +75,9 @@ public class MagnetModule : WeaponModule
     // 통합 입력. DownAttack 액션의 Started/Canceled에 연결한다.
     // 쿨타임 중에는 Started가 실행되지 않아 근접 공격이 그대로 나간다.
     [InputMethod]
-    private void OnDownAttack(InputAction.CallbackContext context)
+    private void OnDownAttack(PlayerInputSignal signal)
     {
-        if (context.phase == InputActionPhase.Started)
+        if (signal.Phase == InputPhase.Started)
         {
             if (pressing || IsPulling)
                 return;
@@ -88,7 +87,7 @@ public class MagnetModule : WeaponModule
             BlockMelee();
             pressRoutine = Owner.StartCoroutine(PressRoutine());
         }
-        else if (context.phase == InputActionPhase.Canceled && pressing)
+        else if (signal.Phase == InputPhase.Canceled && pressing)
         {
             if (IsPulling)
                 EndPull();

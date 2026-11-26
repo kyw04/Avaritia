@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.U2D.Animation;
 
 // 인스펙터의 입력 함수 목록에서 고를 수 있는 모듈 메서드에 붙인다.
-// 매개변수는 없거나 InputAction.CallbackContext 하나만 받을 수 있다.
+// 매개변수는 없거나 PlayerInputSignal 하나만 받을 수 있다.
 [AttributeUsage(AttributeTargets.Method)]
 public class InputMethodAttribute : Attribute { }
 
@@ -28,13 +28,16 @@ public class WeaponData : ScriptableObject, IInfo, ISaveId
     [Serializable]
     public class InputMethodBinding
     {
+        // 인스펙터에서 액션을 고르기 위한 참조. 실행 중에는 액션 이름(ActionName)으로 입력 신호와 맞춘다.
         public InputActionReference action;
-        public InputActionPhase phase = InputActionPhase.Performed;
+        public InputPhase phase = InputPhase.Performed;
         [Min(0)] public float holdDuration;
         public bool keepHoldOnOtherInput;
         public ActionFeedback holdStartFeedback;
         public string methodName;
         public ActionFeedback feedback;
+
+        public string ActionName => action != null && action.action != null ? action.action.name : null;
     }
 
     public SpriteLibraryAsset spriteLibraryAsset;
@@ -74,6 +77,6 @@ public class WeaponData : ScriptableObject, IInfo, ISaveId
     {
         var parameters = method.GetParameters();
         return parameters.Length == 0 ||
-               (parameters.Length == 1 && parameters[0].ParameterType == typeof(InputAction.CallbackContext));
+               (parameters.Length == 1 && parameters[0].ParameterType == typeof(PlayerInputSignal));
     }
 }

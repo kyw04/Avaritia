@@ -433,6 +433,7 @@ GameObject:
   - component: {fileID: 5379797011840322666}
   - component: {fileID: 6477522951164393474}
   - component: {fileID: 258006038428868027}
+  - component: {fileID: 2580051717516500091}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -546,9 +547,6 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 520
-  dropWeaponAsset: {fileID: 0}
-  dropAbilityAsset: {fileID: 0}
-  dropChance: 0
   feedbacks:
     <Idle>k__BackingField:
       animClip: {fileID: 0}
@@ -648,6 +646,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HitFlash
   flashMaterial: {fileID: 2100000, guid: e6adc9dc78ad5504d9a8d911a210b4cf, type: 2}
   duration: 0.1
+--- !u!114 &2580051717516500091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4770807377537432152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d511bc241b9b194478dad03354daa7f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInputDriver
 --- !u!1 &5056997200328523701
 GameObject:
   m_ObjectHideFlags: 0

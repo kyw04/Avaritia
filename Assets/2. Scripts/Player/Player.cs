@@ -26,6 +26,35 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
     private StateManager stateManager;
     public WeaponInstance Weapon => weapon;
     public JumpDataList JumpDataList => jumpDataList;
+
+    // 플레이어를 조종하는 입력. 기본은 키보드·패드(InputHandler)이고 AI·리플레이·테스트 입력으로 바꿔 끼울 수 있다.
+    // null이면 입력이 없는 상태다(조종하지 않음). 기본 입력은 처음 읽을 때 한 번만 채운다.
+    private IPlayerInput input;
+    private bool inputAssigned;
+    public event Action<IPlayerInput> InputChanged;
+    public IPlayerInput Input
+    {
+        get
+        {
+            if (!inputAssigned)
+            {
+                input = InputHandler.Instance;
+                inputAssigned = true;
+            }
+            return input;
+        }
+        set
+        {
+            if (ReferenceEquals(Input, value)) return;
+            input = value;
+            weapon?.SetInput(value);
+            InputChanged?.Invoke(value);
+        }
+    }
+
+    // 행동 제한(기절 등) 중이거나 입력이 없으면 이동 입력이 없는 것으로 본다.
+    public Vector2 MoveInput => Input != null && Restrictions.Can(ActionBlock.Move) ? Input.MoveInput : Vector2.zero;
+    public bool AttackHeld => Input != null && Input.IsPressed(PlayerActions.Attack);
     public PlayerInteractionController InteractionController => interactionController;
     public float AttackReadyTime { get; set; }
 
@@ -59,7 +88,7 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
         {
             weapon?.Unequip();
             weapon = newWeapon;
-            weapon.Equip(this, ammoCountBar);
+            weapon.Equip(this, ammoCountBar, Input);
             spriteLibrary.spriteLibraryAsset = weapon.Data.spriteLibraryAsset;
             RebindWeaponAbilities();
         });
@@ -164,7 +193,7 @@ public class Player : Entity, IStateOwner<Player>, IObserver<EntityDamagedEvent>
     protected override void Start()
     {
         base.Start();
-        weapon?.Equip(this, ammoCountBar);
+        weapon?.Equip(this, ammoCountBar, Input);
         // 시작 무기의 팔 모양도 적용한다(EquipWeapon을 거치지 않으므로 여기서 직접 바꾼다).
         if (weapon != null)
             spriteLibrary.spriteLibraryAsset = weapon.Data.spriteLibraryAsset;

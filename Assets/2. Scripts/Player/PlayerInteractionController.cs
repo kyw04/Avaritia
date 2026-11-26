@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerInteractionController : MonoBehaviour
 {
@@ -14,7 +13,8 @@ public class PlayerInteractionController : MonoBehaviour
 
     private IInteractable current;
     private Transform promptAnchor;
-    private InputAction promptAction;
+    // 키 안내에 보이는 액션 이름(PlayerActions).
+    private string promptAction;
     private bool isHolding;
     private float pressStartTime;
 
@@ -34,11 +34,11 @@ public class PlayerInteractionController : MonoBehaviour
 
         // 그 외에는 상호작용 대상(아이템 등)이 우선이고, 없으면 근처 마커로 지금 쓸 수 있는 스킬의 키를 띄운다.
         Transform anchor = null;
-        InputAction action = null;
+        string action = null;
         if (current != null)
         {
             anchor = current.Transform;
-            action = InputHandler.Instance.InputAction.Gameplay.Interact;
+            action = PlayerActions.Interact;
         }
         else if (hasMarkerSkill)
         {
@@ -59,8 +59,7 @@ public class PlayerInteractionController : MonoBehaviour
             prompt.transform.position = anchor.TryGetComponent(out InteractPromptAnchor promptAnchorPoint)
                 ? promptAnchorPoint.PromptPosition
                 : anchor.position + (Vector3)defaultPromptOffset;
-            // "Hold F | Hold Triangle" 대신 키보드 키 이름만 보여 준다.
-            prompt.Show(action.GetBindingDisplayString(InputBinding.DisplayStringOptions.DontIncludeInteractions, "Keyboard&Mouse"));
+            prompt.Show(player.Input != null ? player.Input.GetDisplayName(action) : string.Empty);
 
             // 무기·스킬·아이템 픽업이면 정보도 띄운다(상자, 문, 마커는 키만).
             if (current is WorldPickup pickup)
@@ -75,14 +74,13 @@ public class PlayerInteractionController : MonoBehaviour
 
     // 슬롯 스킬 중 NearbyMarkerCondition을 가진 스킬이 마커 범위 안에 있고, 지금 쓸 수 있거나 키를 누르고 있는 채널링 중이면
     // 그 마커와 스킬 키를 돌려준다. 누르고 있는 채널링이면 holding과 진행도도 돌려준다(한 번 누르는 채널링 중엔 띄우지 않는다).
-    private bool TryFindMarkerSkill(out AbilityMarker marker, out InputAction action, out bool holding, out float progress)
+    private bool TryFindMarkerSkill(out AbilityMarker marker, out string action, out bool holding, out float progress)
     {
         marker = null;
         action = null;
         holding = false;
         progress = 0f;
 
-        var gameplay = InputHandler.Instance.InputAction.Gameplay;
         for (int slot = 0; slot < 2; slot++)
         {
             var data = player.Abilities.AbilityAt(slot);
@@ -97,7 +95,7 @@ public class PlayerInteractionController : MonoBehaviour
                 if (condition is not NearbyMarkerCondition near) continue;
                 marker = AbilityMarker.FindNearest(near.markerId, player.transform.position, near.radius);
                 if (marker == null) continue;
-                action = slot == 0 ? gameplay.Skill1 : gameplay.Skill2;
+                action = slot == 0 ? PlayerActions.Skill1 : PlayerActions.Skill2;
                 return true;
             }
         }

@@ -163,7 +163,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         private bool AttackAnimationPlaying()
         {
             // 누르고 있으면 계속 공격하는 무기(톱날 등)는 곧 다음 공격이 이어지므로 대기 애니메이션으로 끊지 않는다.
-            if (Owner.Weapon != null && Owner.Weapon.Data.holdToAttack && InputHandler.Instance.AttackHeld)
+            if (Owner.Weapon != null && Owner.Weapon.Data.holdToAttack && Owner.AttackHeld)
                 return true;
             animator ??= Owner.GetComponentInChildren<Animator>();
             if (!Owner.IsAttacking || animator == null)
@@ -188,7 +188,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
                 EntityEventRouter.Raise(new EntityIdleEvent(Owner));
             }
 
-            if (Mathf.Abs(InputHandler.Instance.MoveInput.x) > 0)
+            if (Mathf.Abs(Owner.MoveInput.x) > 0)
                 Machine.ChangeState<PlayerMoveState>();
         }
     }
@@ -216,7 +216,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void Execute()
         {
-            if (InputHandler.Instance.MoveInput.x == 0 && currentSpeed == 0)
+            if (Owner.MoveInput.x == 0 && currentSpeed == 0)
             {
                 Machine.ChangeState<PlayerIdleState>();
             }
@@ -228,7 +228,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void FixedExecute()
         {
-            Owner.Move(InputHandler.Instance.MoveInput);
+            Owner.Move(Owner.MoveInput);
         }
 
         public override void Exit()
@@ -249,13 +249,13 @@ public class PlayerStateMachine : StateMachineBase<Player>
             Machine.AddTransition<PlayerTurnState, PlayerJumpState>();
             Machine.AddTransition<PlayerTurnState, PlayerMoveState>();
             
-            moveDir = InputHandler.Instance.MoveInput;
+            moveDir = Owner.MoveInput;
             EntityEventRouter.Raise(new EntityTurnEvent(Owner, Owner.Feedbacks.Turn.particle));
         }
 
         public override void Execute()
         {
-            if (InputHandler.Instance.MoveInput.x * moveDir.x <= 0f)
+            if (Owner.MoveInput.x * moveDir.x <= 0f)
             {
                 Machine.ChangeState<PlayerMoveState>();
                 return;
@@ -304,7 +304,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void FixedExecute()
         {
-            // Owner.Move(InputHandler.Instance.MoveInput);
+            // Owner.Move(Owner.MoveInput);
         }
     }
     
@@ -349,7 +349,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
 
         public override void FixedExecute()
         {
-            Owner.Move(InputHandler.Instance.MoveInput);
+            Owner.Move(Owner.MoveInput);
         }
     }
 
@@ -433,7 +433,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             if (Owner.Rb.linearVelocityY < 0)
                 lastFallVelocityY = Owner.Rb.linearVelocityY;
 
-            Owner.Move(InputHandler.Instance.MoveInput);
+            Owner.Move(Owner.MoveInput);
         }
     }
     
@@ -475,7 +475,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
         private void BeginAttack(AttackData data)
         {
             if (data.canTurn)
-                Owner.UpdateFacing(InputHandler.Instance.MoveInput);
+                Owner.UpdateFacing(Owner.MoveInput);
 
             // 이동 가능한 공격은 이어서 움직이도록 가로 속도를 남긴다. 세로 속도는 두어 공중에서 멈추지 않게 한다.
             Owner.Rb.linearVelocity = new Vector2(data.canMove ? Owner.Rb.linearVelocity.x : 0f, Owner.Rb.linearVelocity.y);
@@ -555,7 +555,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
             }
             // moveForce가 없으면 moveDuration 동안 방향키대로 움직인다(방향도 따라 바뀐다). 0이면 공격 내내.
             else if (data.canMove && (data.moveDuration <= 0f || timer < data.moveDuration))
-                Owner.Move(InputHandler.Instance.MoveInput);
+                Owner.Move(Owner.MoveInput);
             else
                 Owner.Rb.linearVelocity = new Vector2(0f, Owner.Rb.linearVelocity.y);
         }
@@ -570,7 +570,7 @@ public class PlayerStateMachine : StateMachineBase<Player>
                 Machine.ChangeState<PlayerFallState>();
         }
 
-        private bool IsHoldingAttack() => Owner.Weapon != null && Owner.Weapon.Data.holdToAttack && InputHandler.Instance.AttackHeld;
+        private bool IsHoldingAttack() => Owner.Weapon != null && Owner.Weapon.Data.holdToAttack && Owner.AttackHeld;
     }
 
 #endregion

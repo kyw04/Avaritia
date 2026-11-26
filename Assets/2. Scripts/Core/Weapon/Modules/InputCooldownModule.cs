@@ -10,7 +10,7 @@ using UnityEngine.InputSystem;
 public class InputCooldownModule : WeaponModule
 {
     [SerializeField] private InputActionReference action;
-    [SerializeField] private InputActionPhase phase = InputActionPhase.Performed;
+    [SerializeField] private InputPhase phase = InputPhase.Performed;
     [SerializeField, Min(0)] private float cooldown = 1f;
     [SerializeField] private Sprite icon;
     [SerializeField] private bool startOnInput = true;
@@ -23,11 +23,11 @@ public class InputCooldownModule : WeaponModule
     public void StartCooldown() => readyTime = Time.time + cooldown;
 
     public bool Matches(WeaponData.InputMethodBinding binding) =>
-        action != null && binding.action != null && binding.action.action.id == action.action.id && binding.phase == phase;
+        action != null && action.action != null && binding.ActionName == action.action.name && binding.phase == phase;
 
     // 떼는 입력(Canceled)은 막지 않는다. 누른 상태를 끝내는 입력이 막히면 상태가 풀리지 않는다.
     public override bool CanExecute(WeaponData.InputMethodBinding binding) =>
-        binding.phase == InputActionPhase.Canceled || !Matches(binding) || !IsCoolingDown;
+        binding.phase == InputPhase.Canceled || !Matches(binding) || !IsCoolingDown;
 
     public override void OnExecuted(WeaponData.InputMethodBinding binding)
     {

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 // 태엽 공방 모듈: 아래키를 누르고 있으면 정비 키트를 만들고, 키트를 가진 채 적을 때리면 스턴,
 // 스턴된 적을 아래 공격으로 때리면 키트 1개를 소모해 아군으로 만든다.
@@ -72,8 +71,8 @@ public class ClockworkWorkshopModule : WeaponModule, IObserver<EntityDamagedEven
     // DownAttack 액션의 Started/Canceled에 연결한다. InputHandler가 입력 콜백이 모두 끝난 뒤 Update에서 공격을 시작하므로
     // 같은 프레임에 기록한 값이 첫 공격부터 반영된다.
     [InputMethod]
-    private void SetDownAttackHeld(InputAction.CallbackContext context) =>
-        downAttackHeld = context.phase != InputActionPhase.Canceled;
+    private void SetDownAttackHeld(PlayerInputSignal signal) =>
+        downAttackHeld = signal.Phase != InputPhase.Canceled;
 
     [InputMethod]
     private void AddKit()

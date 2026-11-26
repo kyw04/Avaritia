@@ -1,26 +1,44 @@
-using Unity.VisualScripting;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
 
+// Input System(키보드·패드)을 IPlayerInput으로 바꿔 전한다. 플레이어 명령 처리는 PlayerInputDriver가 한다.
+// 인벤토리·일시정지·UI 입력은 UI 쪽이라 여기서 바로 처리한다.
 // UISelector의 생성자가 다른 오브젝트의 Awake에서 InputHandler.Instance.InputAction을 바로 읽는다.
 // InputHandler가 씬에 미리 배치된 컴포넌트라 Awake 순서가 보장되지 않으면 InputAction이 아직 null일 수 있어,
 // 다른 스크립트보다 먼저 Awake되도록 강제한다.
 [DefaultExecutionOrder(-1000)]
-public class InputHandler : Singleton<InputHandler>
+public class InputHandler : Singleton<InputHandler>, IPlayerInput
 {
+    // UI 입력(인벤토리·일시정지)을 막을 사망 여부 확인용.
     public Player player;
     private Vector2 moveInput;
-    public Vector2 MoveInput => Can(ActionBlock.Move) ? moveInput : Vector2.zero;
-    private bool Can(ActionBlock action) => player == null || player.Restrictions.Can(action);
-    public bool AttackHeld => InputAction.Gameplay.Attack.IsPressed();
-    private bool attackRequested;
-    private bool landingAttackRequested;
+    private readonly Dictionary<string, InputAction> gameplayActions = new();
 
     public PlayerInputActions InputAction { get; private set; }
-    
+
+    public event Action<PlayerInputSignal> ActionTriggered;
+
+    public Vector2 MoveInput => moveInput;
+
+    public bool IsPressed(string action) => gameplayActions.TryGetValue(action, out var a) && a.IsPressed();
+
+    public bool IsControlOf(object control, string action) =>
+        control is InputControl inputControl && gameplayActions.TryGetValue(action, out var a) && a.controls.ContainsReference(inputControl);
+
+    // "Hold F | Hold Triangle" 대신 키보드 키 이름만 보여 준다.
+    public string GetDisplayName(string action) =>
+        gameplayActions.TryGetValue(action, out var a)
+            ? a.GetBindingDisplayString(InputBinding.DisplayStringOptions.DontIncludeInteractions, "Keyboard&Mouse")
+            : string.Empty;
+
     protected override void OnAwake()
     {
         InputAction = new PlayerInputActions();
+        foreach (var action in InputAction.Gameplay.Get().actions)
+            gameplayActions[action.name] = action;
         _ = GameFreezeManager.Instance;
         _ = UIManager.Instance;
     }
@@ -29,19 +47,11 @@ public class InputHandler : Singleton<InputHandler>
     {
         InputAction.Enable();
         InputAction.UI.Disable();
-        
-        InputAction.Gameplay.Jump.performed += OnJump;
-        InputAction.Gameplay.Attack.performed += OnAttack;
-        InputAction.Gameplay.Dash.performed += OnDash;
-        InputAction.Gameplay.Move.performed += OnMove;
-        InputAction.Gameplay.Move.canceled += OnMoveStopped;
-        InputAction.Gameplay.Skill1.performed += OnSkill1;
-        InputAction.Gameplay.Skill2.performed += OnSkill2;
-        InputAction.Gameplay.Interact.started += OnInteractStarted;
-        InputAction.Gameplay.Interact.canceled += OnInteractCanceled;
+
+        InputAction.Gameplay.Get().actionTriggered += Forward;
         InputAction.Gameplay.Inventory.started += OnInventoryOpen;
         InputAction.Gameplay.Pause.started += OnPauseOpen;
-        
+
         InputAction.UI.Cancel.started += OnUICancel;
         InputAction.UI.CloseInventory.started += OnInventoryCloseAll;
     }
@@ -52,101 +62,15 @@ public class InputHandler : Singleton<InputHandler>
         InputAction?.Disable();
     }
 
-    // 누르고 있기 무기: 공격 중이 아닐 때(콤보가 끝나고 쿨다운이 지난 뒤) 키가 눌려 있으면 다시 공격을 시작한다.
-    // 공격 중이거나 쿨다운 중이면 상태 머신의 전환 조건에서 걸러진다.
-    private void Update()
+    private void Forward(InputAction.CallbackContext context)
     {
-        if (!Can(ActionBlock.Attack))
-        {
-            attackRequested = false;
-            landingAttackRequested = false;
-            return;
-        }
+        var action = context.action;
+        var phase = (InputPhase)(int)context.phase;
+        if (action.name == PlayerActions.Move)
+            moveInput = phase == InputPhase.Canceled ? Vector2.zero : context.ReadValue<Vector2>();
 
-        if (attackRequested)
-        {
-            attackRequested = false;
-            // 곧 착지하면 공중 공격 대신 착지한 뒤 지상 공격을 한다.
-            if (player.IsLandingSoon)
-            {
-                landingAttackRequested = true;
-            }
-            else
-            {
-                EventBus.Publish(new EntityAttackBufferEvent());
-                player.Machine.ChangeState<PlayerAttackState>();
-            }
-        }
-
-        // 착지 경직(Land) 등으로 바로 공격할 수 없으면 공격이 시작될 때까지 기다리고, 다시 떠오르면 취소한다.
-        if (landingAttackRequested)
-        {
-            if (!player.IsGrounded)
-            {
-                if (!player.IsLandingSoon)
-                    landingAttackRequested = false;
-            }
-            else
-            {
-                EventBus.Publish(new EntityAttackBufferEvent());
-                player.Machine.ChangeState<PlayerAttackState>();
-                if (player.IsAttacking)
-                    landingAttackRequested = false;
-            }
-        }
-
-        if (player != null && player.Weapon != null && player.Weapon.Data.holdToAttack && AttackHeld)
-            player.Machine.ChangeState<PlayerAttackState>();
-    }
-
-    private void OnDash(InputAction.CallbackContext context)
-    {
-        if (!Can(ActionBlock.Dash)) return;
-        player.Machine.ChangeState<PlayerDashState>();
-    }
-    private void OnJump(InputAction.CallbackContext context)
-    {
-        if (!Can(ActionBlock.Jump)) return;
-        if (player.Weapon != null && player.Weapon.ConsumeJump())
-            return;
-
-        if (MoveInput.y < -0.5f && player.TryDropThroughPlatform())
-            return;
-
-        player.Machine.ChangeState<PlayerJumpState>();
-    }
-    
-    // 공격은 Update에서 시작한다. 같은 키 입력의 다른 액션 콜백(예: 아래+공격의 DownAttack)이
-    // 바인딩 순서상 Attack보다 늦게 오더라도, 그 프레임의 입력 콜백이 모두 끝난 뒤 공격하도록 하기 위함이다.
-    // 실행 순서가 -1000이라 플레이어 상태 머신보다 먼저 돌아 공격 타이밍은 같은 프레임 그대로다.
-    private void OnAttack(InputAction.CallbackContext context) => attackRequested = true;
-
-    private void OnSkill1(InputAction.CallbackContext context)
-    {
-        if (!Can(ActionBlock.Skill)) return;
-        player.Abilities.TryActivate(player.Abilities.AbilityAt(0),
-            new AbilityContext { Caster = player, IsInputHeld = () => InputAction.Gameplay.Skill1.IsPressed() });
-    }
-    private void OnSkill2(InputAction.CallbackContext context)
-    {
-        if (!Can(ActionBlock.Skill)) return;
-        player.Abilities.TryActivate(player.Abilities.AbilityAt(1),
-            new AbilityContext { Caster = player, IsInputHeld = () => InputAction.Gameplay.Skill2.IsPressed() });
-    }
-    private void OnInteractStarted(InputAction.CallbackContext context)
-    {
-        if (!Can(ActionBlock.Interact)) return;
-        player.InteractionController.OnInteractStarted();
-    }
-    private void OnInteractCanceled(InputAction.CallbackContext context) =>
-        player.InteractionController.OnInteractCanceled();
-
-    private void OnMove(InputAction.CallbackContext context) => moveInput = context.ReadValue<Vector2>();
-
-    private void OnMoveStopped(InputAction.CallbackContext context)
-    {
-        moveInput = Vector2.zero;
-        player.Move(MoveInput);
+        var control = context.control;
+        ActionTriggered?.Invoke(new PlayerInputSignal(action.name, phase, control, control != null && control.IsPressed()));
     }
 
     // 사망 중에는 결과 화면을 Cancel로 닫거나 인벤토리·일시정지를 열 수 없다.
