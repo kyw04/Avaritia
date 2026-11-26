@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 
 // 엔티티 하나의 스탯 버프 목록. 추가·갱신·제거와 스탯 계산(고정값 합 → 퍼센트 합)을 맡는다.
@@ -48,6 +49,8 @@ public class BuffContainer
         return existing?.amount ?? 0f;
     }
 
+    // T가 int/float인 것을 확인한 뒤 UnsafeUtility.As로 같은 값을 다른 타입으로 읽는다.
+    // (T)(object) 변환은 스탯을 읽을 때마다 박싱 할당이 생겨 쓰지 않는다.
     public T Apply<T>(StatType type, T value, Transform target = null)
     {
         if (typeof(T) != typeof(float) && typeof(T) != typeof(int)) return value;
@@ -56,16 +59,16 @@ public class BuffContainer
         {
             // Int stats (DoubleJumpCount, DashCount, ...) only make sense as flat additions —
             // a "Percent" modifier is ignored here rather than silently truncating.
-            int intResult = (int)(object)value;
+            int intResult = UnsafeUtility.As<T, int>(ref value);
             foreach (var b in BuffsOf(type))
             {
                 if (b.valueType != BuffValueType.Flat || !IsActive(b, target)) continue;
                 intResult += (int)b.amount;
             }
-            return (T)(object)intResult;
+            return UnsafeUtility.As<int, T>(ref intResult);
         }
 
-        float result = (float)(object)value;
+        float result = UnsafeUtility.As<T, float>(ref value);
         float flatSum = 0f, percentSum = 0f;
         foreach (var b in BuffsOf(type))
         {
@@ -75,7 +78,7 @@ public class BuffContainer
         }
 
         result = (result + flatSum) * (1f + percentSum / 100f);
-        return (T)(object)result;
+        return UnsafeUtility.As<float, T>(ref result);
     }
 
     public void AddOrUpdate(object source, StatType type, BuffValueType valueType, float amount, float expireTime,
@@ -161,7 +164,14 @@ public class BuffContainer
     {
         if (b.expireTime <= Time.time) return false;
         if (b.conditions == null || b.conditions.Count == 0) return true;
+        // 스탯을 읽을 때마다 불리므로 context를 캡처하는 람다(TrueForAll) 대신 루프로 돌아 클로저 할당을 없앤다.
         var context = new AbilityContext { Caster = owner, Target = target, State = b.source as AbilityRuntimeState };
-        return b.conditions.TrueForAll(c => c == null || c.IsMet(context));
+        for (int i = 0; i < b.conditions.Count; i++)
+        {
+            var c = b.conditions[i];
+            if (c != null && !c.IsMet(context))
+                return false;
+        }
+        return true;
     }
 }
