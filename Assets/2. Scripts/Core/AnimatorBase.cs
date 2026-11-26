@@ -6,7 +6,9 @@ public class AnimatorBase : MonoBehaviour
 {
     public Animator AnimatorComponent { get; private set; }
     protected Coroutine animCoroutine;
-    
+    // 파생 클래스가 나중에 재생하려고 기다리는 애니메이션이 있는지. 다른 애니메이션을 재생하면 취소된다.
+    protected bool hasPendingAnimation;
+
     protected virtual void Awake()
     {
         AnimatorComponent = GetComponent<Animator>();
@@ -14,6 +16,7 @@ public class AnimatorBase : MonoBehaviour
     
     protected void PlayAnimation(string animName)
     {
+        hasPendingAnimation = false;
         if (animCoroutine != null)
         {
             StopCoroutine(animCoroutine);
@@ -25,6 +28,7 @@ public class AnimatorBase : MonoBehaviour
 
     protected void PlayAnimation(int stateHash)
     {
+        hasPendingAnimation = false;
         if (animCoroutine != null)
         {
             StopCoroutine(animCoroutine);

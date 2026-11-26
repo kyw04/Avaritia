@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 public class EntityAnimator : AnimatorBase,
@@ -22,6 +21,10 @@ public class EntityAnimator : AnimatorBase,
     private static readonly int Dash = Animator.StringToHash("dash");
     private Entity self;
     private bool? hasSpeedParameter;
+    private int pendingHash;
+    private float pendingLength;
+    private float pendingElapsed;
+    private int pendingStartFrame;
 
     protected override void Awake()
     {
@@ -64,6 +67,8 @@ public class EntityAnimator : AnimatorBase,
     protected override void OnDisable()
     {
         base.OnDisable();
+        // 코루틴이 비활성화로 멈추던 것과 같게, 꺼지면 기다리던 공격 애니메이션을 버린다.
+        hasPendingAnimation = false;
         if (self == null) return;
         var hub = self.Events;
         hub.Unsubscribe<EntityIdleEvent>(this);
@@ -83,6 +88,18 @@ public class EntityAnimator : AnimatorBase,
     {
         if (self != null)
             AnimatorComponent.speed = self.IsAttacking ? self.AttackSpeedMultiplier : 1f;
+        TickPendingAttack();
+    }
+
+    // 준비 동작이 끝나면 공격 애니메이션으로 넘어간다. 준비 동작은 Animator.speed로 느려지므로 같은 배율로 시간을 센다.
+    // 코루틴과 같게 시작한 프레임에는 세지 않는다(코루틴은 다음 프레임부터 셌다). 코루틴을 만들지 않아 할당이 없다.
+    private void TickPendingAttack()
+    {
+        if (!hasPendingAnimation || Time.frameCount == pendingStartFrame)
+            return;
+        pendingElapsed += Time.deltaTime * self.AttackSpeedMultiplier;
+        if (pendingElapsed >= pendingLength)
+            PlayAnimation(pendingHash);
     }
 
     public void EndAttacking()
@@ -137,12 +154,22 @@ public class EntityAnimator : AnimatorBase,
         var readyClip = e.Data.ready.animClip;
         if (readyClip != null)
         {
-            if (animCoroutine != null)
-                StopCoroutine(animCoroutine);
-
             PlayAnimation(ClipHash(readyClip));
             if (attackClip != null)
-                animCoroutine = StartCoroutine(PlayAttackAfterReady(ClipHash(attackClip), readyClip.length));
+            {
+                if (readyClip.length <= 0f)
+                {
+                    PlayAnimation(ClipHash(attackClip));
+                }
+                else
+                {
+                    hasPendingAnimation = true;
+                    pendingHash = ClipHash(attackClip);
+                    pendingLength = readyClip.length;
+                    pendingElapsed = 0f;
+                    pendingStartFrame = Time.frameCount;
+                }
+            }
         }
         else if (attackClip != null)
         {
@@ -160,21 +187,10 @@ public class EntityAnimator : AnimatorBase,
             AnimatorComponent.Play(stateHash, 0, 0f);
     }
 
-    // 준비 동작은 Animator.speed로 느려지므로 공격 애니메이션 전환도 같은 배율로 늦춘다.
-    private IEnumerator PlayAttackAfterReady(int stateHash, float length)
-    {
-        for (float t = 0f; t < length; t += Time.deltaTime * self.AttackSpeedMultiplier)
-            yield return null;
-        PlayAnimation(stateHash);
-    }
-
     // 준비 동작 중 캔슬되면 이어질 공격 애니메이션을 재생하지 않는다.
     public void OnNotify(EntityAttackCanceledEvent e)
     {
-        if (e.Source != self || animCoroutine == null)
-            return;
-
-        StopCoroutine(animCoroutine);
-        animCoroutine = null;
+        if (e.Source == self)
+            hasPendingAnimation = false;
     }
 }
