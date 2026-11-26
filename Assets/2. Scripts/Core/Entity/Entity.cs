@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable, IStatReadable, IStatMutable, IPoolable, IInfo
 {
@@ -37,17 +36,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     public Vector3 FootPosition => groundCheck != null ? groundCheck.position : transform.position;
 
     private BuffContainer buffs;
-    // Keyed by the granting binding's AbilityRuntimeState (same as buff sources), so each copy
-    // of an item refills/loses only its own share and RemoveBuffsBySource can drop it on unequip.
-    private readonly Dictionary<object, float> shields = new();
-    private readonly Dictionary<object, int> hitBlocks = new();
-    private readonly List<object> keyBuffer = new();
-    private float invincibleUntil;
-    private float invincibleDuration;
-    private Sprite invincibleIcon;
-    private float noHitStunUntil;
-    private float noHitStunDuration;
-    private Sprite noHitStunIcon;
+    private DamageReceiver damageReceiver;
     private float knockbackUntil;
     private float trackedMaxHealth;
 
@@ -63,7 +52,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     public Sprite Icon => info.Icon;
     public string Details => info.Details;
     public bool IsGrounded { get; protected set; }
-    public bool IgnoresHitStun => Time.time < noHitStunUntil;
+    public bool IgnoresHitStun => damageReceiver.IgnoresHitStun;
     public bool IsKnockedBack => Time.time < knockbackUntil;
     // 공격 준비/진행 시간과 공격 애니메이션에 곱하는 배율. 1보다 작으면 공격이 느려진다(AttackSlowModule 디버프).
     public float AttackSpeedMultiplier => Debuffs.AttackSpeedMultiplier;
@@ -165,71 +154,23 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
     public float GetBuffAmount(object source, StatType type, BuffValueType valueType) =>
         buffs.GetAmount(source, type, valueType);
 
-    // Refills (not adds to) this source's share — re-granting every room shouldn't stack up.
-    public void GrantShield(object source, float amount) => shields[source] = amount;
+    public void GrantShield(object source, float amount) => damageReceiver.GrantShield(source, amount);
 
-    public void GrantHitBlocks(object source, int count) => hitBlocks[source] = count;
+    public void GrantHitBlocks(object source, int count) => damageReceiver.GrantHitBlocks(source, count);
 
-    public bool HasShield(object source) => shields.TryGetValue(source, out var amount) && amount > 0f;
+    public bool HasShield(object source) => damageReceiver.HasShield(source);
 
-    public bool HasHitBlocks(object source) => hitBlocks.TryGetValue(source, out var count) && count > 0;
+    public bool HasHitBlocks(object source) => damageReceiver.HasHitBlocks(source);
 
-    // icon: 상태 아이콘 UI에 띄울 아이콘(null이면 표시 안 함). 더 길게 남는 쪽의 아이콘/길이를 유지한다.
-    public void SetInvincible(float duration, Sprite icon = null)
-    {
-        float until = Time.time + duration;
-        if (until <= invincibleUntil) return;
-        invincibleUntil = until;
-        invincibleDuration = duration;
-        invincibleIcon = icon;
-    }
+    public void SetInvincible(float duration, Sprite icon = null) => damageReceiver.SetInvincible(duration, icon);
 
-    // SetInvincible과 같은 규칙: 더 길게 남는 쪽의 아이콘/길이를 유지한다. duration 0 = 만료되지 않음.
-    public void SetNoHitStun(float duration, Sprite icon = null)
-    {
-        float until = duration > 0f ? Time.time + duration : float.MaxValue;
-        if (until <= noHitStunUntil) return;
-        noHitStunUntil = until;
-        noHitStunDuration = duration;
-        noHitStunIcon = icon;
-    }
+    public void SetNoHitStun(float duration, Sprite icon = null) => damageReceiver.SetNoHitStun(duration, icon);
 
     // 상태 아이콘 UI용: 지금 걸려 있는 버프/실드/무효화/무적/디버프를 into에 추가한다.
-    // 아이콘을 알 수 없는 출처(AbilityRuntimeState가 아닌 source 등)는 건너뛴다.
     public virtual void CollectStatusIcons(List<StatusIconEntry> into)
     {
         buffs.CollectStatusIcons(into);
-
-        foreach (var pair in shields)
-            if (pair.Value > 0f && pair.Key is AbilityRuntimeState state && state.Icon != null)
-                into.Add(new StatusIconEntry
-                {
-                    Key = (pair.Key, StatusIconKind.Shield), Icon = state.Icon, EndTime = float.MaxValue,
-                    Count = Mathf.CeilToInt(pair.Value),
-                });
-
-        foreach (var pair in hitBlocks)
-            if (pair.Value > 0 && pair.Key is AbilityRuntimeState state && state.Icon != null)
-                into.Add(new StatusIconEntry
-                {
-                    Key = (pair.Key, StatusIconKind.HitBlock), Icon = state.Icon, EndTime = float.MaxValue,
-                    Count = pair.Value,
-                });
-
-        if (invincibleIcon != null && Time.time < invincibleUntil)
-            into.Add(new StatusIconEntry
-            {
-                Key = (this, StatusIconKind.Invincible), Icon = invincibleIcon,
-                EndTime = invincibleUntil, Duration = invincibleDuration,
-            });
-
-        if (noHitStunIcon != null && IgnoresHitStun)
-            into.Add(new StatusIconEntry
-            {
-                Key = (this, StatusIconKind.NoHitStun), Icon = noHitStunIcon,
-                EndTime = noHitStunUntil, Duration = noHitStunDuration,
-            });
-
+        damageReceiver.CollectStatusIcons(into);
         Debuffs.CollectStatusIcons(into);
     }
 
@@ -279,6 +220,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
             stats.Reset(statDataAsset);
         // 생성자에 this가 필요해 필드 초기화 대신 여기서 만든다. 스탯을 읽는 다른 초기화보다 먼저 있어야 한다.
         buffs ??= new BuffContainer(this);
+        damageReceiver ??= new DamageReceiver(this);
         // 에셋 기준(장비 보너스 제외) 비율에서 출발해, 스폰 시 장착된 무기/아이템 보너스도 비율 유지로 반영되게 한다.
         trackedMaxHealth = stats.Get<float>(StatType.MaxHealth);
         Abilities?.UnbindAll();
@@ -286,10 +228,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         Debuffs?.ClearAll();
         Debuffs ??= new DebuffController(this);
         buffs.Clear();
-        shields.Clear();
-        hitBlocks.Clear();
-        noHitStunUntil = 0f;
-        noHitStunIcon = null;
+        damageReceiver.ClearGrants();
         initialAbilities ??= (AbilityData[])abilities?.Clone();
         // 풀에서 다시 꺼낼 때는 매니저와 슬롯 배열을 그대로 두고 슬롯만 처음 구성으로 되돌린다(바인딩은 매니저가 재사용).
         if (Abilities != null && abilities != null && initialAbilities != null)
@@ -302,8 +241,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
             Abilities = new AbilityManager(this, abilities);
         }
         Abilities.BindAll();
-        invincibleUntil = 0f;
-        invincibleIcon = null;
+        damageReceiver.ClearInvincible();
         knockbackUntil = 0f;
         LastAttacker = null;
         LastDamagedTime = float.NegativeInfinity;
@@ -399,27 +337,12 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         var attacker = info.Attacker;
         var hitPoint = info.HitPoint;
         if (isDead) return;
-        if (Time.time < invincibleUntil) return;
-        if (!info.Has(DamageFlags.IgnoreEvasion) && Random.Range(0f, 100f) < GetStat<float>(StatType.Evasion))
-        {
+        float damage = damageReceiver.Resolve(info, out var outcome);
+        if (outcome == DamageOutcome.Evaded)
             EventBus.Publish(new EntityEvadedEvent(this, attacker, hitPoint));
-            return;
-        }
-        if (TryConsumeHitBlock())
-        {
+        else if (outcome == DamageOutcome.Blocked)
             EventBus.Publish(new EntityHitBlockedEvent(this, attacker, hitPoint));
-            return;
-        }
-
-        float damage = info.Amount;
-        // Armor = 받는 피해 감소율(%). 최대 80%까지, 음수면 피해 증가 (-10 = 1.1배).
-        if (!info.Has(DamageFlags.IgnoreArmor))
-        {
-            TryGetStat<int>(StatType.Armor, out var armor);
-            damage *= 1f - Mathf.Min(armor, 80) / 100f;
-        }
-        damage = AbsorbWithShields(damage);
-        if (damage <= 0f) return;
+        if (outcome != DamageOutcome.Damaged) return;
 
         stats.Set(StatType.CurrentHealth, stats.Get<float>(StatType.CurrentHealth) - damage);
         if (attacker != null) LastAttacker = attacker;
@@ -437,34 +360,6 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
         // Listeners (e.g. a revive item) may heal in response; only die if nothing did.
         EventBus.Publish(new EntityLethalDamageEvent(this));
         if (CurrentHealth <= 0) Die();
-    }
-
-    // 딕셔너리를 돌면서 값을 바꿀 수 없어 키를 버퍼에 옮겨 돈다. 두 메서드는 안에서 외부 코드를 부르지 않아 버퍼를 같이 쓴다.
-    private bool TryConsumeHitBlock()
-    {
-        keyBuffer.Clear();
-        keyBuffer.AddRange(hitBlocks.Keys);
-        foreach (var source in keyBuffer)
-        {
-            if (hitBlocks[source] <= 0) continue;
-            hitBlocks[source]--;
-            return true;
-        }
-        return false;
-    }
-
-    private float AbsorbWithShields(float damage)
-    {
-        keyBuffer.Clear();
-        keyBuffer.AddRange(shields.Keys);
-        foreach (var source in keyBuffer)
-        {
-            if (damage <= 0f) break;
-            float absorbed = Mathf.Min(shields[source], damage);
-            shields[source] -= absorbed;
-            damage -= absorbed;
-        }
-        return damage;
     }
 
     protected bool TryMarkDead()
@@ -489,8 +384,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IAttacker, IBuffable,
             RemoveActiveBuffsBySource(source);
         else
             SyncHealthRatio();
-        shields.Remove(source);
-        hitBlocks.Remove(source);
+        damageReceiver.RemoveSource(source);
     }
 
     // 캡처용 클로저가 RemoveBuffsBySource 진입마다 만들어지지 않도록 람다를 별도 메서드로 뺐다.
