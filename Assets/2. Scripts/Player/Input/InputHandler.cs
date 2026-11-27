@@ -64,6 +64,9 @@ public class InputHandler : Singleton<InputHandler>, IPlayerInput
 
     private void Forward(InputAction.CallbackContext context)
     {
+        // 같은 입력의 액션 콜백(인벤토리·일시정지 열기)이 먼저 Gameplay 맵을 끄면 context가 무효가 되므로 건너뛴다.
+        if (!context.action.enabled) return;
+
         var action = context.action;
         var phase = (InputPhase)(int)context.phase;
         if (action.name == PlayerActions.Move)
