@@ -49,8 +49,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Boss
   abilities:
-  - {fileID: 11400000, guid: 6c5e622e576d4b479e3ee43e24722620, type: 2}
   - {fileID: 11400000, guid: d412a9c6b333ac04b99712854595f812, type: 2}
+  - {fileID: 11400000, guid: 6c5e622e576d4b479e3ee43e24722620, type: 2}
   statDataAsset: {fileID: 11400000, guid: 4b58d44bb56e9e047a969259e6e12a70, type: 2}
   movementStrategy:
     rid: 5321512473974276170
@@ -59,9 +59,6 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 0
-  dropWeaponAsset: {fileID: 0}
-  dropAbilityAsset: {fileID: 0}
-  dropChance: 0
   feedbacks:
     <Idle>k__BackingField:
       animClip: {fileID: 7400000, guid: a0feaca4e579e604aba998418ee1e0b6, type: 2}
